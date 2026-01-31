@@ -221,14 +221,17 @@ footer{
 </footer>
 
 <script>
+  <script>
+  // ambil user dari localStorage atau sessionStorage
+  const user = localStorage.getItem("user") || sessionStorage.getItem("user");
+
   // ===== PROTEKSI LOGIN =====
-  if(!localStorage.getItem("user")){
+  if(!user){
     window.location.href = "login.html";
   }
 
   // tampilkan nama user
-  document.getElementById("welcome").innerText =
-    "Welcome, " + localStorage.getItem("user");
+  document.getElementById("welcome").innerText = "Welcome, " + user;
 
   function openPage(page){
     window.location.href = page;
@@ -236,6 +239,7 @@ footer{
 
   function logout(){
     localStorage.removeItem("user");
+    sessionStorage.removeItem("user");
     window.location.href = "login.html";
   }
 </script>
