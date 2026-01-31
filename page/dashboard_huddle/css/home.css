@@ -32,5 +32,5 @@
 
 /* background hanya untuk HOME */
 .home-fullscreen.home-bg {
-  background: url('../../assets/home/huddle_performance.png') center / cover no-repeat;
+  background: url('../../../assets/home/huddle_performance.png') center / cover no-repeat;
 }
