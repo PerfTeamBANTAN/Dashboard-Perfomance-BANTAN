@@ -14,18 +14,45 @@
 body{
   margin:0;
   font-family:"Poppins", sans-serif;
+  min-height:100vh;
 
-  /* Background gradient */
-  background: linear-gradient(135deg, #f1f4ff, #e0e7ff, #fdfbff);
-  background-attachment: fixed;
+  background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #4facfe);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
 
-  /* Optional pattern */
-  background-image:
-    radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
-    linear-gradient(135deg, #f1f4ff, #e0e7ff, #fdfbff);
-  background-size: 20px 20px, cover;
+  position: relative;
+  overflow-x: hidden;
 }
 
+/* animasi gradient */
+@keyframes gradientBG {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+/* abstract shape */
+body::before,
+body::after{
+  content:"";
+  position:absolute;
+  width:400px;
+  height:400px;
+  background: rgba(255,255,255,0.12);
+  border-radius:50%;
+  filter: blur(120px);
+  z-index:-1;
+}
+
+body::before{
+  top:-100px;
+  left:-100px;
+}
+
+body::after{
+  bottom:-100px;
+  right:-100px;
+}
 
 /* HEADER */
 header{
@@ -69,12 +96,16 @@ header span{
 /* GRID */
 .container{
   padding:40px;
-  min-height: calc(100vh - 140px); /* tinggi layar dikurangi header+footer */
+  min-height: calc(100vh - 140px);
   display:flex;
-  align-items:center;      /* center vertikal */
-  justify-content:center;  /* center horizontal */
-}
+  align-items:center;
+  justify-content:center;
 
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border-radius:25px;
+  margin:20px;
+}
 
 .grid{
   display:grid;
