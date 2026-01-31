@@ -1,0 +1,258 @@
+/* ===========================
+   OVERRIDES / FIXES (FINAL)
+   LIGHT TABLE + FLEXIBLE FREEZE HEADER
+=========================== */
+
+/* ===========================
+   CARD TABLE FIX
+=========================== */
+.card table {
+  border: none;
+}
+
+.card table th,
+.card table td {
+  padding: 0.5rem 0.25rem;
+}
+
+
+/* ===========================
+   GLOBAL FORCE LIGHT TABLE
+   (Override Bootstrap table-dark)
+=========================== */
+table,
+.table,
+.table-dark {
+  background-color: #ffffff !important;
+  color: #333333 !important;
+}
+
+.table th,
+.table-dark th {
+  background: #1a2a6c !important;
+  color: #ffffff !important;
+}
+
+.table td,
+.table-dark td {
+  background-color: #ffffff !important;
+  color: #333333 !important;
+}
+
+.table tbody tr:hover td,
+.table-dark tbody tr:hover td {
+  background-color: #f1f1f1 !important;
+}
+
+
+/* ===========================
+   FLEXIBLE FREEZE HEADER
+   (Support multi-row thead)
+=========================== */
+
+/* wrapper scroll */
+.table-responsive,
+.kpi-table-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* base header style */
+table thead th {
+  position: sticky;
+  z-index: 10;
+  background: #1a2a6c;
+  color: #ffffff;
+  background-clip: padding-box;
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,.25);
+}
+
+/* default row height variable */
+table thead {
+  --thead-row-height: 40px;
+}
+
+/* row offset system */
+table thead tr:nth-child(1) th { top: 0; }
+table thead tr:nth-child(2) th { top: var(--thead-row-height); }
+table thead tr:nth-child(3) th { top: calc(var(--thead-row-height) * 2); }
+table thead tr:nth-child(4) th { top: calc(var(--thead-row-height) * 3); }
+
+
+/* ===========================
+   DASHBOARD B2C TABLE ONLY
+=========================== */
+#dashboard-b2c-wrapper table {
+  background-color: #ffffff !important;
+}
+
+#dashboard-b2c-wrapper table th {
+  background: #1a2a6c !important;
+  color: #ffffff !important;
+}
+
+/* =========================
+   FREEZE HEADER KHUSUS DASHBOARD B2C
+========================= */
+#dashboard-b2c-wrapper .table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #1a2a6c !important;
+  color: #ffffff !important;
+}
+
+
+/* ===========================
+   LOADING OVERLAY
+=========================== */
+#dashboard-b2b-loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.85);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #333333;
+  font-size: 14px;
+}
+
+#dashboard-b2b-loading.d-none {
+  display: none;
+}
+
+#dashboard-b2b-loading .spinner {
+  width: 36px;
+  height: 36px;
+  border: 4px solid rgba(0,0,0,.1);
+  border-top-color: #00BCD4;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+  margin-bottom: 8px;
+}
+
+
+/* ===========================
+   KPI TOOLTIP
+=========================== */
+.kpi-tooltip {
+  position: absolute;
+  bottom: 110%;
+  left: 0;
+  background: #333;
+  color: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  width: 220px;
+  display: none;
+  z-index: 20;
+}
+
+.kpi-card:hover .kpi-tooltip {
+  display: block;
+}
+
+
+/* ===========================
+   GLOBAL MODAL (LIGHT THEME)
+=========================== */
+#global-modal .modal-content {
+  background: #ffffff;
+  color: #333333;
+  border-radius: 14px;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0,0,0,.2);
+}
+
+#global-modal .modal-header {
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+#global-modal .modal-title {
+  font-weight: 700;
+  color: #333;
+}
+
+#global-modal .btn-close {
+  filter: none;
+}
+
+#global-modal .modal-body {
+  background: #ffffff;
+  color: #333333;
+}
+
+#global-modal table {
+  background-color: #ffffff !important;
+  color: #333333 !important;
+}
+
+#global-modal table th {
+  background: #f1f3f5 !important;
+  color: #333333 !important;
+  font-weight: 600;
+}
+
+#global-modal table td {
+  background: #ffffff !important;
+  color: #333333 !important;
+}
+
+#global-modal table tbody tr:hover td {
+  background-color: #f1f1f1 !important;
+}
+
+
+/* ===========================
+   🔥 BOOTSTRAP VARIABLE FIX (CRITICAL)
+=========================== */
+.table-dark {
+  --bs-table-color: #333333 !important;
+  --bs-table-bg: #ffffff !important;
+  --bs-table-border-color: #adb5bd !important;
+  --bs-table-striped-color: #333333 !important;
+  --bs-table-hover-color: #333333 !important;
+}
+
+.table-dark td {
+  color: #333333 !important;
+}
+
+/* KPI merah tetap merah */
+td.kpi-not-ach {
+  color: #ef4444 !important;
+  font-weight: 700;
+}
+
+/* ===========================
+   FILTER CARD = THEME HEADER
+=========================== */
+.card.bg-dark.border-secondary {
+  background-color: #1a2a6c !important;
+  border-color: #0dcaf0 !important;
+  color: #ffffff !important;
+}
+
+/* label */
+.card.bg-dark.border-secondary .form-label {
+  color: #e0f2fe !important;
+}
+
+/* select input */
+.card.bg-dark.border-secondary select {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #0dcaf0 !important;
+}
+
+/* focus */
+.card.bg-dark.border-secondary select:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 0.15rem rgba(56,189,248,.35);
+}
+

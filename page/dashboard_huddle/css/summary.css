@@ -1,0 +1,98 @@
+/* ==========================
+   SUMMARY CARDS (PREMIUM)
+   Optimized - relies on dashboard variables
+========================== */
+
+.summary-card,
+.summary-card-v3 {
+  display: flex;
+  justify-content: space-between;
+  transition: .25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-card:hover,
+.summary-card-v3:hover {
+  transform: translateY(-2px);
+}
+
+/* VARIANT COLOR */
+.summary-card-v3.blue { border-left: 6px solid #3a7bd5; }
+.summary-card-v3.green { border-left: 6px solid #22c55e; }
+.summary-card-v3.orange { border-left: 6px solid #f59e0b; }
+.summary-card-v3.red { border-left: 6px solid #ef4444; }
+
+/* LEFT CONTENT */
+.summary-left h5 {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.summary-quote {
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+/* VALUE & PERCENT */
+.summary-percent {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.glow-text { text-shadow: 0 0 6px rgba(58,123,213,.4); }
+
+/* PROGRESS BAR */
+.summary-progress {
+  height: 7px;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.summary-progress-bar {
+  height: 100%;
+  border-radius: 999px;
+  transition: width .4s ease;
+}
+
+/* FOOTER */
+.summary-footer {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.summary-footer span { white-space: nowrap; }
+
+/* AVATAR / ILLUSTRATION */
+.summary-avatar {
+  width: 80px;
+  animation: float 3s ease-in-out infinite;
+}
+
+/* FILTER LABEL */
+.filter-label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+/* CHART CONTAINER */
+#achievement-chart,
+#status-chart {
+  border-radius: 14px;
+  padding: 12px;
+  border: 1px solid var(--b2c-border);
+}
+
+/* ==========================
+   FLOAT ANIMATION
+========================== */
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
