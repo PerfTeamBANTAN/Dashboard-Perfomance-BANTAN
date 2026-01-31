@@ -177,7 +177,7 @@ button:hover{
 <script>
   // ===== CEK JIKA SUDAH LOGIN =====
   if(localStorage.getItem("user")){
-    window.location.href = "dashboard.html";
+    window.location.href = "index.html";
   }
 
   function login(){
@@ -202,7 +202,7 @@ button:hover{
             sessionStorage.setItem("user", data.user);
           }
 
-          window.location.href = "dashboard.html";
+          window.location.href = "index.html";
         }else{
           document.getElementById("error").innerText = "Username atau password salah!";
         }
