@@ -1,0 +1,79 @@
+/* =========================
+   MONITORING B2C MODULE ONLY (LIGHT)
+========================= */
+
+#monitoring-b2c-update {
+  opacity: .85;
+  transition: opacity .15s ease;
+}
+#monitoring-b2c-update:hover {
+  opacity: 1;
+}
+
+/* =========================
+   BASE ROW FIX
+========================= */
+#monitoring-b2c-body tr {
+  background-color: transparent !important;
+}
+
+#monitoring-b2c-body td {
+  color: #1e293b;
+}
+
+/* =========================
+   HOVER ROW (ANTI BLACK)
+========================= */
+#monitoring-b2c-body tr:hover td {
+  background-color: #e0f2fe !important;
+  color: #1e293b !important;
+}
+
+/* clickable cell hover */
+#monitoring-b2c-body td.clickable {
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, transform .08s ease;
+}
+
+#monitoring-b2c-body td.clickable:hover {
+  background-color: #bae6fd !important;
+}
+
+/* =========================
+   ZERO VALUE
+========================= */
+#monitoring-b2c-body td.zero {
+  color: #94a3b8;
+}
+
+/* =========================
+   EMPTY ROW (jika ada)
+========================= */
+#monitoring-b2c-body tr:has(td:empty) td {
+  background-color: transparent !important;
+}
+
+/* =========================
+   FORCE OVERRIDE BOOTSTRAP DARK
+========================= */
+.table-dark tbody tr:hover td {
+  background-color: #e0f2fe !important;
+  color: #1e293b !important;
+}
+
+/* =========================
+   TOTAL ROW (MATCH HEADER)
+========================= */
+#monitoring-b2c-body tr.total-row td {
+  background: #1b2f6b !important;   /* sama dengan header */
+  color: #ffffff !important;
+  font-weight: 700;
+  border-top: 2px solid #0dcaf0;
+}
+
+/* jangan berubah saat hover */
+#monitoring-b2c-body tr.total-row:hover td {
+  background: #1b2f6b !important;
+  color: #ffffff !important;
+}
+
