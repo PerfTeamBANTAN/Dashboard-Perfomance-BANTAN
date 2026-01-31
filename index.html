@@ -13,8 +13,19 @@
 
 body{
   margin:0;
-  background:#f4f6fb;
+  font-family:"Poppins", sans-serif;
+
+  /* Background gradient */
+  background: linear-gradient(135deg, #f1f4ff, #e0e7ff, #fdfbff);
+  background-attachment: fixed;
+
+  /* Optional pattern */
+  background-image:
+    radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(135deg, #f1f4ff, #e0e7ff, #fdfbff);
+  background-size: 20px 20px, cover;
 }
+
 
 /* HEADER */
 header{
@@ -189,35 +200,12 @@ footer{
       <p>FTTH service performance</p>
     </div>
 
-    <div class="card blue" onclick="openPage('analytics.html')">
-      <h3>Dashboard Ebisanalytic</h3>
-      <img src="https://picsum.photos/400/200?7">
-      <p>Business Intelligence Analytics</p>
-    </div>
-
-    <div class="card orange" onclick="openPage('cbd.html')">
-      <h3>Dashboard CBD</h3>
-      <img src="https://picsum.photos/400/200?8">
-      <p>CBD Performance Summary</p>
-    </div>
-
-    <div class="card red" onclick="openPage('addon.html')">
-      <h3>Dashboard AddOn</h3>
-      <img src="https://picsum.photos/400/200?9">
-      <p>AddOn services overview</p>
-    </div>
-
-    <div class="card dark" onclick="openPage('map.html')">
-      <h3>Battle Map Regional</h3>
-      <img src="https://picsum.photos/400/200?10">
-      <p>Regional performance map</p>
-    </div>
 
   </div>
 </div>
 
 <footer>
-© 2026 Corporate Dashboard System
+© 2026 Performance Team
 </footer>
 
 <script>
