@@ -200,4 +200,19 @@ td.zero {
   background: rgba(0,0,0,.03);
 }
 
+.panel-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 600px; /* tinggi minimum panel, sesuaikan kebutuhan */
+}
 
+.panel-body {
+  flex: 1; /* biar panel-body mengisi seluruh tinggi panel */
+  display: flex;
+  flex-direction: column;
+}
+
+.table-responsive.monitoring-no-scroll {
+  flex: 1;       /* tabel mengisi sisa tinggi panel-body */
+  overflow-y: auto; /* scroll vertikal kalau banyak baris */
+}
