@@ -12,7 +12,7 @@ table {
 }
 
 table th {
-    background: #1a2a6c; /* Gradien gelap bisa ditambahkan via gradient pada header */
+    background: linear-gradient(90deg, var(--nav-grad-1), var(--nav-grad-2), var(--nav-grad-3));
     color: #FFFFFF;
     padding: 4px 6px; /* lebih compact */
     text-align: center;
