@@ -297,3 +297,22 @@ table thead th {
   --bs-table-color: #7f1d1d !important;
 }
 
+/* ===========================
+   FINAL FIX - HOVER TABLE-DANGER
+=========================== */
+
+/* Paksa hover row danger tetap merah soft */
+.table tbody tr.table-danger:hover td,
+.table-dark tbody tr.table-danger:hover td,
+.kpi-table-scroll tbody tr.table-danger:hover td,
+.table-responsive tbody tr.table-danger:hover td {
+  background-color: #fecaca !important;
+  color: #7f1d1d !important;
+}
+
+/* Non-hover tetap merah muda */
+.table tbody tr.table-danger td,
+.table-dark tbody tr.table-danger td {
+  background-color: #fee2e2 !important;
+  color: #7f1d1d !important;
+}
