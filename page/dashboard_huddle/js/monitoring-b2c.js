@@ -387,3 +387,28 @@ function buildDropdown(el,set,label){
   [...set].filter(v=>v).sort()
     .forEach(v=>el.innerHTML+=`<option>${v}</option>`);
 }
+
+/* ===============================
+   AUTO FIX STICKY MULTI ROW HEADER
+   (NO GAP / NO TRANSPARENT SEAM)
+================================ */
+function fixStickyHeader(table){
+  const rows = table.querySelectorAll("thead tr");
+  let offset = 0;
+
+  rows.forEach(row => {
+    const height = row.getBoundingClientRect().height;
+    row.querySelectorAll("th, td").forEach(cell => {
+      cell.style.top = offset + "px";
+    });
+    offset += height;
+  });
+}
+
+function initStickyHeaders(scope = document){
+  scope.querySelectorAll("table").forEach(table => {
+    if(table.querySelector("thead")){
+      fixStickyHeader(table);
+    }
+  });
+}
