@@ -316,3 +316,39 @@ table thead th {
   background-color: #fee2e2 !important;
   color: #7f1d1d !important;
 }
+/* ===========================
+   BOOTSTRAP HOVER KILL SWITCH
+=========================== */
+
+/* Bunuh layer shadow bootstrap */
+.table tbody tr:hover > *,
+.table-dark tbody tr:hover > *,
+.kpi-table-scroll tbody tr:hover > *,
+.table-responsive tbody tr:hover > * {
+  --bs-table-bg-state: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Normal row hover = abu soft */
+.table tbody tr:hover td {
+  background-color: #f1f1f1 !important;
+  color: #333 !important;
+}
+
+/* Danger row hover = merah soft */
+.table tbody tr.table-danger:hover td,
+.table-dark tbody tr.table-danger:hover td {
+  background-color: #fecaca !important;
+  color: #7f1d1d !important;
+}
+/* ===========================
+   🚫 BOOTSTRAP TABLE SHADOW NUKER (ULTIMATE)
+=========================== */
+
+.table > :not(caption) > * > * {
+  --bs-table-bg-state: transparent !important;
+  --bs-table-bg-type: transparent !important;
+  --bs-table-accent-bg: transparent !important;
+  --bs-table-striped-bg: transparent !important;
+  box-shadow: none !important;
+}
