@@ -63,7 +63,7 @@ window.B2C24KPI = (function () {
             </div>
           </div>
           <div class="summary-right">
-            <img src="/../assets/img/${img}" alt="puji" class="summary-avatar bounce tilt">
+            <img src="../../assets/img/${img}" alt="puji" class="summary-avatar bounce tilt">
           </div>
         </div>
       </div>
