@@ -66,8 +66,12 @@ table thead th {
   background: #1a2a6c;
   color: #ffffff;
   background-clip: padding-box;
-  box-shadow: inset 0 -1px 0 rgba(255,255,255,.25);
+
+  /* MATIKAN GARIS */
+  box-shadow: none !important;
+  border-bottom: none !important;
 }
+
 
 /* default row height variable */
 table thead {
