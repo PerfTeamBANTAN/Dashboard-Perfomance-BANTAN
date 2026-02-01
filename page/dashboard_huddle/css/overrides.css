@@ -53,7 +53,7 @@ table,
 /* wrapper scroll */
 .table-responsive,
 .kpi-table-scroll {
-  max-height: 400px;
+  max-height: 600px;
   overflow-y: auto;
   position: relative;
 }
