@@ -15,8 +15,7 @@ table th {
     background: #1a2a6c; /* Gradien gelap bisa ditambahkan via gradient pada header */
     color: #FFFFFF;
     padding: 4px 6px; /* lebih compact */
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+    text-align: center;
 }
 
 table td {
