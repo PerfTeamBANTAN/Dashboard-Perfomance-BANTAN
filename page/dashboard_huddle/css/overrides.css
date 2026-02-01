@@ -437,3 +437,111 @@ table thead th {
   border-color: #0ea5e9 !important;
   box-shadow: 0 0 0 0.15rem rgba(14,165,233,.35);
 }
+
+/* ===========================
+   📊 KPI BADGE CARD – PREMIUM LAYOUT
+=========================== */
+
+/* Scroll row */
+.cards-scroll {
+  display: flex;
+  gap: 14px;
+  padding: 10px 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: #38bdf8 #f1f5f9;
+}
+
+/* Scrollbar Chrome/Edge */
+.cards-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+.cards-scroll::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 8px;
+}
+.cards-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+  border-radius: 8px;
+}
+
+/* Card */
+.badge-card {
+  min-width: 220px;
+  max-width: 220px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+/* Hover lift */
+.badge-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.15);
+}
+
+/* Header */
+.badge-card-header {
+  background: linear-gradient(135deg, #1a2a6c, #0ea5e9);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 14px 14px 0 0;
+  text-align: center;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Body */
+.badge-card-body {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Row item */
+.row-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #334155;
+  padding: 4px 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+.row-item:last-child {
+  border-bottom: none;
+}
+
+/* Value alignment */
+.row-item span:last-child {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* GOOD / BAD COLOR */
+.value-good {
+  color: #16a34a !important;
+}
+.value-bad {
+  color: #dc2626 !important;
+}
+
+/* Status border accent */
+.card-good {
+  border-top: 4px solid #16a34a;
+}
+.card-bad {
+  border-top: 4px solid #dc2626;
+}
