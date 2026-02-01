@@ -1,55 +1,6 @@
 /* =====================================================
    MONITORING B2B HI
 ===================================================== */
-
-/* ===== UI POLISH (JS INJECT STYLE) ===== */
-(function injectB2BStyle(){
-  if (document.getElementById('b2b-ui-polish')) return;
-
-  const style = document.createElement('style');
-  style.id = 'b2b-ui-polish';
-  style.textContent = `
-    td.clickable{
-      cursor:pointer;
-      transition:background .15s ease,color .15s ease,transform .08s ease;
-    }
-    td.clickable:hover{ background:rgba(255,255,255,.06); }
-    td.clickable:active{
-      transform:scale(.97);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
-    }
-
-    #monitoring-b2b-body tr:hover td{
-      background:rgba(255,255,255,.045);
-    }
-
-    #monitoring-b2b-body td{
-      font-variant-numeric:tabular-nums;
-    }
-    #monitoring-b2b-body td.zero{
-      color:rgba(255,255,255,.35);
-      font-weight:500;
-    }
-
-    .modal table tbody tr:hover td{
-      background:rgba(255,255,255,.05);
-    }
-
-    #monitoring-b2b-update{
-      opacity:.85;
-      transition:opacity .15s ease;
-    }
-    #monitoring-b2b-update:hover{ opacity:1; }
-
-    #monitoring-b2b-body tr.total-row td{
-      background:#0f172a !important;
-      font-weight:800;
-      border-top:2px solid #38bdf8;
-    }
-  `;
-  document.head.appendChild(style);
-})();
-
 function initMonitoringB2B(API_URL) {
 
   window.API_URL = API_URL;
