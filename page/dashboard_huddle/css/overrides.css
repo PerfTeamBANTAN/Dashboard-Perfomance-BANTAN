@@ -2,7 +2,7 @@
    OVERRIDES / FIXES (FINAL)
    LIGHT TABLE + FLEXIBLE FREEZE HEADER
 =========================== */
-:root { --nav-grad-1: #0f2027; --nav-grad-2: #203a43; --nav-grad-3: #2c5364; --nav-accent: #38bdf8; --nav-hover: #a78bfa; --nav-text: #ffffff; }
+
 /* ===========================
    CARD TABLE FIX
 =========================== */
@@ -29,13 +29,8 @@ table,
 
 .table th,
 .table-dark th {
-    background: linear-gradient(
-        90deg,
-        var(--nav-grad-1, #0f2027),
-        var(--nav-grad-2, #203a43),
-        var(--nav-grad-3, #2c5364)
-    ) !important; /* jika perlu override bootstrap */
-    color: var(--nav-text, #fff) !important;
+  background: #1a2a6c !important; /* <-- ini override gradien */
+  color: #ffffff !important;
 }
 
 
