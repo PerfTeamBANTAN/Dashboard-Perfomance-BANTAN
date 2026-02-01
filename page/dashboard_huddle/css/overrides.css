@@ -1,5 +1,5 @@
 /* ===========================
-   OVERRIDES / FIXES (FINAL)
+   OVERRIDES / FIXES (FINAL CLEAN)
    LIGHT TABLE + FLEXIBLE FREEZE HEADER
 =========================== */
 
@@ -15,7 +15,6 @@
   padding: 0.5rem 0.25rem;
 }
 
-
 /* ===========================
    GLOBAL FORCE LIGHT TABLE
    (Override Bootstrap table-dark)
@@ -29,10 +28,9 @@ table,
 
 .table th,
 .table-dark th {
-  background: #1a2a6c !important; /* <-- ini override gradien */
+  background: #1a2a6c !important;
   color: #ffffff !important;
 }
-
 
 .table td,
 .table-dark td {
@@ -45,10 +43,8 @@ table,
   background-color: #f1f1f1 !important;
 }
 
-
 /* ===========================
    FLEXIBLE FREEZE HEADER
-   (Support multi-row thead)
 =========================== */
 
 /* wrapper scroll */
@@ -58,32 +54,6 @@ table,
   overflow-y: auto;
   position: relative;
 }
-
-/* base header style */
-table thead th {
-  position: sticky;
-  z-index: 10;
-  background: #1a2a6c;
-  color: #ffffff;
-  background-clip: padding-box;
-
-  /* MATIKAN GARIS */
-  box-shadow: none !important;
-  border-bottom: none !important;
-}
-
-
-/* default row height variable */
-table thead {
-  --thead-row-height: 40px;
-}
-
-/* row offset system */
-table thead tr:nth-child(1) th { top: 0; }
-table thead tr:nth-child(2) th { top: var(--thead-row-height); }
-table thead tr:nth-child(3) th { top: calc(var(--thead-row-height) * 2); }
-table thead tr:nth-child(4) th { top: calc(var(--thead-row-height) * 3); }
-
 
 /* ===========================
    DASHBOARD B2C TABLE ONLY
@@ -96,18 +66,6 @@ table thead tr:nth-child(4) th { top: calc(var(--thead-row-height) * 3); }
   background: #1a2a6c !important;
   color: #ffffff !important;
 }
-
-/* =========================
-   FREEZE HEADER KHUSUS DASHBOARD B2C
-========================= */
-#dashboard-b2c-wrapper .table thead th {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: #1a2a6c !important;
-  color: #ffffff !important;
-}
-
 
 /* ===========================
    LOADING OVERLAY
@@ -139,7 +97,6 @@ table thead tr:nth-child(4) th { top: calc(var(--thead-row-height) * 3); }
   margin-bottom: 8px;
 }
 
-
 /* ===========================
    KPI TOOLTIP
 =========================== */
@@ -160,7 +117,6 @@ table thead tr:nth-child(4) th { top: calc(var(--thead-row-height) * 3); }
 .kpi-card:hover .kpi-tooltip {
   display: block;
 }
-
 
 /* ===========================
    GLOBAL MODAL (LIGHT THEME)
@@ -212,9 +168,8 @@ table thead tr:nth-child(4) th { top: calc(var(--thead-row-height) * 3); }
   background-color: #f1f1f1 !important;
 }
 
-
 /* ===========================
-   🔥 BOOTSTRAP VARIABLE FIX (CRITICAL)
+   🔥 BOOTSTRAP VARIABLE FIX
 =========================== */
 .table-dark {
   --bs-table-color: #333333 !important;
@@ -263,16 +218,15 @@ td.kpi-not-ach {
 
 /* ===========================
    🔥 STICKY HEADER SEAM FIX
-   (ANTI GARIS FREEZE ROW)
 =========================== */
 
-/* Paksa mode aman untuk sticky */
+/* Paksa mode aman */
 table {
   border-collapse: separate !important;
   border-spacing: 0 !important;
 }
 
-/* Bunuh semua border bootstrap di header */
+/* Bunuh semua border bootstrap */
 .table > :not(caption) > * > * {
   border-bottom-width: 0 !important;
 }
@@ -287,8 +241,31 @@ table thead th {
   background-clip: border-box !important;
 }
 
-/* Overlap 1px antar sticky row */
+/* ===========================
+   🔒 FINAL STICKY HEADER
+   HANYA THEAD YANG STICKY
+=========================== */
+
+/* Pastikan TH tidak sticky */
 table thead th {
-  margin-bottom: -1px;
+  position: static !important;
+  top: auto !important;
 }
 
+/* Sticky layer tunggal */
+.kpi-table-scroll table thead,
+.table-responsive table thead {
+  position: sticky !important;
+  top: 0;
+  z-index: 100;
+  background: #1a2a6c;
+}
+
+/* Header cell solid */
+.kpi-table-scroll table thead th,
+.table-responsive table thead th {
+  background: #1a2a6c !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
