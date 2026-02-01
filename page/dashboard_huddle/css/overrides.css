@@ -392,3 +392,48 @@ table thead th {
   scrollbar-width: thin;
   scrollbar-color: #1a2a6c #f1f5f9;
 }
+
+/* ===========================
+   🌞 GLOBAL LIGHT THEME FIX
+   BG-DARK & BORDER-WARNING
+=========================== */
+
+/* Matikan dark bootstrap */
+.bg-dark {
+  background-color: #f8fafc !important; /* putih soft */
+  color: #1e293b !important;
+}
+
+/* Card/filter yang tadinya gelap jadi clean */
+.bg-dark .card,
+.bg-dark .card-body,
+.bg-dark .form-label {
+  background-color: transparent !important;
+  color: #1e293b !important;
+}
+
+/* Border warning jadi biru KPI theme */
+.border-warning {
+  border-color: #38bdf8 !important; /* biru soft */
+}
+
+/* Kalau dipakai di card */
+.card.border-warning {
+  border-width: 1.5px;
+  box-shadow: 0 4px 14px rgba(56,189,248,0.15);
+}
+
+/* Input & select di area bg-dark */
+.bg-dark input,
+.bg-dark select {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  border-color: #38bdf8 !important;
+}
+
+/* Focus state */
+.bg-dark input:focus,
+.bg-dark select:focus {
+  border-color: #0ea5e9 !important;
+  box-shadow: 0 0 0 0.15rem rgba(14,165,233,.35);
+}
