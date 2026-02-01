@@ -1,7 +1,15 @@
 /* ==========================
    TABLES
    ========================== */
+:root {
+  --nav-grad-1: #0f2027;
+  --nav-grad-2: #203a43;
+  --nav-grad-3: #2c5364;
 
+  --nav-accent: #38bdf8;
+  --nav-hover: #a78bfa;
+  --nav-text: #ffffff;
+}
 
 table {
     width: 100%;
@@ -13,8 +21,8 @@ table {
 
 table th {
     background: linear-gradient(90deg, var(--nav-grad-1), var(--nav-grad-2), var(--nav-grad-3));
-    color: #FFFFFF;
-    padding: 4px 6px; /* lebih compact */
+    color: var(--nav-text);
+    padding: 4px 6px;
     text-align: center;
 }
 
