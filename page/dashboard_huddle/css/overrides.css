@@ -261,3 +261,34 @@ td.kpi-not-ach {
   box-shadow: 0 0 0 0.15rem rgba(56,189,248,.35);
 }
 
+/* ===========================
+   🔥 STICKY HEADER SEAM FIX
+   (ANTI GARIS FREEZE ROW)
+=========================== */
+
+/* Paksa mode aman untuk sticky */
+table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+/* Bunuh semua border bootstrap di header */
+.table > :not(caption) > * > * {
+  border-bottom-width: 0 !important;
+}
+
+/* Header benar-benar solid */
+table thead,
+table thead tr,
+table thead th {
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background-clip: border-box !important;
+}
+
+/* Overlap 1px antar sticky row */
+table thead th {
+  margin-bottom: -1px;
+}
+
