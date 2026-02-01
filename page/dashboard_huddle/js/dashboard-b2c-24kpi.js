@@ -63,7 +63,7 @@ window.B2C24KPI = (function () {
             </div>
           </div>
           <div class="summary-right">
-            <img src="../../assets/img/${img}" alt="puji" class="summary-avatar bounce tilt">
+            <img src="../../assets/home/img/${img}" alt="puji" class="summary-avatar bounce tilt">
           </div>
         </div>
       </div>
@@ -245,7 +245,7 @@ function renderKpiGridDetailTable(headers, data, wrapperId, loadingId, contentId
       const isLow = num < 95;
       let badge = index===0?'🥇':index===1?'🥈':index===2?'🥉':'';
       let nameHtml = row[labelKey]??'-';
-      if(showPhoto){const baseFileName = hsaFileMap[(row[labelKey]??'').toLowerCase().trim()]??null; let photoFile = baseFileName?(index<=2?`${baseFileName}_juara.png`:`${baseFileName}_kalah.png`):'default.png'; nameHtml = `<img src="../../assets/img/${photoFile}" alt="${row[labelKey]??'-'}" class="rounded-circle me-2" style="width:30px;height:30px;object-fit:cover;">${row[labelKey]??'-'}`;}
+      if(showPhoto){const baseFileName = hsaFileMap[(row[labelKey]??'').toLowerCase().trim()]??null; let photoFile = baseFileName?(index<=2?`${baseFileName}_juara.png`:`${baseFileName}_kalah.png`):'default.png'; nameHtml = `<img src="../../assets/home/img/${photoFile}" alt="${row[labelKey]??'-'}" class="rounded-circle me-2" style="width:30px;height:30px;object-fit:cover;">${row[labelKey]??'-'}`;}
       const tr = document.createElement('tr'); tr.innerHTML = `<td class="fw-semibold d-flex align-items-center">${badge?`<span class="badge">${badge}</span>`:''}<span class="text-muted me-2">${index+1}.</span>${nameHtml}</td><td class="text-end fw-bold ${isLow?'text-danger':'text-success'}">${num.toFixed(2)}%</td>`; tbody.appendChild(tr);
     });
 
