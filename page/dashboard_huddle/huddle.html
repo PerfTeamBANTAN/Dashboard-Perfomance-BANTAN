@@ -4,37 +4,11 @@
   <!-- ================= BASIC META ================= -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   <title>PERFORMANCE BAN-TAN | Enterprise KPI Dashboard</title>
-  <meta name="description" content="Enterprise Performance Dashboard BAN-TAN untuk monitoring KPI B2B & B2C District Banten secara real-time dengan visualisasi modern dan profesional.">
-  <meta name="keywords" content="Enterprise Dashboard, KPI Monitoring, BAN-TAN Performance, B2B KPI, B2C KPI, District Banten Dashboard">
-  <meta name="author" content="PERFORMANCE BAN-TAN Team">
-  <meta name="robots" content="index, follow">
-
-  <!-- ================= SECURITY ================= -->
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-
   <!-- ================= FAVICON ================= -->
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="favicon.png">
-
-  <!-- ================= THEME ================= -->
-  <meta name="theme-color" content="#0f2027">
-
-  <!-- ================= OPEN GRAPH ================= -->
-  <meta property="og:title" content="PERFORMANCE BAN-TAN | Enterprise KPI Dashboard">
-  <meta property="og:description" content="Dashboard KPI enterprise B2B & B2C District Banten dengan tampilan modern dan interaktif.">
-  <meta property="og:image" content="..assets/home/performance-team.png">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://perfteambantan.github.io/HanyaTamplate/">
-
-  <!-- ================= TWITTER ================= -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="PERFORMANCE BAN-TAN | Enterprise KPI Dashboard">
-  <meta name="twitter:description" content="Dashboard KPI BAN-TAN modern & profesional.">
-  <meta name="twitter:image" content="assets/home/performance-team.png">
 
   <!-- ================= PWA ================= -->
   <link rel="manifest" href="manifest.json">
@@ -156,7 +130,24 @@
           </ul>
         </li>
 
-      </ul>
+</ul>
+  <!-- RIGHT MENU -->
+  <ul class="navbar-nav ms-auto">
+    <li class="nav-item">
+      <a class="nav-link" href="#" onclick="goHome()">
+        <i class="fa fa-home"></i> Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <span class="nav-link disabled" id="userLabel"></span>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-danger" href="#" onclick="logout()">
+        <i class="fa fa-sign-out-alt"></i> Logout
+      </a>
+    </li>
+  </ul>
+
 </div>
 </div>
 </nav>
@@ -251,9 +242,22 @@ document.querySelectorAll(".dropdown-submenu > a.dropdown-toggle").forEach(el =>
   });
 });
 
-if(!localStorage.getItem("user")){
-  window.location.href = "/login.html";
+const user = localStorage.getItem("user");
+if(user){
+  document.getElementById("userLabel").innerText = "Hi, " + user;
 }
+  
+if (!localStorage.getItem("user")) {
+  window.location.href = "login.html";
+}
+
+function logout() {
+  if(confirm("Yakin mau logout?")) {
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+  }
+}
+
 </script>
 
 </body>
