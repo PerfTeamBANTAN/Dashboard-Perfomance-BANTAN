@@ -269,3 +269,31 @@ table thead th {
   border: 0 !important;
   box-shadow: none !important;
 }
+
+/* ===========================
+   OVERRIDE TABLE-DANGER
+   (JANGAN GELAP / TRANSPARAN)
+=========================== */
+
+.table-danger,
+.table-danger > th,
+.table-danger > td {
+  background-color: #fee2e2 !important; /* merah muda soft */
+  color: #7f1d1d !important;
+}
+
+/* Kalau ada hover di row danger */
+.table-danger:hover,
+.table-danger:hover > td {
+  background-color: #fecaca !important; /* sedikit lebih tegas */
+  color: #7f1d1d !important;
+}
+
+/* Paksa Bootstrap variable juga */
+.table-danger {
+  --bs-table-bg: #fee2e2 !important;
+  --bs-table-striped-bg: #fecaca !important;
+  --bs-table-hover-bg: #fecaca !important;
+  --bs-table-color: #7f1d1d !important;
+}
+
