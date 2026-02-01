@@ -62,3 +62,44 @@
 #ttr-row .badge-card-body {
   justify-content: space-between;
 }
+
+/* ===========================
+   🔗 TTR TABLE – MATCH GLOBAL HEADER
+=========================== */
+
+/* Wrapper scroll tetap */
+.ttr-table-wrapper {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+/* Sticky header ikut global */
+.ttr-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #1a2a6c;
+}
+
+/* Header cell = sama persis */
+.ttr-table thead th {
+  background: #1a2a6c !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 8px 12px;
+  border: 0 !important;
+  white-space: nowrap;
+}
+
+/* Body tetap light */
+.ttr-table tbody td {
+  background-color: #ffffff !important;
+  color: #333333 !important;
+  padding: 8px 12px;
+}
+
+/* Hover konsisten */
+.ttr-table tbody tr:hover td {
+  background-color: #f1f1f1 !important;
+}
