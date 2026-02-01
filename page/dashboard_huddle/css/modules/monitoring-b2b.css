@@ -1,27 +1,126 @@
-/* =========================
-   MONITORING B2B MODULE ONLY
-========================= */
+/* =====================================================
+   MONITORING B2B HI – GLOBAL CSS
+===================================================== */
 
-#monitoring-b2b-update {
+/* Accent ikut theme dashboard */
+:root{
+  --b2b-accent: var(--accent-color, #0d6efd);
+  --b2b-soft-bg: rgba(13,110,253,.06);
+  --b2b-border: rgba(0,0,0,.08);
+  --b2b-text-soft: rgba(0,0,0,.55);
+}
+
+/* =========================
+   CLICKABLE CELL
+========================= */
+#monitoring-b2b-body td.clickable{
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, transform .08s ease;
+}
+
+#monitoring-b2b-body td.clickable:hover{
+  background: var(--b2b-soft-bg);
+}
+
+#monitoring-b2b-body td.clickable:active{
+  transform: scale(.97);
+  box-shadow: inset 0 0 0 1px var(--b2b-accent);
+}
+
+/* =========================
+   ROW HOVER
+========================= */
+#monitoring-b2b-body tr:hover td{
+  background: rgba(13,110,253,.04);
+}
+
+/* =========================
+   NUMBER STYLE
+========================= */
+#monitoring-b2b-body td{
+  font-variant-numeric: tabular-nums;
+}
+
+/* Zero cell */
+#monitoring-b2b-body td.zero{
+  color: var(--b2b-text-soft);
+  font-weight: 500;
+}
+
+/* =========================
+   TOTAL ROW
+========================= */
+#monitoring-b2b-body tr.total-row td{
+  background: linear-gradient(
+    90deg,
+    rgba(13,110,253,.12),
+    rgba(13,110,253,.04)
+  ) !important;
+  color: #0d6efd;
+  font-weight: 800;
+  border-top: 2px solid var(--b2b-accent);
+}
+
+/* =========================
+   LAST UPDATE TEXT
+========================= */
+#monitoring-b2b-update{
   opacity: .85;
   transition: opacity .15s ease;
 }
 
-#monitoring-b2b-update:hover {
+#monitoring-b2b-update:hover{
   opacity: 1;
 }
 
-/* total row */
-#monitoring-b2b-body tr.total-row td {
-  background: linear-gradient(90deg, #1a2a6c, #b21f1f);
-  color: #fff;
-  font-weight: 800;
-  border-top: 2px solid var(--accent-color);
+/* =========================
+   MODAL TABLE STYLE
+========================= */
+.modal table{
+  background: #fff;
+  border: 1px solid var(--b2b-border);
 }
 
-/* highlight Q HSI buruk */
-#monitoring-b2b-body td.qhsi-bad {
-  color: var(--danger-color);
-  font-weight: 800;
+.modal thead th{
+  background: var(--b2b-soft-bg) !important;
+  color: #0d6efd !important;
+  font-weight: 700;
+  border-bottom: 2px solid var(--b2b-accent);
 }
 
+.modal table tbody tr:hover td{
+  background: var(--b2b-soft-bg);
+}
+
+/* =========================
+   SCROLLBAR + MAX HEIGHT
+========================= */
+.table-responsive{
+  max-height: 600px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--b2b-accent) rgba(0,0,0,.05);
+}
+
+.table-responsive::-webkit-scrollbar{
+  width: 8px;
+  height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track{
+  background: rgba(0,0,0,.05);
+  border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb{
+  background: linear-gradient(
+    180deg,
+    var(--b2b-accent),
+    #5dade2
+  );
+  border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover{
+  background: #0b5ed7;
+}
