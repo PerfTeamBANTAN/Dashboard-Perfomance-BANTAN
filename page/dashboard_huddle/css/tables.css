@@ -6,17 +6,22 @@
 table {
     width: 100%;
     border-collapse: collapse;
-    color: #333333;
+    font-family: Arial, sans-serif;
+    font-size: 12px; /* compact */
+    color: #333;
 }
 
 table th {
     background: #1a2a6c; /* Gradien gelap bisa ditambahkan via gradient pada header */
     color: #FFFFFF;
-    padding: 0.5rem;
+    padding: 4px 6px; /* lebih compact */
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
 table td {
-    padding: 0.5rem;
+    padding: 4px 6px; /* lebih compact */
+    text-align: left;
     border-bottom: 1px solid #adb5bd; /* garis netral */
 }
 
