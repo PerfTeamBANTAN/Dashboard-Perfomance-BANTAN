@@ -39,3 +39,26 @@
 .ttr-tab.active i {
   color: #0d6efd;
 }
+
+/* ===========================
+   TTR ROW — GRID RAPIN FIX
+=========================== */
+
+#ttr-row {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+
+  align-items: stretch;
+  justify-items: stretch;
+}
+
+/* Paksa semua card tinggi sama */
+#ttr-row .badge-card {
+  height: 100%;
+}
+
+/* Rata tengah isi card */
+#ttr-row .badge-card-body {
+  justify-content: space-between;
+}
