@@ -134,10 +134,10 @@
   <!-- RIGHT MENU -->
   <ul class="navbar-nav ms-auto">
     <li class="nav-item">
-      <a class="nav-link" href="index.html" onclick="goHome()">
+      <a class="nav-link" href="index.html">
         <i class="fa fa-home"></i> Dashboard
       </a>
-    </li>
+   </li>
     <li class="nav-item">
       <span class="nav-link disabled" id="userLabel"></span>
     </li>
@@ -213,34 +213,6 @@ function showUnderConstruction() {
   `;
 }
 
-function goHome() {
-  const home = document.getElementById("home-fullscreen");
-  const content = document.getElementById("content-area");
-
-  content.innerHTML = "";
-  home.classList.add("home-bg");
-}
-
-document.querySelectorAll(".menu-link").forEach(el => {
-  el.addEventListener("click", e => {
-    e.preventDefault();
-    loadPage(el.dataset.menu);
-  });
-});
-
-document.querySelectorAll(".dropdown-submenu > a.dropdown-toggle").forEach(el => {
-  el.addEventListener("click", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const parent = this.parentElement;
-    parent.classList.toggle("show");
-
-    document.querySelectorAll(".dropdown-submenu").forEach(item => {
-      if (item !== parent) item.classList.remove("show");
-    });
-  });
-});
 
 const user = localStorage.getItem("user");
 if(user){
