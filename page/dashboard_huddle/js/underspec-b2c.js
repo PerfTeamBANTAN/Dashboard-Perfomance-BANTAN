@@ -10,7 +10,10 @@ function initUnderspecB2C(API_URL) {
   fetch(`${API_URL}?type=monitoring_usb2c`)
     .then(r => r.json())
     .then(res => {
-      if(res.error){ el.innerHTML=`<div class="alert alert-danger">${res.message}</div>`; return; }
+      if(res.error){ 
+        el.innerHTML=`<div class="alert alert-danger">${res.message}</div>`; 
+        return; 
+      }
       const data = res.data || [];
 
       let html = `
@@ -93,6 +96,7 @@ function initUnderspecB2C(API_URL) {
       el.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
     });
 }
+
 /* =====================================================
    INIT GPON MENGelompok
 ===================================================== */
@@ -128,14 +132,14 @@ function initGponMengelompok(API_URL) {
         <tbody>`;
 
       filtered.forEach(d => {
-        const nodeId = d.nodeId || '-';
-        const gpon = d.gpon || '-';
-        const nodeShelf = `${nodeId}|${gpon}`;
-        const safeNodeShelf = nodeShelf.replace(/'/g, "\\'"); // escape '
+        const gponParts = d.gpon.split('|').map(s=>s.trim());
+        const nodeId = d.nodeId.trim();
+        const nodeShelf = `${nodeId}|${gponParts[0]}|${gponParts[1]}|${gponParts[2]}`;
+        const safeNodeShelf = encodeURIComponent(nodeShelf);
 
         html += `
           <tr>
-            <td class="clickable" style="cursor:pointer;" onclick="openDetailGpon('${safeNodeShelf}')">${nodeShelf}</td>
+            <td class="clickable" style="cursor:pointer;" onclick="openDetailGpon('${safeNodeShelf}')">${nodeId} | ${gponParts.join(' | ')}</td>
             <td class="${d.total>0?'value-bad':''}">${d.total}</td>
             <td class="${d.unspec>0?'value-bad':''}">${d.unspec}</td>
             <td class="${d.spec>0?'value-bad':''}">${d.spec}</td>
@@ -150,9 +154,8 @@ function initGponMengelompok(API_URL) {
     });
 }
 
-
 /* =====================================================
-   MODAL DETAIL UNDERSPEC B2C
+   DETAIL UNDERSPEC B2C MODAL
 ===================================================== */
 function openDetailUnderspecB2C(API_URL, sektor, mode) {
   const modal = new bootstrap.Modal(document.getElementById('global-modal'));
@@ -167,7 +170,10 @@ function openDetailUnderspecB2C(API_URL, sektor, mode) {
     .then(r => r.json())
     .then(res => {
       const rows = res.data || [];
-      if(!rows.length){ modalBody.innerHTML = `<div class="text-center text-muted py-4">Tidak ada data</div>`; return; }
+      if(!rows.length){ 
+        modalBody.innerHTML = `<div class="text-center text-muted py-4">Tidak ada data</div>`; 
+        return; 
+      }
 
       let html = `<div class="table-responsive">
         <table class="table table-sm table-bordered table-striped align-middle text-center">
@@ -184,8 +190,7 @@ function openDetailUnderspecB2C(API_URL, sektor, mode) {
               <th>FLAG HVC</th>
             </tr>
           </thead>
-          <tbody>
-      `;
+          <tbody>`;
 
       rows.forEach(r=>{
         html += `<tr>
@@ -207,83 +212,10 @@ function openDetailUnderspecB2C(API_URL, sektor, mode) {
 }
 
 /* =====================================================
-   DETAIL TOTAL UNDERSPEC B2C
-===================================================== */
-function openTotalDetailUnderspecB2C(colIndex) {
-  const f = window.B2C_ACTIVE_FILTER || {};
-  const params = { type: 'monitoring_usb2c_total_detail' };
-  if(f.sto) params.sto=f.sto;
-  if(f.witel) params.witel=f.witel;
-  if(f.hsa) params.hsa=f.hsa;
-
-  const modal = new bootstrap.Modal(document.getElementById('global-modal'));
-  const modalBody = document.querySelector('#global-modal .modal-body');
-  const modalTitle = document.querySelector('#global-modal .modal-title');
-
-  modalTitle.textContent = 'Detail TOTAL Underspec B2C';
-  modalBody.innerHTML = `<div class="text-center my-4"><div class="spinner-border"></div></div>`;
-  modal.show();
-
-  const map = {
-    4:{mode:'UNSPEC'},
-    5:{mode:'SPEC'},
-    6:{mode:'REGULER'},
-    7:{mode:'GOLD'},
-    8:{mode:'PLATINUM'},
-    9:{mode:'DIAMOND'},
-    10:{mode:'SWINGIN'},
-    11:{mode:'BERULANG'}
-  };
-
-  const qs = new URLSearchParams({...params, ...(map[colIndex]||{})}).toString();
-
-  fetch(`${window.API_URL}?${qs}`)
-    .then(r=>r.json())
-    .then(resData=>{
-      const rows = resData.data || [];
-      if(!rows.length){ modalBody.innerHTML = `<div class="text-center text-muted py-4">Tidak ada data</div>`; return; }
-
-      let html = `<div class="table-responsive">
-        <table class="table table-striped table-sm text-center align-middle">
-          <thead class="table-dark">
-            <tr>
-              <th>SEKTOR</th>
-              <th>NODE ID (NODE IP)</th>
-              <th>SHELF | SLOT | PORT | ONU ID</th>
-              <th>CMDF</th>
-              <th>DP</th>
-              <th>ND</th>
-              <th>ONU RX POWER</th>
-              <th>UKUR ULANG</th>
-              <th>FLAG HVC</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-
-      rows.forEach(r=>{
-        html += `<tr>
-          <td>${r.SEKTOR||'-'}</td>
-          <td>${r['NODE ID(NODE IP)']||'-'}</td>
-          <td>${r['SHELF|SLOT|PORT| ONU ID']||'-'}</td>
-          <td>${r.CMDF||'-'}</td>
-          <td>${r.DP||'-'}</td>
-          <td>${r.ND||'-'}</td>
-          <td>${r['ONU RX POWER']||'-'}</td>
-          <td>${r['UKUR ULANG']||'-'}</td>
-          <td>${r['FLAG HVC']||'-'}</td>
-        </tr>`;
-      });
-
-      modalBody.innerHTML = html + '</tbody></table></div>';
-    })
-    .catch(err=>{ modalBody.innerHTML = `<div class="alert alert-danger">${err.message}</div>`; });
-}
-
-/* =====================================================
    DETAIL GPON MODAL
 ===================================================== */
-function openDetailGpon(nodeShelf) {
+function openDetailGpon(encodedNodeShelf) {
+  const nodeShelf = decodeURIComponent(encodedNodeShelf); // decode URL
   const modal = new bootstrap.Modal(document.getElementById('global-modal'));
   const modalBody = document.querySelector('#global-modal .modal-body');
   const modalTitle = document.querySelector('#global-modal .modal-title');
@@ -317,8 +249,7 @@ function openDetailGpon(nodeShelf) {
               <th>STATUS</th>
             </tr>
           </thead>
-          <tbody>
-      `;
+          <tbody>`;
 
       rows.forEach(r => {
         html += `<tr>
