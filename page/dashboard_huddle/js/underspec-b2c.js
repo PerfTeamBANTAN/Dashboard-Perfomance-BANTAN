@@ -1,3 +1,6 @@
+/* =====================================================
+   INIT UNDERSPEC B2C
+===================================================== */
 function initUnderspecB2C(API_URL) {
 
   const url = API_URL + "?type=monitoring_usb2c";
@@ -29,7 +32,7 @@ function initUnderspecB2C(API_URL) {
               <th rowspan="2">OSA</th>
 
               <th colspan="2">SALDO AWAL</th>
-              <th colspan="4">SISA SALDO</th>
+              <th colspan="5">SISA SALDO</th>
 
               <th rowspan="2">SWINGIN</th>
               <th rowspan="2">UNSPEC<br>BERULANG</th>
@@ -65,37 +68,22 @@ function initUnderspecB2C(API_URL) {
         ] = row;
 
         html += `
-          <tr>
+          <tr data-sektor="${sektor}" style="cursor:pointer;" onclick="openDetailUnderspecB2C('${API_URL}', '${sektor}', 'all')">
             <td>${sektor || "-"}</td>
             <td>${witel || "-"}</td>
             <td>${hsa || "-"}</td>
             <td>${osa || "-"}</td>
 
-            <td>${saldoAwalUnspec || 0}</td>
-            <td>${saldoAwalSpec || 0}</td>
+            <td class="${saldoAwalUnspec > 0 ? 'value-red' : ''}">${saldoAwalUnspec || 0}</td>
+            <td class="${saldoAwalSpec > 0 ? 'value-green' : ''}">${saldoAwalSpec || 0}</td>
 
-            <td class="pointer text-primary"
-                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','reguler')">
-              ${reguler || 0}
-            </td>
+            <td class="${reguler > 0 ? 'value-red' : ''}">${reguler || 0}</td>
+            <td class="${gold > 0 ? 'value-red' : ''}">${gold || 0}</td>
+            <td class="${platinum > 0 ? 'value-red' : ''}">${platinum || 0}</td>
+            <td class="${diamond > 0 ? 'value-red' : ''}">${diamond || 0}</td>
 
-            <td class="pointer text-primary"
-                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','gold')">
-              ${gold || 0}
-            </td>
-
-            <td class="pointer text-primary"
-                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','platinum')">
-              ${platinum || 0}
-            </td>
-
-            <td class="pointer text-primary"
-                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','diamond')">
-              ${diamond || 0}
-            </td>
-
-            <td>${swingin || 0}</td>
-            <td>${unspecBerulang || 0}</td>
+            <td class="${swingin > 0 ? 'value-red' : ''}">${swingin || 0}</td>
+            <td class="${unspecBerulang > 0 ? 'value-red' : ''}">${unspecBerulang || 0}</td>
           </tr>
         `;
       });
@@ -113,6 +101,7 @@ function initUnderspecB2C(API_URL) {
     });
 }
 
+
 /* =====================================================
    MODAL DETAIL UNDERSPEC B2C
 ===================================================== */
@@ -125,8 +114,7 @@ function openDetailUnderspecB2C(API_URL, sektor, mode) {
   const modalBody  = document.querySelector('#global-modal .modal-body');
   const modalTitle = document.querySelector('#global-modal .modal-title');
 
-  modalTitle.textContent =
-    `Detail Underspec B2C – ${sektor} (${mode.toUpperCase()})`;
+  modalTitle.textContent = `Detail Underspec B2C – ${sektor} (${mode.toUpperCase()})`;
 
   modalBody.innerHTML = `
     <div class="text-center my-4">
