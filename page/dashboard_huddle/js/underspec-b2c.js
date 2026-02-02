@@ -3,7 +3,7 @@
 ===================================================== */
 function initUnderspecB2C(API_URL) {
 
-  window.API_URL = API_URL; // simpan global supaya modal bisa pakai
+  window.API_URL = API_URL;
 
   const el = document.getElementById("underspec-table");
 
