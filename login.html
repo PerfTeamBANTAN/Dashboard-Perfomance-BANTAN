@@ -39,9 +39,12 @@ body::before{
 
 /* PANEL TRANSPARAN */
 .login-box{
-  position:relative;
+  position:absolute;
+  right:120px;        /* geser ke kanan (sesuai kotak merah) */
+  bottom:40px;       /* pas di bawah */
+
   width:420px;
-  min-height:520px;   /* jangan 100vh */
+  min-height:520px;
 
   background:rgba(30,30,30,0.35);
   backdrop-filter: blur(12px);
@@ -55,6 +58,7 @@ body::before{
     0 0 25px rgba(255,0,0,0.25),
     inset 0 0 10px rgba(255,255,255,0.05);
 }
+
 /* LOGO */
 .logo{
   text-align:center;
