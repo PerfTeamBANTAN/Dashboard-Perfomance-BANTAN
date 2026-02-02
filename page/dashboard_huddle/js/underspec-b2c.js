@@ -32,7 +32,7 @@ function initUnderspecB2C(API_URL) {
               <th rowspan="2">OSA</th>
 
               <th colspan="2">SALDO AWAL</th>
-              <th colspan="5">SISA SALDO</th>
+              <th colspan="4">SISA SALDO</th>
 
               <th rowspan="2">SWINGIN</th>
               <th rowspan="2">UNSPEC<br>BERULANG</th>
