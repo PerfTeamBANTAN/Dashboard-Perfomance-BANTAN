@@ -86,10 +86,67 @@ function initUnderspecB2C(API_URL) {
       `;
 
       html += `</tbody></table>`;
-      el.innerHTML = html;
+       el.innerHTML = html;
+      initGponMengelompok(API_URL);
 
     }).catch(err=>{
       el.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+    });
+}
+
+/* =====================================================
+   INIT GPON MENGelompok (klik angka untuk detail)
+===================================================== */
+function initGponMengelompok(API_URL) {
+  const el = document.getElementById('underspec-gpon-mengelompok');
+  el.innerHTML = `<div class="text-center my-3"><div class="spinner-border"></div></div>`;
+
+  fetch(`${API_URL}?type=monitoring_usb2c_gpon`)
+    .then(r => r.json())
+    .then(res => {
+      if(res.error){
+        el.innerHTML = `<div class="text-danger text-center">${res.message}</div>`;
+        return;
+      }
+
+      const data = res.data || [];
+      const filtered = data.filter(d => d.total > 2);
+
+      if(!filtered.length){
+        el.innerHTML = `<div class="text-center text-muted py-3">Tidak ada data dengan total > 2</div>`;
+        return;
+      }
+
+      let html = `<table class="table table-sm text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>GPON (Node & Shelf|Slot|Port)</th>
+            <th>Total</th>
+            <th>Unspec</th>
+            <th>Spec</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+      filtered.forEach(d => {
+        const nodeId = d.nodeId || '';
+        const gponParts = (d.gpon || '').split('|').map(s => s.trim());
+        const nodeShelf = `${nodeId}|${gponParts[0]||''}|${gponParts[1]||''}|${gponParts[2]||''}`;
+        
+        html += `
+          <tr>
+            <td>${nodeId} | ${gponParts.join(' | ')}</td>
+            <td class="clickable ${d.total>0?'value-bad':''}" onclick="openDetailGponByNumber('${nodeShelf}','total')">${d.total}</td>
+            <td class="clickable ${d.unspec>0?'value-bad':''}" onclick="openDetailGponByNumber('${nodeShelf}','unspec')">${d.unspec}</td>
+            <td class="clickable ${d.spec>0?'value-bad':''}" onclick="openDetailGponByNumber('${nodeShelf}','spec')">${d.spec}</td>
+          </tr>`;
+      });
+
+      html += `</tbody></table>`;
+      el.innerHTML = html;
+    })
+    .catch(err=>{
+      el.innerHTML = `<div class="text-danger text-center">${err.message}</div>`;
     });
 }
 
@@ -221,3 +278,65 @@ function openTotalDetailUnderspecB2C(colIndex) {
     })
     .catch(err=>{ modalBody.innerHTML = `<div class="alert alert-danger">${err.message}</div>`; });
 }
+
+/* =====================================================
+   DETAIL GPON BY NUMBER MODAL
+===================================================== */
+function openDetailGponByNumber(nodeShelf, mode) {
+  const modal = new bootstrap.Modal(document.getElementById('global-modal'));
+  const modalBody = document.querySelector('#global-modal .modal-body');
+  const modalTitle = document.querySelector('#global-modal .modal-title');
+
+  modalTitle.textContent = `Detail GPON – ${mode.toUpperCase()}`;
+  modalBody.innerHTML = `<div class="text-center my-4"><div class="spinner-border"></div></div>`;
+  modal.show();
+
+  fetch(`${window.API_URL}?type=monitoring_usb2c_gpon_detail&nodeShelf=${encodeURIComponent(nodeShelf)}&mode=${mode}`)
+    .then(r => r.json())
+    .then(res => {
+      const rows = res.data || [];
+      if(!rows.length){
+        modalBody.innerHTML = `<div class="text-center text-muted py-4">Tidak ada data</div>`;
+        return;
+      }
+
+      let html = `<div class="table-responsive">
+        <table class="table table-striped table-sm text-center align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>SEKTOR</th>
+              <th>NODE ID (NODE IP)</th>
+              <th>SHELF | SLOT | PORT | ONU ID</th>
+              <th>CMDF</th>
+              <th>DP</th>
+              <th>ND</th>
+              <th>ONU RX POWER</th>
+              <th>UKUR ULANG</th>
+              <th>FLAG HVC</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody>`;
+
+      rows.forEach(r => {
+        html += `<tr>
+          <td>${r.SEKTOR}</td>
+          <td>${r['NODE ID(NODE IP)']}</td>
+          <td>${r['SHELF|SLOT|PORT| ONU ID']}</td>
+          <td>${r.CMDF}</td>
+          <td>${r.DP}</td>
+          <td>${r.ND}</td>
+          <td>${r['ONU RX POWER']}</td>
+          <td>${r['UKUR ULANG']}</td>
+          <td>${r['FLAG HVC']}</td>
+          <td>${r.STATUS}</td>
+        </tr>`;
+      });
+
+      modalBody.innerHTML = html + '</tbody></table></div>';
+    })
+    .catch(err=>{
+      modalBody.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+    });
+}
+
