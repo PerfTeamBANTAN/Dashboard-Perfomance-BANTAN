@@ -92,21 +92,21 @@ function initUnderspecB2C(API_URL) {
           </tr>
         `;
       });
-
       // Tambahkan row TOTAL
-      html += `
-  <tr class="table-dark fw-bold total-row">
-    <td colspan="4" class="text-end">TOTAL</td>
-    <td class="clickable" style="cursor:pointer;" onclick="openTotalDetailUnderspecB2C(4)">${total[0]}</td>
-    <td class="clickable" style="cursor:pointer;" onclick="openTotalDetailUnderspecB2C(5)">${total[1]}</td>
-    <td class="clickable" style="cursor:pointer;" onclick="openTotalDetailUnderspecB2C(6)">${total[2]}</td>
-    <td class="clickable" style="cursor:pointer;" onclick="openTotalDetailUnderspecB2C(7)">${total[3]}</td>
-    <td class="clickable" style="cursor:pointer;" onclick="openTotalDetailUnderspecB2C(8)">${total[4]}</td>
-    <td class="clickable" style="cursor:pointer;" onclick="openTotalDetailUnderspecB2C(9)">${total[5]}</td>
-    <td class="clickable" style="cursor:pointer;" onclick="openTotalDetailUnderspecB2C(10)">${total[6]}</td>
-    <td class="clickable" style="cursor:pointer;" onclick="openTotalDetailUnderspecB2C(11)">${total[7]}</td>
-  </tr>
+html += `
+<tr class="total-row-custom">
+  <td colspan="4" class="text-end fw-bold">TOTAL</td>
+  <td class="clickable total-cell-custom" onclick="openTotalDetailUnderspecB2C(4)">${total[0]}</td>
+  <td class="clickable total-cell-custom" onclick="openTotalDetailUnderspecB2C(5)">${total[1]}</td>
+  <td class="clickable total-cell-custom" onclick="openTotalDetailUnderspecB2C(6)">${total[2]}</td>
+  <td class="clickable total-cell-custom" onclick="openTotalDetailUnderspecB2C(7)">${total[3]}</td>
+  <td class="clickable total-cell-custom" onclick="openTotalDetailUnderspecB2C(8)">${total[4]}</td>
+  <td class="clickable total-cell-custom" onclick="openTotalDetailUnderspecB2C(9)">${total[5]}</td>
+  <td class="clickable total-cell-custom" onclick="openTotalDetailUnderspecB2C(10)">${total[6]}</td>
+  <td class="clickable total-cell-custom" onclick="openTotalDetailUnderspecB2C(11)">${total[7]}</td>
+</tr>
 `;
+
 
       html += `
           </tbody>
