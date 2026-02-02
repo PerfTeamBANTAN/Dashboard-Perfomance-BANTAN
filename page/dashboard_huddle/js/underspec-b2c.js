@@ -3,7 +3,12 @@ function initUnderspecB2C(API_URL) {
   const url = API_URL + "?type=monitoring_usb2c";
   const el = document.getElementById("underspec-table");
 
-  el.innerHTML = `<div class="text-center my-3"><div class="spinner-border"></div></div>`;
+  // Loading
+  el.innerHTML = `
+    <div class="text-center my-3">
+      <div class="spinner-border"></div>
+    </div>
+  `;
 
   fetch(url)
     .then(r => r.json())
@@ -47,33 +52,54 @@ function initUnderspecB2C(API_URL) {
           <tbody>
       `;
 
-      res.data.forEach(d => {
+      res.data.forEach(row => {
+
+        const [
+          sektor,          // 0
+          witel,           // 1
+          hsa,             // 2
+          osa,             // 3
+          saldoAwalUnspec, // 4
+          saldoAwalSpec,   // 5
+          reguler,         // 6
+          silver,          // 7
+          gold,            // 8
+          platinum,        // 9
+          swingin,         // 10
+          unspecBerulang,  // 11
+          sisaSaldo,       // 12
+          hasilPerbaikan   // 13
+        ] = row;
 
         html += `
           <tr>
-            <td>${d.sektor || "-"}</td>
-            <td>${d.witel || "-"}</td>
-            <td>${d.hsa || "-"}</td>
-            <td>${d.osa || "-"}</td>
+            <td>${sektor || "-"}</td>
+            <td>${witel || "-"}</td>
+            <td>${hsa || "-"}</td>
+            <td>${osa || "-"}</td>
 
-            <td>${d.saldoAwal?.unspec || 0}</td>
-            <td>${d.saldoAwal?.spec || 0}</td>
+            <td>${saldoAwalUnspec || 0}</td>
+            <td>${saldoAwalSpec || 0}</td>
 
-            <td>${d.sisaSaldoDetail?.reguler || 0}</td>
-            <td>${d.sisaSaldoDetail?.silver || 0}</td>
-            <td>${d.sisaSaldoDetail?.gold || 0}</td>
-            <td>${d.sisaSaldoDetail?.platinum || 0}</td>
+            <td>${reguler || 0}</td>
+            <td>${silver || 0}</td>
+            <td>${gold || 0}</td>
+            <td>${platinum || 0}</td>
 
-            <td>${d.swingin || 0}</td>
-            <td>${d.unspecBerulang || 0}</td>
+            <td>${swingin || 0}</td>
+            <td>${unspecBerulang || 0}</td>
 
-            <td class="fw-bold text-danger">${d.total?.sisaSaldo || 0}</td>
-            <td>${d.total?.hasilPerbaikan || 0}</td>
+            <td class="fw-bold text-danger">${sisaSaldo || 0}</td>
+            <td>${hasilPerbaikan || 0}</td>
           </tr>
         `;
       });
 
-      html += `</tbody></table>`;
+      html += `
+          </tbody>
+        </table>
+      `;
+
       el.innerHTML = html;
 
     })
