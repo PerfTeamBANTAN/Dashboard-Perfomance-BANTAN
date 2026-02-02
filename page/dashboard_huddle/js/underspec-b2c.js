@@ -109,7 +109,6 @@ function initGponMengelompok(API_URL) {
       }
 
       const data = res.data || [];
-      // filter yang total > 2
       const filtered = data.filter(d => d.total > 2);
 
       if(!filtered.length){
@@ -129,11 +128,14 @@ function initGponMengelompok(API_URL) {
         <tbody>`;
 
       filtered.forEach(d => {
-        // pastikan d.nodeId dan d.gpon berisi NODE ID dan SHELF|SLOT|PORT
-        const nodeShelf = `${d.nodeId}|${d.gpon}`;
+        const nodeId = d.nodeId || '-';
+        const gpon = d.gpon || '-';
+        const nodeShelf = `${nodeId}|${gpon}`;
+        const safeNodeShelf = nodeShelf.replace(/'/g, "\\'"); // escape '
+
         html += `
           <tr>
-            <td class="clickable" onclick="openDetailGpon('${nodeShelf}')">${nodeShelf}</td>
+            <td class="clickable" style="cursor:pointer;" onclick="openDetailGpon('${safeNodeShelf}')">${nodeShelf}</td>
             <td class="${d.total>0?'value-bad':''}">${d.total}</td>
             <td class="${d.unspec>0?'value-bad':''}">${d.unspec}</td>
             <td class="${d.spec>0?'value-bad':''}">${d.spec}</td>
@@ -147,6 +149,7 @@ function initGponMengelompok(API_URL) {
       el.innerHTML = `<div class="text-danger text-center">${err.message}</div>`;
     });
 }
+
 
 /* =====================================================
    MODAL DETAIL UNDERSPEC B2C
