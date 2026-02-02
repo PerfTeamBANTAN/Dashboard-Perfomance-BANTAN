@@ -41,12 +41,10 @@ function initUnderspecB2C(API_URL) {
               <th>SPEC</th>
 
               <th>REGULER</th>
-              <th>SILVER</th>
               <th>GOLD</th>
               <th>PLATINUM</th>
+              <th>DIAMOND</th>
 
-              <th>SISA SALDO</th>
-              <th>HASIL PERBAIKAN</th>
             </tr>
           </thead>
           <tbody>
@@ -67,8 +65,6 @@ function initUnderspecB2C(API_URL) {
           platinum,        // 9
           swingin,         // 10
           unspecBerulang,  // 11
-          sisaSaldo,       // 12
-          hasilPerbaikan   // 13
         ] = row;
 
         html += `
@@ -89,8 +85,6 @@ function initUnderspecB2C(API_URL) {
             <td>${swingin || 0}</td>
             <td>${unspecBerulang || 0}</td>
 
-            <td class="fw-bold text-danger">${sisaSaldo || 0}</td>
-            <td>${hasilPerbaikan || 0}</td>
           </tr>
         `;
       });
