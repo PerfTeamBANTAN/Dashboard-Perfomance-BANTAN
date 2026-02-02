@@ -40,15 +40,17 @@ body::before{
 /* PANEL TRANSPARAN */
 .login-box{
   position:absolute;
-  right:120px;        /* geser ke kanan (sesuai kotak merah) */
-  bottom:40px;       /* pas di bawah */
+  right:120px;      /* posisi ke kanan (atur sesuai kebutuhan) */
+  top:120px;        /* jarak dari atas */
+  bottom:40px;      /* nempel ke bawah tapi tidak bikin scroll */
 
   width:420px;
-  min-height:520px;
+  height:auto;      /* biar memanjang otomatis */
 
   background:rgba(30,30,30,0.35);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+
   border-radius:15px;
   border:1px solid rgba(255,255,255,0.15);
   padding:40px 35px;
@@ -57,6 +59,8 @@ body::before{
   box-shadow:
     0 0 25px rgba(255,0,0,0.25),
     inset 0 0 10px rgba(255,255,255,0.05);
+
+  overflow:hidden; /* tidak muncul scroll */
 }
 
 /* LOGO */
