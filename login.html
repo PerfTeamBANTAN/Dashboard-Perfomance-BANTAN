@@ -12,17 +12,22 @@
   font-family:"Poppins", sans-serif;
 }
 
-body{
-  margin:0;
-  height:100vh;
-  background:url("assets/home/login.png") no-repeat center center/cover;
-  background-size: contain;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  position:relative;
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
 
+body{
+  background: url("assets/home/login.png") no-repeat center center fixed;
+  background-size: cover;
+  display:flex;
+  justify-content:flex-start;   /* mulai dari kiri */
+  align-items:center;
+  padding-left:280px;           /* geser form ke kiri */
+  position:relative;
+}
+  
 /* overlay */
 body::before{
   content:"";
@@ -37,10 +42,6 @@ body::before{
   width:420px;
   height:520px;
 
-  /* geser ke kiri */
-  margin-left:300px;
-  margin-right:0;
-
   background:rgba(30,30,30,0.35);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -53,6 +54,7 @@ body::before{
     0 0 25px rgba(255,0,0,0.25),
     inset 0 0 10px rgba(255,255,255,0.05);
 }
+
 
 /* LOGO */
 .logo{
@@ -147,12 +149,13 @@ button:hover{
 @media(max-width:768px){
   body{
     justify-content:center;
+    padding-left:0;
   }
   .login-box{
-    margin-right:0;
     width:90%;
   }
 }
+
 </style>
 </head>
 
