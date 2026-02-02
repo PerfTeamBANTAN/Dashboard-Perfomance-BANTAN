@@ -34,7 +34,6 @@ function initUnderspecB2C(API_URL) {
               <th rowspan="2">SWINGIN</th>
               <th rowspan="2">UNSPEC<br>BERULANG</th>
 
-              <th colspan="2">TOTAL</th>
             </tr>
             <tr>
               <th>UNSPEC</th>
