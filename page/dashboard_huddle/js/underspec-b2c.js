@@ -92,8 +92,6 @@ function initUnderspecB2C(API_URL) {
       el.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
     });
 }
-
-
 /* =====================================================
    INIT GPON MENGelompok
 ===================================================== */
@@ -138,7 +136,6 @@ function initGponMengelompok(API_URL) {
       el.innerHTML = `<div class="text-danger text-center">${err.message}</div>`;
     });
 }
-
 /* =====================================================
    MODAL DETAIL UNDERSPEC B2C
 ===================================================== */
