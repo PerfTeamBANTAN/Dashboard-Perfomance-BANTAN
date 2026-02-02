@@ -29,7 +29,7 @@ function initUnderspecB2C(API_URL) {
               <th rowspan="2">OSA</th>
 
               <th colspan="2">SALDO AWAL</th>
-              <th colspan="5">SISA SALDO</th>
+              <th colspan="4">SISA SALDO</th>
 
               <th rowspan="2">SWINGIN</th>
               <th rowspan="2">UNSPEC<br>BERULANG</th>
@@ -39,7 +39,6 @@ function initUnderspecB2C(API_URL) {
               <th>SPEC</th>
 
               <th>REGULER</th>
-              <th>SILVER</th>
               <th>GOLD</th>
               <th>PLATINUM</th>
               <th>DIAMOND</th>
@@ -51,10 +50,18 @@ function initUnderspecB2C(API_URL) {
       res.data.forEach(row => {
 
         const [
-          sektor, witel, hsa, osa,
-          saldoAwalUnspec, saldoAwalSpec,
-          reguler, silver, gold, platinum, diamond,
-          swingin, unspecBerulang
+          sektor,          // 0
+          witel,           // 1
+          hsa,             // 2
+          osa,             // 3
+          saldoAwalUnspec, // 4
+          saldoAwalSpec,   // 5
+          reguler,         // 6
+          gold,            // 7
+          platinum,        // 8
+          diamond,         // 9
+          swingin,         // 10
+          unspecBerulang   // 11
         ] = row;
 
         html += `
@@ -64,63 +71,42 @@ function initUnderspecB2C(API_URL) {
             <td>${hsa || "-"}</td>
             <td>${osa || "-"}</td>
 
-            <td>
-              <a href="javascript:void(0)"
-                 onclick="openDetailUnderspecB2C(API_URL,'${sektor}','unspec')">
-                ${saldoAwalUnspec || 0}
-              </a>
-            </td>
-            <td>
-              <a href="javascript:void(0)"
-                 onclick="openDetailUnderspecB2C(API_URL,'${sektor}','spec')">
-                ${saldoAwalSpec || 0}
-              </a>
+            <td>${saldoAwalUnspec || 0}</td>
+            <td>${saldoAwalSpec || 0}</td>
+
+            <td class="pointer text-primary"
+                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','reguler')">
+              ${reguler || 0}
             </td>
 
-            <td>
-              <a href="javascript:void(0)"
-                 onclick="openDetailUnderspecB2C(API_URL,'${sektor}','reguler')">
-                ${reguler || 0}
-              </a>
-            </td>
-            <td>${silver || 0}</td>
-            <td>
-              <a href="javascript:void(0)"
-                 onclick="openDetailUnderspecB2C(API_URL,'${sektor}','gold')">
-                ${gold || 0}
-              </a>
-            </td>
-            <td>
-              <a href="javascript:void(0)"
-                 onclick="openDetailUnderspecB2C(API_URL,'${sektor}','platinum')">
-                ${platinum || 0}
-              </a>
-            </td>
-            <td>
-              <a href="javascript:void(0)"
-                 onclick="openDetailUnderspecB2C(API_URL,'${sektor}','diamond')">
-                ${diamond || 0}
-              </a>
+            <td class="pointer text-primary"
+                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','gold')">
+              ${gold || 0}
             </td>
 
-            <td>
-              <a href="javascript:void(0)"
-                 onclick="openDetailUnderspecB2C(API_URL,'${sektor}','swingin')">
-                ${swingin || 0}
-              </a>
+            <td class="pointer text-primary"
+                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','platinum')">
+              ${platinum || 0}
             </td>
-            <td>
-              <a href="javascript:void(0)"
-                 onclick="openDetailUnderspecB2C(API_URL,'${sektor}','berulang')">
-                ${unspecBerulang || 0}
-              </a>
+
+            <td class="pointer text-primary"
+                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','diamond')">
+              ${diamond || 0}
             </td>
+
+            <td>${swingin || 0}</td>
+            <td>${unspecBerulang || 0}</td>
           </tr>
         `;
       });
 
-      html += `</tbody></table>`;
+      html += `
+          </tbody>
+        </table>
+      `;
+
       el.innerHTML = html;
+
     })
     .catch(err => {
       el.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
@@ -159,6 +145,7 @@ function openDetailUnderspecB2C(API_URL, sektor, mode) {
     .then(res => {
 
       const rows = res.data || [];
+
       if (!rows.length) {
         modalBody.innerHTML =
           `<div class="text-center text-muted py-4">Tidak ada data</div>`;
@@ -167,7 +154,7 @@ function openDetailUnderspecB2C(API_URL, sektor, mode) {
 
       let html = `
         <div class="table-responsive">
-          <table class="table table-sm table-bordered table-striped text-center align-middle">
+          <table class="table table-sm table-bordered table-striped align-middle text-center">
             <thead class="table-dark">
               <tr>
                 <th>SEKTOR</th>
