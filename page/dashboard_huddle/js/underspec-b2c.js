@@ -93,6 +93,52 @@ function initUnderspecB2C(API_URL) {
     });
 }
 
+
+/* =====================================================
+   INIT GPON MENGelompok
+===================================================== */
+function initGponMengelompok(API_URL) {
+  const el = document.getElementById('underspec-gpon-mengelompok');
+  el.innerHTML = `<div class="text-center my-3"><div class="spinner-border"></div></div>`;
+
+  fetch(`${API_URL}?type=monitoring_usb2c_gpon`)
+    .then(r => r.json())
+    .then(res => {
+      if(res.error){
+        el.innerHTML = `<div class="text-danger text-center">${res.message}</div>`;
+        return;
+      }
+
+      const data = res.data || [];
+      let html = `<table class="table table-sm text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>GPON</th>
+            <th>Total</th>
+            <th>Unspec</th>
+            <th>Spec</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+      data.forEach(d => {
+        html += `
+          <tr>
+            <td>${d.gpon}</td>
+            <td class="${d.total>0?'value-bad':''}">${d.total}</td>
+            <td class="${d.unspec>0?'value-bad':''}">${d.unspec}</td>
+            <td class="${d.spec>0?'value-bad':''}">${d.spec}</td>
+          </tr>`;
+      });
+
+      html += `</tbody></table>`;
+      el.innerHTML = html;
+    })
+    .catch(err=>{
+      el.innerHTML = `<div class="text-danger text-center">${err.message}</div>`;
+    });
+}
+
 /* =====================================================
    MODAL DETAIL UNDERSPEC B2C
 ===================================================== */
