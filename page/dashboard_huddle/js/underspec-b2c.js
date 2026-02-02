@@ -109,10 +109,18 @@ function initGponMengelompok(API_URL) {
       }
 
       const data = res.data || [];
+      // filter yang total > 2
+      const filtered = data.filter(d => d.total > 2);
+
+      if(!filtered.length){
+        el.innerHTML = `<div class="text-center text-muted py-3">Tidak ada data dengan total > 2</div>`;
+        return;
+      }
+
       let html = `<table class="table table-sm text-center">
         <thead class="table-dark">
           <tr>
-            <th>GPON</th>
+            <th>GPON (Node & Shelf|Slot|Port)</th>
             <th>Total</th>
             <th>Unspec</th>
             <th>Spec</th>
@@ -120,10 +128,10 @@ function initGponMengelompok(API_URL) {
         </thead>
         <tbody>`;
 
-      data.forEach(d => {
+      filtered.forEach(d => {
         html += `
           <tr>
-            <td>${d.gpon}</td>
+            <td>${d.nodeId || '-'} | ${d.gpon}</td>
             <td class="${d.total>0?'value-bad':''}">${d.total}</td>
             <td class="${d.unspec>0?'value-bad':''}">${d.unspec}</td>
             <td class="${d.spec>0?'value-bad':''}">${d.spec}</td>
@@ -137,6 +145,7 @@ function initGponMengelompok(API_URL) {
       el.innerHTML = `<div class="text-danger text-center">${err.message}</div>`;
     });
 }
+
 /* =====================================================
    MODAL DETAIL UNDERSPEC B2C
 ===================================================== */
