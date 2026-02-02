@@ -50,81 +50,109 @@ function initUnderspecB2C(API_URL) {
           <tbody>
       `;
 
+      // Inisialisasi total
+      let total = {
+        saldoAwalUnspec: 0,
+        saldoAwalSpec: 0,
+        reguler: 0,
+        gold: 0,
+        platinum: 0,
+        diamond: 0,
+        swingin: 0,
+        unspecBerulang: 0
+      };
+
       res.data.forEach(row => {
-  const [
-    sektor,
-    witel,
-    hsa,
-    osa,
-    saldoAwalUnspec,
-    saldoAwalSpec,
-    reguler,
-    gold,
-    platinum,
-    diamond,
-    swingin,
-    unspecBerulang
-  ] = row;
+        const [
+          sektor, witel, hsa, osa,
+          saldoAwalUnspec, saldoAwalSpec,
+          reguler, gold, platinum, diamond,
+          swingin, unspecBerulang
+        ] = row;
 
-  // Buat tombol/modal untuk setiap kolom
-  html += `
-    <tr>
-      <td>${sektor || "-"}</td>
-      <td>${witel || "-"}</td>
-      <td>${hsa || "-"}</td>
-      <td>${osa || "-"}</td>
+        // Tambahkan ke total
+        total.saldoAwalUnspec += saldoAwalUnspec || 0;
+        total.saldoAwalSpec   += saldoAwalSpec || 0;
+        total.reguler         += reguler || 0;
+        total.gold            += gold || 0;
+        total.platinum        += platinum || 0;
+        total.diamond         += diamond || 0;
+        total.swingin         += swingin || 0;
+        total.unspecBerulang  += unspecBerulang || 0;
 
-      <td class="${saldoAwalUnspec>0?'value-red':''}" 
-          style="cursor:pointer;"
-          onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','unspec')">
-        ${saldoAwalUnspec||0}
-      </td>
+        // Buat row per sektor
+        html += `
+          <tr>
+            <td>${sektor || "-"}</td>
+            <td>${witel || "-"}</td>
+            <td>${hsa || "-"}</td>
+            <td>${osa || "-"}</td>
 
-      <td class="${saldoAwalSpec>0?'value-green':''}" 
-          style="cursor:pointer;"
-          onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','spec')">
-        ${saldoAwalSpec||0}
-      </td>
+            <td class="${saldoAwalUnspec>0?'value-red':''}" 
+                style="cursor:pointer;"
+                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','unspec')">
+              ${saldoAwalUnspec||0}
+            </td>
 
-      <td class="${reguler>0?'value-red':''}" 
-          style="cursor:pointer;"
-          onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','reguler')">
-        ${reguler||0}
-      </td>
+            <td class="${saldoAwalSpec>0?'value-green':''}" 
+                style="cursor:pointer;"
+                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','spec')">
+              ${saldoAwalSpec||0}
+            </td>
 
-      <td class="${gold>0?'value-red':''}" 
-          style="cursor:pointer;"
-          onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','gold')">
-        ${gold||0}
-      </td>
+            <td class="${reguler>0?'value-red':''}" 
+                style="cursor:pointer;"
+                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','reguler')">
+              ${reguler||0}
+            </td>
 
-      <td class="${platinum>0?'value-red':''}" 
-          style="cursor:pointer;"
-          onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','platinum')">
-        ${platinum||0}
-      </td>
+            <td class="${gold>0?'value-red':''}" 
+                style="cursor:pointer;"
+                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','gold')">
+              ${gold||0}
+            </td>
 
-      <td class="${diamond>0?'value-red':''}" 
-          style="cursor:pointer;"
-          onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','diamond')">
-        ${diamond||0}
-      </td>
+            <td class="${platinum>0?'value-red':''}" 
+                style="cursor:pointer;"
+                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','platinum')">
+              ${platinum||0}
+            </td>
 
-      <td class="${swingin>0?'value-red':''}" 
-          style="cursor:pointer;"
-          onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','swingin')">
-        ${swingin||0}
-      </td>
+            <td class="${diamond>0?'value-red':''}" 
+                style="cursor:pointer;"
+                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','diamond')">
+              ${diamond||0}
+            </td>
 
-      <td class="${unspecBerulang>0?'value-red':''}" 
-          style="cursor:pointer;"
-          onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','berulang')">
-        ${unspecBerulang||0}
-      </td>
-    </tr>
-  `;
-});
+            <td class="${swingin>0?'value-red':''}" 
+                style="cursor:pointer;"
+                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','swingin')">
+              ${swingin||0}
+            </td>
 
+            <td class="${unspecBerulang>0?'value-red':''}" 
+                style="cursor:pointer;"
+                onclick="openDetailUnderspecB2C('${API_URL}','${sektor}','berulang')">
+              ${unspecBerulang||0}
+            </td>
+          </tr>
+        `;
+      });
+
+      // Row Total
+      html += `
+        <tr class="table-dark fw-bold">
+          <td colspan="4" class="text-end">TOTAL</td>
+          <td style="cursor:pointer;" onclick="openDetailUnderspecB2C('${API_URL}','ALL','unspec')">${total.saldoAwalUnspec}</td>
+          <td style="cursor:pointer;" onclick="openDetailUnderspecB2C('${API_URL}','ALL','spec')">${total.saldoAwalSpec}</td>
+          <td style="cursor:pointer;" onclick="openDetailUnderspecB2C('${API_URL}','ALL','reguler')">${total.reguler}</td>
+          <td style="cursor:pointer;" onclick="openDetailUnderspecB2C('${API_URL}','ALL','gold')">${total.gold}</td>
+          <td style="cursor:pointer;" onclick="openDetailUnderspecB2C('${API_URL}','ALL','platinum')">${total.platinum}</td>
+          <td style="cursor:pointer;" onclick="openDetailUnderspecB2C('${API_URL}','ALL','diamond')">${total.diamond}</td>
+          <td style="cursor:pointer;" onclick="openDetailUnderspecB2C('${API_URL}','ALL','swingin')">${total.swingin}</td>
+          <td style="cursor:pointer;" onclick="openDetailUnderspecB2C('${API_URL}','ALL','berulang')">${total.unspecBerulang}</td>
+        </tr>
+      `;
 
       html += `
           </tbody>
@@ -138,7 +166,6 @@ function initUnderspecB2C(API_URL) {
       el.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
     });
 }
-
 
 /* =====================================================
    MODAL DETAIL UNDERSPEC B2C
