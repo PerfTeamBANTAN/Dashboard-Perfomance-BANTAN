@@ -547,25 +547,34 @@ table thead th {
 /* ==========================
    UNDERSPEC B2C - TOTAL ROW FINAL
 ========================== */
-.total-row-custom {
-  font-weight: 700;
+.total-row-custom td.total-cell-custom {
+    font-weight: 700;
+    text-align: center !important;
+    
+    /* Warna header */
+    background: #1a2a6c !important;
+    color: #ffffff !important;
+
+    /* Override semua variable & shadow bootstrap */
+    --bs-table-bg: #1a2a6c !important;
+    --bs-table-bg-type: initial !important;
+    --bs-table-bg-state: initial !important;
+    --bs-table-accent-bg: initial !important;
+    --bs-table-striped-bg: initial !important;
+    box-shadow: none !important;
+
+    /* Reset semua background image/clip/attachment/etc */
+    background-image: none !important;
+    background-clip: border-box !important;
+    background-origin: border-box !important;
+    background-size: auto !important;
+    background-repeat: no-repeat !important;
+    background-position: 0 0 !important;
 }
 
-.total-cell-custom {
-  background: #1a2a6c !important;   /* sama seperti header */
-  color: #ffffff !important;         /* teks putih */
-  text-align: center !important;
-
-  /* override semua property bootstrap table dark/light */
-  --bs-table-bg: #1a2a6c !important;
-  --bs-table-bg-type: initial !important;
-  --bs-table-bg-state: initial !important;
-  --bs-table-accent-bg: initial !important;
-  --bs-table-striped-bg: initial !important;
-  box-shadow: none !important;       /* hapus inset 9999px */
+/* Hover total row */
+.total-row-custom td.total-cell-custom:hover {
+    background: #16224f !important;
+    color: #ffffff !important;
 }
 
-.total-cell-custom:hover {
-  background: #16224f !important;    /* hover lebih gelap */
-  color: #ffffff !important;
-}
