@@ -95,7 +95,7 @@ function initUnderspecB2C(API_URL) {
       // Tambahkan row TOTAL
 html += `
 <tr class="total-row-custom">
-  <td colspan="4" class="text-end fw-bold">TOTAL</td>
+  <td colspan="4" class="text-end total-cell-custom">TOTAL</td>
   <td class="clickable total-cell-custom" onclick="openTotalDetailUnderspecB2C(4)">${total[0]}</td>
   <td class="clickable total-cell-custom" onclick="openTotalDetailUnderspecB2C(5)">${total[1]}</td>
   <td class="clickable total-cell-custom" onclick="openTotalDetailUnderspecB2C(6)">${total[2]}</td>
@@ -106,7 +106,6 @@ html += `
   <td class="clickable total-cell-custom" onclick="openTotalDetailUnderspecB2C(11)">${total[7]}</td>
 </tr>
 `;
-
 
       html += `
           </tbody>
