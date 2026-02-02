@@ -1,16 +1,18 @@
-/* ===============================
-   UNDERSPEC B2C - VALUE MERAH
-=============================== */
-td.value-bad,
-td.table-danger,
-td.value-bad * {
-    color: #dc2626 !important; /* merah */
-    font-weight: 700;           /* tebal */
+/* =========================
+   VALUE MERAH UNDERSPEC B2C
+========================= */
+#underspec-table table td.value-bad {
+    color: #dc2626 !important;  /* merah */
+    font-weight: 700 !important;
+}
+
+/* Kalau td clickable + value-bad */
+#underspec-table table td.clickable.value-bad {
+    color: #dc2626 !important;
+    font-weight: 700 !important;
 }
 
 /* Hover tetap merah */
-td.value-bad:hover,
-td.table-danger:hover,
-td.value-bad *:hover {
+#underspec-table table td.value-bad:hover {
     color: #dc2626 !important;
 }
