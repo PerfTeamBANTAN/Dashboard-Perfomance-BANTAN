@@ -557,7 +557,14 @@ table thead th {
   background: #1a2a6c !important;   /* sama seperti header */
   color: #ffffff !important;         /* teks putih */
   text-align: center !important;
-  box-shadow: none !important;       /* override inset 9999px */
+
+  /* override semua property bootstrap table dark/light */
+  --bs-table-bg: #1a2a6c !important;
+  --bs-table-bg-type: initial !important;
+  --bs-table-bg-state: initial !important;
+  --bs-table-accent-bg: initial !important;
+  --bs-table-striped-bg: initial !important;
+  box-shadow: none !important;       /* hapus inset 9999px */
 }
 
 .total-cell-custom:hover {
