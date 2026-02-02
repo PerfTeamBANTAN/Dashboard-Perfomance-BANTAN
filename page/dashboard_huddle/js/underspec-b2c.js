@@ -95,7 +95,7 @@ function initUnderspecB2C(API_URL) {
 }
 
 /* =====================================================
-   INIT GPON MENGelompok (klik angka untuk detail)
+   INIT GPON MENGelompok
 ===================================================== */
 function initGponMengelompok(API_URL) {
   const el = document.getElementById('underspec-gpon-mengelompok');
@@ -110,14 +110,12 @@ function initGponMengelompok(API_URL) {
       }
 
       const data = res.data || [];
-      const filtered = data.filter(d => d.total > 2);
-
-      if(!filtered.length){
-        el.innerHTML = `<div class="text-center text-muted py-3">Tidak ada data dengan total > 2</div>`;
+      if(!data.length){
+        el.innerHTML = `<div class="text-center text-muted py-3">Tidak ada data</div>`;
         return;
       }
 
-      let html = `<table class="table table-sm text-center">
+      let html = `<table class="table table-sm text-center table-bordered">
         <thead class="table-dark">
           <tr>
             <th>GPON (Node & Shelf|Slot|Port)</th>
@@ -128,25 +126,40 @@ function initGponMengelompok(API_URL) {
         </thead>
         <tbody>`;
 
-      filtered.forEach(d => {
-        const nodeId = d.nodeId || '';
-        const gponParts = (d.gpon || '').split('|').map(s => s.trim());
-        const nodeShelf = `${nodeId}|${gponParts[0]||''}|${gponParts[1]||''}|${gponParts[2]||''}`;
-        
-        html += `
-          <tr>
-            <td>${nodeId} | ${gponParts.join(' | ')}</td>
-            <td class="clickable ${d.total>0?'value-bad':''}" onclick="openDetailGponByNumber('${nodeShelf}','total')">${d.total}</td>
-            <td class="clickable ${d.unspec>0?'value-bad':''}" onclick="openDetailGponByNumber('${nodeShelf}','unspec')">${d.unspec}</td>
-            <td class="clickable ${d.spec>0?'value-bad':''}" onclick="openDetailGponByNumber('${nodeShelf}','spec')">${d.spec}</td>
-          </tr>`;
+      data.forEach(d => {
+        // Pisahkan NODE ID dan SHELF|SLOT|PORT
+        const gponRaw = d.gpon || '';
+        const parts = gponRaw.split('|').map(s => s.trim());
+
+        const nodeIdRaw = parts[0] || '';
+        const nodeId = nodeIdRaw.split('(')[0].trim(); // tanpa IP
+        const shelf = parts[1] || '';
+        const slot  = parts[2] || '';
+        const port  = parts[3] || '';
+
+        // Key untuk detail
+        const nodeShelf = `${nodeId}|${shelf}|${slot}|${port}`;
+        const encodedNodeShelf = encodeURIComponent(nodeShelf);
+
+        html += `<tr>
+          <td>${nodeId} | ${shelf} | ${slot} | ${port}</td>
+          <td class="clickable ${d.total>0?'value-bad':''}" 
+              style="cursor:pointer;" 
+              onclick="openDetailGpon('${encodedNodeShelf}')">${d.total}</td>
+          <td class="clickable ${d.unspec>0?'value-bad':''}" 
+              style="cursor:pointer;" 
+              onclick="openDetailGpon('${encodedNodeShelf}')">${d.unspec}</td>
+          <td class="clickable ${d.spec>0?'value-bad':''}" 
+              style="cursor:pointer;" 
+              onclick="openDetailGpon('${encodedNodeShelf}')">${d.spec}</td>
+        </tr>`;
       });
 
       html += `</tbody></table>`;
       el.innerHTML = html;
     })
     .catch(err=>{
-      el.innerHTML = `<div class="text-danger text-center">${err.message}</div>`;
+      el.innerHTML = `<div class="alert alert-danger text-center">${err.message}</div>`;
     });
 }
 
@@ -280,18 +293,19 @@ function openTotalDetailUnderspecB2C(colIndex) {
 }
 
 /* =====================================================
-   DETAIL GPON BY NUMBER MODAL
+   DETAIL GPON MODAL
 ===================================================== */
-function openDetailGponByNumber(nodeShelf, mode) {
+function openDetailGpon(encodedNodeShelf) {
+  const nodeShelf = decodeURIComponent(encodedNodeShelf); // decode URL
   const modal = new bootstrap.Modal(document.getElementById('global-modal'));
   const modalBody = document.querySelector('#global-modal .modal-body');
   const modalTitle = document.querySelector('#global-modal .modal-title');
 
-  modalTitle.textContent = `Detail GPON – ${mode.toUpperCase()}`;
+  modalTitle.textContent = `Detail GPON – ${nodeShelf}`;
   modalBody.innerHTML = `<div class="text-center my-4"><div class="spinner-border"></div></div>`;
   modal.show();
 
-  fetch(`${window.API_URL}?type=monitoring_usb2c_gpon_detail&nodeShelf=${encodeURIComponent(nodeShelf)}&mode=${mode}`)
+  fetch(`${window.API_URL}?type=monitoring_usb2c_gpon_detail&nodeShelf=${encodeURIComponent(nodeShelf)}`)
     .then(r => r.json())
     .then(res => {
       const rows = res.data || [];
