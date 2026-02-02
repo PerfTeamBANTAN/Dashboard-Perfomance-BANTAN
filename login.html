@@ -41,9 +41,7 @@ body::before{
 .login-box{
   position:relative;
   width:420px;
-  min-height:100vh;
-
-  transform: translate(480px, 380px); /* geser ke kanan */
+  min-height:520px;   /* jangan 100vh */
 
   background:rgba(30,30,30,0.35);
   backdrop-filter: blur(12px);
@@ -148,12 +146,17 @@ button:hover{
 
 /* RESPONSIVE */
 @media(max-width:768px){
+  body{
+    justify-content:center;
+    align-items:center;
+    padding-right:0;
+    padding-bottom:0;
+  }
   .login-box{
-    transform: translateX(0); /* kembali ke tengah */
     width:90%;
   }
 }
-
+  
 </style>
 </head>
 
