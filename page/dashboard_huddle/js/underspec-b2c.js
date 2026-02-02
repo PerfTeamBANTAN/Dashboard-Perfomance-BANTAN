@@ -251,3 +251,97 @@ function openDetailUnderspecB2C(API_URL, sektor, mode) {
         `<div class="alert alert-danger">${err.message}</div>`;
     });
 }
+
+/* =====================================================
+   DETAIL TOTAL UNDERSPEC B2C (ALL SEKTOR)
+===================================================== */
+function openTotalDetailUnderspecB2C(colIndex) {
+
+  const f = window.B2C_ACTIVE_FILTER || {}; // filter opsional, misal STO/WITEL/HSA
+
+  const params = { type: 'monitoring_usb2c_total_detail' };
+
+  // Kirim filter jika ada
+  if (f.sto)   params.sto   = f.sto;
+  if (f.witel) params.witel = f.witel;
+  if (f.hsa)   params.hsa   = f.hsa;
+
+  const modal = new bootstrap.Modal(
+    document.getElementById('global-modal')
+  );
+  const modalBody  = document.querySelector('#global-modal .modal-body');
+  const modalTitle = document.querySelector('#global-modal .modal-title');
+
+  modalTitle.textContent = 'Detail TOTAL Underspec B2C';
+  modalBody.innerHTML = `<div class="text-center my-4"><div class="spinner-border"></div></div>`;
+  modal.show();
+
+  // Map kolom ke mode sesuai tabel
+  const map = {
+    4:{mode:'UNSPEC'},
+    5:{mode:'SPEC'},
+    6:{mode:'REGULER'},
+    7:{mode:'GOLD'},
+    8:{mode:'PLATINUM'},
+    9:{mode:'DIAMOND'},
+    10:{mode:'SWINGIN'},
+    11:{mode:'BERULANG'}
+  };
+
+  const qs = new URLSearchParams({
+    ...params,
+    ...(map[colIndex] || {})
+  }).toString();
+
+  fetch(API_URL + '?' + qs)
+    .then(res => res.json())
+    .then(resData => {
+      const rows = resData.data || [];
+      if (!rows.length) {
+        modalBody.innerHTML =
+          `<div class="text-center text-muted py-4">Tidak ada data</div>`;
+        return;
+      }
+
+      let html = `
+        <div class="table-responsive">
+          <table class="table table-dark table-striped table-sm text-center align-middle">
+            <thead>
+              <tr>
+                <th>SEKTOR</th>
+                <th>NODE ID (NODE IP)</th>
+                <th>SHELF | SLOT | PORT | ONU ID</th>
+                <th>CMDF</th>
+                <th>DP</th>
+                <th>ND</th>
+                <th>ONU RX POWER</th>
+                <th>UKUR ULANG</th>
+                <th>FLAG HVC</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+
+      rows.forEach(r => {
+        html += `
+          <tr>
+            <td>${r.SEKTOR}</td>
+            <td>${r['NODE ID(NODE IP)']}</td>
+            <td>${r['SHELF|SLOT|PORT| ONU ID']}</td>
+            <td>${r.CMDF}</td>
+            <td>${r.DP}</td>
+            <td>${r.ND}</td>
+            <td>${r['ONU RX POWER']}</td>
+            <td>${r['UKUR ULANG']}</td>
+            <td>${r['FLAG HVC']}</td>
+          </tr>
+        `;
+      });
+
+      modalBody.innerHTML = html + '</tbody></table></div>';
+    })
+    .catch(err => {
+      modalBody.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+    });
+}
+
