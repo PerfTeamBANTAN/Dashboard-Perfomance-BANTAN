@@ -6,22 +6,3 @@
   color: #198754; /* hijau */
   font-weight: 600;
 }
-
-
-/* ==========================
-   UNDERSPEC B2C - TOTAL ROW
-========================== */
-.total-row-custom {
-  font-weight: 700;
-}
-
-.total-cell-custom {
-  background: #1a2a6c !important; /* sama seperti header */
-  color: #ffffff !important;
-  text-align: center;
-}
-
-.total-cell-custom:hover {
-  background: #16224f !important; /* hover sedikit gelap */
-  color: #ffffff !important;
-}
