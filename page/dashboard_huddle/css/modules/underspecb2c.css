@@ -20,14 +20,12 @@
     cursor: pointer;
     transition: background .15s ease, color .15s ease, transform .08s ease;
 }
-
 /* TOTAL row styling */
 #underspec-table table .total-row-custom {
     font-weight: 700;
     background-color: #1a2a6c !important;
     color: #ffffff !important;
 }
-
 /* merah untuk value tertentu */
 #underspec-table table td.value-bad {
     color: #dc2626 !important;
