@@ -132,19 +132,26 @@ function initGponMengelompok(API_URL) {
         <tbody>`;
 
       filtered.forEach(d => {
-        const gponParts = d.gpon.split('|').map(s=>s.trim());
-        const nodeId = d.nodeId.trim();
-        const nodeShelf = `${nodeId}|${gponParts[0]}|${gponParts[1]}|${gponParts[2]}`;
-        const safeNodeShelf = encodeURIComponent(nodeShelf);
+  const gponRaw = d.gpon || '';
+  const nodeIdRaw = d.nodeId || '';
 
-        html += `
-          <tr>
-            <td class="clickable" style="cursor:pointer;" onclick="openDetailGpon('${safeNodeShelf}')">${nodeId} | ${gponParts.join(' | ')}</td>
-            <td class="${d.total>0?'value-bad':''}">${d.total}</td>
-            <td class="${d.unspec>0?'value-bad':''}">${d.unspec}</td>
-            <td class="${d.spec>0?'value-bad':''}">${d.spec}</td>
-          </tr>`;
-      });
+  const gponParts = gponRaw.split('|').map(s => (s||'').trim());
+  const nodeId = nodeIdRaw.trim();
+
+  const nodeShelf = `${nodeId}|${gponParts[0]||''}|${gponParts[1]||''}|${gponParts[2]||''}`;
+  const safeNodeShelf = encodeURIComponent(nodeShelf);
+
+  html += `
+    <tr>
+      <td class="clickable" style="cursor:pointer;" onclick="openDetailGpon('${safeNodeShelf}')">
+        ${nodeId} | ${gponParts.join(' | ')}
+      </td>
+      <td class="${d.total>0?'value-bad':''}">${d.total}</td>
+      <td class="${d.unspec>0?'value-bad':''}">${d.unspec}</td>
+      <td class="${d.spec>0?'value-bad':''}">${d.spec}</td>
+    </tr>`;
+});
+
 
       html += `</tbody></table>`;
       el.innerHTML = html;
