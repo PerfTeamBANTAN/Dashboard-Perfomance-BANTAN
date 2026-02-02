@@ -38,3 +38,22 @@
 #underspec-table table td.clickable:hover {
     background-color: rgba(26,42,108,0.1);
 }
+
+#underspec-gpon-mengelompok table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+#underspec-gpon-mengelompok th,
+#underspec-gpon-mengelompok td {
+  padding: 4px 6px;
+  border: 1px solid #adb5bd;
+}
+#underspec-gpon-mengelompok th {
+  background-color: #1a2a6c;
+  color: #fff;
+}
+.value-bad {
+  color: red;
+  font-weight: bold;
+}
