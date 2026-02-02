@@ -1,8 +1,16 @@
-.value-red {
-  color: #dc3545; /* merah */
-  font-weight: 600;
+/* ===============================
+   UNDERSPEC B2C - VALUE MERAH
+=============================== */
+td.value-bad,
+td.table-danger,
+td.value-bad * {
+    color: #dc2626 !important; /* merah */
+    font-weight: 700;           /* tebal */
 }
-.value-green {
-  color: #198754; /* hijau */
-  font-weight: 600;
+
+/* Hover tetap merah */
+td.value-bad:hover,
+td.table-danger:hover,
+td.value-bad *:hover {
+    color: #dc2626 !important;
 }
