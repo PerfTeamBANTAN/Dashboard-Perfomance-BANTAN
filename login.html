@@ -214,21 +214,24 @@ function login(){
   const password = document.getElementById("password").value.trim();
   const remember = document.getElementById("remember").checked;
 
-  if(username==="" || password===""){
-    document.getElementById("error").innerText="Username dan password harus diisi!";
+  // validasi input
+  if(username === "" || password === ""){
+    document.getElementById("error").innerText = "Username dan password harus diisi!";
     return;
   }
 
-  document.getElementById("error").innerText="Loading...";
+  // ✅ validasi remember me
+  if(!remember){
+    document.getElementById("error").innerText = "Silakan centang Remember Me terlebih dahulu!";
+    return;
+  }
+
+  document.getElementById("error").innerText = "Loading...";
 
   sendRequest("login","login",{username,password})
     .then(data=>{
       if(data.status==="success"){
-        if(remember){
-          localStorage.setItem("user", data.user);
-        }else{
-          sessionStorage.setItem("user", data.user);
-        }
+        localStorage.setItem("user", data.user);
         window.location.href="index.html";
       }else{
         document.getElementById("error").innerText="Username atau password salah!";
@@ -238,6 +241,7 @@ function login(){
       document.getElementById("error").innerText="Server tidak dapat dihubungi!";
     });
 }
+
 </script>
 
 </body>
