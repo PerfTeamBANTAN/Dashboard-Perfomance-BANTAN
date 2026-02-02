@@ -87,6 +87,7 @@ function initUnderspecB2C(API_URL) {
 
       html += `</tbody></table>`;
       el.innerHTML = html;
+      initGponMengelompok(API_URL);
 
     }).catch(err=>{
       el.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
@@ -264,3 +265,4 @@ function openTotalDetailUnderspecB2C(colIndex) {
     })
     .catch(err=>{ modalBody.innerHTML = `<div class="alert alert-danger">${err.message}</div>`; });
 }
+
