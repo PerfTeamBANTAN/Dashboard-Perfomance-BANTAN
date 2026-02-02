@@ -547,19 +547,20 @@ table thead th {
 }
 
 /* ==========================
-   UNDERSPEC B2C - TOTAL ROW
+   UNDERSPEC B2C - TOTAL ROW FINAL
 ========================== */
 .total-row-custom {
   font-weight: 700;
 }
 
 .total-cell-custom {
-  background: #1a2a6c !important; /* sama seperti header */
-  color: #ffffff !important;
-  text-align: center;
+  background: #1a2a6c !important;   /* sama seperti header */
+  color: #ffffff !important;         /* teks putih */
+  text-align: center !important;
+  box-shadow: none !important;       /* override inset 9999px */
 }
 
 .total-cell-custom:hover {
-  background: #16224f !important; /* hover sedikit gelap */
+  background: #16224f !important;    /* hover lebih gelap */
   color: #ffffff !important;
 }
