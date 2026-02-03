@@ -1,1 +1,100 @@
-a
+/* =====================================================
+   QHSI TABLE – CLEAN DASHBOARD STYLE
+   Scope: District Banten QHSI
+===================================================== */
+
+/* Wrapper */
+#district-banten-table {
+  font-size: 12px;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ================= HEADER ================= */
+
+#district-banten-table thead th {
+  background: #1a2a6c !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  text-align: center;
+  padding: 8px 6px;
+  white-space: nowrap;
+  border: none !important;
+}
+
+/* ================= BODY ================= */
+
+#district-banten-table tbody td {
+  padding: 6px 8px;
+  color: #1f2937;
+  background: #ffffff;
+  vertical-align: middle;
+  font-variant-numeric: tabular-nums;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Kolom teks kiri (STO, WITEL, PIC) */
+#district-banten-table tbody td:first-child,
+#district-banten-table tbody td:nth-child(2),
+#district-banten-table tbody td:last-child {
+  text-align: left;
+  font-weight: 600;
+}
+
+/* Kolom angka kanan */
+#district-banten-table tbody td:not(:first-child):not(:nth-child(2)):not(:last-child) {
+  text-align: right;
+}
+
+/* ================= KPI HIGHLIGHT ================= */
+
+/* KPI MERAH */
+#district-banten-table td.kpi-red {
+  color: #dc2626 !important;
+  font-weight: 800;
+  background-color: #fff1f2;      /* merah soft */
+  box-shadow: inset 4px 0 0 #dc2626;
+}
+
+/* KPI HIJAU */
+#district-banten-table td.kpi-green {
+  color: #16a34a !important;
+  font-weight: 800;
+  background-color: #f0fdf4;      /* hijau soft */
+  box-shadow: inset 4px 0 0 #16a34a;
+}
+
+/* Link KPI (Tiket HI) */
+#district-banten-table td a.kpi-red {
+  color: #dc2626 !important;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+#district-banten-table td a.kpi-red:hover {
+  text-decoration: underline;
+}
+
+/* ================= ROW STATUS ================= */
+
+/* Row dengan budget minus */
+#district-banten-table tr.tr-pragnosa-bad td {
+  background-color: #fff7ed !important;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  #district-banten-table {
+    font-size: 11px;
+  }
+
+  #district-banten-table thead th {
+    padding: 6px 4px;
+  }
+
+  #district-banten-table tbody td {
+    padding: 5px 6px;
+  }
+}
