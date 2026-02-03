@@ -578,10 +578,13 @@ table thead th {
     color: #ffffff !important;
 }
 
-.text-danger {
-  color: #ff4d4f !important;
+.table td.kpi-red {
+  color: #dc2626 !important;
+  font-weight: 700;
 }
 
-.text-success {
-  color: #22c55e !important;
+.table td.kpi-green {
+  color: #16a34a !important;
+  font-weight: 700;
 }
+
