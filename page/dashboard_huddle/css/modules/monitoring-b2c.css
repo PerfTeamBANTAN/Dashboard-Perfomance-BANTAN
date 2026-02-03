@@ -71,13 +71,14 @@
   border-top: 2px solid #0dcaf0;
 }
 
-/* jangan berubah saat hover */
-#monitoring-b2c-body tr.total-row:hover td {
-  background: #1b2f6b !important;
-  color: #ffffff !important;
-}
-
+/* Highlight angka > 0 */
 #monitoring-b2c-body td.highlight {
   color: red !important;
   font-weight: bold;
 }
+
+/* Supaya tetap merah saat hover row */
+#monitoring-b2c-body tr:hover td.highlight {
+  color: red !important;
+}
+
