@@ -578,13 +578,56 @@ table thead th {
     color: #ffffff !important;
 }
 
-.table td.kpi-red {
+/* =====================================================
+   KPI COLOR + STRONG HOVER (BOOTSTRAP SAFE)
+===================================================== */
+
+/* ===== MERAH (BAD KPI) ===== */
+.table td.kpi-red,
+.table-dark td.kpi-red,
+.table td.kpi-red *,
+.table-dark td.kpi-red * {
   color: #dc2626 !important;
   font-weight: 700;
 }
 
-.table td.kpi-green {
+/* hover merah */
+.table tbody tr:hover td.kpi-red {
+  background-color: #fee2e2 !important; /* merah muda */
+  color: #b91c1c !important;
+}
+
+/* link merah (Tiket HI) */
+.table td a.kpi-red {
+  color: #dc2626 !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.table td a.kpi-red:hover {
+  text-decoration: underline;
+  color: #991b1b !important;
+}
+
+/* ===== HIJAU (GOOD KPI) ===== */
+.table td.kpi-green,
+.table-dark td.kpi-green {
   color: #16a34a !important;
   font-weight: 700;
+}
+
+/* hover hijau */
+.table tbody tr:hover td.kpi-green {
+  background-color: #dcfce7 !important; /* hijau muda */
+  color: #166534 !important;
+}
+
+/* ===== OPTIONAL: BORDER INDICATOR ===== */
+.table td.kpi-red {
+  box-shadow: inset 0 -2px 0 #dc2626;
+}
+
+.table td.kpi-green {
+  box-shadow: inset 0 -2px 0 #16a34a;
 }
 
