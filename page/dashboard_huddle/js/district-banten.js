@@ -178,53 +178,80 @@ function loadDistrictBantenTable(API_URL) {
 
   function renderTable(data) {
 
-    tbody.innerHTML = '';
+  tbody.innerHTML = '';
 
-    if (!data.length) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="${headers.length}" class="text-center text-muted">
-            Tidak ada data
-          </td>
-        </tr>`;
-      return;
+  if (!data.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="${headers.length}" class="text-center text-muted">
+          Tidak ada data
+        </td>
+      </tr>`;
+    return;
+  }
+
+  data.forEach(row => {
+
+    const tr = document.createElement('tr');
+
+    const budgVal = Number(row['Budg Q BI']);
+    if (!isNaN(budgVal) && budgVal < 0) {
+      tr.classList.add('tr-pragnosa-bad');
     }
 
-    data.forEach(row => {
+    headers.forEach(h => {
 
-      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      const val = Number(row[h]);
 
-      const budgVal = Number(row['Budg Q BI']);
-      if (!isNaN(budgVal) && budgVal < 0) {
-        tr.classList.add('tr-pragnosa-bad');
+      // %Q s/d HI > 2.20 → MERAH
+      if (h === '%Q s/d HI' && !isNaN(val) && val > 2.20) {
+        td.classList.add('text-danger', 'fw-bold');
       }
 
-      headers.forEach(h => {
-
-        const td = document.createElement('td');
-
-        if (h === 'Tiket HI' && Number(row[h]) > 0) {
-          const a = document.createElement('a');
-          a.href = '#';
-          a.className = 'text-warning fw-bold text-decoration-none';
-          a.textContent = row[h];
-
-          a.onclick = e => {
-            e.preventDefault();
-            openTiketHIModal(API_URL, row.STO, row.WITEL || '-');
-          };
-
-          td.appendChild(a);
-        } else {
-          td.textContent = row[h] ?? '-';
+      // Q BI > Q 30D → MERAH
+      if (h === 'Q BI') {
+        const q30 = Number(row['Q 30D']);
+        if (!isNaN(val) && !isNaN(q30) && val > q30) {
+          td.classList.add('text-danger', 'fw-bold');
         }
+      }
 
+      // Budg Q BI <= 0 → MERAH
+      if (h === 'Budg Q BI' && !isNaN(val) && val <= 0) {
+        td.classList.add('text-danger', 'fw-bold');
+      }
+
+      // Q Degr -31 > 0 → HIJAU
+      if (h === 'Q Degr -31' && !isNaN(val) && val > 0) {
+        td.classList.add('text-success', 'fw-bold');
+      }
+
+      // Tiket HI > 1 → MERAH + LINK
+      if (h === 'Tiket HI' && !isNaN(val) && val > 1) {
+
+        const a = document.createElement('a');
+        a.href = '#';
+        a.textContent = row[h];
+        a.className = 'text-danger fw-bold text-decoration-none';
+
+        a.onclick = e => {
+          e.preventDefault();
+          openTiketHIModal(API_URL, row.STO, row.WITEL || '-');
+        };
+
+        td.appendChild(a);
         tr.appendChild(td);
-      });
+        return;
+      }
 
-      tbody.appendChild(tr);
+      td.textContent = row[h] ?? '-';
+      tr.appendChild(td);
     });
-  }
+
+    tbody.appendChild(tr);
+  });
+}
 
   const script = document.createElement('script');
   script.src = `${API_URL}?type=table&callback=${cbTable}`;
