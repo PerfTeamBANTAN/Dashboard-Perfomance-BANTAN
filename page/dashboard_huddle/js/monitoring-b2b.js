@@ -456,18 +456,58 @@ function highlightBadCellsB2B() {
       if (tr.classList.contains('total-row')) return;
 
       const tds = tr.querySelectorAll('td');
+      if (!tds.length) return;
 
-      /* %Q s/d HI  (kolom index 4) */
+      /* =================================================
+         %Q s/d HI  (WAJIB TETAP ADA)
+         kolom index 4
+      ================================================= */
       const qhsiCell = tds[4];
-      if (!qhsiCell) return;
-
-      const val = parseFloat(
-        qhsiCell.innerText.replace('%','').replace(',','.')
-      );
-
-      if (!isNaN(val) && val > 2.3) {
-        qhsiCell.classList.add('b2b-bad');
+      if (qhsiCell) {
+        const val = parseFloat(
+          qhsiCell.innerText.replace('%','').replace(',','.')
+        );
+        if (!isNaN(val) && val > 2.3) {
+          qhsiCell.classList.add('b2b-bad');
+        }
       }
+
+      /* =================================================
+         HELPER: nilai > 0 → MERAH
+      ================================================= */
+      const markRedIfPositive = idx => {
+        const v = Number(
+          tds[idx]?.innerText.replace(/[^\d]/g,'')
+        );
+        if (!isNaN(v) && v > 0) {
+          tds[idx].classList.add('b2b-bad');
+        }
+      };
+
+      /* =================================================
+         RULE MERAH BARU
+      ================================================= */
+
+      // Tiket Open
+      markRedIfPositive(9);   // HSI
+      markRedIfPositive(10);  // DATIN
+
+      // TTR INDIBIZ (✖)
+      markRedIfPositive(12);  // 4 Jam ✖
+      markRedIfPositive(14);  // 24 Jam ✖
+
+      // TTR RESELLER (✖)
+      markRedIfPositive(16);  // 6 Jam ✖
+      markRedIfPositive(18);  // 36 Jam ✖
+
+      // GAUL
+      markRedIfPositive(19);  // HSI
+      markRedIfPositive(20);  // DATIN
+
+      // SQM & ALERT
+      markRedIfPositive(21);  // SQM Jadi Tiket HI
+      markRedIfPositive(22);  // Alert Jadi Tiket HI
     });
 }
+
 
