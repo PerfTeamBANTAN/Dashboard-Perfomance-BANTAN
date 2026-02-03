@@ -227,9 +227,19 @@ function loadAsgarHSITable(API_URL) {
           td.innerHTML = `<span class="text-danger fw-bold">${val}</span>`;
 
         // ✅ Asgar s/d HI < 92 (RULE BARU)
-        } else if (h === 'Asgar s/d HI' && Number(val) < 92) {
-          td.innerHTML = `<span class="text-danger fw-bold">${val}</span>`;
+        } else if (h === 'Asgar s/d HI') {
 
+  const num = Number(val);
+
+  if (!isNaN(num) && num < 92) {
+    td.innerHTML =
+      `<span class="text-danger fw-bold">${num.toFixed(2)}</span>`;
+  } else if (!isNaN(num)) {
+    td.textContent = num.toFixed(2);
+  } else {
+    td.textContent = val ?? '-';
+  }
+;
         // DEFAULT
         } else {
           td.textContent =
