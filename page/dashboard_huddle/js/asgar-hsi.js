@@ -105,9 +105,10 @@ function loadAsgarHSITable(API_URL) {
   const cbTable = 'jsonp_asgar_table_' + Date.now();
 
   window[cbTable] = function (res) {
-    headers = res.headers;
-    rawData = res.data;
+    headers = res.headers || [];
+    rawData = res.data || [];
 
+    /* ===== HEADER ===== */
     thead.innerHTML = '';
     headers.forEach(h => {
       const th = document.createElement('th');
@@ -115,9 +116,10 @@ function loadAsgarHSITable(API_URL) {
       thead.appendChild(th);
     });
 
+    /* ===== FILTER ===== */
     const witelSet = new Set(rawData.map(r => r.WITEL).filter(Boolean));
-    const stoSet = new Set(rawData.map(r => r.STO).filter(Boolean));
-    const picSet = new Set(rawData.map(r => r.PIC).filter(Boolean));
+    const stoSet   = new Set(rawData.map(r => r.STO).filter(Boolean));
+    const picSet   = new Set(rawData.map(r => r.PIC).filter(Boolean));
 
     filterWitel.innerHTML = '<option value="">All Witel</option>';
     [...witelSet].sort().forEach(w =>
@@ -172,6 +174,7 @@ function loadAsgarHSITable(API_URL) {
     data.forEach(row => {
       const tr = document.createElement('tr');
 
+      /* ===== ROW LEVEL ===== */
       if (
         row['Pragnosa Asgar Final BI'] &&
         String(row['Pragnosa Asgar Final BI']).toLowerCase().includes('tidak')
@@ -183,6 +186,11 @@ function loadAsgarHSITable(API_URL) {
         const td = document.createElement('td');
         const val = row[h];
 
+        /* =========================
+           CELL RULE (MERAH)
+        ========================= */
+
+        // Asgar HI > 0
         if (h === 'Asgar HI' && Number(val) > 0) {
           td.innerHTML = `<a href="#" class="text-danger fw-bold text-decoration-none">${val}</a>`;
           td.onclick = e => {
@@ -190,6 +198,7 @@ function loadAsgarHSITable(API_URL) {
             openAsgarHIModal(API_URL, row.STO, row.WITEL || '-');
           };
 
+        // Tiket HI > 0
         } else if (h === 'Tiket HI' && Number(val) > 0) {
           td.innerHTML = `<a href="#" class="text-info fw-bold text-decoration-none">${val}</a>`;
           td.onclick = e => {
@@ -197,29 +206,37 @@ function loadAsgarHSITable(API_URL) {
             openTiketHIModal(API_URL, row.STO, row.WITEL || '-');
           };
 
+        // Total Tiket s/d HI > 0
         } else if (h === 'Total Tiket s/d HI' && Number(val) > 0) {
+          td.innerHTML = `<a href="#" class="text-primary fw-bold text-decoration-none">${val}</a>`;
+          td.onclick = e => {
+            e.preventDefault();
+            openTotalSdHIModal(API_URL, row.STO, row.WITEL || '-');
+          };
 
-  td.innerHTML = `<a href="#" class="text-primary fw-bold text-decoration-none">${val}</a>`;
-  td.onclick = e => {
-    e.preventDefault();
-    openTotalSdHIModal(API_URL, row.STO, row.WITEL || '-');
-  };
-
+        // Total Tiket Asgar > 0
         } else if (h === 'Total Tiket Asgar' && Number(val) > 0) {
+          td.innerHTML = `<a href="#" class="text-danger fw-bold text-decoration-none">${val}</a>`;
+          td.onclick = e => {
+            e.preventDefault();
+            openTotalTiketAsgarModal(API_URL, row.STO, row.WITEL || '-');
+          };
 
-  td.innerHTML = `<a href="#" class="text-primary fw-bold text-decoration-none">${val}</a>`;
-  td.onclick = e => {
-    e.preventDefault();
-    openTotalTiketAsgarModal(API_URL, row.STO, row.WITEL || '-');
-  };
+        // Budg Asgar BI <= 0
+        } else if (h === 'Budg Asgar BI' && Number(val) <= 0) {
+          td.innerHTML = `<span class="text-danger fw-bold">${val}</span>`;
 
-} else {
-  td.textContent =
-    typeof val === 'number'
-      ? (Number.isInteger(val) ? val : val.toFixed(2))
-      : (val ?? '-');
-}
+        // ✅ Asgar s/d HI < 92 (RULE BARU)
+        } else if (h === 'Asgar s/d HI' && Number(val) < 92) {
+          td.innerHTML = `<span class="text-danger fw-bold">${val}</span>`;
 
+        // DEFAULT
+        } else {
+          td.textContent =
+            typeof val === 'number'
+              ? (Number.isInteger(val) ? val : val.toFixed(2))
+              : (val ?? '-');
+        }
 
         tr.appendChild(td);
       });
@@ -232,6 +249,7 @@ function loadAsgarHSITable(API_URL) {
   script.src = `${API_URL}?type=asgar_table&callback=${cbTable}`;
   document.body.appendChild(script);
 }
+
 
 /* =====================================================
    MODAL DETAIL ASGAR HI
@@ -468,3 +486,4 @@ function openTiketHIModal(API_URL, sto, witel) {
 
   new bootstrap.Modal(document.getElementById('modalTiketHI')).show();
 }
+
