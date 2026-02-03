@@ -452,16 +452,22 @@ function buildDropdown(el, setData, label) {
 function highlightBadCellsB2B() {
   document.querySelectorAll('#monitoring-b2b-body tr')
     .forEach(tr => {
+
+      if (tr.classList.contains('total-row')) return;
+
       const tds = tr.querySelectorAll('td');
+
+      /* %Q s/d HI  (kolom index 4) */
       const qhsiCell = tds[4];
       if (!qhsiCell) return;
 
-      const v = parseFloat(
+      const val = parseFloat(
         qhsiCell.innerText.replace('%','').replace(',','.')
       );
-      if (!isNaN(v) && v > 2.3) {
-        qhsiCell.style.color = '#ff4d4f';
-        qhsiCell.style.fontWeight = '800';
+
+      if (!isNaN(val) && val > 2.3) {
+        qhsiCell.classList.add('b2b-bad');
       }
     });
 }
+
