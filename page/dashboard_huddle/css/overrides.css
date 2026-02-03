@@ -578,3 +578,10 @@ table thead th {
     color: #ffffff !important;
 }
 
+.text-danger {
+  color: #ff4d4f !important;
+}
+
+.text-success {
+  color: #22c55e !important;
+}
