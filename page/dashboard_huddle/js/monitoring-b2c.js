@@ -25,64 +25,80 @@ function initMonitoringB2C(API_URL){
 
       const setSto=new Set(), setWitel=new Set(), setHsa=new Set();
 
-      data.forEach(row=>{
+      data.forEach(row => {
 
-        const tr=document.createElement('tr');
-        tr.dataset.sto=row[0];
-        tr.dataset.witel=row[1];
-        tr.dataset.hsa=row[2];
+  const tr = document.createElement('tr');
+  tr.dataset.sto = row[0];
+  tr.dataset.witel = row[1];
+  tr.dataset.hsa = row[2];
 
-        setSto.add(row[0]);
-        setWitel.add(row[1]);
-        setHsa.add(row[2]);
+  setSto.add(row[0]);
+  setWitel.add(row[1]);
+  setHsa.add(row[2]);
 
-        tr.innerHTML = `
-<td>${row[0]}</td>
-<td>${row[1]}</td>
-<td>${row[2]}</td>
-<td>${row[3]}</td>
+  tr.innerHTML = `
+    <td>${row[0]}</td>
+    <td>${row[1]}</td>
+    <td>${row[2]}</td>
+    <td>${row[3]}</td>
 
-<td class="clickable total_reg">${row[4]}</td>
-<td class="clickable total_hvc">${row[5]}</td>
+    <td class="clickable total_reg">${row[4]}</td>
+    <td class="clickable total_hvc">${row[5]}</td>
 
-<td class="clickable closed_reg">${row[6]}</td>
-<td class="clickable closed_hvc">${row[7]}</td>
+    <td class="clickable closed_reg">${row[6]}</td>
+    <td class="clickable closed_hvc">${row[7]}</td>
 
-<td class="clickable open_reg">${row[8]}</td>
-<td class="clickable open_hvc">${row[9]}</td>
+    <td class="clickable open_reg">${row[8]}</td>
+    <td class="clickable open_hvc">${row[9]}</td>
 
-<td class="clickable ttr3_ok">${row[10]}</td>
-<td class="clickable ttr3_nok">${row[11]}</td>
+    <td class="clickable ttr3_ok">${row[10]}</td>
+    <td class="clickable ttr3_nok">${row[11]}</td>
 
-<td class="clickable ttr6_ok">${row[12]}</td>
-<td class="clickable ttr6_nok">${row[13]}</td>
+    <td class="clickable ttr6_ok">${row[12]}</td>
+    <td class="clickable ttr6_nok">${row[13]}</td>
 
-<td class="clickable ttr12_ok">${row[14]}</td>
-<td class="clickable ttr12_nok">${row[15]}</td>
+    <td class="clickable ttr12_ok">${row[14]}</td>
+    <td class="clickable ttr12_nok">${row[15]}</td>
 
-<td class="clickable manja_ok">${row[16]}</td>
-<td class="clickable manja_nok">${row[17]}</td>
+    <td class="clickable manja_ok">${row[16]}</td>
+    <td class="clickable manja_nok">${row[17]}</td>
 
-<td class="clickable ttr36_ok">${row[18]}</td>
-<td class="clickable ttr36_nok">${row[19]}</td>
+    <td class="clickable ttr36_ok">${row[18]}</td>
+    <td class="clickable ttr36_nok">${row[19]}</td>
 
-<td class="clickable gaul_reg">${row[20]}</td>
-<td class="clickable gaul_hvc">${row[21]}</td>
-<td class="clickable sqm_jadi">${row[22]}</td>   
-<td class="clickable alert_jadi">${row[23]}</td>
-<td class="clickable ffg">${row[24]}</td>
-<td class="clickable sqm_total">${row[25]}</td>
-<td class="clickable sqm_open">${row[26]}</td>
-`;
+    <td class="clickable gaul_reg">${row[20]}</td>
+    <td class="clickable gaul_hvc">${row[21]}</td>
+    <td class="clickable sqm_jadi">${row[22]}</td>   
+    <td class="clickable alert_jadi">${row[23]}</td>
+    <td class="clickable ffg">${row[24]}</td>
+    <td class="clickable sqm_total">${row[25]}</td>
+    <td class="clickable sqm_open">${row[26]}</td>
+  `;
 
-        tbody.appendChild(tr);
+  // ✅ Highlight angka > 0
+  const highlightClasses = [
+    'open_reg', 'open_hvc',
+    'ttr3_nok', 'ttr6_nok', 'ttr12_nok', 'manja_nok', 'ttr36_nok',
+    'gaul_reg', 'gaul_hvc',
+    'ffg'
+  ];
 
-        tr.querySelectorAll('td').forEach(td=>{
-          if(td.textContent==='0') td.classList.add('zero');
-        });
+  highlightClasses.forEach(cls => {
+    const td = tr.querySelector('.' + cls);
+    if (td && Number(td.textContent) > 0) {
+      td.classList.add('highlight');
+    }
+  });
 
-        bindB2CClicks(tr);
-      });
+  // ✅ Zero class
+  tr.querySelectorAll('td').forEach(td=>{
+    if(td.textContent==='0') td.classList.add('zero');
+  });
+
+  tbody.appendChild(tr);
+  bindB2CClicks(tr);
+});
+
 
       buildDropdown(filterSto,setSto,'All STO');
       buildDropdown(filterWitel,setWitel,'All Witel');
