@@ -205,6 +205,12 @@ async function loadPage(menu) {
   if (!menuMap[menu]) return showUnderConstruction();
 
   const cfg = menuMap[menu];
+
+  // LOAD CSS
+  if (cfg.css) {
+    loadCSS(cfg.css);
+  }
+
   const res = await fetch(cfg.html);
   content.innerHTML = await res.text();
 
@@ -213,6 +219,7 @@ async function loadPage(menu) {
   s.onload = () => window[cfg.init](B2B_API_URL);
   document.body.appendChild(s);
 }
+
 
 function showUnderConstruction() {
   document.getElementById("content-area").innerHTML = `
