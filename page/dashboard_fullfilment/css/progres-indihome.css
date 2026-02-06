@@ -134,13 +134,13 @@
 
 /* POSISI TABEL */
 #tblSisa {
-  top:380px;       /* baris pertama */
+  top:230px;       /* baris pertama */
   left:50px;
   width:250px;
 }
 
 #tblManja {
-  top:380px;       /* baris pertama */
+  top:230px;       /* baris pertama */
   left:350px;
   width:300px;
 }
