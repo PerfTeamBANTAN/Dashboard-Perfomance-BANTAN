@@ -5,27 +5,40 @@
   font-family: 'Poppins', sans-serif;
 }
 
-.tree-dashboard-fullfillment .title {
-  font-size: 15px;
-  margin: 2px 0;
+.title {
+  font-size: 18px;
+  margin: 4px 0;
   text-align: center;
   font-weight: 700;
 }
 
-.tree-dashboard-fullfillment .subtitle {
-  font-size: 10px;
-  margin-bottom: 4px;
+.subtitle {
+  font-size: 11px;
   text-align: center;
   color: #555;
+  margin-bottom: 6px;
 }
 
-.tree-area {
-  position: relative;
+/* SCALE WRAPPER */
+.tree-scale {
   width: 100%;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
   overflow: hidden;
 }
 
+/* MAIN CANVAS */
+.tree-area {
+  position: relative;
+  width: 1200px;
+  height: 700px;
+  transform: scale(0.75);   /* JANGAN 0.6 */
+  transform-origin: top center;
+}
+
+/* SVG */
 #tree-lines {
   position: absolute;
   inset: 0;
@@ -34,24 +47,25 @@
   pointer-events: none;
 }
 
+/* BOX */
 .tree-box {
   position: absolute;
-  width: 90px;
-  height: 42px;
-  padding: 2px;
-  border-radius: 6px;
+  width: 120px;
+  height: 60px;
+  padding: 4px;
+  border-radius: 8px;
   text-align: center;
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0,0,0,.25);
+  box-shadow: 0 2px 5px rgba(0,0,0,.25);
 }
 
 .tree-box b {
-  font-size: 11px;
+  font-size: 15px;
 }
 
 .tree-box small {
-  font-size: 7px;
+  font-size: 9px;
 }
 
 /* COLORS */
@@ -60,87 +74,62 @@
 .yellow { background:#ffc107; color:#000; }
 .red { background:#f44336; color:#fff; }
 
+/* TABLE */
 .table-block {
   position: absolute;
   background: #fff;
-  border-radius: 6px;
-  padding: 2px;
-  font-size: 7px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  border-radius: 8px;
+  padding: 4px;
+  font-size: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,.2);
 }
 
 .table-block h4 {
-  font-size: 9px;
-  margin: 2px 0;
+  font-size: 12px;
+  margin: 4px 0;
+  text-align:center;
 }
 
 .table-block th,
 .table-block td {
-  padding: 1px 2px;
+  padding: 3px 5px;
 }
 
 /* SIZE */
-.table-block.small { width: 230px; }
-.table-block.large { width: 300px; }
+.table-block.small { width: 300px; }
+.table-block.large { width: 420px; }
 
-.table-block.bottom {
-  width: 100%;
-}
+.table-block.bottom { width: 100%; }
 
-/* POSISI (lebih rapat) */
-#wo { top: 5px; left: 50%; transform: translateX(-50%); }
+/* POSISI (rapih & proporsional) */
+#wo { top: 10px; left: 50%; transform: translateX(-50%); }
 
-#sisa { top: 70px; left: 35%; }
-#sudah { top: 70px; left: 55%; }
+#sisa { top: 90px; left: 35%; }
+#sudah { top: 90px; left: 55%; }
 
-#manja { top: 135px; left: 25%; }
-#manja2 { top: 135px; left: 45%; }
+#manja { top: 170px; left: 25%; }
+#manja2 { top: 170px; left: 45%; }
 
-#sukses { top: 135px; left: 55%; }
-#gagal { top: 135px; left: 75%; }
+#sukses { top: 170px; left: 55%; }
+#gagal { top: 170px; left: 75%; }
 
-#tblSisa { top: 200px; left: 5px; }
-#tblManja { top: 200px; left: 245px; }
+#tblSisa { top: 260px; left: 10px; }
+#tblManja { top: 260px; left: 330px; }
 
-#tblPS { top: 200px; left: 485px; }
-#tblOGP { top: 200px; left: 725px; }
+#tblPS { top: 260px; left: 650px; }
+#tblOGP { top: 260px; left: 970px; }
 
-#tblNonTeknik { top: 330px; left: 5px; }
-#tblTeknik { top: 330px; left: 320px; }
+#tblNonTeknik { top: 420px; left: 10px; }
+#tblTeknik { top: 420px; left: 450px; }
 
-.table-block.bottom {
-  top: 470px;
-}
+.table-block.bottom { top: 580px; }
 
-/* EXTRA SMALL SCREEN */
-@media (max-height: 700px) {
-  .tree-box { width: 95px; height: 45px; font-size: 8px; }
-  .table-block { font-size: 7px; }
-}
-
-
-.tree-scale {
-  width: 100%;
-  height: calc(100vh - 60px);
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-/* SCALE UTAMA */
-.tree-area {
-  transform: scale(0.6);   /* UBAH INI: 0.65 / 0.7 / 0.75 */
-  transform-origin: top center;
-  width: 1400px;  /* canvas tetap */
-  height: 900px;
-  position: relative;
-}
-
+/* NO SCROLL */
 body, html {
   overflow: hidden;
 }
 
 #content-area {
-  padding: 4px !important;
+  padding: 6px !important;
   overflow: hidden;
 }
