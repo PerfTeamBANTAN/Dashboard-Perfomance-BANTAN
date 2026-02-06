@@ -1,49 +1,77 @@
 <div class="tree-dashboard-fullfillment">
+
   <h3 class="title">DIAGRAM TREE INDIHOME TANGERANG</h3>
   <div class="subtitle" id="updateTime"></div>
 
   <div class="tree-area">
     <svg id="tree-lines"></svg>
 
-    <!-- BOX -->
-    <div class="tree-box blue" id="wo">WO PSB<br><b>0</b></div>
+    <!-- LEVEL 1 -->
+    <div class="tree-box blue" id="wo">
+      WO PSB<br><b>0</b>
+    </div>
 
-    <div class="tree-box yellow" id="sisa">SISA PROGRESS<br><b>0</b><small>0%</small></div>
-    <div class="tree-box green" id="sudah">SUDAH PROGRESS<br><b>0</b><small>0%</small></div>
+    <!-- LEVEL 2 -->
+    <div class="tree-box yellow" id="sisa">
+      SISA PROGRESS<br><b>0</b><small>0%</small>
+    </div>
 
-    <div class="tree-box yellow" id="manja">MANJA H+EXP<br><b>0</b><small>0%</small></div>
-    <div class="tree-box yellow" id="manja2">NON MANJA<br><b>0</b><small>0%</small></div>
+    <div class="tree-box green" id="sudah">
+      SUDAH PROGRESS<br><b>0</b><small>0%</small>
+    </div>
 
-    <div class="tree-box green" id="sukses">SUKSES<br><b>0</b><small>0%</small></div>
-    <div class="tree-box red" id="gagal">GAGAL TARIK<br><b>0</b><small>0%</small></div>
-    <!-- TABLE SISA -->
+    <!-- LEVEL 3 -->
+    <div class="tree-box yellow" id="manja">
+      MANJA H+EXP<br><b>0</b><small>0%</small>
+    </div>
+
+    <div class="tree-box yellow" id="manja2">
+      NON MANJA<br><b>0</b><small>0%</small>
+    </div>
+
+    <div class="tree-box green" id="sukses">
+      SUKSES<br><b>0</b><small>0%</small>
+    </div>
+
+    <div class="tree-box red" id="gagal">
+      GAGAL TARIK<br><b>0</b><small>0%</small>
+    </div>
+
+    <!-- LEVEL 4 (CARD, bukan table) -->
+    <div class="tree-box white" id="psEnd">
+      PS END STATE<br><b>0</b>
+    </div>
+
+    <div class="tree-box white" id="ogpEnd">
+      OGP TARIK<br>PS END STATE<br><b>0</b>
+    </div>
+
+    <!-- TABLE AREA -->
     <div class="table-block small" id="tblSisa">
+      <h4>SISA PROGRESS</h4>
       <table>
-        <tr><th>CLUSTER</th><th>SUDAH PICKUP</th><th>BELUM PICKUP</th><th>TOTAL</th></tr>
+        <tr>
+          <th>CLUSTER</th>
+          <th>SUDAH PICKUP</th>
+          <th>BELUM PICKUP</th>
+          <th>TOTAL</th>
+        </tr>
       </table>
     </div>
 
-    <!-- TABLE MANJA -->
     <div class="table-block small" id="tblManja">
+      <h4>MANJA</h4>
       <table>
-        <tr><th>CLUSTER</th><th>MANJA</th><th>NON MANJA</th><th>TOTAL</th></tr>
+        <tr>
+          <th>CLUSTER</th>
+          <th>MANJA</th>
+          <th>NON MANJA</th>
+          <th>TOTAL</th>
+        </tr>
       </table>
     </div>
 
-    <!-- PS END STATE -->
-    <div class="table-block small" id="tblPS">
-      <h4>PS END STATE</h4>
-      <table></table>
-    </div>
-
-    <!-- OGP TARIK -->
-    <div class="table-block small" id="tblOGP">
-      <h4>OGP TARIK / PS END STATE</h4>
-      <table></table>
-    </div>
-
-    <!-- NON TEKNIK -->
-    <div class="table-block large blueTbl" id="tblNonTeknik">
+    <div class="table-block large" id="tblNonTeknik">
       <h4>NON TEKNIK</h4>
       <table>
         <tr>
@@ -55,8 +83,7 @@
       </table>
     </div>
 
-    <!-- TEKNIK -->
-    <div class="table-block large redTbl" id="tblTeknik">
+    <div class="table-block large" id="tblTeknik">
       <h4>TEKNIK</h4>
       <table>
         <tr>
@@ -68,8 +95,7 @@
       </table>
     </div>
 
-    <!-- CLUSTER -->
-    <div class="table-block bottom">
+    <div class="table-block bottom" id="tblCluster">
       <h4>CLUSTER</h4>
       <table>
         <tr>
