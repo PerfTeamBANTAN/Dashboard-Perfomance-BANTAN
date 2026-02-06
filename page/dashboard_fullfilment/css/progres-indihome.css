@@ -34,25 +34,24 @@
   pointer-events: none;
 }
 
-/* BOX */
 .tree-box {
   position: absolute;
-  width: 110px;
-  height: 50px;
-  padding: 3px;
+  width: 90px;
+  height: 42px;
+  padding: 2px;
   border-radius: 6px;
   text-align: center;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 600;
-  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+  box-shadow: 0 1px 3px rgba(0,0,0,.25);
 }
 
 .tree-box b {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .tree-box small {
-  font-size: 8px;
+  font-size: 7px;
 }
 
 /* COLORS */
@@ -61,33 +60,23 @@
 .yellow { background:#ffc107; color:#000; }
 .red { background:#f44336; color:#fff; }
 
-/* TABLE */
 .table-block {
   position: absolute;
   background: #fff;
   border-radius: 6px;
-  padding: 3px;
-  font-size: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  padding: 2px;
+  font-size: 7px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
 }
 
 .table-block h4 {
   font-size: 9px;
   margin: 2px 0;
-  text-align: center;
-  font-weight: 700;
-}
-
-.table-block table {
-  width: 100%;
-  border-collapse: collapse;
 }
 
 .table-block th,
 .table-block td {
-  border: 1px solid #ccc;
-  padding: 1px 3px;
-  text-align: center;
+  padding: 1px 2px;
 }
 
 /* SIZE */
@@ -127,4 +116,31 @@
 @media (max-height: 700px) {
   .tree-box { width: 95px; height: 45px; font-size: 8px; }
   .table-block { font-size: 7px; }
+}
+
+
+.tree-scale {
+  width: 100%;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+/* SCALE UTAMA */
+.tree-area {
+  transform: scale(0.6);   /* UBAH INI: 0.65 / 0.7 / 0.75 */
+  transform-origin: top center;
+  width: 1400px;  /* canvas tetap */
+  height: 900px;
+  position: relative;
+}
+
+body, html {
+  overflow: hidden;
+}
+
+#content-area {
+  padding: 4px !important;
+  overflow: hidden;
 }
