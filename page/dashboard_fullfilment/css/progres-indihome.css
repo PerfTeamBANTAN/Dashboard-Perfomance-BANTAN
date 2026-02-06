@@ -1,92 +1,165 @@
-/* ===============================
-   DASHBOARD FULLFILMENT STYLE
+/* ==============================
+   TREE DASHBOARD FULLFILMENT
    page/dashboard_fullfilment/css
 ================================ */
 
-.dashboard-fullfilment {
+.tree-dashboard {
   font-family: 'Poppins', sans-serif;
 }
 
 /* TITLE */
-.dashboard-fullfilment .dashboard-title {
+.tree-dashboard .title {
+  text-align: center;
   font-weight: 700;
   color: #c62828;
+  margin-bottom: 5px;
+}
+
+.tree-dashboard .subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
   margin-bottom: 20px;
 }
 
-/* BOX STAT */
-.dashboard-fullfilment .stat-box {
-  background: white;
-  border-radius: 16px;
-  padding: 18px;
+/* TREE AREA */
+.tree-area {
+  position: relative;
+  min-height: 800px;
+  background: #f4f4f4;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* BOX */
+.tree-dashboard .box {
+  position: absolute;
+  padding: 12px 16px;
+  border-radius: 14px;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  font-weight: 600;
+  min-width: 150px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
   transition: 0.3s;
 }
 
-.dashboard-fullfilment .stat-box:hover {
-  transform: translateY(-5px);
+.tree-dashboard .box:hover {
+  transform: scale(1.05);
 }
 
-/* COLOR VARIANT */
-.dashboard-fullfilment .stat-box.red {
-  background: linear-gradient(135deg,#c62828,#8e0000);
+/* BOX COLORS */
+.tree-dashboard .blue {
+  background: linear-gradient(135deg,#1976d2,#0d47a1);
   color: white;
 }
-.dashboard-fullfilment .stat-box.blue {
-  background: linear-gradient(135deg,#1565c0,#0d47a1);
-  color: white;
-}
-.dashboard-fullfilment .stat-box.green {
+.tree-dashboard .green {
   background: linear-gradient(135deg,#2e7d32,#1b5e20);
   color: white;
 }
-.dashboard-fullfilment .stat-box.orange {
-  background: linear-gradient(135deg,#ef6c00,#e65100);
+.tree-dashboard .yellow {
+  background: linear-gradient(135deg,#fbc02d,#f57f17);
+  color: #111;
+}
+.tree-dashboard .red {
+  background: linear-gradient(135deg,#c62828,#8e0000);
   color: white;
 }
 
-.dashboard-fullfilment .stat-box span {
-  font-size: 14px;
-  opacity: 0.9;
+/* NUMBER */
+.tree-dashboard .box b {
+  font-size: 22px;
 }
 
-.dashboard-fullfilment .stat-box b {
-  font-size: 28px;
-  display: block;
+.tree-dashboard .box small {
+  font-size: 12px;
 }
 
-/* TABLE CARD */
-.dashboard-fullfilment .table-card {
-  margin-top: 25px;
+/* TABLE BLOCK */
+.tree-dashboard .table-block {
   background: white;
-  padding: 20px;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  padding: 15px;
+  margin-top: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
-.dashboard-fullfilment table {
+.tree-dashboard .table-block h4 {
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* TABLE */
+.tree-dashboard table {
   width: 100%;
+  border-collapse: collapse;
 }
 
-.dashboard-fullfilment table th {
+.tree-dashboard table th {
   background: #c62828;
   color: white;
-  text-align: center;
+  padding: 6px;
+  font-size: 13px;
 }
 
-.dashboard-fullfilment table td {
+.tree-dashboard table td {
   text-align: center;
-  font-weight: 500;
+  padding: 6px;
+  font-size: 13px;
+  border-bottom: 1px solid #ddd;
 }
 
-.dashboard-fullfilment tr:last-child th {
+.tree-dashboard table tr:last-child th {
   background: #111;
 }
 
+/* TABLE COLOR VARIANT */
+.tree-dashboard .blueTbl table th {
+  background: #1565c0;
+}
+
+.tree-dashboard .redTbl table th {
+  background: #b71c1c;
+}
+
+/* SIZE VARIANT */
+.tree-dashboard .small {
+  width: 48%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.tree-dashboard .large {
+  width: 100%;
+}
+
+.tree-dashboard .bottom {
+  width: 100%;
+}
+
+/* SVG LINE */
+#tree-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
 /* RESPONSIVE */
-@media (max-width:768px){
-  .dashboard-fullfilment .stat-box b {
-    font-size: 22px;
+@media (max-width: 768px) {
+  .tree-dashboard .small {
+    width: 100%;
+  }
+
+  .tree-dashboard .box {
+    position: static;
+    margin-bottom: 10px;
+  }
+
+  .tree-area {
+    min-height: auto;
   }
 }
