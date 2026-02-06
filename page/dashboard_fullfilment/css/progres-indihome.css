@@ -35,49 +35,47 @@
   height:900px;
 }
 
-/* BOX */
-.tree-box{
-  position:absolute;
-  width:120px;
-  height:55px;
-  border:1px solid #000;
-  text-align:center;
-  padding:4px;
-  font-size:11px;
-  font-weight:bold;
+.tree-box {
+  position: absolute;
+  width: 120px;
+  min-height: 60px;
+  padding: 6px 4px;
+  border-radius: 10px;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
 }
-
-.tree-box b{font-size:14px;}
-.tree-box small{font-size:10px;}
-
-/* COLORS */
-.blue{background:#00a2e8;color:#000;}
-.green{background:#92d050;color:#000;}
-.yellow{background:#ffe699;color:#000;}
-.red{background:#ff4d4d;color:#fff;}
-
-/* TABLE */
-.table-block{
-  position:absolute;
-  font-size:11px;
+/* Judul (SISA PROGRESS, SUKSES, dll) */
+.tree-box span,
+.tree-box .label {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
 }
-
-.table-block table{
-  border-collapse:collapse;
-  width:100%;
+/* Angka utama */
+.tree-box b {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.1;
 }
-.table-block th,
-.table-block td{
-  border:1px solid #000;
-  padding:2px 4px;
-  text-align:center;
+/* Persentase */
+.tree-box small {
+  font-size: 10px;
+  opacity: .9;
+  line-height: 1;
 }
-
-/* WARNA TABLE */
-.blueTbl th{background:#bdd7ee;}
-.greenTbl th{background:#c6e0b4;}
-.orangeTbl th{background:#f8cbad;}
-.redTbl th{background:#f4b084;}
+/* Warna tetap */
+.blue { background:#2196f3; color:#fff; }
+.green { background:#4caf50; color:#fff; }
+.yellow { background:#ffc107; color:#000; }
+.red { background:#f44336; color:#fff; }
+.white { background:#f5f5f5; color:#000; border:1px solid #ccc; }
 
 #wo { top:20px; left:50%; transform:translateX(-50%); }
 
