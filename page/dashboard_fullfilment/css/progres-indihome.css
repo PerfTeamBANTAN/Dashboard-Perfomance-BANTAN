@@ -1,121 +1,129 @@
-/* RESET konflik template */
-.tree-dashboard-fullfillment * {
-  box-sizing: border-box;
-}
-
 /* ROOT */
-.tree-dashboard-fullfillment {
-  width: 100%;
-  min-height: 100vh;
+.tree-dashboard {
   padding: 20px;
-  background: #f2f4f8;
-  font-family: Arial, sans-serif;
+  background: #f4f6f9;
 }
 
-.tree-dashboard-fullfillment .title {
+.title {
   text-align: center;
-  font-weight: bold;
   color: #c62828;
+  font-weight: 700;
 }
 
-.tree-dashboard-fullfillment .subtitle {
+.subtitle {
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
   margin-bottom: 20px;
 }
 
-/* AREA */
-.tree-dashboard-fullfillment .tree-area {
-  position: relative !important;
-  width: 100%;
-  min-height: 1000px;
+/* AREA DIAGRAM */
+.tree-area {
+  position: relative;
+  min-height: 1300px;
   background: #fff;
   border-radius: 15px;
   padding: 30px;
-  box-shadow: 0 5px 20px rgba(0,0,0,.15);
+  box-shadow: 0 0 15px rgba(0,0,0,0.15);
 }
 
-/* ================= BOX ================= */
-.tree-dashboard-fullfillment .tree-box {
-  position: absolute !important;
-  width: 180px;
-  padding: 12px;
+/* BOX STYLE */
+.box {
+  position: absolute;
+  width: 150px;
   text-align: center;
-  border-radius: 12px;
+  padding: 12px;
+  border-radius: 10px;
   color: #fff;
   font-weight: bold;
-  box-shadow: 0 5px 15px rgba(0,0,0,.25);
-  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
 }
 
-.tree-dashboard-fullfillment .tree-box b {
+.box b {
   font-size: 22px;
+}
+.box small {
+  font-size: 12px;
 }
 
 /* COLORS */
-.tree-dashboard-fullfillment .blue { background:#1565c0; }
-.tree-dashboard-fullfillment .green { background:#2e7d32; }
-.tree-dashboard-fullfillment .yellow { background:#f9a825; color:#000; }
-.tree-dashboard-fullfillment .red { background:#c62828; }
+.blue { background: #1565c0; }
+.yellow { background: #f9a825; color:#000; }
+.green { background: #2e7d32; }
+.red { background: #c62828; }
 
-/* POSISI BOX */
-#wo { top: 30px; left: 50%; transform: translateX(-50%); }
+/* BOX POSITION (FLOWCHART) */
+#wo { top: 80px; left: 45%; }
 
-#sisa { top: 140px; left: 15%; }
-#sudah { top: 140px; right: 15%; }
+#sisa { top: 200px; left: 25%; }
+#sudah { top: 200px; left: 65%; }
 
-#manja { top: 260px; left: 5%; }
-#manja2 { top: 260px; left: 30%; }
+#manja { top: 330px; left: 20%; }
+#manja2 { top: 330px; left: 35%; }
 
-#sukses { top: 260px; right: 30%; }
-#gagal { top: 260px; right: 5%; }
+#sukses { top: 330px; left: 60%; }
+#gagal { top: 330px; left: 75%; }
 
-/* ================= TABLE ================= */
-.tree-dashboard-fullfillment .table-block {
+/* TABLE BLOCK */
+.table-block {
+  position: absolute;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 10px;
   padding: 10px;
-  margin-top: 40px;
-  box-shadow: 0 3px 10px rgba(0,0,0,.1);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 }
 
-.tree-dashboard-fullfillment table {
+.table-block h4 {
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.table-block table {
   width: 100%;
   border-collapse: collapse;
   font-size: 12px;
 }
 
-.tree-dashboard-fullfillment th,
-.tree-dashboard-fullfillment td {
+.table-block th {
+  background: #111;
+  color: #fff;
+  padding: 5px;
+}
+
+.table-block td {
   border: 1px solid #ddd;
-  padding: 6px;
+  padding: 4px;
   text-align: center;
 }
 
-.tree-dashboard-fullfillment th {
-  background: #222;
-  color: #fff;
+.small { width: 450px; }
+.large { width: 700px; }
+
+/* TABLE POSITIONS */
+#tblSisa { top: 450px; left: 50px; }
+#tblManja { top: 450px; right: 50px; }
+
+#tblPS { top: 650px; left: 50px; width: 400px; }
+#tblOGP { top: 650px; right: 50px; width: 400px; }
+
+#tblNonTeknik { top: 850px; left: 50px; }
+#tblTeknik { top: 1050px; left: 50px; }
+
+.table-block.bottom {
+  top: 1250px;
+  left: 50px;
+  width: 700px;
 }
 
-/* ukuran */
-.tree-dashboard-fullfillment .small {
-  width: 48%;
-  display: inline-block;
-}
+/* SPECIAL TABLE COLORS */
+.blueTbl th { background:#1565c0; }
+.redTbl th { background:#c62828; }
 
-.tree-dashboard-fullfillment .large {
+/* SVG LINES */
+#tree-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-}
-
-/* warna tabel */
-.tree-dashboard-fullfillment .blueTbl th {
-  background:#1565c0;
-}
-
-.tree-dashboard-fullfillment .redTbl th {
-  background:#b71c1c;
-}
-
-.tree-dashboard-fullfillment .bottom {
-  margin-top: 30px;
+  height: 100%;
 }
