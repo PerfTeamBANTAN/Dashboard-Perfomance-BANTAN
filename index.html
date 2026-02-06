@@ -185,6 +185,95 @@ footer{
     gap:10px;
   }
 }
+
+/* ===============================
+   FULFILLMENT ANIMATED TEXT
+   =============================== */
+
+.fulfillment-anim {
+  height:140px;
+  margin-top:10px;
+  border-radius:10px;
+  background: linear-gradient(135deg, #0b0b0b, #1a1a1a, #000);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+  animation:bgPulse 6s ease-in-out infinite;
+}
+
+.fulfillment-anim::before {
+  content:"";
+  position:absolute;
+  width:100%;
+  height:2px;
+  background:linear-gradient(to right, transparent, #ff2b2b, transparent);
+  animation:scan 2.5s linear infinite;
+  opacity:.8;
+}
+
+.fulfillment-anim .line1 {
+  font-size:20px;
+  font-weight:700;
+  color:#ffffff;
+  letter-spacing:2px;
+  animation:textGlow 2s ease-in-out infinite alternate;
+}
+
+.fulfillment-anim .line2 {
+  font-size:14px;
+  font-weight:600;
+  margin-top:6px;
+  color:#ff2b2b;
+  letter-spacing:1.5px;
+  animation:textGlowRed 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes textGlow {
+  from { text-shadow:0 0 5px rgba(255,255,255,.3); }
+  to   { text-shadow:0 0 15px rgba(255,255,255,.8); }
+}
+
+@keyframes textGlowRed {
+  from { text-shadow:0 0 5px rgba(255,0,0,.4); }
+  to   { text-shadow:0 0 20px rgba(255,0,0,.9); }
+}
+
+@keyframes bgPulse {
+  0%   { box-shadow:0 0 10px rgba(255,0,0,.2); }
+  50%  { box-shadow:0 0 25px rgba(255,0,0,.6); }
+  100% { box-shadow:0 0 10px rgba(255,0,0,.2); }
+}
+
+@keyframes scan {
+  from { top:0; }
+  to   { top:100%; }
+}
+
+.card:hover .fulfillment-anim {
+  transform: scale(1.05);
+  transition: 0.4s ease;
+}
+
+.card:hover .fulfillment-anim {
+  transform: scale(1.05);
+}
+
+.fulfillment-anim {
+  transition: transform 0.4s ease;
+}
+
+@media(max-width:600px){
+  .fulfillment-anim .line1 {
+    font-size:18px;
+  }
+  .fulfillment-anim .line2 {
+    font-size:13px;
+  }
+}
+
 </style>
 </head>
 
@@ -218,10 +307,16 @@ footer{
     </div>
 
     <div class="card dark" onclick="openPage('page/dashboard_fullfilment/fullfilment.html')">
-      <h3>Fulfillment Performance Dashboard</h3>
-      <img src="assets/home/img/viki_kalah.png">
-      <p>Monitoring & Analysis of Service Activation Process</p>
-    </div>
+  <h3>Fulfillment Performance Dashboard</h3>
+
+  <div class="fulfillment-anim">
+    <div class="line1">FULFILLMENT</div>
+    <div class="line2">BRANCH TANGERANG</div>
+  </div>
+
+  <p>Monitoring & Analysis of Service Activation Process</p>
+</div>
+
 
     <div class="card orange" onclick="openPage('fulfillment.html')">
       <h3>Service Assurance & Maintenance Dashboard</h3>
