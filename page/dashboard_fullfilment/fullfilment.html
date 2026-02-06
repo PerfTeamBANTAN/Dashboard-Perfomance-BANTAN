@@ -187,8 +187,12 @@ body {
 const B2B_API_URL = 'https://script.google.com/macros/s/AKfycbwUqQ9_EFnGsX0swiip-Mc7ZNavcxLnr7lZdl8bLDYBr4gkRyGeugFPd1elH7Z6QPJwuA/exec';
 
 const menuMap = {
-  "progres-indihome": { html: "partial/progres-indihome.html", js: "js/progres-indihome.js", init: "initProgresIndihome" },
-  "underspec-b2c": { html: "partial/underspec-b2c.html", js: "js/underspec-b2c.js", init: "initUnderspecB2C" }
+  "progres-indihome": {
+    html: "partial/progres-indihome.html",
+    js: "js/progres-indihome.js",
+    css: "css/progres-indihome.css",
+    init: "initProgresIndihome"
+  }
 };
 
 async function loadPage(menu) {
