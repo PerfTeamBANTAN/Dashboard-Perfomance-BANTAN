@@ -1,1 +1,100 @@
-bbb
+<link rel="stylesheet" href="page/dashboard_fullfilment/css/progres-indihome.css">
+
+<div class="tree-dashboard">
+
+  <h3 class="title">DIAGRAM TREE INDIHOME TANGERANG</h3>
+  <div class="subtitle" id="updateTime"></div>
+
+  <div class="tree-area">
+    <svg id="tree-lines"></svg>
+
+    <!-- BOX TREE -->
+    <div class="box blue" id="wo">WO PSB<br><b>0</b></div>
+
+    <div class="box yellow" id="sisa">SISA PROGRESS<br><b>0</b><br><small>0%</small></div>
+    <div class="box green" id="sudah">SUDAH PROGRESS<br><b>0</b><br><small>0%</small></div>
+
+    <div class="box yellow" id="manja">MANJA H+EXP<br><b>0</b><br><small>0%</small></div>
+    <div class="box yellow" id="manja2">NON MANJA<br><b>0</b><br><small>0%</small></div>
+
+    <div class="box green" id="sukses">SUKSES<br><b>0</b><br><small>0%</small></div>
+    <div class="box red" id="gagal">GAGAL TARIK<br><b>0</b><br><small>0%</small></div>
+
+    <!-- TABLE SISA PROGRESS -->
+    <div class="table-block small" id="tblSisa">
+      <table>
+        <tr><th>CLUSTER</th><th>SUDAH PICKUP</th><th>BELUM PICKUP</th><th>TOTAL</th></tr>
+        <!-- diisi JS -->
+      </table>
+    </div>
+
+    <!-- TABLE MANJA -->
+    <div class="table-block small" id="tblManja">
+      <table>
+        <tr><th>CLUSTER</th><th>MANJA</th><th>NON MANJA</th><th>TOTAL</th></tr>
+        <!-- diisi JS -->
+      </table>
+    </div>
+
+    <!-- PS END STATE -->
+    <div class="table-block small" id="tblPS">
+      <h4>PS END STATE</h4>
+      <table>
+        <!-- diisi JS -->
+      </table>
+    </div>
+
+    <!-- OGP TARIK -->
+    <div class="table-block small" id="tblOGP">
+      <h4>OGP TARIK / PS END STATE</h4>
+      <table>
+        <!-- diisi JS -->
+      </table>
+    </div>
+
+    <!-- NON TEKNIK -->
+    <div class="table-block large blueTbl" id="tblNonTeknik">
+      <h4>NON TEKNIK</h4>
+      <table>
+        <tr>
+          <th>KENDALA</th>
+          <th>KOTANG</th>
+          <th>TANGSEL</th>
+          <th>TOTAL</th>
+        </tr>
+        <!-- diisi JS -->
+      </table>
+    </div>
+
+    <!-- TEKNIK -->
+    <div class="table-block large redTbl" id="tblTeknik">
+      <h4>TEKNIK</h4>
+      <table>
+        <tr>
+          <th>KENDALA</th>
+          <th>KOTANG</th>
+          <th>TANGSEL</th>
+          <th>TOTAL</th>
+        </tr>
+        <!-- diisi JS -->
+      </table>
+    </div>
+
+    <!-- DATEL / CLUSTER -->
+    <div class="table-block bottom">
+      <h4>CLUSTER</h4>
+      <table>
+        <tr>
+          <th>CLUSTER</th>
+          <th>WO</th>
+          <th>UPDATE VIA BOT</th>
+          <th>% BOT</th>
+        </tr>
+        <!-- diisi JS -->
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script src="page/dashboard_fullfilment/js/progres-indihome.js"></script>
