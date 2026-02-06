@@ -162,10 +162,12 @@ function updateManjaTable(data) {
 }
 
 /* ================= KENDALA NON TEKNIK ================= */
+/* ================= KENDALA NON TEKNIK ================= */
 function updateKendalaNonTeknik(data) {
   const table = document.querySelector("#tblNonTeknik table");
   if (!table) return;
 
+  // Build NON TEKNIK table
   let html = `
     <tr>
       <th>KENDALA</th>
@@ -210,7 +212,18 @@ function updateKendalaNonTeknik(data) {
   `;
 
   table.innerHTML = html;
+
+  // ==============================================
+  // Atur posisi TEKNIK otomatis di bawah NON TEKNIK
+  // ==============================================
+  const teknikTable = document.getElementById("tblTeknik");
+  if (nonTeknikTable && teknikTable) {
+    const nonTeknikBlock = document.getElementById("tblNonTeknik");
+    const bottomNonTeknik = nonTeknikBlock.offsetTop + nonTeknikBlock.offsetHeight;
+    teknikTable.style.top = (bottomNonTeknik + 10) + "px"; // +10px jarak
+  }
 }
+
 
 function drawPath(fromId, toId) {
   const from = document.getElementById(fromId);
