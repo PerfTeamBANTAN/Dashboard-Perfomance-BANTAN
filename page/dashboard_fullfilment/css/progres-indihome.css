@@ -1,8 +1,9 @@
 .tree-dashboard-fullfillment{
   width:100%;
   height:100vh;
-  overflow:hidden;
-  font-family:Segoe UI, Arial, sans-serif;
+  overflow:auto;
+  background:#eee;
+  font-family:Arial, sans-serif;
 }
 
 .title{
@@ -16,52 +17,104 @@
   margin-bottom:5px;
 }
 
-/* CANVAS */
+/* KANVAS UTAMA */
 .tree-area{
   position:relative;
-  width:1200px;
-  height:500px;
-  margin:0 auto;
+  width:1400px;
+  height:900px;
+  margin:10px auto;
   background:#fff;
+  border:2px solid #000;
 }
 
-/* SVG */
+/* SVG GARIS */
 #tree-lines{
   position:absolute;
   inset:0;
-  width:100%;
-  height:100%;
+  width:1400px;
+  height:900px;
 }
 
 /* BOX */
 .tree-box{
   position:absolute;
-  width:140px;
-  height:65px;
-  border-radius:8px;
+  width:120px;
+  height:55px;
+  border:1px solid #000;
   text-align:center;
-  padding:6px;
-  font-size:12px;
-  font-weight:600;
-  box-shadow:0 2px 5px rgba(0,0,0,.25);
+  padding:4px;
+  font-size:11px;
+  font-weight:bold;
 }
-.tree-box b{font-size:16px;}
+
+.tree-box b{font-size:14px;}
 .tree-box small{font-size:10px;}
 
 /* COLORS */
-.blue{background:#2196f3;color:#fff;}
-.green{background:#4caf50;color:#fff;}
-.yellow{background:#ffc107;color:#000;}
-.red{background:#f44336;color:#fff;}
+.blue{background:#00a2e8;color:#000;}
+.green{background:#92d050;color:#000;}
+.yellow{background:#ffe699;color:#000;}
+.red{background:#ff4d4d;color:#fff;}
 
-/* ====== KOORDINAT 1:1 ====== */
-#wo{top:20px;left:530px;}
+/* TABLE */
+.table-block{
+  position:absolute;
+  font-size:11px;
+}
 
-#sisa{top:110px;left:360px;}
-#sudah{top:110px;left:700px;}
+.table-block table{
+  border-collapse:collapse;
+  width:100%;
+}
+.table-block th,
+.table-block td{
+  border:1px solid #000;
+  padding:2px 4px;
+  text-align:center;
+}
 
-#manja{top:200px;left:250px;}
-#manja2{top:200px;left:450px;}
+/* WARNA TABLE */
+.blueTbl th{background:#bdd7ee;}
+.greenTbl th{background:#c6e0b4;}
+.orangeTbl th{background:#f8cbad;}
+.redTbl th{background:#f4b084;}
 
-#sukses{top:200px;left:650px;}
-#gagal{top:200px;left:850px;}
+/* TOP TREE */
+#wo{top:80px;left:120px;}
+
+#sisa{top:80px;left:260px;}
+#sudah{top:150px;left:260px;}
+
+#manja{top:20px;left:360px;}
+#manja2{top:110px;left:360px;}
+
+#sukses{top:150px;left:500px;}
+#gagal{top:240px;left:500px;}
+
+/* TABLE ATAS */
+#tblSisa{top:20px;left:520px;width:320px;}
+#tblManja{top:20px;left:860px;width:320px;}
+
+#tblPS{top:140px;left:700px;width:260px;}
+#tblOGP{top:200px;left:700px;width:260px;}
+
+/* NON TEKNIK */
+#tblNonTeknik{
+  top:300px;
+  left:700px;
+  width:500px;
+}
+
+/* TEKNIK */
+#tblTeknik{
+  top:520px;
+  left:700px;
+  width:500px;
+}
+
+/* CLUSTER BAWAH */
+.table-block.bottom{
+  top:700px;
+  left:50px;
+  width:400px;
+}
