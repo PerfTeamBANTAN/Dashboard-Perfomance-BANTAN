@@ -79,69 +79,25 @@
 .orangeTbl th{background:#f8cbad;}
 .redTbl th{background:#f4b084;}
 
-/* TOP TREE */
-/* TREE LEVEL 1 */
-#wo{
-  top:80px;
-  left:120px;
-}
+#wo { top:20px; left:50%; transform:translateX(-50%); }
 
-/* TREE LEVEL 2 */
-#sisa{
-  top:80px;
-  left:300px;
-}
+#sisa { top:90px; left:35%; }
+#sudah { top:90px; left:55%; }
 
-#sudah{
-  top:160px;
-  left:300px;
-}
+#manja { top:160px; left:25%; }
+#manja2 { top:160px; left:40%; }
 
-/* TREE LEVEL 3 */
-#manja{
-  top:20px;
-  left:480px;
-}
+#sukses { top:160px; left:55%; }
+#gagal { top:160px; left:70%; }
 
-#manja2{
-  top:100px;
-  left:480px;
-}
+#psEnd { top:230px; left:55%; }
+#ogpEnd { top:300px; left:55%; }
 
-#sukses{
-  top:160px;
-  left:480px;
-}
+#tblSisa { top:380px; left:5%; }
+#tblManja { top:380px; left:35%; }
 
-#gagal{
-  top:240px;
-  left:480px;
-}
+#tblNonTeknik { top:520px; left:5%; }
+#tblTeknik { top:520px; left:45%; }
 
-/* TABLE ATAS */
-#tblSisa{top:20px;left:520px;width:320px;}
-#tblManja{top:20px;left:860px;width:320px;}
+#tblCluster { top:680px; left:5%; width:90%; }
 
-#tblPS{top:140px;left:700px;width:260px;}
-#tblOGP{top:200px;left:700px;width:260px;}
-
-/* NON TEKNIK */
-#tblNonTeknik{
-  top:300px;
-  left:700px;
-  width:500px;
-}
-
-/* TEKNIK */
-#tblTeknik{
-  top:520px;
-  left:700px;
-  width:500px;
-}
-
-/* CLUSTER BAWAH */
-.table-block.bottom{
-  top:700px;
-  left:50px;
-  width:400px;
-}
