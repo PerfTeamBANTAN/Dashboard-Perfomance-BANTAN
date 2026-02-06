@@ -1,137 +1,121 @@
-/* ================= TREE DASHBOARD ROOT ================= */
-.tree-dashboard {
+/* RESET konflik template */
+.tree-dashboard-fullfillment * {
+  box-sizing: border-box;
+}
+
+/* ROOT */
+.tree-dashboard-fullfillment {
   width: 100%;
   min-height: 100vh;
   padding: 20px;
-  background: #f4f6f9;
-  font-family: 'Poppins', sans-serif;
+  background: #f2f4f8;
+  font-family: Arial, sans-serif;
 }
 
-.tree-dashboard .title {
+.tree-dashboard-fullfillment .title {
   text-align: center;
-  font-weight: 700;
+  font-weight: bold;
   color: #c62828;
 }
 
-.tree-dashboard .subtitle {
+.tree-dashboard-fullfillment .subtitle {
   text-align: center;
+  font-size: 12px;
   margin-bottom: 20px;
-  font-size: 13px;
-  color: #555;
 }
 
-/* ================= TREE AREA ================= */
-.tree-area {
-  position: relative;
+/* AREA */
+.tree-dashboard-fullfillment .tree-area {
+  position: relative !important;
   width: 100%;
-  min-height: 900px;
+  min-height: 1000px;
   background: #fff;
-  border-radius: 20px;
+  border-radius: 15px;
   padding: 30px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 5px 20px rgba(0,0,0,.15);
 }
 
 /* ================= BOX ================= */
-.box {
-  position: absolute;
+.tree-dashboard-fullfillment .tree-box {
+  position: absolute !important;
   width: 180px;
   padding: 12px;
   text-align: center;
   border-radius: 12px;
   color: #fff;
-  font-weight: 600;
+  font-weight: bold;
   box-shadow: 0 5px 15px rgba(0,0,0,.25);
+  z-index: 10;
 }
 
-.box b {
-  font-size: 26px;
-}
-
-.box small {
-  font-size: 12px;
+.tree-dashboard-fullfillment .tree-box b {
+  font-size: 22px;
 }
 
 /* COLORS */
-.blue { background: linear-gradient(135deg,#1976d2,#0d47a1); }
-.green { background: linear-gradient(135deg,#2e7d32,#1b5e20); }
-.yellow { background: linear-gradient(135deg,#f9a825,#f57f17); color:#000; }
-.red { background: linear-gradient(135deg,#c62828,#8e0000); }
+.tree-dashboard-fullfillment .blue { background:#1565c0; }
+.tree-dashboard-fullfillment .green { background:#2e7d32; }
+.tree-dashboard-fullfillment .yellow { background:#f9a825; color:#000; }
+.tree-dashboard-fullfillment .red { background:#c62828; }
 
-/* ================= BOX POSITIONS ================= */
-/* Top */
-#wo { top: 40px; left: 50%; transform: translateX(-50%); }
+/* POSISI BOX */
+#wo { top: 30px; left: 50%; transform: translateX(-50%); }
 
-/* Level 2 */
-#sisa { top: 150px; left: 20%; }
-#sudah { top: 150px; right: 20%; }
+#sisa { top: 140px; left: 15%; }
+#sudah { top: 140px; right: 15%; }
 
-/* Level 3 */
-#manja { top: 280px; left: 10%; }
-#manja2 { top: 280px; left: 30%; }
-#sukses { top: 280px; right: 30%; }
-#gagal { top: 280px; right: 10%; }
+#manja { top: 260px; left: 5%; }
+#manja2 { top: 260px; left: 30%; }
 
-/* ================= TABLE BLOCK ================= */
-.table-block {
-  background: #fff;
-  border-radius: 15px;
-  padding: 15px;
-  margin-top: 40px;
-  box-shadow: 0 5px 15px rgba(0,0,0,.1);
-}
-
-.table-block h4 {
-  text-align: center;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-/* SIZE */
-.table-block.small {
-  width: 48%;
-  display: inline-block;
-}
-
-.table-block.large {
-  width: 100%;
-}
-
-/* COLORS TABLE */
-.blueTbl table th {
-  background: #1565c0;
-  color: white;
-}
-
-.redTbl table th {
-  background: #b71c1c;
-  color: white;
-}
+#sukses { top: 260px; right: 30%; }
+#gagal { top: 260px; right: 5%; }
 
 /* ================= TABLE ================= */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
+.tree-dashboard-fullfillment .table-block {
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px;
+  margin-top: 40px;
+  box-shadow: 0 3px 10px rgba(0,0,0,.1);
 }
 
-table th, table td {
+.tree-dashboard-fullfillment table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.tree-dashboard-fullfillment th,
+.tree-dashboard-fullfillment td {
   border: 1px solid #ddd;
   padding: 6px;
   text-align: center;
 }
 
-table th {
+.tree-dashboard-fullfillment th {
   background: #222;
   color: #fff;
 }
 
-table tr:last-child {
-  background: #000;
-  color: #fff;
-  font-weight: bold;
+/* ukuran */
+.tree-dashboard-fullfillment .small {
+  width: 48%;
+  display: inline-block;
 }
 
-/* ================= BOTTOM CLUSTER ================= */
-.table-block.bottom {
-  margin-top: 40px;
+.tree-dashboard-fullfillment .large {
+  width: 100%;
+}
+
+/* warna tabel */
+.tree-dashboard-fullfillment .blueTbl th {
+  background:#1565c0;
+}
+
+.tree-dashboard-fullfillment .redTbl th {
+  background:#b71c1c;
+}
+
+.tree-dashboard-fullfillment .bottom {
+  margin-top: 30px;
 }
