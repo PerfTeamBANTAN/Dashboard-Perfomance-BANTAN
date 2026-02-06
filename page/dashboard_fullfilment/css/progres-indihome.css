@@ -123,28 +123,28 @@
   font-size: 12px;
 }
 
-/* POSISI TABEL DIBERIKAN JARAK RAPIH */
+/* POSISI TABEL */
 #tblSisa {
-  top:380px;
-  left:50px;   /* beri jarak kiri */
+  top:380px;       /* baris pertama */
+  left:50px;
   width:250px;
 }
 
 #tblManja {
-  top:380px;
-  left:350px;  /* geser kanan dari tabel SISA */
+  top:380px;       /* baris pertama */
+  left:350px;
   width:300px;
 }
 
 #tblNonTeknik {
-  top:520px;
-  left:50px;   /* di bawah card GAGAL TARIK */
+  top:520px;       /* baris kedua, di bawah GAGAL TARIK */
+  left:50px;
   width:250px;
 }
 
 #tblTeknik {
-  top:520px;
-  left:350px;  /* di samping NON TEKNIK */
+  top:520px;       /* baris kedua */
+  left:350px;
   width:250px;
 }
 
