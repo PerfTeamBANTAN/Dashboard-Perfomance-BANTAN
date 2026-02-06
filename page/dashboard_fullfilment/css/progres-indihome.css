@@ -1,128 +1,130 @@
-.tree-dashboard-fullfillment {
-  width: 100%;
-  height: 100vh;
-  font-family: Poppins, sans-serif;
-  overflow: hidden;
+.tree-dashboard-fullfillment{
+  width:100%;
+  height:100vh;
+  overflow:hidden;
+  font-family:Segoe UI, Arial, sans-serif;
 }
 
-.title {
-  text-align: center;
-  font-size: 18px;
-  margin: 6px 0;
-  font-weight: 700;
+/* TITLE */
+.title{
+  text-align:center;
+  font-size:16px;
+  margin:4px 0;
+  font-weight:700;
+}
+.subtitle{
+  text-align:center;
+  font-size:11px;
+  color:#555;
+  margin-bottom:4px;
 }
 
-.subtitle {
-  text-align: center;
-  font-size: 12px;
-  margin-bottom: 8px;
-  color: #555;
+/* SCALE WRAPPER */
+.tree-scale{
+  width:100%;
+  height:calc(100vh - 70px);
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  overflow:hidden;
 }
 
-/* WRAPPER */
-.tree-scale {
-  width: 100%;
-  height: calc(100vh - 90px);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  overflow: hidden;
+/* MAIN CANVAS */
+.tree-area{
+  position:relative;
+  width:1000px;
+  height:600px;
+  transform:scale(0.75);
+  transform-origin:top center;
 }
 
-/* CANVAS */
-.tree-area {
-  position: relative;
-  width: 1100px;
-  height: 650px;
-  transform: scale(0.8);
-  transform-origin: top center;
+/* SVG LINES */
+#tree-lines{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
 }
 
-/* SVG */
-#tree-lines {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+/* BOX TREE */
+.tree-box{
+  position:absolute;
+  width:120px;
+  height:58px;
+  border-radius:6px;
+  text-align:center;
+  font-size:11px;
+  font-weight:600;
+  padding:4px;
+  box-shadow:0 2px 5px rgba(0,0,0,.25);
 }
+.tree-box b{font-size:14px;}
+.tree-box small{font-size:9px;}
 
-/* BOX */
-.tree-box {
-  position: absolute;
-  width: 130px;
-  height: 65px;
-  padding: 4px;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 600;
-  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+.blue{background:#1976d2;color:#fff;}
+.green{background:#2e7d32;color:#fff;}
+.yellow{background:#fbc02d;color:#000;}
+.red{background:#d32f2f;color:#fff;}
+
+/* TABLE BLOCK */
+.table-block{
+  position:absolute;
+  background:#fff;
+  border-radius:6px;
+  padding:5px;
+  font-size:10px;
+  box-shadow:0 2px 5px rgba(0,0,0,.25);
 }
-
-.tree-box b { font-size: 16px; }
-.tree-box small { font-size: 10px; }
-
-/* COLORS */
-.blue { background:#1e88e5; color:#fff; }
-.green { background:#43a047; color:#fff; }
-.yellow { background:#fbc02d; color:#000; }
-.red { background:#e53935; color:#fff; }
-
-/* TABLE */
-.table-block {
-  position: absolute;
-  background: #fff;
-  border-radius: 8px;
-  padding: 6px;
-  font-size: 11px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+.table-block h4{
+  font-size:11px;
+  margin:3px 0;
+  text-align:center;
 }
-
-.table-block h4 {
-  font-size: 13px;
-  margin: 4px 0;
-  text-align: center;
+.table-block table{
+  width:100%;
+  border-collapse:collapse;
 }
-
 .table-block th,
-.table-block td {
-  padding: 4px 6px;
+.table-block td{
+  border:1px solid #ccc;
+  padding:3px 5px;
 }
 
-.table-block.small { width: 300px; }
-.table-block.large { width: 420px; }
-.table-block.bottom { width: 100%; }
+/* SIZE TABLE */
+.table-block.small{width:260px;}
+.table-block.large{width:360px;}
+.table-block.bottom{width:760px;}
 
-/* POSISI FIX (rapih & padat) */
-#wo { top: 10px; left: 50%; transform: translateX(-50%); }
+/* POSISI TREE */
+#wo{top:10px;left:50%;transform:translateX(-50%);}
 
-#sisa { top: 90px; left: 35%; }
-#sudah { top: 90px; left: 55%; }
+#sisa{top:80px;left:32%;}
+#sudah{top:80px;left:52%;}
 
-#manja { top: 170px; left: 25%; }
-#manja2 { top: 170px; left: 45%; }
+#manja{top:150px;left:22%;}
+#manja2{top:150px;left:42%;}
 
-#sukses { top: 170px; left: 55%; }
-#gagal { top: 170px; left: 75%; }
+#sukses{top:150px;left:62%;}
+#gagal{top:150px;left:82%;}
 
-#tblSisa { top: 260px; left: 10px; }
-#tblManja { top: 260px; left: 330px; }
+/* TABLE POSISI */
+#tblSisa{top:230px;left:10px;}
+#tblManja{top:230px;left:280px;}
 
-#tblPS { top: 260px; left: 650px; }
-#tblOGP { top: 260px; left: 900px; }
+#tblPS{top:230px;left:550px;}
+#tblOGP{top:230px;left:820px;}
 
-#tblNonTeknik { top: 420px; left: 10px; }
-#tblTeknik { top: 420px; left: 450px; }
+#tblNonTeknik{top:380px;left:10px;}
+#tblTeknik{top:380px;left:400px;}
 
-.table-block.bottom { top: 580px; }
+.table-block.bottom{top:520px;left:120px;}
 
-/* NO SCROLL */
-body, html {
-  overflow: hidden;
+/* NO SCROLL GLOBAL */
+html,body{
+  overflow:hidden;
 }
-
-#content-area {
-  padding: 6px !important;
-  overflow: hidden;
+#content-area{
+  overflow:hidden!important;
+  padding:4px!important;
 }
