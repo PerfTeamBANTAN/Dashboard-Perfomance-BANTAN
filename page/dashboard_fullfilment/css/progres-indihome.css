@@ -5,126 +5,63 @@
   font-family:Segoe UI, Arial, sans-serif;
 }
 
-/* TITLE */
 .title{
   text-align:center;
-  font-size:16px;
-  margin:4px 0;
-  font-weight:700;
+  font-size:18px;
+  margin:5px 0;
 }
 .subtitle{
   text-align:center;
-  font-size:11px;
-  color:#555;
-  margin-bottom:4px;
+  font-size:12px;
+  margin-bottom:5px;
 }
 
-/* SCALE WRAPPER */
-.tree-scale{
-  width:100%;
-  height:calc(100vh - 70px);
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  overflow:hidden;
-}
-
-/* MAIN CANVAS */
+/* CANVAS */
 .tree-area{
   position:relative;
-  width:1000px;
-  height:600px;
-  transform:scale(0.75);
-  transform-origin:top center;
+  width:1200px;
+  height:500px;
+  margin:0 auto;
+  background:#fff;
 }
 
-/* SVG LINES */
+/* SVG */
 #tree-lines{
   position:absolute;
   inset:0;
   width:100%;
   height:100%;
-  pointer-events:none;
 }
 
-/* BOX TREE */
+/* BOX */
 .tree-box{
   position:absolute;
-  width:120px;
-  height:58px;
-  border-radius:6px;
+  width:140px;
+  height:65px;
+  border-radius:8px;
   text-align:center;
-  font-size:11px;
+  padding:6px;
+  font-size:12px;
   font-weight:600;
-  padding:4px;
   box-shadow:0 2px 5px rgba(0,0,0,.25);
 }
-.tree-box b{font-size:14px;}
-.tree-box small{font-size:9px;}
+.tree-box b{font-size:16px;}
+.tree-box small{font-size:10px;}
 
-.blue{background:#1976d2;color:#fff;}
-.green{background:#2e7d32;color:#fff;}
-.yellow{background:#fbc02d;color:#000;}
-.red{background:#d32f2f;color:#fff;}
+/* COLORS */
+.blue{background:#2196f3;color:#fff;}
+.green{background:#4caf50;color:#fff;}
+.yellow{background:#ffc107;color:#000;}
+.red{background:#f44336;color:#fff;}
 
-/* TABLE BLOCK */
-.table-block{
-  position:absolute;
-  background:#fff;
-  border-radius:6px;
-  padding:5px;
-  font-size:10px;
-  box-shadow:0 2px 5px rgba(0,0,0,.25);
-}
-.table-block h4{
-  font-size:11px;
-  margin:3px 0;
-  text-align:center;
-}
-.table-block table{
-  width:100%;
-  border-collapse:collapse;
-}
-.table-block th,
-.table-block td{
-  border:1px solid #ccc;
-  padding:3px 5px;
-}
+/* ====== KOORDINAT 1:1 ====== */
+#wo{top:20px;left:530px;}
 
-/* SIZE TABLE */
-.table-block.small{width:260px;}
-.table-block.large{width:360px;}
-.table-block.bottom{width:760px;}
+#sisa{top:110px;left:360px;}
+#sudah{top:110px;left:700px;}
 
-/* POSISI TREE */
-#wo{top:10px;left:50%;transform:translateX(-50%);}
+#manja{top:200px;left:250px;}
+#manja2{top:200px;left:450px;}
 
-#sisa{top:80px;left:32%;}
-#sudah{top:80px;left:52%;}
-
-#manja{top:150px;left:22%;}
-#manja2{top:150px;left:42%;}
-
-#sukses{top:150px;left:62%;}
-#gagal{top:150px;left:82%;}
-
-/* TABLE POSISI */
-#tblSisa{top:230px;left:10px;}
-#tblManja{top:230px;left:280px;}
-
-#tblPS{top:230px;left:550px;}
-#tblOGP{top:230px;left:820px;}
-
-#tblNonTeknik{top:380px;left:10px;}
-#tblTeknik{top:380px;left:400px;}
-
-.table-block.bottom{top:520px;left:120px;}
-
-/* NO SCROLL GLOBAL */
-html,body{
-  overflow:hidden;
-}
-#content-area{
-  overflow:hidden!important;
-  padding:4px!important;
-}
+#sukses{top:200px;left:650px;}
+#gagal{top:200px;left:850px;}
