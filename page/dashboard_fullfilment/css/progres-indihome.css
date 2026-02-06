@@ -1,165 +1,137 @@
-/* ==============================
-   TREE DASHBOARD FULLFILMENT
-   page/dashboard_fullfilment/css
-================================ */
-
+/* ================= TREE DASHBOARD ROOT ================= */
 .tree-dashboard {
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+  background: #f4f6f9;
   font-family: 'Poppins', sans-serif;
 }
 
-/* TITLE */
 .tree-dashboard .title {
   text-align: center;
   font-weight: 700;
   color: #c62828;
-  margin-bottom: 5px;
 }
 
 .tree-dashboard .subtitle {
   text-align: center;
-  font-size: 14px;
-  color: #555;
   margin-bottom: 20px;
+  font-size: 13px;
+  color: #555;
 }
 
-/* TREE AREA */
+/* ================= TREE AREA ================= */
 .tree-area {
   position: relative;
-  min-height: 800px;
-  background: #f4f4f4;
+  width: 100%;
+  min-height: 900px;
+  background: #fff;
   border-radius: 20px;
   padding: 30px;
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-/* BOX */
-.tree-dashboard .box {
+/* ================= BOX ================= */
+.box {
   position: absolute;
-  padding: 12px 16px;
-  border-radius: 14px;
+  width: 180px;
+  padding: 12px;
   text-align: center;
+  border-radius: 12px;
+  color: #fff;
   font-weight: 600;
-  min-width: 150px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-  transition: 0.3s;
+  box-shadow: 0 5px 15px rgba(0,0,0,.25);
 }
 
-.tree-dashboard .box:hover {
-  transform: scale(1.05);
+.box b {
+  font-size: 26px;
 }
 
-/* BOX COLORS */
-.tree-dashboard .blue {
-  background: linear-gradient(135deg,#1976d2,#0d47a1);
-  color: white;
-}
-.tree-dashboard .green {
-  background: linear-gradient(135deg,#2e7d32,#1b5e20);
-  color: white;
-}
-.tree-dashboard .yellow {
-  background: linear-gradient(135deg,#fbc02d,#f57f17);
-  color: #111;
-}
-.tree-dashboard .red {
-  background: linear-gradient(135deg,#c62828,#8e0000);
-  color: white;
-}
-
-/* NUMBER */
-.tree-dashboard .box b {
-  font-size: 22px;
-}
-
-.tree-dashboard .box small {
+.box small {
   font-size: 12px;
 }
 
-/* TABLE BLOCK */
-.tree-dashboard .table-block {
-  background: white;
-  border-radius: 16px;
+/* COLORS */
+.blue { background: linear-gradient(135deg,#1976d2,#0d47a1); }
+.green { background: linear-gradient(135deg,#2e7d32,#1b5e20); }
+.yellow { background: linear-gradient(135deg,#f9a825,#f57f17); color:#000; }
+.red { background: linear-gradient(135deg,#c62828,#8e0000); }
+
+/* ================= BOX POSITIONS ================= */
+/* Top */
+#wo { top: 40px; left: 50%; transform: translateX(-50%); }
+
+/* Level 2 */
+#sisa { top: 150px; left: 20%; }
+#sudah { top: 150px; right: 20%; }
+
+/* Level 3 */
+#manja { top: 280px; left: 10%; }
+#manja2 { top: 280px; left: 30%; }
+#sukses { top: 280px; right: 30%; }
+#gagal { top: 280px; right: 10%; }
+
+/* ================= TABLE BLOCK ================= */
+.table-block {
+  background: #fff;
+  border-radius: 15px;
   padding: 15px;
-  margin-top: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  margin-top: 40px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.1);
 }
 
-.tree-dashboard .table-block h4 {
+.table-block h4 {
   text-align: center;
   font-weight: 700;
   margin-bottom: 10px;
 }
 
-/* TABLE */
-.tree-dashboard table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.tree-dashboard table th {
-  background: #c62828;
-  color: white;
-  padding: 6px;
-  font-size: 13px;
-}
-
-.tree-dashboard table td {
-  text-align: center;
-  padding: 6px;
-  font-size: 13px;
-  border-bottom: 1px solid #ddd;
-}
-
-.tree-dashboard table tr:last-child th {
-  background: #111;
-}
-
-/* TABLE COLOR VARIANT */
-.tree-dashboard .blueTbl table th {
-  background: #1565c0;
-}
-
-.tree-dashboard .redTbl table th {
-  background: #b71c1c;
-}
-
-/* SIZE VARIANT */
-.tree-dashboard .small {
+/* SIZE */
+.table-block.small {
   width: 48%;
   display: inline-block;
-  vertical-align: top;
 }
 
-.tree-dashboard .large {
+.table-block.large {
   width: 100%;
 }
 
-.tree-dashboard .bottom {
-  width: 100%;
+/* COLORS TABLE */
+.blueTbl table th {
+  background: #1565c0;
+  color: white;
 }
 
-/* SVG LINE */
-#tree-lines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+.redTbl table th {
+  background: #b71c1c;
+  color: white;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .tree-dashboard .small {
-    width: 100%;
-  }
+/* ================= TABLE ================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
 
-  .tree-dashboard .box {
-    position: static;
-    margin-bottom: 10px;
-  }
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 6px;
+  text-align: center;
+}
 
-  .tree-area {
-    min-height: auto;
-  }
+table th {
+  background: #222;
+  color: #fff;
+}
+
+table tr:last-child {
+  background: #000;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* ================= BOTTOM CLUSTER ================= */
+.table-block.bottom {
+  margin-top: 40px;
 }
