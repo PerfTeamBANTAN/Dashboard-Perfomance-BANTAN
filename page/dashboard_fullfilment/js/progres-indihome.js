@@ -211,3 +211,60 @@ function updateKendalaNonTeknik(data) {
 
   table.innerHTML = html;
 }
+
+function drawPath(fromId, toId) {
+  const from = document.getElementById(fromId);
+  const to = document.getElementById(toId);
+  const svg = document.getElementById("tree-lines");
+
+  if (!from || !to) return;
+
+  const f = from.getBoundingClientRect();
+  const t = to.getBoundingClientRect();
+  const parent = document.querySelector(".tree-area").getBoundingClientRect();
+
+  const x1 = f.right - parent.left;
+  const y1 = f.top + f.height / 2 - parent.top;
+
+  const x2 = t.left - parent.left;
+  const y2 = t.top + t.height / 2 - parent.top;
+
+  const midX = x1 + 40;
+
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
+  const d = `
+    M ${x1} ${y1}
+    L ${midX} ${y1}
+    L ${midX} ${y2}
+    L ${x2} ${y2}
+  `;
+
+  path.setAttribute("d", d);
+  path.setAttribute("fill", "none");
+  path.setAttribute("stroke", "#333");
+  path.setAttribute("stroke-width", "2");
+  path.setAttribute("stroke-linecap", "round");
+  path.setAttribute("stroke-linejoin", "round");
+
+  svg.appendChild(path);
+}
+
+function drawTreeLines() {
+  const svg = document.getElementById("tree-lines");
+  svg.innerHTML = "";
+
+  drawPath("wo", "sisa");
+  drawPath("wo", "sudah");
+
+  drawPath("sisa", "manja");
+  drawPath("sisa", "manja2");
+
+  drawPath("sudah", "sukses");
+  drawPath("sudah", "gagal");
+}
+
+/* redraw setelah data masuk */
+setTimeout(drawTreeLines, 800);
+window.addEventListener("resize", drawTreeLines);
+
