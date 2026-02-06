@@ -1,4 +1,3 @@
-/* ROOT AREA */
 .tree-dashboard-fullfillment {
   width: 100%;
   height: 100vh;
@@ -7,28 +6,26 @@
 }
 
 .tree-dashboard-fullfillment .title {
+  font-size: 15px;
+  margin: 2px 0;
   text-align: center;
   font-weight: 700;
-  font-size: 18px;
-  margin-bottom: 2px;
 }
 
 .tree-dashboard-fullfillment .subtitle {
+  font-size: 10px;
+  margin-bottom: 4px;
   text-align: center;
-  font-size: 12px;
-  margin-bottom: 6px;
   color: #555;
 }
 
-/* TREE AREA */
 .tree-area {
   position: relative;
   width: 100%;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 60px);
   overflow: hidden;
 }
 
-/* SVG LINES */
 #tree-lines {
   position: absolute;
   inset: 0;
@@ -40,22 +37,22 @@
 /* BOX */
 .tree-box {
   position: absolute;
-  width: 130px;
-  height: 65px;
-  padding: 5px;
-  border-radius: 8px;
+  width: 110px;
+  height: 50px;
+  padding: 3px;
+  border-radius: 6px;
   text-align: center;
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 600;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
 }
 
 .tree-box b {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .tree-box small {
-  font-size: 10px;
+  font-size: 8px;
 }
 
 /* COLORS */
@@ -64,24 +61,23 @@
 .yellow { background:#ffc107; color:#000; }
 .red { background:#f44336; color:#fff; }
 
-/* TABLE BLOCK */
+/* TABLE */
 .table-block {
   position: absolute;
   background: #fff;
-  border-radius: 8px;
-  padding: 5px;
-  font-size: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,.2);
+  border-radius: 6px;
+  padding: 3px;
+  font-size: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
 }
 
 .table-block h4 {
-  font-size: 11px;
+  font-size: 9px;
   margin: 2px 0;
   text-align: center;
   font-weight: 700;
 }
 
-/* TABLE */
 .table-block table {
   width: 100%;
   border-collapse: collapse;
@@ -90,52 +86,45 @@
 .table-block th,
 .table-block td {
   border: 1px solid #ccc;
-  padding: 2px 4px;
+  padding: 1px 3px;
   text-align: center;
 }
 
 /* SIZE */
-.table-block.small {
-  width: 260px;
-}
-
-.table-block.large {
-  width: 360px;
-}
+.table-block.small { width: 230px; }
+.table-block.large { width: 300px; }
 
 .table-block.bottom {
   width: 100%;
-  bottom: 5px;
-  left: 0;
 }
 
-/* POSITIONS (1:1 seperti gambar) */
-#wo { top: 20px; left: 50%; transform: translateX(-50%); }
+/* POSISI (lebih rapat) */
+#wo { top: 5px; left: 50%; transform: translateX(-50%); }
 
-#sisa { top: 110px; left: 35%; }
-#sudah { top: 110px; left: 55%; }
+#sisa { top: 70px; left: 35%; }
+#sudah { top: 70px; left: 55%; }
 
-#manja { top: 200px; left: 25%; }
-#manja2 { top: 200px; left: 45%; }
+#manja { top: 135px; left: 25%; }
+#manja2 { top: 135px; left: 45%; }
 
-#sukses { top: 200px; left: 55%; }
-#gagal { top: 200px; left: 75%; }
+#sukses { top: 135px; left: 55%; }
+#gagal { top: 135px; left: 75%; }
 
-#tblSisa { top: 280px; left: 10px; }
-#tblManja { top: 280px; left: 280px; }
+#tblSisa { top: 200px; left: 5px; }
+#tblManja { top: 200px; left: 245px; }
 
-#tblPS { top: 280px; left: 550px; }
-#tblOGP { top: 280px; left: 820px; }
+#tblPS { top: 200px; left: 485px; }
+#tblOGP { top: 200px; left: 725px; }
 
-#tblNonTeknik { top: 400px; left: 10px; }
-#tblTeknik { top: 400px; left: 400px; }
+#tblNonTeknik { top: 330px; left: 5px; }
+#tblTeknik { top: 330px; left: 320px; }
 
 .table-block.bottom {
-  top: 560px;
+  top: 470px;
 }
 
-/* RESPONSIVE (laptop kecil) */
-@media (max-height: 768px) {
-  .tree-box { height: 55px; font-size: 10px; }
-  .table-block { font-size: 9px; }
+/* EXTRA SMALL SCREEN */
+@media (max-height: 700px) {
+  .tree-box { width: 95px; height: 45px; font-size: 8px; }
+  .table-block { font-size: 7px; }
 }
