@@ -161,9 +161,10 @@ function updateManjaTable(data) {
   table.innerHTML = html;
 }
 
+/* ================= KENDALA NON TEKNIK ================= */
 function updateKendalaNonTeknik(data) {
-  const table = document.querySelector("#tblNonTeknik table");
-  if (!table) return;
+  const nonTeknikTable = document.querySelector("#tblNonTeknik table");
+  if (!nonTeknikTable) return;
 
   // Build NON TEKNIK table
   let html = `
@@ -209,16 +210,102 @@ function updateKendalaNonTeknik(data) {
     </tr>
   `;
 
+  nonTeknikTable.innerHTML = html;
+
+  // Setelah NON TEKNIK render, update posisi TEKNIS
+  updateKendalaTeknisPosition();
+}
+
+/* ================= KENDALA TEKNIS ================= */
+function updateKendalaTeknisPosition() {
+  const nonTeknikBlock = document.getElementById("tblNonTeknik");
+  const teknikBlock = document.getElementById("tblTeknik");
+
+  if (!nonTeknikBlock || !teknikBlock) return;
+
+  // ambil data kendala TEKNIS dari JS
+  const dataTeknis = window.lastData?.kendalaTeknis || {};
+
+  const table = teknikBlock.querySelector("table");
+  if (!table) return;
+
+  // Build TEKNIS table
+  let html = `
+    <tr>
+      <th>KENDALA</th>
+      <th>KOTANG</th>
+      <th>TANGSEL</th>
+      <th>TOTAL</th>
+    </tr>
+  `;
+
+  let gKotang = 0;
+  let gTangsel = 0;
+  let gTotal = 0;
+
+  for (let kendala in dataTeknis) {
+    const row = dataTeknis[kendala];
+
+    const kotang = row.KOTANG || 0;
+    const tangsel = row.TANGSEL || 0;
+    const total = row.total || 0;
+
+    html += `
+      <tr>
+        <td>${kendala}</td>
+        <td>${kotang}</td>
+        <td>${tangsel}</td>
+        <td>${total}</td>
+      </tr>
+    `;
+
+    gKotang += kotang;
+    gTangsel += tangsel;
+    gTotal += total;
+  }
+
+  html += `
+    <tr>
+      <th>GRAND TOTAL</th>
+      <th>${gKotang}</th>
+      <th>${gTangsel}</th>
+      <th>${gTotal}</th>
+    </tr>
+  `;
+
   table.innerHTML = html;
 
-  // ==============================================
-  // Atur posisi TEKNIK otomatis di bawah NON TEKNIK
-  // ==============================================
-  const teknikTable = document.getElementById("tblTeknik");
-  if (table && teknikTable) {   // <-- gunakan "table" bukan nonTeknikTable
-    const nonTeknikBlock = document.getElementById("tblNonTeknik");
-    const bottomNonTeknik = nonTeknikBlock.offsetTop + nonTeknikBlock.offsetHeight;
-    teknikTable.style.top = (bottomNonTeknik + 10) + "px"; // +10px jarak
+  // set posisi TEKNIS tepat di bawah NON TEKNIK
+  const bottomNonTeknik = nonTeknikBlock.offsetTop + nonTeknikBlock.offsetHeight;
+  teknikBlock.style.top = (bottomNonTeknik + 10) + "px"; // +10px jarak
+}
+
+/* ================= MODIFIKASI loadIndihomeData ================= */
+async function loadIndihomeData() {
+  try {
+    showLoading(true);
+
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error("API Error");
+
+    const data = await res.json();
+
+    // simpan data global untuk TEKNIS
+    window.lastData = data;
+
+    updateHeader(data);
+    updateBoxes(data);
+    updateClusterTable(data);
+    updateManjaTable(data);
+
+    // NON TEKNIK akan otomatis panggil update TEKNIS
+    updateKendalaNonTeknik(data);
+
+    showLoading(false);
+
+  } catch (err) {
+    console.error("Fetch error:", err);
+    showError("Gagal load data dari server");
   }
 }
 
