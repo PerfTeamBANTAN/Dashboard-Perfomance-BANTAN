@@ -136,14 +136,17 @@
   width:300px;
 }
 
+/* TABEL NON TEKNIK & TEKNIK vertical stack di bawah #gagal */
 #tblNonTeknik {
-  top:230px;    /* #gagal top 160px + card height 60px + margin 10px */
-  left:600px;   /* disesuaikan dengan posisi #gagal yang left:70% ~ 980px, kira-kira bisa digeser agar pas */
-  width:250px;
+  position: absolute;
+  top: 230px;      /* 160 + 60 + 10 */
+  left: 940px;     /* kira-kira 70% dari 1400px canvas = 980px, geser sedikit agar pas */
+  width: 250px;
 }
 
 #tblTeknik {
-  top:320px;    /* di bawah NON TEKNIK */
-  left:600px;
-  width:250px;
+  position: absolute;
+  top: 360px;      /* di bawah NON TEKNIK */
+  left: 940px;
+  width: 250px;
 }
