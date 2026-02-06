@@ -132,17 +132,17 @@
   background: #f9f9f9;
 }
 
-/* POSISI TABEL */
+/* POSISI TABEL RAPIH DI BAWAH CARD */
 #tblSisa {
-  top:350px;       /* baris pertama */
-  left:50px;
-  width:250px;
+  top: 230px;       /* langsung di bawah card #sisa */
+  left: 30px;       /* lebih dekat ke kiri */
+  width: 280px;     /* sedikit lebih lebar */
 }
 
 #tblManja {
-  top:350px;       /* baris pertama */
-  left:350px;
-  width:300px;
+  top: 230px;       /* sejajar dengan #tblSisa */
+  left: 350px;      /* sedikit kanan dari #tblSisa */
+  width: 300px;     /* lebar sesuai kebutuhan */
 }
 
 /* TABEL NON TEKNIK & TEKNIK vertical stack di bawah #gagal */
