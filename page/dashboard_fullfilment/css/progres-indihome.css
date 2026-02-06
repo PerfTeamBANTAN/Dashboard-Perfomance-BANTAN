@@ -1,146 +1,92 @@
-/* ===== TREE DASHBOARD INDIHOME ===== */
+/* ===============================
+   DASHBOARD FULLFILMENT STYLE
+   page/dashboard_fullfilment/css
+================================ */
 
-.tree-dashboard {
-  width: 100%;
-  padding: 20px;
-  background: #f4f6f9;
-  border-radius: 18px;
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.08);
+.dashboard-fullfilment {
   font-family: 'Poppins', sans-serif;
 }
 
-.tree-dashboard .title {
-  text-align: center;
+/* TITLE */
+.dashboard-fullfilment .dashboard-title {
   font-weight: 700;
-  color: #b71c1c;
-}
-
-.tree-dashboard .subtitle {
-  text-align: center;
-  font-size: 13px;
-  color: #555;
+  color: #c62828;
   margin-bottom: 20px;
 }
 
-/* TREE AREA */
-.tree-area {
-  position: relative;
-  min-height: 900px;
-}
-
-/* BOX */
-.box {
-  position: absolute;
-  min-width: 150px;
-  padding: 10px 14px;
-  border-radius: 12px;
+/* BOX STAT */
+.dashboard-fullfilment .stat-box {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
   text-align: center;
-  font-weight: 600;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transition: 0.3s;
 }
 
-.box b {
-  font-size: 20px;
+.dashboard-fullfilment .stat-box:hover {
+  transform: translateY(-5px);
 }
 
-.box small {
-  font-size: 12px;
+/* COLOR VARIANT */
+.dashboard-fullfilment .stat-box.red {
+  background: linear-gradient(135deg,#c62828,#8e0000);
+  color: white;
+}
+.dashboard-fullfilment .stat-box.blue {
+  background: linear-gradient(135deg,#1565c0,#0d47a1);
+  color: white;
+}
+.dashboard-fullfilment .stat-box.green {
+  background: linear-gradient(135deg,#2e7d32,#1b5e20);
+  color: white;
+}
+.dashboard-fullfilment .stat-box.orange {
+  background: linear-gradient(135deg,#ef6c00,#e65100);
+  color: white;
 }
 
-/* COLORS */
-.blue { background: linear-gradient(135deg,#1976d2,#0d47a1); color:#fff; }
-.green { background: linear-gradient(135deg,#2e7d32,#1b5e20); color:#fff; }
-.yellow { background: linear-gradient(135deg,#fbc02d,#f57f17); color:#000; }
-.red { background: linear-gradient(135deg,#c62828,#8e0000); color:#fff; }
+.dashboard-fullfilment .stat-box span {
+  font-size: 14px;
+  opacity: 0.9;
+}
 
-/* POSITIONS */
-#wo { top: 20px; left: 50%; transform: translateX(-50%); }
+.dashboard-fullfilment .stat-box b {
+  font-size: 28px;
+  display: block;
+}
 
-#sisa { top: 120px; left: 20%; }
-#sudah { top: 120px; right: 20%; }
-
-#manja { top: 230px; left: 20%; }
-#manja2 { top: 230px; right: 20%; }
-
-#sukses { top: 340px; left: 20%; }
-#gagal { top: 340px; right: 20%; }
-
-/* TABLE BLOCK */
-.table-block {
-  position: absolute;
-  background: #fff;
-  padding: 12px;
-  border-radius: 14px;
+/* TABLE CARD */
+.dashboard-fullfilment .table-card {
+  margin-top: 25px;
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
-.table-block h4 {
-  text-align: center;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.table-block table {
+.dashboard-fullfilment table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
 }
 
-.table-block th {
+.dashboard-fullfilment table th {
   background: #c62828;
-  color: #fff;
-  padding: 6px;
-}
-
-.table-block td {
-  padding: 6px;
-  border: 1px solid #ddd;
+  color: white;
   text-align: center;
 }
 
-/* SIZES */
-.small { width: 280px; }
-.large { width: 480px; }
-
-/* TABLE POSITIONS */
-#tblSisa { top: 450px; left: 10%; }
-#tblManja { top: 450px; right: 10%; }
-
-#tblPS { top: 600px; left: 5%; }
-#tblOGP { top: 600px; right: 5%; }
-
-#tblNonTeknik { top: 750px; left: 5%; }
-#tblTeknik { top: 750px; right: 5%; }
-
-.table-block.bottom {
-  top: 950px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 600px;
+.dashboard-fullfilment table td {
+  text-align: center;
+  font-weight: 500;
 }
 
-/* SPECIAL TABLE COLORS */
-.blueTbl th { background:#1565c0; }
-.redTbl th { background:#b71c1c; }
-
-/* SVG LINES */
-#tree-lines {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
-.box, .table-block {
-  z-index: 2;
+.dashboard-fullfilment tr:last-child th {
+  background: #111;
 }
 
 /* RESPONSIVE */
-@media(max-width:1200px){
-  .tree-area { transform: scale(0.85); transform-origin: top center; }
-}
-
-@media(max-width:768px){
-  .tree-area { transform: scale(0.7); }
+@media (max-width:768px){
+  .dashboard-fullfilment .stat-box b {
+    font-size: 22px;
+  }
 }
