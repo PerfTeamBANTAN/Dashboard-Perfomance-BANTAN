@@ -137,14 +137,13 @@
 }
 
 #tblNonTeknik {
-  top:520px;       /* baris kedua, di bawah GAGAL TARIK */
-  left:50px;
+  top:230px;    /* #gagal top 160px + card height 60px + margin 10px */
+  left:600px;   /* disesuaikan dengan posisi #gagal yang left:70% ~ 980px, kira-kira bisa digeser agar pas */
   width:250px;
 }
 
 #tblTeknik {
-  top:520px;       /* baris kedua */
-  left:350px;
+  top:320px;    /* di bawah NON TEKNIK */
+  left:600px;
   width:250px;
 }
-
