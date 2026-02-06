@@ -1,97 +1,78 @@
-/* ================= ROOT THEME ================= */
-:root {
-  --red: #c62828;
-  --red-dark: #8e0000;
-  --black: #111;
-  --white: #fff;
-  --gray-bg: linear-gradient(135deg,#eeeeee,#cfcfcf);
-  --glass: rgba(255,255,255,0.85);
-  --shadow: 0 6px 18px rgba(0,0,0,0.15);
-  --radius: 14px;
-}
+/* ===== TREE DASHBOARD INDIHOME ===== */
 
-/* ================= PAGE ================= */
 .tree-dashboard {
-  background: var(--gray-bg);
+  width: 100%;
   padding: 20px;
+  background: #f4f6f9;
   border-radius: 18px;
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.1);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.08);
+  font-family: 'Poppins', sans-serif;
 }
 
-.title {
+.tree-dashboard .title {
   text-align: center;
   font-weight: 700;
-  color: var(--black);
+  color: #b71c1c;
 }
 
-.subtitle {
+.tree-dashboard .subtitle {
   text-align: center;
-  margin-bottom: 15px;
-  color: #444;
-  font-size: 14px;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 20px;
 }
 
-/* ================= TREE AREA ================= */
+/* TREE AREA */
 .tree-area {
   position: relative;
-  min-height: 850px;
-  background: #f8f8f8;
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: var(--shadow);
+  min-height: 900px;
 }
 
-/* ================= BOX ================= */
+/* BOX */
 .box {
   position: absolute;
-  width: 200px;
-  padding: 14px;
+  min-width: 150px;
+  padding: 10px 14px;
+  border-radius: 12px;
   text-align: center;
   font-weight: 600;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(6px);
-  transition: 0.3s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  background: #fff;
 }
 
-.box:hover {
-  transform: scale(1.03);
+.box b {
+  font-size: 20px;
 }
 
-/* Colors */
-.blue { background: linear-gradient(135deg,#2196f3,#1976d2); color:white; }
-.green { background: linear-gradient(135deg,#4caf50,#2e7d32); color:white; }
-.yellow { background: linear-gradient(135deg,#ffca28,#f57f17); color:#111; }
-.red { background: linear-gradient(135deg,#e53935,#b71c1c); color:white; }
-
-/* ================= POSITION BOX ================= */
-#wo { top: 40px; left: 45%; }
-
-#sisa { top: 160px; left: 20%; }
-#sudah { top: 160px; left: 65%; }
-
-#manja { top: 300px; left: 10%; }
-#manja2 { top: 300px; left: 35%; }
-
-#sukses { top: 300px; left: 65%; }
-#gagal { top: 300px; left: 85%; }
-
-/* ================= SVG LINES ================= */
-#tree-lines {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
+.box small {
+  font-size: 12px;
 }
 
-/* ================= TABLE BLOCK ================= */
+/* COLORS */
+.blue { background: linear-gradient(135deg,#1976d2,#0d47a1); color:#fff; }
+.green { background: linear-gradient(135deg,#2e7d32,#1b5e20); color:#fff; }
+.yellow { background: linear-gradient(135deg,#fbc02d,#f57f17); color:#000; }
+.red { background: linear-gradient(135deg,#c62828,#8e0000); color:#fff; }
+
+/* POSITIONS */
+#wo { top: 20px; left: 50%; transform: translateX(-50%); }
+
+#sisa { top: 120px; left: 20%; }
+#sudah { top: 120px; right: 20%; }
+
+#manja { top: 230px; left: 20%; }
+#manja2 { top: 230px; right: 20%; }
+
+#sukses { top: 340px; left: 20%; }
+#gagal { top: 340px; right: 20%; }
+
+/* TABLE BLOCK */
 .table-block {
   position: absolute;
-  background: var(--glass);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  background: #fff;
   padding: 12px;
-  font-size: 13px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
 .table-block h4 {
@@ -100,96 +81,66 @@
   margin-bottom: 6px;
 }
 
-/* Sizes */
-.table-block.small { width: 280px; }
-.table-block.large { width: 500px; }
-
-/* ================= TABLE STYLE ================= */
 .table-block table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 12px;
 }
 
 .table-block th {
-  background: var(--red);
-  color: white;
+  background: #c62828;
+  color: #fff;
   padding: 6px;
-  font-size: 12px;
 }
 
 .table-block td {
   padding: 6px;
+  border: 1px solid #ddd;
   text-align: center;
-  border-bottom: 1px solid #ddd;
 }
 
-.table-block tr:nth-child(even) {
-  background: #f5f5f5;
-}
+/* SIZES */
+.small { width: 280px; }
+.large { width: 480px; }
 
-.table-block tr:hover {
-  background: #ffecec;
-}
+/* TABLE POSITIONS */
+#tblSisa { top: 450px; left: 10%; }
+#tblManja { top: 450px; right: 10%; }
 
-/* ================= SPECIAL TABLE ================= */
-.blueTbl th { background:#1976d2; }
-.redTbl th { background:#c62828; }
+#tblPS { top: 600px; left: 5%; }
+#tblOGP { top: 600px; right: 5%; }
 
-/* ================= POSITION TABLE ================= */
-#tblSisa { top: 460px; left: 5%; }
-#tblManja { top: 460px; left: 30%; }
-#tblPS { top: 460px; left: 55%; }
-#tblOGP { top: 460px; left: 72%; }
-
-#tblNonTeknik { top: 650px; left: 5%; }
-#tblTeknik { top: 650px; left: 45%; }
+#tblNonTeknik { top: 750px; left: 5%; }
+#tblTeknik { top: 750px; right: 5%; }
 
 .table-block.bottom {
-  top: 820px;
-  left: 25%;
-  width: 500px;
+  top: 950px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
 }
 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 1200px) {
-  .tree-area {
-    min-height: auto;
-  }
+/* SPECIAL TABLE COLORS */
+.blueTbl th { background:#1565c0; }
+.redTbl th { background:#b71c1c; }
 
-  .box,
-  .table-block {
-    position: static;
-    margin: 12px auto;
-    width: 95%;
-  }
-
-  #tree-lines {
-    display: none;
-  }
-}
-
-/* ================= ANIMATION ================= */
-.box b {
-  font-size: 22px;
-}
-
-.box small {
-  font-size: 12px;
-  opacity: 0.9;
-}
-
-/* ================= LOADING STATE ================= */
-.loading {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-/* ================= ENTERPRISE LOOK ================= */
-.tree-area::before {
-  content: "";
+/* SVG LINES */
+#tree-lines {
   position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  background: linear-gradient(145deg, rgba(255,255,255,0.5), rgba(0,0,0,0.03));
-  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.box, .table-block {
+  z-index: 2;
+}
+
+/* RESPONSIVE */
+@media(max-width:1200px){
+  .tree-area { transform: scale(0.85); transform-origin: top center; }
+}
+
+@media(max-width:768px){
+  .tree-area { transform: scale(0.7); }
 }
