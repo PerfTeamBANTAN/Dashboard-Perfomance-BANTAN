@@ -80,16 +80,43 @@
 .redTbl th{background:#f4b084;}
 
 /* TOP TREE */
-#wo{top:80px;left:120px;}
+/* TREE LEVEL 1 */
+#wo{
+  top:80px;
+  left:120px;
+}
 
-#sisa{top:80px;left:260px;}
-#sudah{top:150px;left:260px;}
+/* TREE LEVEL 2 */
+#sisa{
+  top:80px;
+  left:300px;
+}
 
-#manja{top:20px;left:360px;}
-#manja2{top:110px;left:360px;}
+#sudah{
+  top:160px;
+  left:300px;
+}
 
-#sukses{top:150px;left:500px;}
-#gagal{top:240px;left:500px;}
+/* TREE LEVEL 3 */
+#manja{
+  top:20px;
+  left:480px;
+}
+
+#manja2{
+  top:100px;
+  left:480px;
+}
+
+#sukses{
+  top:160px;
+  left:480px;
+}
+
+#gagal{
+  top:240px;
+  left:480px;
+}
 
 /* TABLE ATAS */
 #tblSisa{top:20px;left:520px;width:320px;}
