@@ -105,7 +105,8 @@
   padding: 5px;
   font-size: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,.2);
-  overflow-x: auto;
+  overflow-x: auto;   /* scroll horizontal jika konten lebar */
+  max-width: 300px;   /* ukuran maksimum agar tidak overlap */
 }
 
 .table-block table {
@@ -122,8 +123,28 @@
   font-size: 12px;
 }
 
-/* POSISI TABEL */
-#tblSisa { top:380px; left:5%; width:400px; }
-#tblManja { top:380px; left:450px; width:500px; }
-#tblNonTeknik { top:520px; left:25%; width:400px; }
-#tblTeknik { top:520px; left:750px; width:400px; }
+/* POSISI TABEL DIBERIKAN JARAK RAPIH */
+#tblSisa {
+  top:380px;
+  left:50px;   /* beri jarak kiri */
+  width:250px;
+}
+
+#tblManja {
+  top:380px;
+  left:350px;  /* geser kanan dari tabel SISA */
+  width:300px;
+}
+
+#tblNonTeknik {
+  top:520px;
+  left:50px;   /* di bawah card GAGAL TARIK */
+  width:250px;
+}
+
+#tblTeknik {
+  top:520px;
+  left:350px;  /* di samping NON TEKNIK */
+  width:250px;
+}
+
