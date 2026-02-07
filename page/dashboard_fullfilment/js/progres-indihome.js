@@ -395,3 +395,49 @@ function drawTreeLines() {
 setTimeout(drawTreeLines, 800);
 window.addEventListener("resize", drawTreeLines);
 
+function drawTableLines() {
+  const svg = document.getElementById("tree-lines");
+  if (!svg) return;
+
+  // helper function menggambar garis vertikal dari card ke tabel
+  function drawLine(cardId, tableId) {
+    const card = document.getElementById(cardId);
+    const table = document.getElementById(tableId);
+    if (!card || !table) return;
+
+    const parent = document.querySelector(".tree-area").getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const tableRect = table.getBoundingClientRect();
+
+    // titik bawah tengah card
+    const x1 = cardRect.left + cardRect.width / 2 - parent.left;
+    const y1 = cardRect.bottom - parent.top;
+
+    // titik atas tengah tabel
+    const x2 = tableRect.left + tableRect.width / 2 - parent.left;
+    const y2 = tableRect.top - parent.top;
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", `M ${x1} ${y1} L ${x2} ${y2}`);
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "#333");
+    path.setAttribute("stroke-width", "2");
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("stroke-linejoin", "round");
+
+    svg.appendChild(path);
+  }
+
+  // tambahkan garis tanpa menghapus garis tree
+  drawLine("sisa", "tblSisa");
+  drawLine("manja", "tblManja");
+  drawLine("gagal", "tblNonTeknik");
+}
+
+// panggil setelah drawTreeLines
+setTimeout(drawTableLines, 1000);
+window.addEventListener("resize", () => {
+  drawTreeLines();   // tetap draw garis tree lama
+  drawTableLines();  // tambah garis card->table baru
+});
+
