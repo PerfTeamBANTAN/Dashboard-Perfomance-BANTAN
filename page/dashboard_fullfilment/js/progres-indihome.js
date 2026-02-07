@@ -178,7 +178,7 @@ function positionTablesBelowCards() {
   /* ==== TABEL SISA (kiri) ==== */
   const rectSisa = cardSisa.getBoundingClientRect();
   tblSisa.style.position = "absolute";
-  tblSisa.style.top = (rectSisa.bottom - parentRect.top + 15) + "px";
+  tblSisa.style.top = (rectSisa.bottom - parentRect.top + 25) + "px";
   tblSisa.style.left = "20px";
 
   /* ==== TABEL MANJA (kanan tblSisa) ==== */
