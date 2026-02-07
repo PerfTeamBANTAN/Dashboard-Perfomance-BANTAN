@@ -74,7 +74,10 @@ function updateBoxes(data) {
   const nonManja = cards["MANJA H+ & NON MANJA"]?.nilai || 0;
   const sukses = cards["SUKSES"]?.nilai || 0;
   const gagal  = cards["GAGALTARIK"]?.nilai || 0;
+  const psEnd  = cards["PS END STATE"]?.nilai || 0;
+  const ogpEnd = cards["OGP TARIK PS END STATE"]?.nilai || 0;
 
+  
   const pWo     = cards["WO PSB"]?.persen || "0%";
   const pSisa   = cards["SISA PROGRES"]?.persen || "0%";
   const pSudah  = cards["SUDAH PROGRES"]?.persen || "0%";
@@ -82,6 +85,8 @@ function updateBoxes(data) {
   const pNonManja = cards["MANJA H+ & NON MANJA"]?.persen || "0%";
   const pSukses = cards["SUKSES"]?.persen || "0%";
   const pGagal  = cards["GAGALTARIK"]?.persen || "0%";
+  const pPsEnd  = cards["PS END STATE"]?.persen || "0%";
+const pOgpEnd = cards["OGP TARIK PS END STATE"]?.persen || "0%";
 
   // isi card (nilai + persen langsung dari sheet)
   setBox("wo", wo);
@@ -92,6 +97,8 @@ function updateBoxes(data) {
   setBoxValuePercent("manja2", nonManja, pNonManja);
   setBoxValuePercent("sukses", sukses, pSukses);
   setBoxValuePercent("gagal", gagal, pGagal);
+  setBoxValuePercent("psEnd", psEnd, pPsEnd);
+  setBoxValuePercent("ogpEnd", ogpEnd, pOgpEnd);
 }
 
 function setBoxValuePercent(id, value, percentText) {
