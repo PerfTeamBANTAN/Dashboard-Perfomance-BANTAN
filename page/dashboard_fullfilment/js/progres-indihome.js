@@ -101,8 +101,23 @@ function setBoxValuePercent(id, value, percentText) {
   const b = box.querySelector("b");
   const small = box.querySelector("small");
 
+  let percentFormatted = percentText;
+
+  // jika percent berupa number (0.259887...) ubah ke 25.99%
+  if (typeof percentText === "number") {
+    percentFormatted = (percentText * 100).toFixed(2) + "%";
+  }
+
+  // jika string tapi tanpa %
+  if (typeof percentText === "string" && !percentText.includes("%")) {
+    const num = parseFloat(percentText);
+    if (!isNaN(num)) {
+      percentFormatted = (num * 100).toFixed(2) + "%";
+    }
+  }
+
   if (b) b.innerText = value;
-  if (small) small.innerText = percentText;
+  if (small) small.innerText = percentFormatted;
 }
 
 function setBox(id, value) {
