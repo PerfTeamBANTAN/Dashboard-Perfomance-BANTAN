@@ -21,7 +21,7 @@
 .tree-area{
   position:relative;
   width:1400px;
-  min-height:900px;  /* fleksibel untuk tabel */
+  min-height:900px;
   margin:10px auto;
   background:#fff;
   border:2px solid #000;
@@ -46,12 +46,10 @@
   border-radius: 10px;
   text-align: center;
   font-family: 'Poppins', sans-serif;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 3px;
-
   box-shadow: 0 2px 6px rgba(0,0,0,.25);
 }
 
@@ -74,7 +72,7 @@
   line-height: 1;
 }
 
-/* WARNA */
+/* WARNA CARD */
 .blue { background:#2196f3; color:#fff; }
 .green { background:#4caf50; color:#fff; }
 .yellow { background:#ffc107; color:#000; }
@@ -96,65 +94,118 @@
 #psEnd { top:230px; left:55%; }
 #ogpEnd { top:300px; left:55%; }
 
-/* Table blocks: lebih padat */
+/* ===================== */
+/* TABLE BLOCK STYLE */
+/* ===================== */
 .table-block {
-  font-size: 10px;          /* lebih kecil */
-  padding: 3px;             /* padding dikurangi */
-  max-height: 250px;        /* scroll vertical jika terlalu tinggi */
-  overflow-y: auto;         /* scroll otomatis */
-  overflow-x: auto;         /* scroll horizontal jika perlu */
-}
-
-/* Tabel sendiri */
-.table-block table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 10px;          /* font lebih kecil */
-}
-
-.table-block table th,
-.table-block table td {
-  border: 1px solid #bbb;   /* border sedikit lebih tipis */
-  padding: 2px 4px;         /* lebih rapat */
-  text-align: center;
+  position:absolute;
+  font-family: 'Poppins', sans-serif;
   font-size: 10px;
-  line-height: 1.1;
+  background:#fff;
+  border-radius:8px;
+  padding:6px;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  max-height:260px;
+  overflow:auto;
 }
 
-/* Header tabel sedikit tebal */
-.table-block table th {
-  font-weight: 600;
-  background: #f0f0f0;
+/* Judul tabel */
+.table-block h4{
+  margin:0 0 6px 0;
+  padding:4px 6px;
+  font-size:12px;
+  font-weight:600;
+  text-align:center;
+  border-radius:6px;
+  color:#fff;
 }
 
-/* Optional: hover effect agar lebih mudah dibaca */
-.table-block table tr:hover {
-  background: #f9f9f9;
-}
-/* POSISI TABEL DI BAWAH CARD */
-#tblSisa {
-  top: 160px;       /* card #sisa top=90px, tinggi card ~60px + 10px jarak */
-  left: 30px;       /* sejajar ke kiri canvas */
-  width: 280px;     /* lebar tabel */
+/* Warna header tiap tabel */
+#tblSisa h4{
+  background:#ffc107;
+  color:#000;
 }
 
-#tblManja {
-  top: 160px;       /* sejajar #tblSisa */
-  left: 350px;      /* kanan sedikit dari #tblSisa */
-  width: 300px;     /* lebar tabel */
+#tblManja h4{
+  background:#20c997;
+  color:#fff;
 }
 
-/* TABEL NON TEKNIK & TEKNIK vertical stack di bawah #gagal */
-#tblNonTeknik {
-  position: absolute;
-  top: 230px;      /* 160 + 60 + 10 */
-  left: 940px;     /* kira-kira 70% dari 1400px canvas = 980px, geser sedikit agar pas */
-  width: 250px;
+#tblNonTeknik h4{
+  background:#dc3545;
+  color:#fff;
 }
 
-#tblTeknik {
-  position: absolute;
-  top: 360px;      /* di bawah NON TEKNIK */
-  left: 940px;
-  width: 250px;
+#tblTeknik h4{
+  background:#0d6efd;
+  color:#fff;
+}
+
+/* Table */
+.table-block table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:10px;
+}
+
+.table-block th,
+.table-block td{
+  border:1px solid #bbb;
+  padding:3px 5px;
+  text-align:center;
+  line-height:1.1;
+}
+
+/* header row */
+.table-block th{
+  background:#f1f1f1;
+  font-weight:600;
+}
+
+/* grand total */
+.table-block tr:last-child th{
+  background:#e9ecef;
+  font-weight:700;
+}
+
+/* hover */
+.table-block table tr:hover{
+  background:#f9f9f9;
+}
+
+/* ukuran tabel */
+.table-block.small{
+  width:280px;
+}
+
+.table-block.large{
+  width:360px;
+}
+
+/* ===================== */
+/* POSISI TABEL */
+/* ===================== */
+
+/* kiri bawah sisa */
+#tblSisa{
+  top:180px;
+  left:30px;
+}
+
+/* kanan tblSisa */
+#tblManja{
+  top:180px;
+  left:350px;
+}
+
+/* kanan sejajar card gagal */
+#tblNonTeknik{
+  top:240px;
+  left:1000px;  /* lurus di bawah card gagal */
+}
+
+/* di bawah tblNonTeknik */
+#tblTeknik{
+  top:390px;
+  left:1000px;
 }
