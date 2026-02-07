@@ -159,51 +159,39 @@ function updateClusterTable(data) {
 
   table.innerHTML = html;
 }
-
-/* ================= TABLE MANJA ================= */
+/* ================= TABLE MANJA (DARI SHEET WEB A18:F21) ================= */
 function updateManjaTable(data) {
   const table = document.querySelector("#tblManja table");
   if (!table) return;
 
-  let html = `<tr>
-    <th>CLUSTER</th>
-    <th>MANJA</th>
-    <th>NON MANJA</th>
-    <th>TOTAL</th>
-  </tr>`;
+  const rows = data.manjaTable || [];
 
-  let totalManja = 0;
-  let totalNonManja = 0;
-
-  for (let cluster in data.cluster) {
-    const manja = data.manja || 0;
-    const nonManja = data.nonManja || 0;
-    const total = manja + nonManja;
-
-    html += `
-      <tr>
-        <td>${cluster}</td>
-        <td>${manja}</td>
-        <td>${nonManja}</td>
-        <td>${total}</td>
-      </tr>
-    `;
-    totalManja += manja;
-    totalNonManja += nonManja;
-  }
-
-  html += `
+  let html = `
     <tr>
-      <th>GRAND TOTAL</th>
-      <th>${totalManja}</th>
-      <th>${totalNonManja}</th>
-      <th>${totalManja + totalNonManja}</th>
+      <th>CLUSTER</th>
+      <th>MANJA HI</th>
+      <th>MANJA H+</th>
+      <th>EXP</th>
+      <th>NON MANJA</th>
+      <th>TOTAL</th>
     </tr>
   `;
 
+  rows.forEach(row => {
+    html += `
+      <tr>
+        <td>${row.cluster || ""}</td>
+        <td>${row.manjaHI || 0}</td>
+        <td>${row.manjaH || 0}</td>
+        <td>${row.exp || 0}</td>
+        <td>${row.nonManja || 0}</td>
+        <td>${row.total || 0}</td>
+      </tr>
+    `;
+  });
+
   table.innerHTML = html;
 }
-
 /* ================= POSISI DAN GARIS ================= */
 function positionTablesBelowCards() {
   const parent = document.querySelector(".tree-area");
