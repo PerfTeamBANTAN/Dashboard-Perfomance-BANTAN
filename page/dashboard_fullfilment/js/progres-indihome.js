@@ -19,6 +19,7 @@ async function loadIndihomeData() {
     if (!res.ok) throw new Error("API Error");
 
     const data = await res.json();
+    window.lastData = data;
 
     updateHeader(data);
     updateBoxes(data);
@@ -27,6 +28,9 @@ async function loadIndihomeData() {
     updateKendalaNonTeknik(data);
 
     showLoading(false);
+
+    // render semua garis setelah data update
+    renderLines();
 
   } catch (err) {
     console.error("Fetch error:", err);
@@ -38,12 +42,7 @@ async function loadIndihomeData() {
 function showLoading(show) {
   const area = document.getElementById("content-area");
   if (!area) return;
-
-  if (show) {
-    area.classList.add("loading");
-  } else {
-    area.classList.remove("loading");
-  }
+  area.classList.toggle("loading", show);
 }
 
 function showError(msg) {
@@ -58,8 +57,8 @@ function showError(msg) {
 /* ================= HEADER ================= */
 function updateHeader(data) {
   const time = new Date(data.updateTime);
-  document.getElementById("updateTime").innerText =
-    "Last Update : " + time.toLocaleString("id-ID");
+  const el = document.getElementById("updateTime");
+  if (el) el.innerText = "Last Update : " + time.toLocaleString("id-ID");
 }
 
 /* ================= BOX ================= */
@@ -84,16 +83,18 @@ function updateBoxes(data) {
 function setBox(id, value) {
   const box = document.getElementById(id);
   if (!box) return;
-  box.querySelector("b").innerText = value;
+  const b = box.querySelector("b");
+  if (b) b.innerText = value;
 }
 
 function setBoxPercent(id, value, total) {
   const box = document.getElementById(id);
   if (!box) return;
-
+  const b = box.querySelector("b");
+  const small = box.querySelector("small");
   const percent = total ? ((value / total) * 100).toFixed(2) : 0;
-  box.querySelector("b").innerText = value;
-  box.querySelector("small").innerText = percent + "%";
+  if (b) b.innerText = value;
+  if (small) small.innerText = percent + "%";
 }
 
 /* ================= TABLE CLUSTER ================= */
@@ -102,7 +103,6 @@ function updateClusterTable(data) {
   if (!table) return;
 
   let html = `<tr><th>CLUSTER</th><th>WO</th></tr>`;
-
   let grandTotal = 0;
 
   for (let cluster in data.cluster) {
@@ -112,7 +112,6 @@ function updateClusterTable(data) {
   }
 
   html += `<tr><th>GRAND TOTAL</th><th>${grandTotal}</th></tr>`;
-
   table.innerHTML = html;
 }
 
@@ -144,7 +143,6 @@ function updateManjaTable(data) {
         <td>${total}</td>
       </tr>
     `;
-
     totalManja += manja;
     totalNonManja += nonManja;
   }
@@ -161,213 +159,134 @@ function updateManjaTable(data) {
   table.innerHTML = html;
 }
 
-/* ================= POSISI TABEL DIBAWAH CARD ================= */
+/* ================= POSISI DAN GARIS ================= */
 function positionTablesBelowCards() {
+  const parent = document.querySelector(".tree-area");
+  if (!parent) return;
+  const parentRect = parent.getBoundingClientRect();
+
   const tblSisa = document.getElementById("tblSisa");
   const tblManja = document.getElementById("tblManja");
   const cardSisa = document.getElementById("sisa");
   const cardManja = document.getElementById("manja");
+  const cardGagal = document.getElementById("gagal");
+  const tblNonTeknik = document.getElementById("tblNonTeknik");
+  const tblTeknik = document.getElementById("tblTeknik");
 
-  if (!tblSisa || !tblManja || !cardSisa || !cardManja) return;
+  if (!tblSisa || !tblManja || !cardSisa || !cardManja || !cardGagal) return;
 
-  const parent = document.querySelector(".tree-area");
-  const parentRect = parent.getBoundingClientRect();
-
-  // posisi tabel SISA: 20px dari kiri canvas, di bawah card SISA
   const rectSisa = cardSisa.getBoundingClientRect();
   tblSisa.style.position = "absolute";
-  tblSisa.style.top = (rectSisa.bottom - parentRect.top + 10) + "px"; // 10px jarak vertikal
-  tblSisa.style.left = "20px"; // geser ke kiri layar
+  tblSisa.style.top = rectSisa.bottom - parentRect.top + 10 + "px";
+  tblSisa.style.left = "20px";
 
-  // posisi tabel MANJA: di samping tabel SISA
   const rectManja = cardManja.getBoundingClientRect();
   tblManja.style.position = "absolute";
-  tblManja.style.top = (rectManja.bottom - parentRect.top + 10) + "px"; // sama jarak vertikal
-  tblManja.style.left = (20 + tblSisa.offsetWidth + 20) + "px"; // 20px jarak antar tabel
+  tblManja.style.top = rectManja.bottom - parentRect.top + 10 + "px";
+  tblManja.style.left = 20 + tblSisa.offsetWidth + 20 + "px";
+
+  const rectGagal = cardGagal.getBoundingClientRect();
+  tblNonTeknik.style.position = "absolute";
+  tblNonTeknik.style.top = rectGagal.bottom - parentRect.top + 10 + "px";
+  tblNonTeknik.style.left = "20px";
+
+  if (tblTeknik) {
+    const bottomNonTeknik = tblNonTeknik.offsetTop + tblNonTeknik.offsetHeight;
+    tblTeknik.style.position = "absolute";
+    tblTeknik.style.top = bottomNonTeknik + 10 + "px";
+    tblTeknik.style.left = "20px";
+  }
 }
-
-/* panggil setelah semua data render */
-setTimeout(positionTablesBelowCards, 900);
-window.addEventListener("resize", positionTablesBelowCards);
-
 
 /* ================= KENDALA NON TEKNIK ================= */
 function updateKendalaNonTeknik(data) {
-  const nonTeknikTable = document.querySelector("#tblNonTeknik table");
-  if (!nonTeknikTable) return;
+  const table = document.querySelector("#tblNonTeknik table");
+  if (!table) return;
 
-  // Build NON TEKNIK table
-  let html = `
-    <tr>
-      <th>KENDALA</th>
-      <th>KOTANG</th>
-      <th>TANGSEL</th>
-      <th>TOTAL</th>
-    </tr>
-  `;
+  let html = `<tr>
+    <th>KENDALA</th>
+    <th>KOTANG</th>
+    <th>TANGSEL</th>
+    <th>TOTAL</th>
+  </tr>`;
 
-  let gKotang = 0;
-  let gTangsel = 0;
-  let gTotal = 0;
+  let gKotang = 0, gTangsel = 0, gTotal = 0;
 
-  for (let kendala in data.kendalaNonTeknis) {
-    const row = data.kendalaNonTeknis[kendala];
-
+  for (let k in data.kendalaNonTeknis) {
+    const row = data.kendalaNonTeknis[k];
     const kotang = row.KOTANG || 0;
     const tangsel = row.TANGSEL || 0;
     const total = row.total || 0;
-
-    html += `
-      <tr>
-        <td>${kendala}</td>
-        <td>${kotang}</td>
-        <td>${tangsel}</td>
-        <td>${total}</td>
-      </tr>
-    `;
-
+    html += `<tr><td>${k}</td><td>${kotang}</td><td>${tangsel}</td><td>${total}</td></tr>`;
     gKotang += kotang;
     gTangsel += tangsel;
     gTotal += total;
   }
 
-  html += `
-    <tr>
-      <th>GRAND TOTAL</th>
-      <th>${gKotang}</th>
-      <th>${gTangsel}</th>
-      <th>${gTotal}</th>
-    </tr>
-  `;
+  html += `<tr><th>GRAND TOTAL</th><th>${gKotang}</th><th>${gTangsel}</th><th>${gTotal}</th></tr>`;
+  table.innerHTML = html;
 
-  nonTeknikTable.innerHTML = html;
-
-  // Setelah NON TEKNIK render, update posisi TEKNIS
   updateKendalaTeknisPosition();
 }
 
 /* ================= KENDALA TEKNIS ================= */
 function updateKendalaTeknisPosition() {
-  const nonTeknikBlock = document.getElementById("tblNonTeknik");
-  const teknikBlock = document.getElementById("tblTeknik");
+  const nonTeknik = document.getElementById("tblNonTeknik");
+  const teknik = document.getElementById("tblTeknik");
+  if (!nonTeknik || !teknik) return;
 
-  if (!nonTeknikBlock || !teknikBlock) return;
-
-  // ambil data kendala TEKNIS dari JS
   const dataTeknis = window.lastData?.kendalaTeknis || {};
-
-  const table = teknikBlock.querySelector("table");
+  const table = teknik.querySelector("table");
   if (!table) return;
 
-  // Build TEKNIS table
-  let html = `
-    <tr>
-      <th>KENDALA</th>
-      <th>KOTANG</th>
-      <th>TANGSEL</th>
-      <th>TOTAL</th>
-    </tr>
-  `;
+  let html = `<tr>
+    <th>KENDALA</th>
+    <th>KOTANG</th>
+    <th>TANGSEL</th>
+    <th>TOTAL</th>
+  </tr>`;
 
-  let gKotang = 0;
-  let gTangsel = 0;
-  let gTotal = 0;
+  let gKotang = 0, gTangsel = 0, gTotal = 0;
 
-  for (let kendala in dataTeknis) {
-    const row = dataTeknis[kendala];
-
+  for (let k in dataTeknis) {
+    const row = dataTeknis[k];
     const kotang = row.KOTANG || 0;
     const tangsel = row.TANGSEL || 0;
     const total = row.total || 0;
-
-    html += `
-      <tr>
-        <td>${kendala}</td>
-        <td>${kotang}</td>
-        <td>${tangsel}</td>
-        <td>${total}</td>
-      </tr>
-    `;
-
+    html += `<tr><td>${k}</td><td>${kotang}</td><td>${tangsel}</td><td>${total}</td></tr>`;
     gKotang += kotang;
     gTangsel += tangsel;
     gTotal += total;
   }
 
-  html += `
-    <tr>
-      <th>GRAND TOTAL</th>
-      <th>${gKotang}</th>
-      <th>${gTangsel}</th>
-      <th>${gTotal}</th>
-    </tr>
-  `;
-
+  html += `<tr><th>GRAND TOTAL</th><th>${gKotang}</th><th>${gTangsel}</th><th>${gTotal}</th></tr>`;
   table.innerHTML = html;
 
-  // set posisi TEKNIS tepat di bawah NON TEKNIK
-  const bottomNonTeknik = nonTeknikBlock.offsetTop + nonTeknikBlock.offsetHeight;
-  teknikBlock.style.top = (bottomNonTeknik + 10) + "px"; // +10px jarak
+  const bottomNonTeknik = nonTeknik.offsetTop + nonTeknik.offsetHeight;
+  teknik.style.top = bottomNonTeknik + 10 + "px";
+
+  drawTableLines();
 }
 
-/* ================= MODIFIKASI loadIndihomeData ================= */
-async function loadIndihomeData() {
-  try {
-    showLoading(true);
-
-    const res = await fetch(API_URL);
-    if (!res.ok) throw new Error("API Error");
-
-    const data = await res.json();
-
-    // simpan data global untuk TEKNIS
-    window.lastData = data;
-
-    updateHeader(data);
-    updateBoxes(data);
-    updateClusterTable(data);
-    updateManjaTable(data);
-
-    // NON TEKNIK akan otomatis panggil update TEKNIS
-    updateKendalaNonTeknik(data);
-
-    showLoading(false);
-
-  } catch (err) {
-    console.error("Fetch error:", err);
-    showError("Gagal load data dari server");
-  }
-}
-
+/* ================= GARIS ANTAR BOX ================= */
 function drawPath(fromId, toId) {
   const from = document.getElementById(fromId);
   const to = document.getElementById(toId);
   const svg = document.getElementById("tree-lines");
+  if (!from || !to || !svg) return;
 
-  if (!from || !to) return;
-
+  const parent = document.querySelector(".tree-area").getBoundingClientRect();
   const f = from.getBoundingClientRect();
   const t = to.getBoundingClientRect();
-  const parent = document.querySelector(".tree-area").getBoundingClientRect();
 
   const x1 = f.right - parent.left;
   const y1 = f.top + f.height / 2 - parent.top;
-
   const x2 = t.left - parent.left;
   const y2 = t.top + t.height / 2 - parent.top;
-
   const midX = x1 + 40;
 
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-
-  const d = `
-    M ${x1} ${y1}
-    L ${midX} ${y1}
-    L ${midX} ${y2}
-    L ${x2} ${y2}
-  `;
-
-  path.setAttribute("d", d);
+  path.setAttribute("d", `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${y2} L ${x2} ${y2}`);
   path.setAttribute("fill", "none");
   path.setAttribute("stroke", "#333");
   path.setAttribute("stroke-width", "2");
@@ -379,27 +298,22 @@ function drawPath(fromId, toId) {
 
 function drawTreeLines() {
   const svg = document.getElementById("tree-lines");
+  if (!svg) return;
   svg.innerHTML = "";
 
   drawPath("wo", "sisa");
   drawPath("wo", "sudah");
-
   drawPath("sisa", "manja");
   drawPath("sisa", "manja2");
-
   drawPath("sudah", "sukses");
   drawPath("sudah", "gagal");
 }
 
-/* redraw setelah data masuk */
-setTimeout(drawTreeLines, 800);
-window.addEventListener("resize", drawTreeLines);
-
+/* ================= GARIS CARD → TABLE ================= */
 function drawTableLines() {
   const svg = document.getElementById("tree-lines");
   if (!svg) return;
 
-  // hapus dulu garis card->table lama
   svg.querySelectorAll(".card-table-line").forEach(line => line.remove());
 
   function drawLine(cardId, tableId) {
@@ -408,31 +322,18 @@ function drawTableLines() {
     if (!card || !table) return;
 
     const parent = document.querySelector(".tree-area").getBoundingClientRect();
-    const cardRect = card.getBoundingClientRect();
-    const tableRect = table.getBoundingClientRect();
+    const cRect = card.getBoundingClientRect();
+    const tRect = table.getBoundingClientRect();
 
-    // titik awal: tengah bawah card
-    const x1 = cardRect.left + cardRect.width / 2 - parent.left;
-    const y1 = cardRect.bottom - parent.top;
-
-    // titik akhir: tengah atas table
-    const x2 = tableRect.left + tableRect.width / 2 - parent.left;
-    const y2 = tableRect.top - parent.top;
-
-    // titik tengah horizontal (jarak 40px ke kanan atau kiri)
+    const x1 = cRect.left + cRect.width / 2 - parent.left;
+    const y1 = cRect.bottom - parent.top;
+    const x2 = tRect.left + tRect.width / 2 - parent.left;
+    const y2 = tRect.top - parent.top;
     const midX = x1 + (x2 > x1 ? 40 : -40);
-
-    // titik kedua vertikal (turun ke level table)
     const midY = y2;
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    const d = `
-      M ${x1} ${y1}
-      L ${midX} ${y1}
-      L ${midX} ${midY}
-      L ${x2} ${midY}
-    `;
-    path.setAttribute("d", d);
+    path.setAttribute("d", `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${midY} L ${x2} ${midY}`);
     path.setAttribute("fill", "none");
     path.setAttribute("stroke", "#333");
     path.setAttribute("stroke-width", "2");
@@ -448,3 +349,12 @@ function drawTableLines() {
   drawLine("gagal", "tblNonTeknik");
 }
 
+/* ================= RENDER SEMUA GARIS ================= */
+function renderLines() {
+  positionTablesBelowCards();
+  drawTreeLines();
+  drawTableLines();
+}
+
+// resize listener
+window.addEventListener("resize", renderLines);
