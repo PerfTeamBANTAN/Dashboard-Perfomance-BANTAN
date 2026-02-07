@@ -324,6 +324,7 @@ function drawTableLines() {
   const svg = document.getElementById("tree-lines");
   if (!svg) return;
 
+  // hapus dulu garis lama card->table
   svg.querySelectorAll(".card-table-line").forEach(line => line.remove());
 
   function drawLine(cardId, tableId) {
@@ -332,18 +333,28 @@ function drawTableLines() {
     if (!card || !table) return;
 
     const parent = document.querySelector(".tree-area").getBoundingClientRect();
-    const cRect = card.getBoundingClientRect();
-    const tRect = table.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const tableRect = table.getBoundingClientRect();
 
-    const x1 = cRect.left + cRect.width / 2 - parent.left;
-    const y1 = cRect.bottom - parent.top;
-    const x2 = tRect.left + tRect.width / 2 - parent.left;
-    const y2 = tRect.top - parent.top;
-    const midX = x1 + (x2 > x1 ? 40 : -40);
-    const midY = y2;
+    // ✅ titik awal: tengah kiri card
+    const x1 = cardRect.left - parent.left;
+    const y1 = cardRect.top + cardRect.height / 2 - parent.top;
+
+    // ✅ titik akhir: tengah kiri table
+    const x2 = tableRect.left - parent.left;
+    const y2 = tableRect.top + tableRect.height / 2 - parent.top;
+
+    const midX = x1 - 40; // belok ke kiri dulu biar rapi
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${midY} L ${x2} ${midY}`);
+    const d = `
+      M ${x1} ${y1}
+      L ${midX} ${y1}
+      L ${midX} ${y2}
+      L ${x2} ${y2}
+    `;
+
+    path.setAttribute("d", d);
     path.setAttribute("fill", "none");
     path.setAttribute("stroke", "#333");
     path.setAttribute("stroke-width", "2");
@@ -358,6 +369,7 @@ function drawTableLines() {
   drawLine("manja", "tblManja");
   drawLine("gagal", "tblNonTeknik");
 }
+
 
 /* ================= RENDER SEMUA GARIS ================= */
 function renderLines() {
