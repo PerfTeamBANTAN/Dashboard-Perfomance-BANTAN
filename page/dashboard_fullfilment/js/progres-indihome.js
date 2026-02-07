@@ -318,7 +318,7 @@ function drawTableLines() {
   const svg = document.getElementById("tree-lines");
   if (!svg) return;
 
-  // hapus garis lama
+  // hapus dulu garis card->table lama
   svg.querySelectorAll(".card-table-line").forEach(line => line.remove());
 
   function drawLine(cardId, tableId) {
@@ -340,9 +340,9 @@ function drawTableLines() {
 
     let d = "";
 
-    // khusus untuk GAGAL → KENDALA (turun dulu baru belok)
+    // ✅ KHUSUS card gagal → tabel kendala (turun dulu)
     if (cardId === "gagal") {
-      const midY = y1 + 40; // turun 40px dulu
+      const midY = y1 + 40; // turun dulu 40px
 
       d = `
         M ${x1} ${y1}
@@ -350,8 +350,9 @@ function drawTableLines() {
         L ${x2} ${midY}
         L ${x2} ${y2}
       `;
-    } else {
-      // default (horizontal dulu)
+    } 
+    // ✅ selain gagal tetap pakai pola lama (horizontal dulu)
+    else {
       const midX = x1 + (x2 > x1 ? 40 : -40);
 
       d = `
@@ -374,9 +375,9 @@ function drawTableLines() {
     svg.appendChild(path);
   }
 
-  drawLine("sisa", "tblSisa");
-  drawLine("manja", "tblManja");
-  drawLine("gagal", "tblNonTeknik"); // ✅ turun dari bawah card gagal
+  drawLine("sisa", "tblSisa");       // normal
+  drawLine("manja", "tblManja");     // normal
+  drawLine("gagal", "tblNonTeknik"); // khusus turun dari bawah
 }
 
 
