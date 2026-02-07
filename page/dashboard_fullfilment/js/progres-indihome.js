@@ -318,7 +318,7 @@ function drawTableLines() {
   const svg = document.getElementById("tree-lines");
   if (!svg) return;
 
-  // hapus dulu garis card->table lama
+  // hapus dulu garis lama card->table
   svg.querySelectorAll(".card-table-line").forEach(line => line.remove());
 
   function drawLine(cardId, tableId) {
@@ -330,9 +330,18 @@ function drawTableLines() {
     const cardRect = card.getBoundingClientRect();
     const tableRect = table.getBoundingClientRect();
 
-    // titik awal: tengah bawah card
-    const x1 = cardRect.left + cardRect.width / 2 - parent.left;
-    const y1 = cardRect.bottom - parent.top;
+    let x1, y1;
+
+    // ✅ KHUSUS gagal: mulai dari bawah card
+    if (cardId === "gagal") {
+      x1 = cardRect.left + cardRect.width / 2 - parent.left;
+      y1 = cardRect.bottom - parent.top;
+    }
+    // ✅ selain gagal: mulai dari sisi kiri card
+    else {
+      x1 = cardRect.left - parent.left;
+      y1 = cardRect.top + cardRect.height / 2 - parent.top;
+    }
 
     // titik akhir: tengah atas table
     const x2 = tableRect.left + tableRect.width / 2 - parent.left;
@@ -340,9 +349,9 @@ function drawTableLines() {
 
     let d = "";
 
-    // ✅ KHUSUS card gagal → tabel kendala (turun dulu)
+    // khusus gagal → turun dulu
     if (cardId === "gagal") {
-      const midY = y1 + 40; // turun dulu 40px
+      const midY = y1 + 40;
 
       d = `
         M ${x1} ${y1}
@@ -350,10 +359,10 @@ function drawTableLines() {
         L ${x2} ${midY}
         L ${x2} ${y2}
       `;
-    } 
-    // ✅ selain gagal tetap pakai pola lama (horizontal dulu)
+    }
+    // selain gagal → horizontal dulu
     else {
-      const midX = x1 + (x2 > x1 ? 40 : -40);
+      const midX = x1 - 40;
 
       d = `
         M ${x1} ${y1}
@@ -375,11 +384,13 @@ function drawTableLines() {
     svg.appendChild(path);
   }
 
-  drawLine("sisa", "tblSisa");       // normal
-  drawLine("manja", "tblManja");     // normal
-  drawLine("gagal", "tblNonTeknik"); // khusus turun dari bawah
-}
+  // normal (samping)
+  drawLine("sisa", "tblSisa");
+  drawLine("manja", "tblManja");
 
+  // khusus dari bawah
+  drawLine("gagal", "tblNonTeknik");
+}
 
 /* ================= RENDER SEMUA GARIS ================= */
 function renderLines() {
