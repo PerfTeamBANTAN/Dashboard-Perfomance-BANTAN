@@ -342,10 +342,9 @@ function drawTableLines() {
       x1 = cardRect.left - parent.left;
       y1 = cardRect.top + cardRect.height / 2 - parent.top;
     }
-
-    // titik akhir: tengah atas table
-    const x2 = tableRect.left + tableRect.width / 2 - parent.left;
-    const y2 = tableRect.top - parent.top;
+// titik akhir: tengah kiri tabel
+const x2 = tableRect.left - parent.left;
+const y2 = tableRect.top + tableRect.height / 2 - parent.top;
 
     let d = "";
 
