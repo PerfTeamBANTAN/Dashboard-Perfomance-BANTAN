@@ -168,23 +168,22 @@ function positionTablesBelowCards() {
   const cardSisa = document.getElementById("sisa");
   const cardManja = document.getElementById("manja");
 
-  if (tblSisa && cardSisa) {
-    const rect = cardSisa.getBoundingClientRect();
-    const parentRect = cardSisa.parentElement.getBoundingClientRect();
+  if (!tblSisa || !tblManja || !cardSisa || !cardManja) return;
 
-    tblSisa.style.position = "absolute";
-    tblSisa.style.top = (rect.bottom - parentRect.top + 10) + "px"; // 10px jarak
-    tblSisa.style.left = (rect.left - parentRect.left) + "px";
-  }
+  const parent = document.querySelector(".tree-area");
+  const parentRect = parent.getBoundingClientRect();
 
-  if (tblManja && cardManja) {
-    const rect = cardManja.getBoundingClientRect();
-    const parentRect = cardManja.parentElement.getBoundingClientRect();
+  // posisi tabel SISA: 20px dari kiri canvas, di bawah card SISA
+  const rectSisa = cardSisa.getBoundingClientRect();
+  tblSisa.style.position = "absolute";
+  tblSisa.style.top = (rectSisa.bottom - parentRect.top + 10) + "px"; // 10px jarak vertikal
+  tblSisa.style.left = "20px"; // geser ke kiri layar
 
-    tblManja.style.position = "absolute";
-    tblManja.style.top = (rect.bottom - parentRect.top + 10) + "px"; // 10px jarak
-    tblManja.style.left = (rect.left - parentRect.left) + "px";
-  }
+  // posisi tabel MANJA: di samping tabel SISA
+  const rectManja = cardManja.getBoundingClientRect();
+  tblManja.style.position = "absolute";
+  tblManja.style.top = (rectManja.bottom - parentRect.top + 10) + "px"; // sama jarak vertikal
+  tblManja.style.left = (20 + tblSisa.offsetWidth + 20) + "px"; // 20px jarak antar tabel
 }
 
 /* panggil setelah semua data render */
