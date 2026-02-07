@@ -131,18 +131,17 @@
 .table-block table tr:hover {
   background: #f9f9f9;
 }
-
-/* POSISI TABEL RAPIH DI BAWAH CARD */
+/* POSISI TABEL DI BAWAH CARD */
 #tblSisa {
-  top: 230px;       /* langsung di bawah card #sisa */
-  left: 30px;       /* lebih dekat ke kiri */
-  width: 280px;     /* sedikit lebih lebar */
+  top: 160px;       /* card #sisa top=90px, tinggi card ~60px + 10px jarak */
+  left: 30px;       /* sejajar ke kiri canvas */
+  width: 280px;     /* lebar tabel */
 }
 
 #tblManja {
-  top: 230px;       /* sejajar dengan #tblSisa */
-  left: 350px;      /* sedikit kanan dari #tblSisa */
-  width: 300px;     /* lebar sesuai kebutuhan */
+  top: 160px;       /* sejajar #tblSisa */
+  left: 350px;      /* kanan sedikit dari #tblSisa */
+  width: 300px;     /* lebar tabel */
 }
 
 /* TABEL NON TEKNIK & TEKNIK vertical stack di bawah #gagal */
