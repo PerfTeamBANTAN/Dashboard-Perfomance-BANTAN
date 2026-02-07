@@ -63,21 +63,46 @@ function updateHeader(data) {
 
 /* ================= BOX ================= */
 function updateBoxes(data) {
-  const wo = data.woTotal || 0;
-  const sisa = data.sisa || 0;
-  const sudah = data.sudah || 0;
-  const manja = data.manja || 0;
-  const nonManja = data.nonManja || 0;
-  const sukses = data.sukses || 0;
-  const gagal = data.gagal || 0;
 
+  const cards = data.cards || {};
+
+  // ambil nilai dari sheet WEB
+  const wo     = cards["WO PSB"]?.nilai || 0;
+  const sisa   = cards["SISA PROGRES"]?.nilai || 0;
+  const sudah  = cards["SUDAH PROGRES"]?.nilai || 0;
+  const manja  = cards["MANJA HI EXP"]?.nilai || 0;
+  const nonManja = cards["MANJA H+ & NON MANJA"]?.nilai || 0;
+  const sukses = cards["SUKSES"]?.nilai || 0;
+  const gagal  = cards["GAGALTARIK"]?.nilai || 0;
+
+  const pWo     = cards["WO PSB"]?.persen || "0%";
+  const pSisa   = cards["SISA PROGRES"]?.persen || "0%";
+  const pSudah  = cards["SUDAH PROGRES"]?.persen || "0%";
+  const pManja  = cards["MANJA HI EXP"]?.persen || "0%";
+  const pNonManja = cards["MANJA H+ & NON MANJA"]?.persen || "0%";
+  const pSukses = cards["SUKSES"]?.persen || "0%";
+  const pGagal  = cards["GAGALTARIK"]?.persen || "0%";
+
+  // isi card (nilai + persen langsung dari sheet)
   setBox("wo", wo);
-  setBoxPercent("sisa", sisa, wo);
-  setBoxPercent("sudah", sudah, wo);
-  setBoxPercent("manja", manja, wo);
-  setBoxPercent("manja2", nonManja, wo);
-  setBoxPercent("sukses", sukses, wo);
-  setBoxPercent("gagal", gagal, wo);
+
+  setBoxValuePercent("sisa", sisa, pSisa);
+  setBoxValuePercent("sudah", sudah, pSudah);
+  setBoxValuePercent("manja", manja, pManja);
+  setBoxValuePercent("manja2", nonManja, pNonManja);
+  setBoxValuePercent("sukses", sukses, pSukses);
+  setBoxValuePercent("gagal", gagal, pGagal);
+}
+
+function setBoxValuePercent(id, value, percentText) {
+  const box = document.getElementById(id);
+  if (!box) return;
+
+  const b = box.querySelector("b");
+  const small = box.querySelector("small");
+
+  if (b) b.innerText = value;
+  if (small) small.innerText = percentText;
 }
 
 function setBox(id, value) {
@@ -85,16 +110,6 @@ function setBox(id, value) {
   if (!box) return;
   const b = box.querySelector("b");
   if (b) b.innerText = value;
-}
-
-function setBoxPercent(id, value, total) {
-  const box = document.getElementById(id);
-  if (!box) return;
-  const b = box.querySelector("b");
-  const small = box.querySelector("small");
-  const percent = total ? ((value / total) * 100).toFixed(2) : 0;
-  if (b) b.innerText = value;
-  if (small) small.innerText = percent + "%";
 }
 
 /* ================= TABLE CLUSTER ================= */
