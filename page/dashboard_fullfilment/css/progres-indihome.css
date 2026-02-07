@@ -209,3 +209,58 @@
   top:390px;
   left:1000px;
 }
+
+/* ===================== */
+/* STYLE KHUSUS HSA */
+/* ===================== */
+
+#tblHSA{
+  width:520px;              /* bikin lebih lebar */
+  font-size:11px;
+}
+
+/* judul HSA */
+#tblHSA h4{
+  background:linear-gradient(135deg,#6f42c1,#0d6efd);
+  color:#fff;
+  font-weight:700;
+  letter-spacing:0.5px;
+}
+
+/* header kolom */
+#tblHSA th{
+  background:#e7f1ff;
+  font-weight:700;
+  font-size:10px;
+  padding:5px 6px;
+}
+
+/* isi tabel */
+#tblHSA td{
+  padding:5px 6px;
+  font-size:10px;
+}
+
+/* baris nama HSA (kolom pertama) */
+#tblHSA td:first-child{
+  font-weight:600;
+  background:#f3f6ff;
+}
+
+/* zebra stripe */
+#tblHSA tr:nth-child(even) td{
+  background:#fafbff;
+}
+
+/* hover effect */
+#tblHSA table tr:hover{
+  background:#e0ecff;
+  transition:0.2s;
+}
+
+/* border lebih halus */
+#tblHSA table{
+  border:1px solid #9bbcff;
+  border-radius:6px;
+  overflow:hidden;
+}
