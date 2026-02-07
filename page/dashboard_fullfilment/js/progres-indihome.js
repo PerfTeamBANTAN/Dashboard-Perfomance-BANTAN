@@ -318,7 +318,7 @@ function drawTableLines() {
   const svg = document.getElementById("tree-lines");
   if (!svg) return;
 
-  // hapus dulu garis lama card->table
+  // hapus garis lama
   svg.querySelectorAll(".card-table-line").forEach(line => line.remove());
 
   function drawLine(cardId, tableId) {
@@ -330,24 +330,39 @@ function drawTableLines() {
     const cardRect = card.getBoundingClientRect();
     const tableRect = table.getBoundingClientRect();
 
-    // ✅ titik awal: tengah kiri card
-    const x1 = cardRect.left - parent.left;
-    const y1 = cardRect.top + cardRect.height / 2 - parent.top;
+    // titik awal: tengah bawah card
+    const x1 = cardRect.left + cardRect.width / 2 - parent.left;
+    const y1 = cardRect.bottom - parent.top;
 
-    // ✅ titik akhir: tengah kiri table
-    const x2 = tableRect.left - parent.left;
-    const y2 = tableRect.top + tableRect.height / 2 - parent.top;
+    // titik akhir: tengah atas table
+    const x2 = tableRect.left + tableRect.width / 2 - parent.left;
+    const y2 = tableRect.top - parent.top;
 
-    const midX = x1 - 40; // belok ke kiri dulu biar rapi
+    let d = "";
+
+    // khusus untuk GAGAL → KENDALA (turun dulu baru belok)
+    if (cardId === "gagal") {
+      const midY = y1 + 40; // turun 40px dulu
+
+      d = `
+        M ${x1} ${y1}
+        L ${x1} ${midY}
+        L ${x2} ${midY}
+        L ${x2} ${y2}
+      `;
+    } else {
+      // default (horizontal dulu)
+      const midX = x1 + (x2 > x1 ? 40 : -40);
+
+      d = `
+        M ${x1} ${y1}
+        L ${midX} ${y1}
+        L ${midX} ${y2}
+        L ${x2} ${y2}
+      `;
+    }
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    const d = `
-      M ${x1} ${y1}
-      L ${midX} ${y1}
-      L ${midX} ${y2}
-      L ${x2} ${y2}
-    `;
-
     path.setAttribute("d", d);
     path.setAttribute("fill", "none");
     path.setAttribute("stroke", "#333");
@@ -361,7 +376,7 @@ function drawTableLines() {
 
   drawLine("sisa", "tblSisa");
   drawLine("manja", "tblManja");
-  drawLine("gagal", "tblNonTeknik");
+  drawLine("gagal", "tblNonTeknik"); // ✅ turun dari bawah card gagal
 }
 
 
