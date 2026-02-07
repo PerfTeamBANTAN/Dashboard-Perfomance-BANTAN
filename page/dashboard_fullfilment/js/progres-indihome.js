@@ -231,6 +231,8 @@ function updateHSATable(data) {
 /* ================= POSISI TABLE ================= */
 function positionTablesBelowCards() {
   const parent = document.querySelector(".tree-area");
+  if (!parent) return;
+
   const parentRect = parent.getBoundingClientRect();
 
   const tblSisa = document.getElementById("tblSisa");
@@ -243,23 +245,29 @@ function positionTablesBelowCards() {
   const cardManja = document.getElementById("manja");
   const cardGagal = document.getElementById("gagal");
 
-  if (!tblSisa || !tblManja || !tblHSA || !tblNonTeknik || !cardSisa || !cardManja || !cardGagal) return;
+  if (!tblSisa || !tblManja || !tblHSA || !cardSisa || !cardManja) return;
 
+  /* ==== TABEL SISA ==== */
   const rectSisa = cardSisa.getBoundingClientRect();
   tblSisa.style.position = "absolute";
   tblSisa.style.top = (rectSisa.bottom - parentRect.top + 25) + "px";
   tblSisa.style.left = "20px";
 
+  /* ==== TABEL MANJA ==== */
   const rectManja = cardManja.getBoundingClientRect();
   tblManja.style.position = "absolute";
   tblManja.style.top = (rectManja.bottom - parentRect.top + 15) + "px";
   tblManja.style.left = (tblSisa.offsetLeft + tblSisa.offsetWidth + 20) + "px";
 
-  /* === HSA di bawah MANJA === */
+  /* ==== TABEL HSA (DI BAWAH MANJA) ==== */
   const bottomManja = tblManja.offsetTop + tblManja.offsetHeight;
+
   tblHSA.style.position = "absolute";
   tblHSA.style.top = (bottomManja + 20) + "px";
   tblHSA.style.left = tblManja.style.left;
+
+  /* ==== KENDALA ==== */
+  if (!tblNonTeknik || !cardGagal) return;
 
   const rectGagal = cardGagal.getBoundingClientRect();
   tblNonTeknik.style.position = "absolute";
@@ -269,11 +277,14 @@ function positionTablesBelowCards() {
      rectGagal.width / 2 -
      tblNonTeknik.offsetWidth / 2) + "px";
 
+  if (!tblTeknik) return;
+
   const bottomNonTeknik = tblNonTeknik.offsetTop + tblNonTeknik.offsetHeight;
   tblTeknik.style.position = "absolute";
   tblTeknik.style.top = (bottomNonTeknik + 20) + "px";
   tblTeknik.style.left = tblNonTeknik.style.left;
 }
+
 
 /* ================= KENDALA NON TEKNIK ================= */
 function updateKendalaNonTeknik(data) {
