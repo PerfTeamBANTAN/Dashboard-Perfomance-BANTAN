@@ -188,18 +188,33 @@ function positionTablesBelowCards() {
   tblManja.style.left = (tblSisa.offsetLeft + tblSisa.offsetWidth + 20) + "px";
 
   /* ==== TABEL NON TEKNIK (kanan card GAGAL) ==== */
-  const rectGagal = cardGagal.getBoundingClientRect();
-  tblNonTeknik.style.position = "absolute";
-  tblNonTeknik.style.top = (rectGagal.bottom - parentRect.top + 15) + "px";
-  tblNonTeknik.style.left = (rectGagal.right - parentRect.left + 20) + "px";
+  // posisi tabel NON TEKNIK: lurus di bawah card GAGAL (center)
+const rectGagal = cardGagal.getBoundingClientRect();
+
+tblNonTeknik.style.position = "absolute";
+
+// jarak vertikal biar ada ruang untuk garis
+const gap = 40;
+
+tblNonTeknik.style.top =
+  (rectGagal.bottom - parentRect.top + gap) + "px";
+
+// center tabel dengan card gagal
+tblNonTeknik.style.left =
+  (rectGagal.left - parentRect.left +
+   (rectGagal.width / 2) -
+   (tblNonTeknik.offsetWidth / 2)) + "px";
+
 
   /* ==== TABEL TEKNIS (di bawah NON TEKNIK) ==== */
   if (tblTeknik) {
-    const bottomNonTeknik = tblNonTeknik.offsetTop + tblNonTeknik.offsetHeight;
-    tblTeknik.style.position = "absolute";
-    tblTeknik.style.top = (bottomNonTeknik + 15) + "px";
-    tblTeknik.style.left = tblNonTeknik.style.left;
-  }
+  const bottomNonTeknik =
+    tblNonTeknik.offsetTop + tblNonTeknik.offsetHeight;
+
+  tblTeknik.style.position = "absolute";
+  tblTeknik.style.top = (bottomNonTeknik + 20) + "px"; // jarak antar tabel
+  tblTeknik.style.left = tblNonTeknik.style.left; // sejajar
+}
 }
 
 /* ================= KENDALA NON TEKNIK ================= */
