@@ -322,66 +322,65 @@ function drawTableLines() {
   svg.querySelectorAll(".card-table-line").forEach(line => line.remove());
 
   function drawLine(cardId, tableId) {
-    const card = document.getElementById(cardId);
-    const table = document.getElementById(tableId);
-    if (!card || !table) return;
+  const card = document.getElementById(cardId);
+  const table = document.getElementById(tableId);
+  if (!card || !table) return;
 
-    const parent = document.querySelector(".tree-area").getBoundingClientRect();
-    const cardRect = card.getBoundingClientRect();
-    const tableRect = table.getBoundingClientRect();
+  const parent = document.querySelector(".tree-area").getBoundingClientRect();
+  const cardRect = card.getBoundingClientRect();
+  const tableRect = table.getBoundingClientRect();
 
-    let x1, y1;
+  let x1, y1, x2, y2, d;
 
-    // ✅ KHUSUS gagal: mulai dari bawah card
-    if (cardId === "gagal") {
-      x1 = cardRect.left + cardRect.width / 2 - parent.left;
-      y1 = cardRect.bottom - parent.top;
-    }
-    // ✅ selain gagal: mulai dari sisi kiri card
-    else {
-      x1 = cardRect.left - parent.left;
-      y1 = cardRect.top + cardRect.height / 2 - parent.top;
-    }
-// titik akhir: tengah kiri tabel
-const x2 = tableRect.left - parent.left;
-const y2 = tableRect.top + tableRect.height / 2 - parent.top;
+  // ================= KHUSUS GAGAL → KENDALA (GARIS LURUS) =================
+  if (cardId === "gagal") {
 
-    let d = "";
+    // titik awal: tengah bawah card gagal
+    x1 = cardRect.left + cardRect.width / 2 - parent.left;
+    y1 = cardRect.bottom - parent.top;
 
-    // khusus gagal → turun dulu
-    if (cardId === "gagal") {
-      const midY = y1 + 40;
+    // titik akhir: tengah atas tabel kendala
+    x2 = tableRect.left + tableRect.width / 2 - parent.left;
+    y2 = tableRect.top - parent.top;
 
-      d = `
-        M ${x1} ${y1}
-        L ${x1} ${midY}
-        L ${x2} ${midY}
-        L ${x2} ${y2}
-      `;
-    }
-    // selain gagal → horizontal dulu
-    else {
-      const midX = x1 - 40;
-
-      d = `
-        M ${x1} ${y1}
-        L ${midX} ${y1}
-        L ${midX} ${y2}
-        L ${x2} ${y2}
-      `;
-    }
-
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", d);
-    path.setAttribute("fill", "none");
-    path.setAttribute("stroke", "#333");
-    path.setAttribute("stroke-width", "2");
-    path.setAttribute("stroke-linecap", "round");
-    path.setAttribute("stroke-linejoin", "round");
-    path.classList.add("card-table-line");
-
-    svg.appendChild(path);
+    // garis lurus
+    d = `
+      M ${x1} ${y1}
+      L ${x2} ${y2}
+    `;
   }
+  // ================= GARIS CARD LAIN (BELAKU SEPERTI BIASA) =================
+  else {
+
+    // titik awal: sisi kiri tengah card
+    x1 = cardRect.left - parent.left;
+    y1 = cardRect.top + cardRect.height / 2 - parent.top;
+
+    // titik akhir: sisi kiri tengah tabel
+    x2 = tableRect.left - parent.left;
+    y2 = tableRect.top + tableRect.height / 2 - parent.top;
+
+    const midX = x1 - 40;
+
+    d = `
+      M ${x1} ${y1}
+      L ${midX} ${y1}
+      L ${midX} ${y2}
+      L ${x2} ${y2}
+    `;
+  }
+
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("d", d);
+  path.setAttribute("fill", "none");
+  path.setAttribute("stroke", "#333");
+  path.setAttribute("stroke-width", "2");
+  path.setAttribute("stroke-linecap", "round");
+  path.setAttribute("stroke-linejoin", "round");
+  path.classList.add("card-table-line");
+
+  document.getElementById("tree-lines").appendChild(path);
+}
 
   // normal (samping)
   drawLine("sisa", "tblSisa");
