@@ -399,7 +399,9 @@ function drawTableLines() {
   const svg = document.getElementById("tree-lines");
   if (!svg) return;
 
-  // helper function menggambar garis vertikal dari card ke tabel
+  // hapus dulu garis card->table lama
+  svg.querySelectorAll(".card-table-line").forEach(line => line.remove());
+
   function drawLine(cardId, tableId) {
     const card = document.getElementById(cardId);
     const table = document.getElementById(tableId);
@@ -409,35 +411,40 @@ function drawTableLines() {
     const cardRect = card.getBoundingClientRect();
     const tableRect = table.getBoundingClientRect();
 
-    // titik bawah tengah card
+    // titik awal: tengah bawah card
     const x1 = cardRect.left + cardRect.width / 2 - parent.left;
     const y1 = cardRect.bottom - parent.top;
 
-    // titik atas tengah tabel
+    // titik akhir: tengah atas table
     const x2 = tableRect.left + tableRect.width / 2 - parent.left;
     const y2 = tableRect.top - parent.top;
 
+    // titik tengah horizontal (jarak 40px ke kanan atau kiri)
+    const midX = x1 + (x2 > x1 ? 40 : -40);
+
+    // titik kedua vertikal (turun ke level table)
+    const midY = y2;
+
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", `M ${x1} ${y1} L ${x2} ${y2}`);
+    const d = `
+      M ${x1} ${y1}
+      L ${midX} ${y1}
+      L ${midX} ${midY}
+      L ${x2} ${midY}
+    `;
+    path.setAttribute("d", d);
     path.setAttribute("fill", "none");
     path.setAttribute("stroke", "#333");
     path.setAttribute("stroke-width", "2");
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("stroke-linejoin", "round");
+    path.classList.add("card-table-line");
 
     svg.appendChild(path);
   }
 
-  // tambahkan garis tanpa menghapus garis tree
   drawLine("sisa", "tblSisa");
   drawLine("manja", "tblManja");
   drawLine("gagal", "tblNonTeknik");
 }
-
-// panggil setelah drawTreeLines
-setTimeout(drawTableLines, 1000);
-window.addEventListener("resize", () => {
-  drawTreeLines();   // tetap draw garis tree lama
-  drawTableLines();  // tambah garis card->table baru
-});
 
