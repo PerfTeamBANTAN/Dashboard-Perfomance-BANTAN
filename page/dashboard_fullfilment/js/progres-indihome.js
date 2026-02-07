@@ -161,6 +161,37 @@ function updateManjaTable(data) {
   table.innerHTML = html;
 }
 
+/* ================= POSISI TABEL DIBAWAH CARD ================= */
+function positionTablesBelowCards() {
+  const tblSisa = document.getElementById("tblSisa");
+  const tblManja = document.getElementById("tblManja");
+  const cardSisa = document.getElementById("sisa");
+  const cardManja = document.getElementById("manja");
+
+  if (tblSisa && cardSisa) {
+    const rect = cardSisa.getBoundingClientRect();
+    const parentRect = cardSisa.parentElement.getBoundingClientRect();
+
+    tblSisa.style.position = "absolute";
+    tblSisa.style.top = (rect.bottom - parentRect.top + 10) + "px"; // 10px jarak
+    tblSisa.style.left = (rect.left - parentRect.left) + "px";
+  }
+
+  if (tblManja && cardManja) {
+    const rect = cardManja.getBoundingClientRect();
+    const parentRect = cardManja.parentElement.getBoundingClientRect();
+
+    tblManja.style.position = "absolute";
+    tblManja.style.top = (rect.bottom - parentRect.top + 10) + "px"; // 10px jarak
+    tblManja.style.left = (rect.left - parentRect.left) + "px";
+  }
+}
+
+/* panggil setelah semua data render */
+setTimeout(positionTablesBelowCards, 900);
+window.addEventListener("resize", positionTablesBelowCards);
+
+
 /* ================= KENDALA NON TEKNIK ================= */
 function updateKendalaNonTeknik(data) {
   const nonTeknikTable = document.querySelector("#tblNonTeknik table");
