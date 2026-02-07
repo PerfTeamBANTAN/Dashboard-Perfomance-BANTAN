@@ -135,20 +135,28 @@ function setBox(id, value) {
 }
 
 /* ================= TABLE CLUSTER ================= */
+/* ================= TABLE CLUSTER (TOTAL SAJA) ================= */
 function updateClusterTable(data) {
   const table = document.querySelector("#tblSisa table");
   if (!table) return;
 
-  let html = `<tr><th>CLUSTER</th><th>WO</th></tr>`;
+  const rows = data.clusterTable || [];
+
+  let html = `<tr><th>CLUSTER</th><th>TOTAL</th></tr>`;
   let grandTotal = 0;
 
-  for (let cluster in data.cluster) {
-    const val = data.cluster[cluster] || 0;
-    grandTotal += val;
-    html += `<tr><td>${cluster}</td><td>${val}</td></tr>`;
-  }
+  rows.forEach(row => {
+    const cluster = row.cluster;
+    const total = row.total || 0;
+
+    if (!cluster) return;
+
+    html += `<tr><td>${cluster}</td><td>${total}</td></tr>`;
+    grandTotal += total;
+  });
 
   html += `<tr><th>GRAND TOTAL</th><th>${grandTotal}</th></tr>`;
+
   table.innerHTML = html;
 }
 
