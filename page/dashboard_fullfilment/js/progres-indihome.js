@@ -25,6 +25,7 @@ async function loadIndihomeData() {
     updateBoxes(data);
     updateClusterTable(data);
     updateManjaTable(data);
+    updateHSATable(data);
     updateKendalaNonTeknik(data);
 
     showLoading(false);
@@ -192,13 +193,49 @@ function updateManjaTable(data) {
 
   table.innerHTML = html;
 }
-/* ================= POSISI DAN GARIS ================= */
+/* ================= TABLE HSA ================= */
+function updateHSATable(data) {
+  const table = document.querySelector("#tblHSA table");
+  if (!table) return;
+
+  const rows = data.hsaTable || [];
+
+  let html = `
+    <tr>
+      <th>HSA</th>
+      <th>Est PS HI</th>
+      <th>PS</th>
+      <th>Total WO</th>
+      <th>Sisa WO</th>
+      <th>KP</th>
+      <th>KT</th>
+    </tr>
+  `;
+
+  rows.forEach(row => {
+    html += `
+      <tr>
+        <td>${row.hsa || ""}</td>
+        <td>${row.estPSHI || ""}</td>
+        <td>${row.ps || ""}</td>
+        <td>${row.totalWO || ""}</td>
+        <td>${row.sisaWO || ""}</td>
+        <td>${row.kp || ""}</td>
+        <td>${row.kt || ""}</td>
+      </tr>
+    `;
+  });
+
+  table.innerHTML = html;
+}
+/* ================= POSISI TABLE ================= */
 function positionTablesBelowCards() {
   const parent = document.querySelector(".tree-area");
   const parentRect = parent.getBoundingClientRect();
 
   const tblSisa = document.getElementById("tblSisa");
   const tblManja = document.getElementById("tblManja");
+  const tblHSA = document.getElementById("tblHSA");
   const tblNonTeknik = document.getElementById("tblNonTeknik");
   const tblTeknik = document.getElementById("tblTeknik");
 
@@ -206,46 +243,36 @@ function positionTablesBelowCards() {
   const cardManja = document.getElementById("manja");
   const cardGagal = document.getElementById("gagal");
 
-  if (!tblSisa || !tblManja || !tblNonTeknik || !cardSisa || !cardManja || !cardGagal) return;
+  if (!tblSisa || !tblManja || !tblHSA || !tblNonTeknik || !cardSisa || !cardManja || !cardGagal) return;
 
-  /* ==== TABEL SISA (kiri) ==== */
   const rectSisa = cardSisa.getBoundingClientRect();
   tblSisa.style.position = "absolute";
   tblSisa.style.top = (rectSisa.bottom - parentRect.top + 25) + "px";
   tblSisa.style.left = "20px";
 
-  /* ==== TABEL MANJA (kanan tblSisa) ==== */
   const rectManja = cardManja.getBoundingClientRect();
   tblManja.style.position = "absolute";
   tblManja.style.top = (rectManja.bottom - parentRect.top + 15) + "px";
   tblManja.style.left = (tblSisa.offsetLeft + tblSisa.offsetWidth + 20) + "px";
 
-  /* ==== TABEL NON TEKNIK (di bawah card GAGAL, diturunkan sedikit) ==== */
+  /* === HSA di bawah MANJA === */
+  const bottomManja = tblManja.offsetTop + tblManja.offsetHeight;
+  tblHSA.style.position = "absolute";
+  tblHSA.style.top = (bottomManja + 20) + "px";
+  tblHSA.style.left = tblManja.style.left;
+
   const rectGagal = cardGagal.getBoundingClientRect();
-
   tblNonTeknik.style.position = "absolute";
-
-  const gap = 40;        // jarak dasar
-  const extraDown = 130; // tambahan turun supaya tidak nabrak card lain
-
-  tblNonTeknik.style.top =
-    (rectGagal.bottom - parentRect.top + gap + extraDown) + "px";
-
-  // tetap center lurus dengan card gagal
+  tblNonTeknik.style.top = (rectGagal.bottom - parentRect.top + 170) + "px";
   tblNonTeknik.style.left =
     (rectGagal.left - parentRect.left +
-     (rectGagal.width / 2) -
-     (tblNonTeknik.offsetWidth / 2)) + "px";
+     rectGagal.width / 2 -
+     tblNonTeknik.offsetWidth / 2) + "px";
 
-  /* ==== TABEL TEKNIS (di bawah NON TEKNIK) ==== */
-  if (tblTeknik) {
-    const bottomNonTeknik =
-      tblNonTeknik.offsetTop + tblNonTeknik.offsetHeight;
-
-    tblTeknik.style.position = "absolute";
-    tblTeknik.style.top = (bottomNonTeknik + 20) + "px";
-    tblTeknik.style.left = tblNonTeknik.style.left;
-  }
+  const bottomNonTeknik = tblNonTeknik.offsetTop + tblNonTeknik.offsetHeight;
+  tblTeknik.style.position = "absolute";
+  tblTeknik.style.top = (bottomNonTeknik + 20) + "px";
+  tblTeknik.style.left = tblNonTeknik.style.left;
 }
 
 /* ================= KENDALA NON TEKNIK ================= */
