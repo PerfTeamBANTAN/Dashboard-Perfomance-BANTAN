@@ -165,16 +165,19 @@ function positionTablesBelowCards() {
   if (!parent) return;
   const parentRect = parent.getBoundingClientRect();
 
+  // card & table references
   const tblSisa = document.getElementById("tblSisa");
   const tblManja = document.getElementById("tblManja");
-  const cardSisa = document.getElementById("sisa");
-  const cardManja = document.getElementById("manja");
-  const cardGagal = document.getElementById("gagal");
   const tblNonTeknik = document.getElementById("tblNonTeknik");
   const tblTeknik = document.getElementById("tblTeknik");
 
+  const cardSisa = document.getElementById("sisa");
+  const cardManja = document.getElementById("manja");
+  const cardGagal = document.getElementById("gagal");
+
   if (!tblSisa || !tblManja || !cardSisa || !cardManja || !cardGagal) return;
 
+  // ===== Posisi tabel SISA & MANJA (kiri) =====
   const rectSisa = cardSisa.getBoundingClientRect();
   tblSisa.style.position = "absolute";
   tblSisa.style.top = rectSisa.bottom - parentRect.top + 10 + "px";
@@ -183,18 +186,25 @@ function positionTablesBelowCards() {
   const rectManja = cardManja.getBoundingClientRect();
   tblManja.style.position = "absolute";
   tblManja.style.top = rectManja.bottom - parentRect.top + 10 + "px";
-  tblManja.style.left = 20 + tblSisa.offsetWidth + 20 + "px";
+  tblManja.style.left = 20 + tblSisa.offsetWidth + 20 + "px"; // jarak 20px
+
+  // ===== Posisi tabel NON TEKNIK & TEKNIS (kanan) =====
+  const rightStart = Math.max(
+    cardSisa.offsetLeft + tblSisa.offsetWidth,
+    cardManja.offsetLeft + tblManja.offsetWidth,
+    500 // minimal offset kanan, bisa disesuaikan
+  ) + 50; // jarak dari tabel kiri
 
   const rectGagal = cardGagal.getBoundingClientRect();
   tblNonTeknik.style.position = "absolute";
-  tblNonTeknik.style.top = rectGagal.bottom - parentRect.top + 10 + "px";
-  tblNonTeknik.style.left = "20px";
+  tblNonTeknik.style.top = rectGagal.top - parentRect.top + "px"; // sejajar card GAGAL
+  tblNonTeknik.style.left = rightStart + "px";
 
   if (tblTeknik) {
     const bottomNonTeknik = tblNonTeknik.offsetTop + tblNonTeknik.offsetHeight;
     tblTeknik.style.position = "absolute";
     tblTeknik.style.top = bottomNonTeknik + 10 + "px";
-    tblTeknik.style.left = "20px";
+    tblTeknik.style.left = rightStart + "px";
   }
 }
 
