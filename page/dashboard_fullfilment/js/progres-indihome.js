@@ -193,7 +193,7 @@ function positionTablesBelowCards() {
   tblNonTeknik.style.position = "absolute";
 
   const gap = 40;        // jarak dasar
-  const extraDown = 40; // tambahan turun supaya tidak nabrak card lain
+  const extraDown = 60; // tambahan turun supaya tidak nabrak card lain
 
   tblNonTeknik.style.top =
     (rectGagal.bottom - parentRect.top + gap + extraDown) + "px";
