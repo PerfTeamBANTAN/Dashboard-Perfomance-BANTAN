@@ -1,14 +1,16 @@
-let API_URL = "";
-let refreshTimer = null;
+(function(){
+  let API_URL = "";
+  let refreshTimer = null;
 
-/* ================= INIT ================= */
-function initProgresIndibiz(apiUrl) {
-  API_URL = apiUrl;
-  loadIndibizData();
+  function initProgresIndibiz(apiUrl) {
+    API_URL = apiUrl;
+    loadIndibizData();
 
-  if (refreshTimer) clearInterval(refreshTimer);
-  refreshTimer = setInterval(loadIndibizData, 60000); // auto refresh 1 menit
-}
+    if (refreshTimer) clearInterval(refreshTimer);
+    refreshTimer = setInterval(loadIndibizData, 60000);
+  }
+
+  window.initProgresIndibiz = initProgresIndibiz;
 
 /* ================= LOAD DATA ================= */
 async function loadIndibizData() {
