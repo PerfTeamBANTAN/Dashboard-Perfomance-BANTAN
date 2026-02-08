@@ -275,10 +275,10 @@ function positionTablesBelowCards() {
   /* ==== KESIMPULAN BOX (DI BAWAH TBL TEKNIK) ==== */
   const bottomTeknik = tblTeknik.offsetTop + tblTeknik.offsetHeight;
 
-  kesimpulanBox.style.position = "absolute";
-  kesimpulanBox.style.top = (bottomTeknik + 30) + "px";
-  kesimpulanBox.style.left = "50%";
-  kesimpulanBox.style.transform = "translateX(-50%)";
+  kesimpulanBox.style.position = "relative";
+  kesimpulanBox.style.top = "auto";
+  kesimpulanBox.style.left = "auto";
+  kesimpulanBox.style.transform = "none";
   kesimpulanBox.style.width = "90%";
 
   /* ==== PERPANJANG TINGGI TREE AREA ==== */
