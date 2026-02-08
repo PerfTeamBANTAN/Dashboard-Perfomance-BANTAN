@@ -527,7 +527,6 @@ async function showKendalaDetailIndibizSC(type, detail, cluster) {
 
   try {
     let url = `${API_URL}?action=getkendala&type=${encodeURIComponent(type)}&detail=${encodeURIComponent(detail)}`;
-
     if (cluster) {
       url += `&cluster=${encodeURIComponent(cluster)}`;
     }
@@ -536,14 +535,19 @@ async function showKendalaDetailIndibizSC(type, detail, cluster) {
     const data = await res.json();
 
     if (!data || data.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="8">Tidak ada data kendala</td>
-        </tr>`;
+      tbody.innerHTML = `<tr><td colspan="8">Tidak ada data kendala</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = data.map((r, i) => `
+    // ================= FILTER HANYA SC =================
+    const scData = data.filter(r => r.MYIR?.toUpperCase().startsWith("SC"));
+
+    if (scData.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8">Tidak ada data SC</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = scData.map((r, i) => `
       <tr>
         <td>${i + 1}</td>
         <td>${r.MYIR || ""}</td>
@@ -561,6 +565,7 @@ async function showKendalaDetailIndibizSC(type, detail, cluster) {
     tbody.innerHTML = `<tr><td colspan="8">Gagal load data</td></tr>`;
   }
 }
+
 
 /* ================= BIND CLICK HSA ================= */
 function bindHSAClicks() {
