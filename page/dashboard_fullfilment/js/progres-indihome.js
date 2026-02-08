@@ -511,7 +511,7 @@ async function showHSADetail(sto, type) {
   const tbody = modal.querySelector("#modalTable tbody");
   if (!modal || !tbody) return;
 
-  // sekarang colspan = 8 karena tambah kolom No
+  // sekarang colspan = 8 (karena ada kolom NO)
   tbody.innerHTML = `<tr><td colspan="8">Loading...</td></tr>`;
   openModal();
 
@@ -528,7 +528,6 @@ async function showHSADetail(sto, type) {
       return;
     }
 
-    // render dengan nomor urut
     tbody.innerHTML = data.map((r, i) => `
       <tr>
         <td>${i + 1}</td>
@@ -547,7 +546,6 @@ async function showHSADetail(sto, type) {
     tbody.innerHTML = `<tr><td colspan="8">Gagal load data</td></tr>`;
   }
 }
-
 
 /* ================= EVENT CLICK HSA ================= */
 function bindHSAClicks() {
