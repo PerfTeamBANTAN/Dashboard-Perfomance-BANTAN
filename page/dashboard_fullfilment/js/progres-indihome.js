@@ -281,11 +281,13 @@ function positionTablesBelowCards() {
 }
 
 
-/* ================= KENDALA NON TEKNIK ================= */
+/* ================= TABEL KENDALA ================= */
 function updateKendalaNonTeknik(data) {
   const table = document.querySelector("#tblNonTeknik table");
   if (!table) return;
 
+  const rows = data.kendalaPelangganTable || [];
+
   let html = `<tr>
     <th>KENDALA</th>
     <th>KOTANG</th>
@@ -293,35 +295,31 @@ function updateKendalaNonTeknik(data) {
     <th>TOTAL</th>
   </tr>`;
 
-  let gKotang = 0, gTangsel = 0, gTotal = 0;
+  rows.forEach(row => {
+    html += `
+      <tr>
+        <td>${row.kendala || ""}</td>
+        <td>${row.kotang || 0}</td>
+        <td>${row.tangsel || 0}</td>
+        <td>${row.total || 0}</td>
+      </tr>
+    `;
+  });
 
-  for (let k in data.kendalaNonTeknis) {
-    const row = data.kendalaNonTeknis[k];
-    const kotang = row.KOTANG || 0;
-    const tangsel = row.TANGSEL || 0;
-    const total = row.total || 0;
-    html += `<tr><td>${k}</td><td>${kotang}</td><td>${tangsel}</td><td>${total}</td></tr>`;
-    gKotang += kotang;
-    gTangsel += tangsel;
-    gTotal += total;
-  }
-
-  html += `<tr><th>GRAND TOTAL</th><th>${gKotang}</th><th>${gTangsel}</th><th>${gTotal}</th></tr>`;
   table.innerHTML = html;
 
-  updateKendalaTeknisPosition();
+  updateKendalaTeknisTable(data);
 }
 
-/* ================= KENDALA TEKNIS ================= */
-function updateKendalaTeknisPosition() {
-  const nonTeknik = document.getElementById("tblNonTeknik");
+function updateKendalaTeknisTable(data) {
   const teknik = document.getElementById("tblTeknik");
-  if (!nonTeknik || !teknik) return;
+  if (!teknik) return;
 
-  const dataTeknis = window.lastData?.kendalaTeknis || {};
   const table = teknik.querySelector("table");
   if (!table) return;
 
+  const rows = data.kendalaTeknisTable || [];
+
   let html = `<tr>
     <th>KENDALA</th>
     <th>KOTANG</th>
@@ -329,27 +327,20 @@ function updateKendalaTeknisPosition() {
     <th>TOTAL</th>
   </tr>`;
 
-  let gKotang = 0, gTangsel = 0, gTotal = 0;
+  rows.forEach(row => {
+    html += `
+      <tr>
+        <td>${row.kendala || ""}</td>
+        <td>${row.kotang || 0}</td>
+        <td>${row.tangsel || 0}</td>
+        <td>${row.total || 0}</td>
+      </tr>
+    `;
+  });
 
-  for (let k in dataTeknis) {
-    const row = dataTeknis[k];
-    const kotang = row.KOTANG || 0;
-    const tangsel = row.TANGSEL || 0;
-    const total = row.total || 0;
-    html += `<tr><td>${k}</td><td>${kotang}</td><td>${tangsel}</td><td>${total}</td></tr>`;
-    gKotang += kotang;
-    gTangsel += tangsel;
-    gTotal += total;
-  }
-
-  html += `<tr><th>GRAND TOTAL</th><th>${gKotang}</th><th>${gTangsel}</th><th>${gTotal}</th></tr>`;
   table.innerHTML = html;
-
-  const bottomNonTeknik = nonTeknik.offsetTop + nonTeknik.offsetHeight;
-  teknik.style.top = bottomNonTeknik + 10 + "px";
-
-  drawTableLines();
 }
+
 
 /* ================= GARIS ANTAR BOX ================= */
 function drawPath(fromId, toId) {
