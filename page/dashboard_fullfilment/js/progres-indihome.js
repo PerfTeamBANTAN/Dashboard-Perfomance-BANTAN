@@ -498,88 +498,79 @@ function renderLines() {
 window.addEventListener("resize", renderLines);
 
 /* ================= MODAL DETAIL ================= */
-// buat modal di DOM
-if (!document.getElementById("modalDetail")) {
-  const modal = document.createElement("div");
-  modal.id = "modalDetail";
-  modal.innerHTML = `
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h4>Detail WO</h4>
-      <table id="modalTable">
-        <thead>
-          <tr>
-            <th>MYIR/SCID/WOID</th>
-            <th>STO</th>
-            <th>MITRA</th>
-            <th>TEKNISI (ASSIGN HD)</th>
-            <th>KESIMPULAN</th>
-            <th>DETIL KESIMPULAN</th>
-            <th>STATUS MANJA</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  `;
-  document.body.appendChild(modal);
 
-  // tutup modal
-  modal.querySelector(".close").addEventListener("click", () => {
-    modal.style.display = "none";
-  });
-
-  // klik luar modal → tutup
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) modal.style.display = "none";
-  });
+function openModal() {
+  const modal = document.getElementById("modalDetail");
+  if (!modal) return;
+  modal.style.display = "block";
 }
 
-// fungsi tampilkan modal
+function closeModal() {
+  const modal = document.getElementById("modalDetail");
+  if (!modal) return;
+  modal.style.display = "none";
+}
+
+// klik area luar modal untuk tutup
+window.addEventListener("click", function (e) {
+  const modal = document.getElementById("modalDetail");
+  if (!modal) return;
+  if (e.target === modal) {
+    modal.style.display = "none";
+  }
+});
+
+// tampilkan data detail berdasarkan STO
 function showHSADetail(sto) {
   const modal = document.getElementById("modalDetail");
-  const tbody = modal.querySelector("tbody");
+  const tbody = modal.querySelector("#modalTable tbody");
   if (!modal || !tbody) return;
 
   const woData = window.lastData?.woData || [];
-  const rows = woData.filter(r => (r[4] || "").toUpperCase() === sto.toUpperCase()); // kol E = STO
+
+  const rows = woData.filter(r =>
+    (r[4] || "").toUpperCase() === sto.toUpperCase()
+  );
 
   if (rows.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7">Tidak ada data untuk STO ${sto}</td></tr>`;
+    tbody.innerHTML = `<tr>
+      <td colspan="7">Tidak ada data untuk STO ${sto}</td>
+    </tr>`;
   } else {
     tbody.innerHTML = rows.map(r => `
       <tr>
-        <td>${r[3] || ""}</td>  <!-- MYIR/SCID/WOID kol D -->
-        <td>${r[4] || ""}</td>  <!-- STO kol E -->
-        <td>${r[8] || ""}</td>  <!-- MITRA kol I -->
-        <td>${r[9] || ""}</td>  <!-- TEKNISI kol J -->
-        <td>${r[18] || ""}</td> <!-- KESIMPULAN kol S -->
-        <td>${r[19] || ""}</td> <!-- DETIL KESIMPULAN kol T -->
-        <td>${r[26] || ""}</td> <!-- STATUS MANJA kol AA -->
+        <td>${r[3] || ""}</td>
+        <td>${r[4] || ""}</td>
+        <td>${r[8] || ""}</td>
+        <td>${r[9] || ""}</td>
+        <td>${r[18] || ""}</td>
+        <td>${r[19] || ""}</td>
+        <td>${r[26] || ""}</td>
       </tr>
     `).join("");
   }
 
-  modal.style.display = "block";
+  openModal();
 }
 
 /* ================= EVENT CLICK HSA ================= */
+
 function bindHSAClicks() {
   const tbody = document.querySelector("#tblHSA table tbody");
   if (!tbody) return;
 
   tbody.querySelectorAll("tr").forEach(tr => {
     tr.style.cursor = "pointer";
-    tr.addEventListener("click", () => {
-      const sto = tr.children[0]?.innerText || "";
+    tr.onclick = function () {
+      const sto = this.children[0]?.innerText.trim();
       if (sto) showHSADetail(sto);
-    });
+    };
   });
 }
 
-// jalankan binding setelah HSA table terupdate
+// panggil ini setelah updateHSATable(data)
 function updateHSATableWithModal(data) {
-  updateHSATable(data);
+  updateHSATable(data); // fungsi kamu yang sudah ada
   bindHSAClicks();
 }
 
