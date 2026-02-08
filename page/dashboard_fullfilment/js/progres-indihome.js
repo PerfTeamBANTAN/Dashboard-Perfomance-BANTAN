@@ -296,18 +296,21 @@ function updateKendalaNonTeknik(data) {
   </tr>`;
 
   rows.forEach(row => {
+    const kendala = row.kendala || "";
+
     html += `
       <tr>
-        <td>${row.kendala || ""}</td>
-        <td>${row.kotang || 0}</td>
-        <td>${row.tangsel || 0}</td>
-        <td>${row.total || 0}</td>
+        <td>${kendala}</td>
+        <td class="clickable" data-type="KP" data-detail="${kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
+        <td class="clickable" data-type="KP" data-detail="${kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
+        <td class="clickable" data-type="KP" data-detail="${kendala}" data-cluster="">${row.total || 0}</td>
       </tr>
     `;
   });
 
   table.innerHTML = html;
 
+  bindKendalaClicks();
   updateKendalaTeknisTable(data);
 }
 
@@ -328,19 +331,22 @@ function updateKendalaTeknisTable(data) {
   </tr>`;
 
   rows.forEach(row => {
+    const kendala = row.kendala || "";
+
     html += `
       <tr>
-        <td>${row.kendala || ""}</td>
-        <td>${row.kotang || 0}</td>
-        <td>${row.tangsel || 0}</td>
-        <td>${row.total || 0}</td>
+        <td>${kendala}</td>
+        <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
+        <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
+        <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="">${row.total || 0}</td>
       </tr>
     `;
   });
 
   table.innerHTML = html;
-}
 
+  bindKendalaClicks();
+}
 
 /* ================= GARIS ANTAR BOX ================= */
 function drawPath(fromId, toId) {
@@ -534,6 +540,52 @@ async function showHSADetail(sto, type) {
   }
 }
 
+/* ================= SHOW MODAL KENDALA ================= */
+async function showKendalaDetail(type, detail, cluster) {
+  const modal = document.getElementById("modalDetail");
+  const tbody = modal.querySelector("#modalTable tbody");
+  if (!modal || !tbody) return;
+
+  tbody.innerHTML = `<tr><td colspan="8">Loading...</td></tr>`;
+  openModal();
+
+  try {
+    let url = `${API_URL}?action=getkendala&type=${encodeURIComponent(type)}&detail=${encodeURIComponent(detail)}`;
+
+    if (cluster) {
+      url += `&cluster=${encodeURIComponent(cluster)}`;
+    }
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="8">Tidak ada data kendala</td>
+        </tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map((r, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${r.MYIR || ""}</td>
+        <td>${r.STO || ""}</td>
+        <td>${r.MITRA || ""}</td>
+        <td>${r.TEKNISI || ""}</td>
+        <td>${r.KESIMPULAN || ""}</td>
+        <td>${r.DETIL_KESIMPULAN || ""}</td>
+        <td>${r.STATUS_MANJA || ""}</td>
+      </tr>
+    `).join("");
+
+  } catch (err) {
+    console.error("Modal Kendala error:", err);
+    tbody.innerHTML = `<tr><td colspan="8">Gagal load data</td></tr>`;
+  }
+}
+
 /* ================= EVENT CLICK HSA ================= */
 function bindHSAClicks() {
   const tbody = document.querySelector("#tblHSA table tbody");
@@ -557,6 +609,23 @@ function bindHSAClicks() {
 function updateHSATableWithModal(data) {
   updateHSATable(data);
   bindHSAClicks();
+}
+
+/* ================= EVENT CLICK KENDALA ================= */
+function bindKendalaClicks() {
+  document.querySelectorAll("#tblNonTeknik td.clickable, #tblTeknik td.clickable")
+    .forEach(td => {
+      td.style.cursor = "pointer";
+      td.onclick = function () {
+        const type = this.dataset.type;
+        const detail = this.dataset.detail;
+        const cluster = this.dataset.cluster;
+
+        if (type && detail !== undefined) {
+          showKendalaDetail(type, detail, cluster);
+        }
+      };
+    });
 }
 
 
