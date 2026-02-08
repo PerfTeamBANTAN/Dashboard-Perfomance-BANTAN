@@ -511,7 +511,8 @@ async function showHSADetail(sto, type) {
   const tbody = modal.querySelector("#modalTable tbody");
   if (!modal || !tbody) return;
 
-  tbody.innerHTML = `<tr><td colspan="7">Loading...</td></tr>`;
+  // sekarang colspan = 8 karena tambah kolom No
+  tbody.innerHTML = `<tr><td colspan="8">Loading...</td></tr>`;
   openModal();
 
   try {
@@ -522,13 +523,15 @@ async function showHSADetail(sto, type) {
     if (!data || data.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="7">Tidak ada data ${type} untuk STO ${sto}</td>
+          <td colspan="8">Tidak ada data ${type} untuk STO ${sto}</td>
         </tr>`;
       return;
     }
 
-    tbody.innerHTML = data.map(r => `
+    // render dengan nomor urut
+    tbody.innerHTML = data.map((r, i) => `
       <tr>
+        <td>${i + 1}</td>
         <td>${r.MYIR || ""}</td>
         <td>${r.STO || ""}</td>
         <td>${r.MITRA || ""}</td>
@@ -541,9 +544,10 @@ async function showHSADetail(sto, type) {
 
   } catch (err) {
     console.error("Modal fetch error:", err);
-    tbody.innerHTML = `<tr><td colspan="7">Gagal load data</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8">Gagal load data</td></tr>`;
   }
 }
+
 
 /* ================= EVENT CLICK HSA ================= */
 function bindHSAClicks() {
