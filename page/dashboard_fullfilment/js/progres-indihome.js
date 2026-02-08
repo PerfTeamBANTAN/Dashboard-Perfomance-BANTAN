@@ -1,15 +1,17 @@
-let API_URL = "";
-let refreshTimer = null;
+window.API_URL = window.API_URL || "";
+window.refreshTimer = window.refreshTimer || null;
 
 /* ================= INIT ================= */
-function initProgresIndihome(apiUrl) {
-  API_URL = apiUrl;
-  loadIndihomeData();
+window.API_URL = window.API_URL || "";
+window.refreshTimer = window.refreshTimer || null;
 
-  if (refreshTimer) clearInterval(refreshTimer);
-  refreshTimer = setInterval(loadIndihomeData, 60000); // auto refresh 1 menit
+function initProgresIndibiz(apiUrl) {
+  window.API_URL = apiUrl;
+  loadIndibizData();
+
+  if (window.refreshTimer) clearInterval(window.refreshTimer);
+  window.refreshTimer = setInterval(loadIndibizData, 60000);
 }
-
 /* ================= LOAD DATA ================= */
 async function loadIndihomeData() {
   try {
