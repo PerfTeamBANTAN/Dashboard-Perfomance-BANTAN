@@ -508,8 +508,6 @@ async function showHSADetail(sto, type, layanan = "INDIBIZ") {
   }
 }
 
-
-/* ================= SHOW MODAL KENDALA ================= */
 async function showKendalaDetailIndibizSC(type, detail, cluster) {
   const modal = document.getElementById("modalDetail");
   const tbody = modal.querySelector("#modalTable tbody");
@@ -523,9 +521,15 @@ async function showKendalaDetailIndibizSC(type, detail, cluster) {
     if (cluster) url += `&cluster=${encodeURIComponent(cluster)}`;
 
     const res = await fetch(url);
-    const data = await res.json();
+    let data = await res.json();
 
-    if (!data || data.length === 0) {
+    // pastikan data adalah array
+    if (!Array.isArray(data)) {
+      if (data && Array.isArray(data.result)) data = data.result; // beberapa API bungkus di "result"
+      else data = []; // default kosong
+    }
+
+    if (!data.length) {
       tbody.innerHTML = `<tr><td colspan="8">Tidak ada data kendala</td></tr>`;
       return;
     }
@@ -533,12 +537,12 @@ async function showKendalaDetailIndibizSC(type, detail, cluster) {
     tbody.innerHTML = data.map((r, i) => `
       <tr>
         <td>${i + 1}</td>
-        <td>${r.MYIR || ""}</td>
+        <td>${r.MYIR || r.MYIRID || ""}</td>
         <td>${r.STO || ""}</td>
         <td>${r.MITRA || ""}</td>
         <td>${r.TEKNISI || ""}</td>
-        <td>${r.KESIMPULAN || ""}</td>
-        <td>${r.DETIL_KESIMPULAN || ""}</td>
+        <td>${r.KESIMPULAN || r.kesimpulan || ""}</td>
+        <td>${r.DETIL_KESIMPULAN || r.DETAIL || ""}</td>
         <td>${r.STATUS_MANJA || ""}</td>
       </tr>
     `).join("");
