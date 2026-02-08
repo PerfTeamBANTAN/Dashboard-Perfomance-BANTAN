@@ -595,7 +595,7 @@ function bindKendalaClicksIndibizSC() {
         const cluster = this.dataset.cluster;
 
         if (type && detail !== undefined) {
-          showKendalaDetail(type, detail, cluster);
+          showKendalaDetailIndibizSC(type, detail, cluster);
         }
       };
     });
