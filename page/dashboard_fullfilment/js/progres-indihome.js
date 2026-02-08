@@ -238,7 +238,7 @@ function positionTablesBelowCards() {
   const cardManja = document.getElementById("manja");
   const cardGagal = document.getElementById("gagal");
 
-  if (!tblSisa || !tblManja || !tblHSA || !cardSisa || !cardManja) return;
+  if (!tblSisa || !tblManja || !tblHSA || !tblNonTeknik || !tblTeknik || !kesimpulanBox) return;
 
   /* ==== TABEL SISA ==== */
   const rectSisa = cardSisa.getBoundingClientRect();
@@ -258,9 +258,7 @@ function positionTablesBelowCards() {
   tblHSA.style.top = (bottomManja + 20) + "px";
   tblHSA.style.left = tblSisa.offsetLeft + "px";
 
-  /* ==== KENDALA PELANGGAN ==== */
-  if (!tblNonTeknik || !cardGagal) return;
-
+  /* ==== KENDALA NON TEKNIK ==== */
   const rectGagal = cardGagal.getBoundingClientRect();
   tblNonTeknik.style.position = "absolute";
   tblNonTeknik.style.top = (rectGagal.bottom - parentRect.top + 170) + "px";
@@ -269,25 +267,25 @@ function positionTablesBelowCards() {
      rectGagal.width / 2 -
      tblNonTeknik.offsetWidth / 2) + "px";
 
-  /* ==== KENDALA TEKNIS ==== */
-  if (!tblTeknik) return;
-
+  /* ==== KENDALA TEKNIK ==== */
   const bottomNonTeknik = tblNonTeknik.offsetTop + tblNonTeknik.offsetHeight;
   tblTeknik.style.position = "absolute";
   tblTeknik.style.top = (bottomNonTeknik + 20) + "px";
   tblTeknik.style.left = tblNonTeknik.style.left;
 
-  /* ==== KESIMPULAN BOX ==== */
-  if (!kesimpulanBox) return;
-
+  /* ==== KESIMPULAN BOX (DI BAWAH TBL TEKNIK) ==== */
   const bottomTeknik = tblTeknik.offsetTop + tblTeknik.offsetHeight;
+
   kesimpulanBox.style.position = "absolute";
   kesimpulanBox.style.top = (bottomTeknik + 30) + "px";
   kesimpulanBox.style.left = "50%";
   kesimpulanBox.style.transform = "translateX(-50%)";
   kesimpulanBox.style.width = "90%";
-}
 
+  /* ==== PERPANJANG TINGGI TREE AREA ==== */
+  parent.style.minHeight =
+    (bottomTeknik + kesimpulanBox.offsetHeight + 80) + "px";
+}
 
 /* ================= TABEL KENDALA ================= */
 function updateKendalaNonTeknik(data) {
