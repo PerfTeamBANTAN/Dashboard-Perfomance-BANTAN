@@ -1,23 +1,25 @@
+// ================= GLOBAL =================
 window.API_URL = window.API_URL || "";
 window.refreshTimer = window.refreshTimer || null;
 
-/* ================= INIT ================= */
-window.API_URL = window.API_URL || "";
-window.refreshTimer = window.refreshTimer || null;
-
-function initProgresIndibiz(apiUrl) {
+// ================= INIT =================
+function _initProgresIndihome(apiUrl) {
   window.API_URL = apiUrl;
-  loadIndibizData();
+  loadIndihomeData();
 
   if (window.refreshTimer) clearInterval(window.refreshTimer);
-  window.refreshTimer = setInterval(loadIndibizData, 60000);
+  window.refreshTimer = setInterval(loadIndihomeData, 60000);
 }
-/* ================= LOAD DATA ================= */
+
+// attach ke window supaya bisa dipanggil via window[cfg.init]()
+window.initProgresIndihome = _initProgresIndihome;
+
+// ================= LOAD DATA =================
 async function loadIndihomeData() {
   try {
     showLoading(true);
 
-    const res = await fetch(API_URL);
+    const res = await fetch(window.API_URL);
     if (!res.ok) throw new Error("API Error");
 
     const data = await res.json();
@@ -32,8 +34,6 @@ async function loadIndihomeData() {
     updateKesimpulan(data);
 
     showLoading(false);
-
-    // render semua garis setelah data update
     renderLines();
 
   } catch (err) {
