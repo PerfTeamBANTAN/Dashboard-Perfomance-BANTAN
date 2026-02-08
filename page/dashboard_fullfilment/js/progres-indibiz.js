@@ -614,3 +614,5 @@ function updateKesimpulan(data) {
   </i></small>
 `;
 }
+
+})();
