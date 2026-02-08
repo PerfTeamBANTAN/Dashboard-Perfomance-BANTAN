@@ -296,17 +296,16 @@ function updateKendalaNonTeknik(data) {
   </tr>`;
 
   rows.forEach(row => {
-    const kendala = row.kendala || "";
+  html += `
+    <tr>
+      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.kendala}</td>
+      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="KOTANG">${row.kotang}</td>
+      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TANGSEL">${row.tangsel}</td>
+      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.total}</td>
+    </tr>
+  `;
+});
 
-    html += `
-      <tr>
-        <td>${kendala}</td>
-        <td class="clickable" data-type="KP" data-detail="${kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
-        <td class="clickable" data-type="KP" data-detail="${kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
-        <td class="clickable" data-type="KP" data-detail="${kendala}" data-cluster="">${row.total || 0}</td>
-      </tr>
-    `;
-  });
 
   table.innerHTML = html;
 
@@ -331,17 +330,17 @@ function updateKendalaTeknisTable(data) {
   </tr>`;
 
   rows.forEach(row => {
-    const kendala = row.kendala || "";
+  const kendala = row.kendala || "";
 
-    html += `
-      <tr>
-        <td>${kendala}</td>
-        <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
-        <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
-        <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="">${row.total || 0}</td>
-      </tr>
-    `;
-  });
+  html += `
+    <tr>
+      <td>${kendala}</td>
+      <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
+      <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
+      <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="TOTAL">${row.total || 0}</td>
+    </tr>
+  `;
+});
 
   table.innerHTML = html;
 
