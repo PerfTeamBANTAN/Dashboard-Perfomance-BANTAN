@@ -202,9 +202,22 @@ function updateHSATable(data) {
 
   let html = "";
 
+  // header (opsional kalau table sudah punya <thead>)
+  // html += `<tr>
+  //   <th>STO</th>
+  //   <th>HSA</th>
+  //   <th>Est PS HI</th>
+  //   <th>PS</th>
+  //   <th>Total WO</th>
+  //   <th>Sisa WO</th>
+  //   <th>KP</th>
+  //   <th>KT</th>
+  // </tr>`;
+
   rows.forEach(row => {
-    const totalWO = row.totalWO !== undefined 
-                    ? row.totalWO 
+    // fallback: hitung totalWO kalau belum ada
+    const totalWO = row.totalWO !== undefined
+                    ? row.totalWO
                     : (row.ps || 0) + (row.sisaWO || 0) + (row.kp || 0) + (row.kt || 0);
 
     html += `
