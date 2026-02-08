@@ -264,3 +264,86 @@
   border-radius:6px;
   overflow:hidden;
 }
+
+/* ===================== */
+/* MODAL DETAIL STYLE    */
+/* ===================== */
+#modalDetail {
+  display: none;
+  position: fixed;
+  z-index: 200;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+  font-family: 'Poppins', sans-serif;
+}
+
+#modalDetail .modal-content {
+  background-color: #fff;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 1100px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: slideDown 0.3s ease-out;
+}
+
+#modalDetail .modal-content h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+}
+
+#modalDetail .close {
+  float: right;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #333;
+}
+
+#modalTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+#modalTable th,
+#modalTable td {
+  border: 1px solid #bbb;
+  padding: 4px 6px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+#modalTable th {
+  background: linear-gradient(135deg, #9fbbcf, #5378b5);
+  color: #fff;
+  font-weight: 700;
+}
+
+#modalTable td:first-child {
+  font-weight: 600;
+  background: #f3f6ff;
+}
+
+#modalTable tr:nth-child(even) td {
+  background: #fafbff;
+}
+
+#modalTable tr:hover {
+  background: #e0ecff;
+  transition: 0.2s;
+}
+
+/* Animasi modal muncul */
+@keyframes slideDown {
+  from {transform: translateY(-50px); opacity:0;}
+  to {transform: translateY(0); opacity:1;}
+}
