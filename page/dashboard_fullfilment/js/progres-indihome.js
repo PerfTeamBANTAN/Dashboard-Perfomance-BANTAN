@@ -654,19 +654,22 @@ function updateKesimpulan(data) {
   if (!kesimpulanEl) return;
 
   kesimpulanEl.innerHTML = `
-    <span style="color:#0d6efd;"><i>Dari total</i></span> 
-    <b style="color:#0d6efd;">${wo} WO PSB</b>, 
-    <b style="color:#dc3545;">${sisa} WO (${pSisa})</b> masih dalam 
-    <i style="color:#dc3545;">Sisa Progress</i>, 
-    sementara 
-    <b style="color:#198754;">${sudah} WO</b> telah 
-    <i style="color:#198754;">selesai diproses</i>. 
-    Kinerja tergolong 
-    <b style="color:#198754;">baik</b> dengan 
-    <b style="color:#198754;">${sukses} WO sukses</b> dan 
-    <b style="color:#6c757d;">${gagal}</b> gagal tarik. 
-    Kendala utama berasal dari 
-    <i style="color:#fd7e14;">${kendalaTerbesar.kendala}</i> sebanyak 
-    <b style="color:#fd7e14;">${kendalaTerbesar.total} kasus</b>.
-  `;
+  <span style="color:#0d6efd;"><i>Dari total</i></span> 
+  <b style="color:#0d6efd;">${wo} WO PSB</b>, 
+  <b style="color:#dc3545;">${sisa} (${pSisa})</b> masih berada pada kategori 
+  <i style="color:#dc3545;">Sisa Progress</i>, sedangkan 
+  <b style="color:#198754;">${sudah}</b> telah 
+  <i style="color:#198754;">selesai diproses</i>. 
+  Kinerja dinilai 
+  <b style="color:#198754;">baik</b> dengan 
+  <b style="color:#198754;">${sukses}</b> WO sukses dan 
+  <b style="color:#6c757d;">${gagal}</b> gagal tarik. 
+  Kendala dominan berasal dari 
+  <i style="color:#fd7e14;">${kendalaTerbesar.kendala}</i> sebanyak 
+  <b style="color:#fd7e14;">${kendalaTerbesar.total} kasus</b>.
+  <br>
+  <small><i style="color:#2c4b6c;">
+    * Sumber data: WO HI Spreadsheet HD Fulfillment Branch <b>Tangerang</b>
+  </i></small>
+`;
 }
