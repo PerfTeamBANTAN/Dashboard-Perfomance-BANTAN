@@ -233,7 +233,7 @@ function positionTablesBelowCards() {
   const tblNonTeknik = document.getElementById("tblNonTeknik");
   const tblTeknik = document.getElementById("tblTeknik");
   const kesimpulanBox = document.getElementById("kesimpulanBox");
-  
+
   const cardSisa = document.getElementById("sisa");
   const cardManja = document.getElementById("manja");
   const cardGagal = document.getElementById("gagal");
@@ -252,16 +252,13 @@ function positionTablesBelowCards() {
   tblManja.style.top = (rectManja.bottom - parentRect.top + 15) + "px";
   tblManja.style.left = (tblSisa.offsetLeft + tblSisa.offsetWidth + 20) + "px";
 
-  /* ==== TABEL HSA (DI BAWAH MANJA & KE KIRI) ==== */
+  /* ==== TABEL HSA ==== */
   const bottomManja = tblManja.offsetTop + tblManja.offsetHeight;
-
   tblHSA.style.position = "absolute";
   tblHSA.style.top = (bottomManja + 20) + "px";
+  tblHSA.style.left = tblSisa.offsetLeft + "px";
 
-  const sisaLeft = tblSisa.offsetLeft;
-  tblHSA.style.left = sisaLeft + "px";
-
-  /* ==== KENDALA ==== */
+  /* ==== KENDALA PELANGGAN ==== */
   if (!tblNonTeknik || !cardGagal) return;
 
   const rectGagal = cardGagal.getBoundingClientRect();
@@ -272,24 +269,25 @@ function positionTablesBelowCards() {
      rectGagal.width / 2 -
      tblNonTeknik.offsetWidth / 2) + "px";
 
+  /* ==== KENDALA TEKNIS ==== */
   if (!tblTeknik) return;
 
   const bottomNonTeknik = tblNonTeknik.offsetTop + tblNonTeknik.offsetHeight;
   tblTeknik.style.position = "absolute";
   tblTeknik.style.top = (bottomNonTeknik + 20) + "px";
   tblTeknik.style.left = tblNonTeknik.style.left;
-}
-/* ==== KESIMPULAN BOX (INI YANG BARU) ==== */
+
+  /* ==== KESIMPULAN BOX ==== */
   if (!kesimpulanBox) return;
 
   const bottomTeknik = tblTeknik.offsetTop + tblTeknik.offsetHeight;
-
   kesimpulanBox.style.position = "absolute";
   kesimpulanBox.style.top = (bottomTeknik + 30) + "px";
   kesimpulanBox.style.left = "50%";
   kesimpulanBox.style.transform = "translateX(-50%)";
   kesimpulanBox.style.width = "90%";
 }
+
 
 /* ================= TABEL KENDALA ================= */
 function updateKendalaNonTeknik(data) {
