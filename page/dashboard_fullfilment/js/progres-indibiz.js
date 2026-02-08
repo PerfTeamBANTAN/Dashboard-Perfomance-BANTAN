@@ -291,6 +291,7 @@ function updateKendalaNonTeknikIndibizSC(data) {
   const table = document.querySelector("#tblNonTeknik table");
   if (!table) return;
 
+  // gunakan data langsung tanpa filter LAYANAN / MYIR
   const rows = data.kendalaPelangganTable || [];
 
   let html = `<tr>
@@ -302,12 +303,12 @@ function updateKendalaNonTeknikIndibizSC(data) {
 
   rows.forEach(row => {
     html += `
-    <tr>
-      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.kendala}</td>
-      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
-      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
-      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.total || 0}</td>
-    </tr>`;
+      <tr>
+        <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.kendala}</td>
+        <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
+        <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
+        <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.total || 0}</td>
+      </tr>`;
   });
 
   table.innerHTML = html;
@@ -331,12 +332,12 @@ function updateKendalaTeknisTableIndibizSC(data) {
 
   rows.forEach(row => {
     html += `
-    <tr>
-      <td class="clickable" data-type="KT" data-detail="${row.kendala}" data-cluster="TOTAL">${row.kendala}</td>
-      <td class="clickable" data-type="KT" data-detail="${row.kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
-      <td class="clickable" data-type="KT" data-detail="${row.kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
-      <td class="clickable" data-type="KT" data-detail="${row.kendala}" data-cluster="TOTAL">${row.total || 0}</td>
-    </tr>`;
+      <tr>
+        <td class="clickable" data-type="KT" data-detail="${row.kendala}" data-cluster="TOTAL">${row.kendala}</td>
+        <td class="clickable" data-type="KT" data-detail="${row.kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
+        <td class="clickable" data-type="KT" data-detail="${row.kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
+        <td class="clickable" data-type="KT" data-detail="${row.kendala}" data-cluster="TOTAL">${row.total || 0}</td>
+      </tr>`;
   });
 
   table.innerHTML = html;
