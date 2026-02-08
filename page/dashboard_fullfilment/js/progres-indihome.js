@@ -206,7 +206,7 @@ function updateHSATable(data) {
       <tr>
         <td>${row.sto || ""}</td>
         <td>${row.hsa || ""}</td>
-        <td class="clickable" data-type="SISA">${row.estPSHI || 0}</td>
+        <td class="clickable" data-type="ESTPSHI">${row.estPSHI || 0}</td>
         <td class="clickable" data-type="PS">${row.ps || 0}</td>
         <td>${totalWO}</td>
         <td class="clickable" data-type="SISA">${row.sisaWO || 0}</td>
