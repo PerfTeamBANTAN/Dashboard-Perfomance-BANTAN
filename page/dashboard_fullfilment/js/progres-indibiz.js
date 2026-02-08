@@ -472,8 +472,8 @@ window.addEventListener("click", function (e) {
   if (e.target === modal) modal.style.display = "none";
 });
 
-/* ================= SHOW MODAL HSA ================= */
-async function showHSADetail(sto, type) {
+// ================= SHOW MODAL HSA =================
+async function showHSADetail(sto, type, layanan = "INDIBIZ") { 
   const modal = document.getElementById("modalDetail");
   const tbody = modal.querySelector("#modalTable tbody");
   if (!modal || !tbody) return;
@@ -482,7 +482,10 @@ async function showHSADetail(sto, type) {
   openModal();
 
   try {
-    const url = `${API_URL}?action=getwohi&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(type)}`;
+    let action = "getwohi"; // default
+    if(layanan === "INDIBIZ") action = "getwohiindibiz";
+
+    const url = `${API_URL}?action=${action}&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(type)}`;
     const res = await fetch(url);
     const data = await res.json();
 
@@ -509,6 +512,7 @@ async function showHSADetail(sto, type) {
     tbody.innerHTML = `<tr><td colspan="8">Gagal load data</td></tr>`;
   }
 }
+
 
 /* ================= SHOW MODAL KENDALA ================= */
 async function showKendalaDetail(type, detail, cluster) {
