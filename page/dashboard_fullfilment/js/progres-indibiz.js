@@ -1,4 +1,4 @@
-  let API_URL = "";
+  window.API_URL = window.API_URL || "";
   let refreshTimer = null;
 
   function initProgresIndibiz(apiUrl) {
@@ -16,7 +16,7 @@ async function loadIndibizData() {
   try {
     showLoading(true);
 
-    const res = await fetch(API_URL);
+    const res = await fetch(window.API_URL);
     if (!res.ok) throw new Error("API Error");
 
     const data = await res.json();
