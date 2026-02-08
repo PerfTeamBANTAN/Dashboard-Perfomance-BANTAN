@@ -315,7 +315,7 @@ function updateKendalaNonTeknikIndibizSC(data) {
   table.innerHTML = html;
 
   bindKendalaClicksIndibizSC();
-  updateKendalaTeknisTable(data);
+  updateKendalaTeknisTableIndibizSC(data);
 }
 
   function updateKendalaTeknisTableIndibizSC(data) {
