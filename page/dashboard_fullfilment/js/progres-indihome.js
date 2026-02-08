@@ -25,7 +25,7 @@ async function loadIndihomeData() {
     updateBoxes(data);
     updateClusterTable(data);
     updateManjaTable(data);
-    updateHSATable(data);
+    updateHSATableWithModal(data);
     updateKendalaNonTeknik(data);
 
     showLoading(false);
