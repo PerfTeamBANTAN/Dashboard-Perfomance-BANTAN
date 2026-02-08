@@ -287,11 +287,9 @@ function positionTablesBelowCards() {
     (bottomTeknik + kesimpulanBox.offsetHeight + 80) + "px";
 }
 
-function updateKendalaNonTeknikIndibizSC(data) {
+function updateKendalaNonTeknikIndibizSC(data, bind = true) {
   const table = document.querySelector("#tblNonTeknik table");
   if (!table) return;
-
-  // gunakan data langsung tanpa filter LAYANAN / MYIR
   const rows = data.kendalaPelangganTable || [];
 
   let html = `<tr>
@@ -312,10 +310,11 @@ function updateKendalaNonTeknikIndibizSC(data) {
   });
 
   table.innerHTML = html;
-  bindKendalaClicksIndibizSC();
+  if (bind) bindKendalaClicksIndibizSC();
 }
 
-function updateKendalaTeknisTableIndibizSC(data) {
+
+function updateKendalaTeknisTableIndibizSC(data, bind = true) {
   const tableContainer = document.getElementById("tblTeknik");
   if (!tableContainer) return;
   const table = tableContainer.querySelector("table");
@@ -595,17 +594,16 @@ function updateHSATableWithModal(data) {
   bindHSAClicks();
 }
 
-/* ================= UPDATE KENDALA NON TEKNIK + BIND MODAL ================= */
 function updateKendalaNonTeknikWithModal(data) {
-  updateKendalaNonTeknikIndibizSC(data); // render table
-  bindKendalaClicksIndibizSC();          // pasang click event
+  updateKendalaNonTeknikIndibizSC(data, false); // false = jangan bind
 }
 
-/* ================= UPDATE KENDALA TEKNIS + BIND MODAL ================= */
 function updateKendalaTeknisWithModal(data) {
-  updateKendalaTeknisTableIndibizSC(data); // render table
-  bindKendalaClicksIndibizSC();            // pasang click event
+  updateKendalaTeknisTableIndibizSC(data, false); // false = jangan bind
 }
+
+// kemudian bind sekali setelah kedua tabel diupdate
+bindKendalaClicksIndibizSC();
 
 /* ================= UPDATE KESIMPULAN ================= */
 function updateKesimpulan(data) {
