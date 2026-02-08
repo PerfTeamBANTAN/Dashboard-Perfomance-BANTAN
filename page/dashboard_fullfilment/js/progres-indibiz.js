@@ -287,14 +287,11 @@ function positionTablesBelowCards() {
     (bottomTeknik + kesimpulanBox.offsetHeight + 80) + "px";
 }
 
-/* ================= UPDATE KENDALA NON TEKNIK ================= */
 function updateKendalaNonTeknikIndibizSC(data) {
   const table = document.querySelector("#tblNonTeknik table");
   if (!table) return;
 
-  const rows = (data.kendalaPelangganTable || []).filter(r =>
-    r.LAYANAN === "INDIBIZ" && r.MYIR.includes("SC")
-  );
+  const rows = data.kendalaPelangganTable || [];
 
   let html = `<tr>
     <th>KENDALA</th>
@@ -306,10 +303,10 @@ function updateKendalaNonTeknikIndibizSC(data) {
   rows.forEach(row => {
     html += `
     <tr>
-      <td class="clickable" data-type="KP" data-detail="${row.KESIMPULAN}" data-cluster="TOTAL">${row.KESIMPULAN}</td>
-      <td class="clickable" data-type="KP" data-detail="${row.KESIMPULAN}" data-cluster="KOTANG">${row.KOTANG || 0}</td>
-      <td class="clickable" data-type="KP" data-detail="${row.KESIMPULAN}" data-cluster="TANGSEL">${row.TANGSEL || 0}</td>
-      <td class="clickable" data-type="KP" data-detail="${row.KESIMPULAN}" data-cluster="TOTAL">${row.TOTAL || 0}</td>
+      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.kendala}</td>
+      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
+      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
+      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.total || 0}</td>
     </tr>`;
   });
 
@@ -317,16 +314,13 @@ function updateKendalaNonTeknikIndibizSC(data) {
   bindKendalaClicksIndibizSC();
 }
 
-/* ================= UPDATE KENDALA TEKNIS ================= */
 function updateKendalaTeknisTableIndibizSC(data) {
   const tableContainer = document.getElementById("tblTeknik");
   if (!tableContainer) return;
   const table = tableContainer.querySelector("table");
   if (!table) return;
 
-  const rows = (data.kendalaTeknisTable || []).filter(r =>
-    r.LAYANAN === "INDIBIZ" && r.MYIR.includes("SC")
-  );
+  const rows = data.kendalaTeknisTable || [];
 
   let html = `<tr>
     <th>KENDALA</th>
@@ -338,10 +332,10 @@ function updateKendalaTeknisTableIndibizSC(data) {
   rows.forEach(row => {
     html += `
     <tr>
-      <td>${row.KESIMPULAN}</td>
-      <td class="clickable" data-type="KT" data-detail="${row.KESIMPULAN}" data-cluster="KOTANG">${row.KOTANG || 0}</td>
-      <td class="clickable" data-type="KT" data-detail="${row.KESIMPULAN}" data-cluster="TANGSEL">${row.TANGSEL || 0}</td>
-      <td class="clickable" data-type="KT" data-detail="${row.KESIMPULAN}" data-cluster="TOTAL">${row.TOTAL || 0}</td>
+      <td class="clickable" data-type="KT" data-detail="${row.kendala}" data-cluster="TOTAL">${row.kendala}</td>
+      <td class="clickable" data-type="KT" data-detail="${row.kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
+      <td class="clickable" data-type="KT" data-detail="${row.kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
+      <td class="clickable" data-type="KT" data-detail="${row.kendala}" data-cluster="TOTAL">${row.total || 0}</td>
     </tr>`;
   });
 
