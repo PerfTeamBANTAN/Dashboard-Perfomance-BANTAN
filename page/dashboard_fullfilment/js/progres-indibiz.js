@@ -15,8 +15,9 @@
 async function loadIndibizData() {
   try {
     showLoading(true);
+    const url = `${window.API_URL}?action=getdashboardindibiz`;
 
-    const res = await fetch(window.API_URL);
+    const res = await fetch(url);
     if (!res.ok) throw new Error("API Error");
 
     const data = await res.json();
@@ -31,7 +32,6 @@ async function loadIndibizData() {
     updateKesimpulan(data);
 
     showLoading(false);
-
     renderLines();
 
   } catch (err) {
