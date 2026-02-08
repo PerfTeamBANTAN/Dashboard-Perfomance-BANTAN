@@ -286,12 +286,14 @@ function positionTablesBelowCards() {
     (bottomTeknik + kesimpulanBox.offsetHeight + 80) + "px";
 }
 
-/* ================= KENDALA ================= */
-function updateKendalaNonTeknik(data) {
+/* ================= UPDATE KENDALA NON TEKNIK ================= */
+function updateKendalaNonTeknikIndibizSC(data) {
   const table = document.querySelector("#tblNonTeknik table");
   if (!table) return;
 
-  const rows = data.kendalaPelangganTable || [];
+  const rows = (data.kendalaPelangganTable || []).filter(r =>
+    r.LAYANAN === "INDIBIZ" && r.MYIR.includes("SC")
+  );
 
   let html = `<tr>
     <th>KENDALA</th>
@@ -303,27 +305,27 @@ function updateKendalaNonTeknik(data) {
   rows.forEach(row => {
     html += `
     <tr>
-      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.kendala}</td>
-      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="KOTANG">${row.kotang}</td>
-      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TANGSEL">${row.tangsel}</td>
-      <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.total}</td>
+      <td class="clickable" data-type="KP" data-detail="${row.KESIMPULAN}" data-cluster="TOTAL">${row.KESIMPULAN}</td>
+      <td class="clickable" data-type="KP" data-detail="${row.KESIMPULAN}" data-cluster="KOTANG">${row.KOTANG || 0}</td>
+      <td class="clickable" data-type="KP" data-detail="${row.KESIMPULAN}" data-cluster="TANGSEL">${row.TANGSEL || 0}</td>
+      <td class="clickable" data-type="KP" data-detail="${row.KESIMPULAN}" data-cluster="TOTAL">${row.TOTAL || 0}</td>
     </tr>`;
   });
 
   table.innerHTML = html;
-
-  bindKendalaClicks();
-  updateKendalaTeknisTable(data);
+  bindKendalaClicksIndibizSC();
 }
 
-function updateKendalaTeknisTable(data) {
-  const teknik = document.getElementById("tblTeknik");
-  if (!teknik) return;
-
-  const table = teknik.querySelector("table");
+/* ================= UPDATE KENDALA TEKNIS ================= */
+function updateKendalaTeknisTableIndibizSC(data) {
+  const tableContainer = document.getElementById("tblTeknik");
+  if (!tableContainer) return;
+  const table = tableContainer.querySelector("table");
   if (!table) return;
 
-  const rows = data.kendalaTeknisTable || [];
+  const rows = (data.kendalaTeknisTable || []).filter(r =>
+    r.LAYANAN === "INDIBIZ" && r.MYIR.includes("SC")
+  );
 
   let html = `<tr>
     <th>KENDALA</th>
@@ -333,19 +335,17 @@ function updateKendalaTeknisTable(data) {
   </tr>`;
 
   rows.forEach(row => {
-    const kendala = row.kendala || "";
-
     html += `
     <tr>
-      <td>${kendala}</td>
-      <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
-      <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
-      <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="TOTAL">${row.total || 0}</td>
+      <td>${row.KESIMPULAN}</td>
+      <td class="clickable" data-type="KT" data-detail="${row.KESIMPULAN}" data-cluster="KOTANG">${row.KOTANG || 0}</td>
+      <td class="clickable" data-type="KT" data-detail="${row.KESIMPULAN}" data-cluster="TANGSEL">${row.TANGSEL || 0}</td>
+      <td class="clickable" data-type="KT" data-detail="${row.KESIMPULAN}" data-cluster="TOTAL">${row.TOTAL || 0}</td>
     </tr>`;
   });
 
   table.innerHTML = html;
-  bindKendalaClicks();
+  bindKendalaClicksIndibizSC();
 }
 
 /* ================= GARIS ANTAR BOX ================= */
@@ -515,7 +515,7 @@ async function showHSADetail(sto, type, layanan = "INDIBIZ") {
 
 
 /* ================= SHOW MODAL KENDALA ================= */
-async function showKendalaDetail(type, detail, cluster) {
+async function showKendalaDetailIndibizSC(type, detail, cluster) {
   const modal = document.getElementById("modalDetail");
   const tbody = modal.querySelector("#modalTable tbody");
   if (!modal || !tbody) return;
@@ -524,7 +524,7 @@ async function showKendalaDetail(type, detail, cluster) {
   openModal();
 
   try {
-    let url = `${API_URL}?action=getkendala&type=${encodeURIComponent(type)}&detail=${encodeURIComponent(detail)}`;
+    let url = `${API_URL}?action=getkendalaindibizsc&type=${encodeURIComponent(type)}&detail=${encodeURIComponent(detail)}`;
     if (cluster) url += `&cluster=${encodeURIComponent(cluster)}`;
 
     const res = await fetch(url);
@@ -549,7 +549,7 @@ async function showKendalaDetail(type, detail, cluster) {
     `).join("");
 
   } catch (err) {
-    console.error("Modal Kendala error:", err);
+    console.error("Modal Kendala Indibiz SC error:", err);
     tbody.innerHTML = `<tr><td colspan="8">Gagal load data</td></tr>`;
   }
 }
@@ -571,7 +571,7 @@ function bindHSAClicks() {
 }
 
 /* ================= BIND CLICK KENDALA ================= */
-function bindKendalaClicks() {
+function bindKendalaClicksIndibizSC() {
   document.querySelectorAll("#tblNonTeknik td.clickable, #tblTeknik td.clickable")
     .forEach(td => {
       td.style.cursor = "pointer";
@@ -579,7 +579,7 @@ function bindKendalaClicks() {
         const type = this.dataset.type;
         const detail = this.dataset.detail;
         const cluster = this.dataset.cluster;
-        if (type && detail !== undefined) showKendalaDetail(type, detail, cluster);
+        if (type && detail !== undefined) showKendalaDetailIndibizSC(type, detail, cluster);
       };
     });
 }
