@@ -252,11 +252,15 @@ function positionTablesBelowCards() {
   tblManja.style.left = (tblSisa.offsetLeft + tblSisa.offsetWidth + 20) + "px";
 
   /* ==== TABEL HSA (DI BAWAH MANJA) ==== */
+    /* ==== TABEL HSA (DI BAWAH MANJA & KE KIRI) ==== */
   const bottomManja = tblManja.offsetTop + tblManja.offsetHeight;
 
   tblHSA.style.position = "absolute";
   tblHSA.style.top = (bottomManja + 20) + "px";
-  tblHSA.style.left = tblManja.style.left;
+
+  const sisaLeft = tblSisa.offsetLeft;
+  tblHSA.style.left = sisaLeft + "px";
+
 
   /* ==== KENDALA ==== */
   if (!tblNonTeknik || !cardGagal) return;
