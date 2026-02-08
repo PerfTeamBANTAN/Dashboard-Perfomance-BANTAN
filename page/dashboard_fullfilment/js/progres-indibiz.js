@@ -1,4 +1,3 @@
-(function(){
   let API_URL = "";
   let refreshTimer = null;
 
@@ -614,5 +613,3 @@ function updateKesimpulan(data) {
   </i></small>
 `;
 }
-
-})();
