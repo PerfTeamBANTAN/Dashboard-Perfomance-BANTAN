@@ -117,27 +117,26 @@
     </div>
 
     <!-- TABLE HSA (DI BAWAH TBL MANJA) -->
-<div class="table-block large" id="tblHSA">
-  <h4>HSA</h4>
-  <table>
-    <thead>
-      <tr>
-        <th>STO</th>
-        <th>HSA</th>
-        <th>Est PS HI</th>
-        <th>PS</th>
-        <th>Total WO</th>
-        <th>Sisa WO</th>
-        <th>KP</th>
-        <th>KT</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- diisi JS -->
-    </tbody>
-  </table>
-</div>
-
+    <div class="table-block large" id="tblHSA">
+      <h4>HSA</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>STO</th>
+            <th>HSA</th>
+            <th>Est PS HI</th>
+            <th>PS</th>
+            <th>Total WO</th>
+            <th>Sisa WO</th>
+            <th>KP</th>
+            <th>KT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- diisi JS -->
+        </tbody>
+      </table>
+    </div>
 
     <div class="table-block large" id="tblNonTeknik">
       <h4>KENDALA PELANGGAN</h4>
@@ -162,6 +161,29 @@
         </tr>
       </table>
     </div>
+  </div>
+</div>
 
+<!-- ================= MODAL DETAIL ================= -->
+<div id="modalDetail" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h4>Detail WO HI</h4>
+    <table id="modalTable">
+      <thead>
+        <tr>
+          <th>MYIR / SCID / WOID</th>
+          <th>STO</th>
+          <th>MITRA</th>
+          <th>TEKNISI</th>
+          <th>KESIMPULAN</th>
+          <th>DETIL KESIMPULAN</th>
+          <th>STATUS MANJA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- diisi JS -->
+      </tbody>
+    </table>
   </div>
 </div>
