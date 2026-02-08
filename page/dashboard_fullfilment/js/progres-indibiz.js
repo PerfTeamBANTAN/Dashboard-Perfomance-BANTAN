@@ -512,51 +512,36 @@ async function showKendalaDetailIndibizSC(type, detail, cluster) {
   const modal = document.getElementById("modalDetail");
   const tbody = modal.querySelector("#modalTable tbody");
   if (!modal || !tbody) return;
-
   tbody.innerHTML = `<tr><td colspan="8">Loading...</td></tr>`;
   openModal();
 
   try {
-    // kirim cluster = TOTAL atau KOTANG/TANGSEL
     let url = `${API_URL}?action=getkendalaindibizsc&type=${encodeURIComponent(type)}&detail=${encodeURIComponent(detail)}`;
     if (cluster) url += `&cluster=${encodeURIComponent(cluster)}`;
-
-    const res = await fetch(url);
-    let data = await res.json();
-
-    // pastikan data array dan normalize field
-    if (!Array.isArray(data)) {
-      if (data && Array.isArray(data.result)) data = data.result;
-      else data = [];
-    }
+    let data = await (await fetch(url)).json();
+    if (!Array.isArray(data)) data = data.result ?? [];
 
     if (!data.length) {
       tbody.innerHTML = `<tr><td colspan="8">Tidak ada data kendala</td></tr>`;
       return;
     }
 
-    // mapping agar field konsisten
-    tbody.innerHTML = data.map((r, i) => {
-      return `
-        <tr>
-          <td>${i + 1}</td>
-          <td>${r.MYIR || r.myir || ""}</td>
-          <td>${r.STO || r.sto || ""}</td>
-          <td>${r.MITRA || r.mitra || ""}</td>
-          <td>${r.TEKNISI || r.teknisi || ""}</td>
-          <td>${r.KESIMPULAN || r.kesimpulan || ""}</td>
-          <td>${r.DETIL_KESIMPULAN || r.detail || ""}</td>
-          <td>${r.STATUS_MANJA || r.status_manja || ""}</td>
-        </tr>
-      `;
-    }).join("");
+    tbody.innerHTML = data.map((r, i) => `<tr>
+      <td>${i + 1}</td>
+      <td>${r.MYIR || r.myir || ""}</td>
+      <td>${r.STO || r.sto || ""}</td>
+      <td>${r.MITRA || r.mitra || ""}</td>
+      <td>${r.TEKNISI || r.teknisi || ""}</td>
+      <td>${r.KESIMPULAN || r.kesimpulan || ""}</td>
+      <td>${r.DETIL_KESIMPULAN || r.detail || ""}</td>
+      <td>${r.STATUS_MANJA || r.status_manja || ""}</td>
+    </tr>`).join("");
 
   } catch (err) {
-    console.error("Modal Kendala Indibiz SC error:", err);
+    console.error(err);
     tbody.innerHTML = `<tr><td colspan="8">Gagal load data</td></tr>`;
   }
 }
-
 
 /* ================= BIND CLICK HSA ================= */
 function bindHSAClicks() {
@@ -576,34 +561,19 @@ function bindHSAClicks() {
 
 /* ================= BIND CLICK KENDALA ================= */
 function bindKendalaClicksIndibizSC() {
-  document.querySelectorAll("#tblNonTeknik td.clickable, #tblTeknik td.clickable")
-    .forEach(td => {
-      td.style.cursor = "pointer";
-      td.onclick = function () {
-        const type = this.dataset.type;
-        const detail = this.dataset.detail;
-        const cluster = this.dataset.cluster;
-        if (type && detail !== undefined) showKendalaDetailIndibizSC(type, detail, cluster);
-      };
-    });
+  document.querySelectorAll("#tblNonTeknik td.clickable, #tblTeknik td.clickable").forEach(td => {
+    td.style.cursor = "pointer";
+    td.onclick = () => {
+      showKendalaDetailIndibizSC(td.dataset.type, td.dataset.detail, td.dataset.cluster);
+    };
+  });
 }
 
-/* ================= UPDATE HSA + BIND ================= */
-function updateHSATableWithModal(data) {
-  updateHSATable(data);
-  bindHSAClicks();
-}
-
-function updateKendalaNonTeknikWithModal(data) {
-  updateKendalaNonTeknikIndibizSC(data, false); // false = jangan bind
-}
-
-function updateKendalaTeknisWithModal(data) {
-  updateKendalaTeknisTableIndibizSC(data, false); // false = jangan bind
-}
-
-// kemudian bind sekali setelah kedua tabel diupdate
-bindKendalaClicksIndibizSC();
+// ================= UPDATE HSA + KENDALA =================
+function updateHSATableWithModal(data) { updateHSATable(data); bindHSAClicks(); }
+function updateKendalaNonTeknikWithModal(data) { updateKendalaNonTeknikIndibizSC(data, false); }
+function updateKendalaTeknisWithModal(data) { updateKendalaTeknisTableIndibizSC(data, false); }
+bindKendalaClicksIndibizSC(); 
 
 /* ================= UPDATE KESIMPULAN ================= */
 function updateKesimpulan(data) {
