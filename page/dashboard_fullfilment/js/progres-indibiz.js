@@ -216,7 +216,7 @@ function updateHSATable(data) {
   tbody.innerHTML = html;
 }
 
-/* ================= POSITION TABLES ================= */
+/* ================= POSISI TABLE ================= */
 function positionTablesBelowCards() {
   const parent = document.querySelector(".tree-area");
   if (!parent) return;
@@ -236,21 +236,25 @@ function positionTablesBelowCards() {
 
   if (!tblSisa || !tblManja || !tblHSA || !tblNonTeknik || !tblTeknik || !kesimpulanBox) return;
 
+  /* ==== TABEL SISA ==== */
   const rectSisa = cardSisa.getBoundingClientRect();
   tblSisa.style.position = "absolute";
   tblSisa.style.top = (rectSisa.bottom - parentRect.top + 25) + "px";
   tblSisa.style.left = "20px";
 
+  /* ==== TABEL MANJA ==== */
   const rectManja = cardManja.getBoundingClientRect();
   tblManja.style.position = "absolute";
   tblManja.style.top = (rectManja.bottom - parentRect.top + 15) + "px";
   tblManja.style.left = (tblSisa.offsetLeft + tblSisa.offsetWidth + 20) + "px";
 
+  /* ==== TABEL HSA ==== */
   const bottomManja = tblManja.offsetTop + tblManja.offsetHeight;
   tblHSA.style.position = "absolute";
   tblHSA.style.top = (bottomManja + 20) + "px";
   tblHSA.style.left = tblSisa.offsetLeft + "px";
 
+  /* ==== KENDALA NON TEKNIK ==== */
   const rectGagal = cardGagal.getBoundingClientRect();
   tblNonTeknik.style.position = "absolute";
   tblNonTeknik.style.top = (rectGagal.bottom - parentRect.top + 170) + "px";
@@ -259,18 +263,22 @@ function positionTablesBelowCards() {
      rectGagal.width / 2 -
      tblNonTeknik.offsetWidth / 2) + "px";
 
+  /* ==== KENDALA TEKNIK ==== */
   const bottomNonTeknik = tblNonTeknik.offsetTop + tblNonTeknik.offsetHeight;
   tblTeknik.style.position = "absolute";
   tblTeknik.style.top = (bottomNonTeknik + 20) + "px";
   tblTeknik.style.left = tblNonTeknik.style.left;
 
+  /* ==== KESIMPULAN BOX (DI BAWAH TBL TEKNIK) ==== */
   const bottomTeknik = tblTeknik.offsetTop + tblTeknik.offsetHeight;
+
   kesimpulanBox.style.position = "absolute";
   kesimpulanBox.style.top = (bottomTeknik + 30) + "px";
   kesimpulanBox.style.left = "50%";
   kesimpulanBox.style.transform = "translateX(-50%)";
   kesimpulanBox.style.width = "90%";
 
+  /* ==== PERPANJANG TINGGI TREE AREA ==== */
   parent.style.minHeight =
     (bottomTeknik + kesimpulanBox.offsetHeight + 80) + "px";
 }
