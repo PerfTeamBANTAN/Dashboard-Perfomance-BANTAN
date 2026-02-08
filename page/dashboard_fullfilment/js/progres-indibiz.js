@@ -472,7 +472,7 @@ window.addEventListener("click", function (e) {
   if (e.target === modal) modal.style.display = "none";
 });
 
-* ================= SHOW MODAL HSA ================= */
+/* ================= SHOW MODAL HSA ================= */
 async function showHSADetail(sto, type) {
   const modal = document.getElementById("modalDetail");
   const tbody = modal.querySelector("#modalTable tbody");
