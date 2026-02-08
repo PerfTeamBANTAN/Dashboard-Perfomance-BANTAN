@@ -199,37 +199,23 @@ function updateHSATable(data) {
   if (!tbody) return;
 
   const rows = data.hsaTable || [];
-
   let html = "";
 
-  // header (opsional kalau table sudah punya <thead>)
-  // html += `<tr>
-  //   <th>STO</th>
-  //   <th>HSA</th>
-  //   <th>Est PS HI</th>
-  //   <th>PS</th>
-  //   <th>Total WO</th>
-  //   <th>Sisa WO</th>
-  //   <th>KP</th>
-  //   <th>KT</th>
-  // </tr>`;
-
   rows.forEach(row => {
-    // fallback: hitung totalWO kalau belum ada
     const totalWO = row.totalWO !== undefined
-                    ? row.totalWO
-                    : (row.ps || 0) + (row.sisaWO || 0) + (row.kp || 0) + (row.kt || 0);
+      ? row.totalWO
+      : (row.ps || 0) + (row.sisaWO || 0) + (row.kp || 0) + (row.kt || 0);
 
     html += `
       <tr>
         <td>${row.sto || ""}</td>
         <td>${row.hsa || ""}</td>
-        <td>${row.estPSHI || 0}</td>
-        <td>${row.ps || 0}</td>
+        <td class="clickable" data-type="SISA">${row.estPSHI || 0}</td>
+        <td class="clickable" data-type="PS">${row.ps || 0}</td>
         <td>${totalWO}</td>
-        <td>${row.sisaWO || 0}</td>
-        <td>${row.kp || 0}</td>
-        <td>${row.kt || 0}</td>
+        <td class="clickable" data-type="SISA">${row.sisaWO || 0}</td>
+        <td class="clickable" data-type="KP">${row.kp || 0}</td>
+        <td class="clickable" data-type="KT">${row.kt || 0}</td>
       </tr>
     `;
   });
@@ -511,66 +497,77 @@ function closeModal() {
   modal.style.display = "none";
 }
 
-// klik area luar modal untuk tutup
+// klik luar modal untuk tutup
 window.addEventListener("click", function (e) {
   const modal = document.getElementById("modalDetail");
   if (!modal) return;
-  if (e.target === modal) {
-    modal.style.display = "none";
-  }
+  if (e.target === modal) modal.style.display = "none";
 });
 
-// tampilkan data detail berdasarkan STO
-function showHSADetail(sto) {
+
+/* ================= SHOW MODAL BASED ON HITUNGAN ================= */
+async function showHSADetail(sto, type) {
   const modal = document.getElementById("modalDetail");
   const tbody = modal.querySelector("#modalTable tbody");
   if (!modal || !tbody) return;
 
-  const woData = window.lastData?.woData || [];
+  tbody.innerHTML = `<tr><td colspan="7">Loading...</td></tr>`;
+  openModal();
 
-  const rows = woData.filter(r =>
-    (r[4] || "").toUpperCase() === sto.toUpperCase()
-  );
+  try {
+    const url = `${API_URL}?action=getwohi&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(type)}`;
+    const res = await fetch(url);
+    const data = await res.json();
 
-  if (rows.length === 0) {
-    tbody.innerHTML = `<tr>
-      <td colspan="7">Tidak ada data untuk STO ${sto}</td>
-    </tr>`;
-  } else {
-    tbody.innerHTML = rows.map(r => `
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7">Tidak ada data ${type} untuk STO ${sto}</td>
+        </tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map(r => `
       <tr>
-        <td>${r[3] || ""}</td>
-        <td>${r[4] || ""}</td>
-        <td>${r[8] || ""}</td>
-        <td>${r[9] || ""}</td>
-        <td>${r[18] || ""}</td>
-        <td>${r[19] || ""}</td>
-        <td>${r[26] || ""}</td>
+        <td>${r.MYIR || ""}</td>
+        <td>${r.STO || ""}</td>
+        <td>${r.MITRA || ""}</td>
+        <td>${r.TEKNISI || ""}</td>
+        <td>${r.KESIMPULAN || ""}</td>
+        <td>${r.DETIL_KESIMPULAN || ""}</td>
+        <td>${r.STATUS_MANJA || ""}</td>
       </tr>
     `).join("");
-  }
 
-  openModal();
+  } catch (err) {
+    console.error("Modal fetch error:", err);
+    tbody.innerHTML = `<tr><td colspan="7">Gagal load data</td></tr>`;
+  }
 }
 
 /* ================= EVENT CLICK HSA ================= */
-
 function bindHSAClicks() {
   const tbody = document.querySelector("#tblHSA table tbody");
   if (!tbody) return;
 
-  tbody.querySelectorAll("tr").forEach(tr => {
-    tr.style.cursor = "pointer";
-    tr.onclick = function () {
-      const sto = this.children[0]?.innerText.trim();
-      if (sto) showHSADetail(sto);
+  tbody.querySelectorAll("td.clickable").forEach(td => {
+    td.style.cursor = "pointer";
+    td.onclick = function () {
+      const tr = this.parentElement;
+      const sto = tr.children[0].innerText.trim();
+      const type = this.dataset.type;
+
+      if (sto && type) {
+        showHSADetail(sto, type);
+      }
     };
   });
 }
 
 // panggil ini setelah updateHSATable(data)
 function updateHSATableWithModal(data) {
-  updateHSATable(data); // fungsi kamu yang sudah ada
+  updateHSATable(data);
   bindHSAClicks();
 }
+
 
