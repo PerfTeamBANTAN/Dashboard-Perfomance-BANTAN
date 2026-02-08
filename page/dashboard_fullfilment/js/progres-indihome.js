@@ -203,13 +203,17 @@ function updateHSATable(data) {
   let html = "";
 
   rows.forEach(row => {
+    const totalWO = row.totalWO !== undefined 
+                    ? row.totalWO 
+                    : (row.ps || 0) + (row.sisaWO || 0) + (row.kp || 0) + (row.kt || 0);
+
     html += `
       <tr>
         <td>${row.sto || ""}</td>
         <td>${row.hsa || ""}</td>
         <td>${row.estPSHI || 0}</td>
         <td>${row.ps || 0}</td>
-        <td>${row.totalWO || 0}</td>
+        <td>${totalWO}</td>
         <td>${row.sisaWO || 0}</td>
         <td>${row.kp || 0}</td>
         <td>${row.kt || 0}</td>
