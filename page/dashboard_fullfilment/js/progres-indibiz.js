@@ -31,7 +31,8 @@ async function loadIndibizData() {
     updateClusterTable(data);
     updateManjaTable(data);
     updateHSATableWithModal(data);
-    updateKendalaNonTeknik(data);
+    updateKendalaNonTeknikIndibizSC(data);
+    updateKendalaTeknisTableIndibizSC(data);
     updateKesimpulan(data);
 
     showLoading(false);
