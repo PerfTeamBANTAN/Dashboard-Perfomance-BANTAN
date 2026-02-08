@@ -1,0 +1,196 @@
+<div class="tree-dashboard-fullfillment">
+
+  <h3 class="title">DIAGRAM TREE INDIBIZ TANGERANG</h3>
+  <div class="subtitle" id="updateTime"></div>
+
+  <div class="tree-area">
+    <svg id="tree-lines"></svg>
+
+    <!-- LEVEL 1 -->
+    <div class="tree-box blue" id="wo">
+      WO PSB<br><b>0</b>
+    </div>
+
+    <!-- LEVEL 2 -->
+    <div class="tree-box yellow" id="sisa">
+      <span class="label">SISA PROGRESS</span>
+      <b>0</b>
+      <small>0%</small>
+    </div>
+
+    <div class="tree-box green" id="sudah">
+      <span class="label">SUDAH PROGRESS</span>
+      <b>0</b>
+      <small>0%</small>
+    </div>
+
+    <div class="tree-box yellow" id="manja">
+      <span class="label">MANJA H+EXP</span>
+      <b>0</b>
+      <small>0%</small>
+    </div>
+
+    <div class="tree-box yellow" id="manja2">
+      <span class="label">NON MANJA</span>
+      <b>0</b>
+      <small>0%</small>
+    </div>
+
+    <div class="tree-box green" id="sukses">
+      <span class="label">SUKSES</span>
+      <b>0</b>
+      <small>0%</small>
+    </div>
+
+    <div class="tree-box red" id="gagal">
+      <span class="label">GAGAL TARIK</span>
+      <b>0</b>
+      <small>0%</small>
+    </div>
+
+    <!-- LEVEL 4 (CARD) -->
+    <div class="tree-box white" id="psEnd">
+      <span class="label">PS END STATE</span>
+      <b>0</b>
+      <small>0%</small>
+    </div>
+
+    <div class="tree-box white" id="ogpEnd">
+      <span class="label">OGP TARIK<br>PS END STATE</span>
+      <b>0</b>
+      <small>0%</small>
+    </div>
+
+    <!-- TABLES -->
+    <div class="table-block small" id="tblSisa">
+      <h4>SISA PROGRESS</h4>
+      <table>
+        <tr>
+          <th>CLUSTER</th>
+          <th>SUDAH PICKUP</th>
+          <th>BELUM PICKUP</th>
+          <th>TOTAL</th>
+        </tr>
+        <tr>
+          <td>KOTANG</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>TANGSEL</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="table-block small" id="tblManja">
+      <h4>MANJA</h4>
+      <table>
+        <tr>
+          <th>CLUSTER</th>
+          <th>MANJA HI</th>
+          <th>MANJA H+</th>
+          <th>EXP</th>
+          <th>NON MANJA</th>
+          <th>TOTAL</th>
+        </tr>
+        <tr>
+          <td>KOTANG</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>TANGSEL</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- TABLE HSA (DI BAWAH TBL MANJA) -->
+    <div class="table-block large" id="tblHSA">
+      <h4>HSA</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>STO</th>
+            <th>HSA</th>
+            <th>Est PS HI</th>
+            <th>PS</th>
+            <th>Total WO</th>
+            <th>Sisa WO</th>
+            <th>KP</th>
+            <th>KT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- diisi JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-block large" id="tblNonTeknik">
+      <h4>KENDALA PELANGGAN</h4>
+      <table>
+        <tr>
+          <th>KENDALA</th>
+          <th>KOTANG</th>
+          <th>TANGSEL</th>
+          <th>TOTAL</th>
+        </tr>
+      </table>
+    </div>
+
+    <div class="table-block large" id="tblTeknik">
+      <h4>KENDALA TEKNIS</h4>
+      <table>
+        <tr>
+          <th>KENDALA</th>
+          <th>KOTANG</th>
+          <th>TANGSEL</th>
+          <th>TOTAL</th>
+        </tr>
+      </table>
+    </div>
+
+    <div id="kesimpulanBox" class="kesimpulan-box">
+      <h3>INSIGHT TREE MONITORING</h3>
+      <div id="kesimpulanText">Loading kesimpulan...</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= MODAL DETAIL ================= -->
+<div id="modalDetail" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h4>Detail WO INDIBIZ</h4>
+    <table id="modalTable">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>MYIR / SCID / WOID</th>
+          <th>STO</th>
+          <th>MITRA</th>
+          <th>TEKNISI</th>
+          <th>KESIMPULAN</th>
+          <th>DETIL KESIMPULAN</th>
+          <th>STATUS MANJA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- diisi JS -->
+      </tbody>
+    </table>
+  </div>
+</div>
