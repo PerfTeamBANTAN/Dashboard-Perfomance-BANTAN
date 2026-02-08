@@ -232,7 +232,8 @@ function positionTablesBelowCards() {
   const tblHSA = document.getElementById("tblHSA");
   const tblNonTeknik = document.getElementById("tblNonTeknik");
   const tblTeknik = document.getElementById("tblTeknik");
-
+  const kesimpulanBox = document.getElementById("kesimpulanBox");
+  
   const cardSisa = document.getElementById("sisa");
   const cardManja = document.getElementById("manja");
   const cardGagal = document.getElementById("gagal");
@@ -251,8 +252,7 @@ function positionTablesBelowCards() {
   tblManja.style.top = (rectManja.bottom - parentRect.top + 15) + "px";
   tblManja.style.left = (tblSisa.offsetLeft + tblSisa.offsetWidth + 20) + "px";
 
-  /* ==== TABEL HSA (DI BAWAH MANJA) ==== */
-    /* ==== TABEL HSA (DI BAWAH MANJA & KE KIRI) ==== */
+  /* ==== TABEL HSA (DI BAWAH MANJA & KE KIRI) ==== */
   const bottomManja = tblManja.offsetTop + tblManja.offsetHeight;
 
   tblHSA.style.position = "absolute";
@@ -260,7 +260,6 @@ function positionTablesBelowCards() {
 
   const sisaLeft = tblSisa.offsetLeft;
   tblHSA.style.left = sisaLeft + "px";
-
 
   /* ==== KENDALA ==== */
   if (!tblNonTeknik || !cardGagal) return;
@@ -280,7 +279,17 @@ function positionTablesBelowCards() {
   tblTeknik.style.top = (bottomNonTeknik + 20) + "px";
   tblTeknik.style.left = tblNonTeknik.style.left;
 }
+/* ==== KESIMPULAN BOX (INI YANG BARU) ==== */
+  if (!kesimpulanBox) return;
 
+  const bottomTeknik = tblTeknik.offsetTop + tblTeknik.offsetHeight;
+
+  kesimpulanBox.style.position = "absolute";
+  kesimpulanBox.style.top = (bottomTeknik + 30) + "px";
+  kesimpulanBox.style.left = "50%";
+  kesimpulanBox.style.transform = "translateX(-50%)";
+  kesimpulanBox.style.width = "90%";
+}
 
 /* ================= TABEL KENDALA ================= */
 function updateKendalaNonTeknik(data) {
