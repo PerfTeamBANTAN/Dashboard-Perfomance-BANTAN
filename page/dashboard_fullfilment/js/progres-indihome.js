@@ -136,7 +136,6 @@ function setBox(id, value) {
 }
 
 /* ================= TABLE CLUSTER ================= */
-/* ================= TABLE CLUSTER (TOTAL SAJA) ================= */
 function updateClusterTable(data) {
   const table = document.querySelector("#tblSisa table");
   if (!table) return;
@@ -144,7 +143,6 @@ function updateClusterTable(data) {
   const rows = data.clusterTable || [];
 
   let html = `<tr><th>CLUSTER</th><th>TOTAL</th></tr>`;
-  let grandTotal = 0;
 
   rows.forEach(row => {
     const cluster = row.cluster;
@@ -153,13 +151,11 @@ function updateClusterTable(data) {
     if (!cluster) return;
 
     html += `<tr><td>${cluster}</td><td>${total}</td></tr>`;
-    grandTotal += total;
   });
-
-  html += `<tr><th>GRAND TOTAL</th><th>${grandTotal}</th></tr>`;
 
   table.innerHTML = html;
 }
+
 /* ================= TABLE MANJA (DARI SHEET WEB A18:F21) ================= */
 function updateManjaTable(data) {
   const table = document.querySelector("#tblManja table");
