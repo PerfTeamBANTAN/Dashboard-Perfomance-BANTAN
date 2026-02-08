@@ -25,9 +25,10 @@
   margin:10px auto;
   background:#fff;
   border:2px solid #000;
-  overflow:auto;
-  padding-bottom:20px;
+  overflow:visible;        /* ganti dari auto */
+  padding-bottom:350px;   /* ruang khusus kesimpulan */
 }
+
 
 /* SVG GARIS */
 #tree-lines{
@@ -349,12 +350,15 @@
 }
 
 .kesimpulan-box {
-  margin-top: 15px;
+  position: relative;   /* penting */
+  margin-top: 40px;
   border: 2px solid #d32f2f;
   border-radius: 10px;
   padding: 15px 20px;
   background: #fff5f5;
-  width: 100%;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
 }
 
