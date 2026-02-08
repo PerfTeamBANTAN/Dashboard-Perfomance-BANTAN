@@ -472,7 +472,7 @@ window.addEventListener("click", function (e) {
   if (e.target === modal) modal.style.display = "none";
 });
 
-/* ================= SHOW MODAL HSA ================= */
+* ================= SHOW MODAL HSA ================= */
 async function showHSADetail(sto, type) {
   const modal = document.getElementById("modalDetail");
   const tbody = modal.querySelector("#modalTable tbody");
@@ -566,11 +566,6 @@ function bindHSAClicks() {
   });
 }
 
-function updateHSATableWithModal(data) {
-  updateHSATable(data);
-  bindHSAClicks();
-}
-
 /* ================= BIND CLICK KENDALA ================= */
 function bindKendalaClicks() {
   document.querySelectorAll("#tblNonTeknik td.clickable, #tblTeknik td.clickable")
@@ -583,6 +578,12 @@ function bindKendalaClicks() {
         if (type && detail !== undefined) showKendalaDetail(type, detail, cluster);
       };
     });
+}
+
+/* ================= UPDATE HSA + BIND ================= */
+function updateHSATableWithModal(data) {
+  updateHSATable(data);
+  bindHSAClicks();
 }
 
 /* ================= UPDATE KESIMPULAN ================= */
