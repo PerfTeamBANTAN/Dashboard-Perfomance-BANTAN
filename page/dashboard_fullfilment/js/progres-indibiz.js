@@ -314,7 +314,7 @@ function updateKendalaNonTeknikIndibizSC(data) {
 
   table.innerHTML = html;
 
-  bindKendalaClicks();
+  bindKendalaClicksIndibizSC();
   updateKendalaTeknisTable(data);
 }
 
@@ -349,7 +349,7 @@ function updateKendalaNonTeknikIndibizSC(data) {
 
   table.innerHTML = html;
 
-  bindKendalaClicks();
+  bindKendalaClicksIndibizSC();
 }
 
 /* ================= GARIS ANTAR BOX ================= */
