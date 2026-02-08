@@ -31,8 +31,8 @@ async function loadIndibizData() {
     updateClusterTable(data);
     updateManjaTable(data);
     updateHSATableWithModal(data);
-    updateKendalaNonTeknikIndibizSC(data);
-    updateKendalaTeknisTableIndibizSC(data);
+    updateKendalaNonTeknikWithModal(data);
+    updateKendalaTeknisWithModal(data);
     updateKesimpulan(data);
 
     showLoading(false);
@@ -518,16 +518,17 @@ async function showKendalaDetailIndibizSC(type, detail, cluster) {
   openModal();
 
   try {
+    // kirim cluster = TOTAL atau KOTANG/TANGSEL
     let url = `${API_URL}?action=getkendalaindibizsc&type=${encodeURIComponent(type)}&detail=${encodeURIComponent(detail)}`;
     if (cluster) url += `&cluster=${encodeURIComponent(cluster)}`;
 
     const res = await fetch(url);
     let data = await res.json();
 
-    // pastikan data adalah array
+    // pastikan data array dan normalize field
     if (!Array.isArray(data)) {
-      if (data && Array.isArray(data.result)) data = data.result; // beberapa API bungkus di "result"
-      else data = []; // default kosong
+      if (data && Array.isArray(data.result)) data = data.result;
+      else data = [];
     }
 
     if (!data.length) {
@@ -535,24 +536,28 @@ async function showKendalaDetailIndibizSC(type, detail, cluster) {
       return;
     }
 
-    tbody.innerHTML = data.map((r, i) => `
-      <tr>
-        <td>${i + 1}</td>
-        <td>${r.MYIR || r.MYIRID || ""}</td>
-        <td>${r.STO || ""}</td>
-        <td>${r.MITRA || ""}</td>
-        <td>${r.TEKNISI || ""}</td>
-        <td>${r.KESIMPULAN || r.kesimpulan || ""}</td>
-        <td>${r.DETIL_KESIMPULAN || r.DETAIL || ""}</td>
-        <td>${r.STATUS_MANJA || ""}</td>
-      </tr>
-    `).join("");
+    // mapping agar field konsisten
+    tbody.innerHTML = data.map((r, i) => {
+      return `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${r.MYIR || r.myir || ""}</td>
+          <td>${r.STO || r.sto || ""}</td>
+          <td>${r.MITRA || r.mitra || ""}</td>
+          <td>${r.TEKNISI || r.teknisi || ""}</td>
+          <td>${r.KESIMPULAN || r.kesimpulan || ""}</td>
+          <td>${r.DETIL_KESIMPULAN || r.detail || ""}</td>
+          <td>${r.STATUS_MANJA || r.status_manja || ""}</td>
+        </tr>
+      `;
+    }).join("");
 
   } catch (err) {
     console.error("Modal Kendala Indibiz SC error:", err);
     tbody.innerHTML = `<tr><td colspan="8">Gagal load data</td></tr>`;
   }
 }
+
 
 /* ================= BIND CLICK HSA ================= */
 function bindHSAClicks() {
@@ -588,6 +593,18 @@ function bindKendalaClicksIndibizSC() {
 function updateHSATableWithModal(data) {
   updateHSATable(data);
   bindHSAClicks();
+}
+
+/* ================= UPDATE KENDALA NON TEKNIK + BIND MODAL ================= */
+function updateKendalaNonTeknikWithModal(data) {
+  updateKendalaNonTeknikIndibizSC(data); // render table
+  bindKendalaClicksIndibizSC();          // pasang click event
+}
+
+/* ================= UPDATE KENDALA TEKNIS + BIND MODAL ================= */
+function updateKendalaTeknisWithModal(data) {
+  updateKendalaTeknisTableIndibizSC(data); // render table
+  bindKendalaClicksIndibizSC();            // pasang click event
 }
 
 /* ================= UPDATE KESIMPULAN ================= */
