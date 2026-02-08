@@ -195,39 +195,31 @@ function updateManjaTable(data) {
 }
 /* ================= TABLE HSA ================= */
 function updateHSATable(data) {
-  const table = document.querySelector("#tblHSA table");
-  if (!table) return;
+  const tbody = document.querySelector("#tblHSA table tbody");
+  if (!tbody) return;
 
   const rows = data.hsaTable || [];
 
-  let html = `
-    <tr>
-      <th>HSA</th>
-      <th>Est PS HI</th>
-      <th>PS</th>
-      <th>Total WO</th>
-      <th>Sisa WO</th>
-      <th>KP</th>
-      <th>KT</th>
-    </tr>
-  `;
+  let html = "";
 
   rows.forEach(row => {
     html += `
       <tr>
+        <td>${row.sto || ""}</td>
         <td>${row.hsa || ""}</td>
-        <td>${row.estPSHI || ""}</td>
-        <td>${row.ps || ""}</td>
-        <td>${row.totalWO || ""}</td>
-        <td>${row.sisaWO || ""}</td>
-        <td>${row.kp || ""}</td>
-        <td>${row.kt || ""}</td>
+        <td>${row.estPSHI || 0}</td>
+        <td>${row.ps || 0}</td>
+        <td>${row.totalWO || 0}</td>
+        <td>${row.sisaWO || 0}</td>
+        <td>${row.kp || 0}</td>
+        <td>${row.kt || 0}</td>
       </tr>
     `;
   });
 
-  table.innerHTML = html;
+  tbody.innerHTML = html;
 }
+
 /* ================= POSISI TABLE ================= */
 function positionTablesBelowCards() {
   const parent = document.querySelector(".tree-area");
