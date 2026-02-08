@@ -1,17 +1,20 @@
-  window.API_URL = window.API_URL || "";
-  let refreshTimer = null;
+// ================= GLOBAL =================
+window.API_URL = window.API_URL || "";
+window.refreshTimer = window.refreshTimer || null;
 
-  function initProgresIndibiz(apiUrl) {
-    API_URL = apiUrl;
-    loadIndibizData();
+// ================= INIT =================
+function _initProgresIndibiz(apiUrl) {
+  window.API_URL = apiUrl;
+  loadIndibizData();
 
-    if (refreshTimer) clearInterval(refreshTimer);
-    refreshTimer = setInterval(loadIndibizData, 60000);
-  }
+  if (window.refreshTimer) clearInterval(window.refreshTimer);
+  window.refreshTimer = setInterval(loadIndibizData, 60000);
+}
 
-  window.initProgresIndibiz = initProgresIndibiz;
+// attach ke window supaya bisa dipanggil via window[cfg.init]()
+window.initProgresIndibiz = _initProgresIndibiz;
 
-/* ================= LOAD DATA ================= */
+// ================= LOAD DATA =================
 async function loadIndibizData() {
   try {
     showLoading(true);
