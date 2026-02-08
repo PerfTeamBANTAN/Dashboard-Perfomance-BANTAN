@@ -633,38 +633,40 @@ function bindKendalaClicks() {
     });
 }
 
-
 function updateKesimpulan(data) {
 
-  const wo = data.cards["WO PSB"]?.nilai || 0;
-  const sisa = data.cards["SISA PROGRES"]?.nilai || 0;
-  const pSisa = data.cards["SISA PROGRES"]?.persen || "0%";
-  const sudah = data.cards["SUDAH PROGRES"]?.nilai || 0;
+  const wo     = data.cards["WO PSB"]?.nilai || 0;
+  const sisa   = data.cards["SISA PROGRES"]?.nilai || 0;
+  const pSisaRaw = data.cards["SISA PROGRES"]?.persen || 0;
+  const sudah  = data.cards["SUDAH PROGRES"]?.nilai || 0;
   const sukses = data.cards["SUKSES"]?.nilai || 0;
-  const gagal = data.cards["GAGALTARIK"]?.nilai || 0;
+  const gagal  = data.cards["GAGALTARIK"]?.nilai || 0;
+
+  // format persen rapi (2 desimal)
+  let pSisa = "0%";
+  const num = parseFloat(pSisaRaw);
+  if (!isNaN(num)) pSisa = (num * 100).toFixed(2) + "%";
 
   const kendalaList = data.kendalaPelangganTable || [];
-  let kendalaTerbesar = kendalaList.length ? kendalaList[0] : null;
+  const kendalaTerbesar = kendalaList.length ? kendalaList[0] : { kendala: "-", total: 0 };
 
   const kesimpulanEl = document.getElementById("kesimpulanText");
   if (!kesimpulanEl) return;
 
   kesimpulanEl.innerHTML = `
-    Berdasarkan hasil monitoring Fulfillment Indihome Tangerang, dari total 
-    <b>${wo}</b> WO PSB terdapat <b>${sisa} (${pSisa})</b> WO yang masih berada pada tahap 
-    <b>Sisa Progress</b>, sedangkan <b>${sudah}</b> WO telah masuk kategori <b>Sudah Progress</b>.<br><br>
-
-    Seluruh WO yang telah diproses menunjukkan hasil <b>${sukses}</b> WO sukses dengan 
-    <b>${gagal}</b> kasus gagal tarik, sehingga performa penyelesaian pekerjaan dapat dikategorikan 
-    <b>baik</b>.<br><br>
-
-    Kendala terbesar saat ini berasal dari kategori 
-    <b>${kendalaTerbesar?.kendala || "-"}</b> sebanyak 
-    <b>${kendalaTerbesar?.total || 0}</b> kasus. 
-    Distribusi kendala pada cluster Kotang dan Tangsel relatif seimbang sehingga diperlukan 
-    percepatan penanganan secara merata.<br><br>
-
-    Secara keseluruhan fokus perbaikan perlu diarahkan pada percepatan penyelesaian Sisa Progress serta penanganan kendala pelanggan 
-    agar target penyelesaian WO dapat tercapai secara optimal.
+    <span style="color:#0d6efd;"><i>Dari total</i></span> 
+    <b style="color:#0d6efd;">${wo} WO PSB</b>, 
+    <b style="color:#dc3545;">${sisa} WO (${pSisa})</b> masih dalam 
+    <i style="color:#dc3545;">Sisa Progress</i>, 
+    sementara 
+    <b style="color:#198754;">${sudah} WO</b> telah 
+    <i style="color:#198754;">selesai diproses</i>. 
+    Kinerja tergolong 
+    <b style="color:#198754;">baik</b> dengan 
+    <b style="color:#198754;">${sukses} WO sukses</b> dan 
+    <b style="color:#6c757d;">${gagal}</b> gagal tarik. 
+    Kendala utama berasal dari 
+    <i style="color:#fd7e14;">${kendalaTerbesar.kendala}</i> sebanyak 
+    <b style="color:#fd7e14;">${kendalaTerbesar.total} kasus</b>.
   `;
 }
