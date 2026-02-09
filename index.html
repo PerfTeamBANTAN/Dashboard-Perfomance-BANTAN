@@ -187,14 +187,14 @@ footer{
 }
 
 /* ===============================
-   FULFILLMENT ANIMATED TEXT SUPER PERFECT FUTURISTIC
+   FULFILLMENT ANIMATED TEXT DYNAMIC COLORS
    =============================== */
 
 .fulfillment-anim {
   height: 160px;
   margin-top: 20px;
   border-radius: 15px;
-  background: linear-gradient(270deg, #0d0d1a, #1b1b36, #0d0d1a);
+  background: linear-gradient(270deg, #ff00ff, #00ffff, #ff4bff, #ff6bff);
   background-size: 800% 800%;
   display: flex;
   flex-direction: column;
@@ -202,41 +202,41 @@ footer{
   justify-content: center;
   position: relative;
   overflow: hidden;
-  animation: bgGradientMovePerfect 15s ease infinite, bgPulsePerfect 6s ease-in-out infinite;
+  animation: bgDynamicColors 15s ease infinite, bgPulseDynamic 6s ease-in-out infinite;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
-/* Overlay gelap tipis untuk kontras */
+/* Overlay tipis */
 .fulfillment-anim::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.05);
   pointer-events: none;
   border-radius: 15px;
 }
 
-/* PARTIKEL LAYER */
+/* Partikel */
 .fulfillment-anim::after {
   content: "";
   position: absolute;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
   background-size: 15px 15px;
-  animation: particlesFlyPerfect 10s linear infinite, particlesFlickerPerfect 3s infinite;
+  animation: particlesFlyDynamic 10s linear infinite, particlesFlickerDynamic 3s infinite;
   top: 0;
   left: 0;
   pointer-events: none;
 }
 
-/* TEXT STYLES */
+/* Text */
 .fulfillment-anim .line1 {
   font-size: 24px;
   font-weight: 800;
   color: #00ffff;
   letter-spacing: 2px;
-  animation: textGlowPerfect 4s ease-in-out infinite alternate;
+  animation: textGlowDynamic 4s ease-in-out infinite alternate;
   text-align: center;
 }
 
@@ -244,47 +244,47 @@ footer{
   font-size: 16px;
   font-weight: 600;
   margin-top: 6px;
-  color: #ff4bff;
   letter-spacing: 1.5px;
-  animation: textGlowPerfectRed 4s ease-in-out infinite alternate;
+  color: #ff4bff;
+  animation: textGlowDynamicRed 4s ease-in-out infinite alternate;
   text-align: center;
 }
 
-/* BACKGROUND GRADIENT MOVE */
-@keyframes bgGradientMovePerfect {
-  0%   { background-position: 0% 50%; }
-  25%  { background-position: 50% 50%; }
-  50%  { background-position: 100% 50%; }
-  75%  { background-position: 50% 50%; }
-  100% { background-position: 0% 50%; }
+/* BACKGROUND DYNAMIC */
+@keyframes bgDynamicColors {
+  0%   { background-position: 0% 50%; background-color: #ff00ff; }
+  25%  { background-position: 50% 50%; background-color: #00ffff; }
+  50%  { background-position: 100% 50%; background-color: #ff4bff; }
+  75%  { background-position: 50% 50%; background-color: #ff6bff; }
+  100% { background-position: 0% 50%; background-color: #ff00ff; }
 }
 
-/* PULSE HALO */
-@keyframes bgPulsePerfect {
-  0%   { box-shadow: 0 0 25px rgba(0,255,255,0.3); }
-  50%  { box-shadow: 0 0 60px rgba(255,0,255,0.5); }
-  100% { box-shadow: 0 0 25px rgba(0,255,255,0.3); }
+/* PULSE */
+@keyframes bgPulseDynamic {
+  0%   { box-shadow: 0 0 30px rgba(0,255,255,0.3); }
+  50%  { box-shadow: 0 0 70px rgba(255,0,255,0.5); }
+  100% { box-shadow: 0 0 30px rgba(0,255,255,0.3); }
 }
 
-/* TEXT GLOW */
-@keyframes textGlowPerfect {
-  0%   { text-shadow: 0 0 5px #0ff; }
-  25%  { text-shadow: 0 0 20px #00f0ff, 0 0 15px #ff00ff; }
-  50%  { text-shadow: 0 0 35px #0ff, 0 0 25px #f0f; }
-  75%  { text-shadow: 0 0 45px #00ffff, 0 0 35px #ff00ff; }
-  100% { text-shadow: 0 0 15px #0ff; }
+/* Text Glow */
+@keyframes textGlowDynamic {
+  0%   { text-shadow: 0 0 5px #0ff; color: #0ff; }
+  25%  { text-shadow: 0 0 20px #00f0ff, 0 0 15px #ff00ff; color: #00f0ff; }
+  50%  { text-shadow: 0 0 35px #0ff, 0 0 25px #f0f; color: #f0f; }
+  75%  { text-shadow: 0 0 45px #00ffff, 0 0 35px #ff00ff; color: #ff00ff; }
+  100% { text-shadow: 0 0 15px #0ff; color: #0ff; }
 }
 
-@keyframes textGlowPerfectRed {
-  0%   { text-shadow: 0 0 5px #ff4bff; }
-  25%  { text-shadow: 0 0 20px #ff00ff, 0 0 15px #ff6bff; }
-  50%  { text-shadow: 0 0 35px #ff4bff, 0 0 25px #ff00ff; }
-  75%  { text-shadow: 0 0 45px #ff6bff, 0 0 35px #ff4bff; }
-  100% { text-shadow: 0 0 15px #ff4bff; }
+@keyframes textGlowDynamicRed {
+  0%   { text-shadow: 0 0 5px #ff4bff; color: #ff4bff; }
+  25%  { text-shadow: 0 0 20px #ff00ff, 0 0 15px #ff6bff; color: #ff00ff; }
+  50%  { text-shadow: 0 0 35px #ff4bff, 0 0 25px #ff00ff; color: #ff4bff; }
+  75%  { text-shadow: 0 0 45px #ff6bff, 0 0 35px #ff4bff; color: #ff6bff; }
+  100% { text-shadow: 0 0 15px #ff4bff; color: #ff4bff; }
 }
 
-/* PARTICLES FLY */
-@keyframes particlesFlyPerfect {
+/* Particles */
+@keyframes particlesFlyDynamic {
   0%   { transform: translate(0,0); }
   25%  { transform: translate(5px,-10px); }
   50%  { transform: translate(-10px,-25px); }
@@ -292,19 +292,18 @@ footer{
   100% { transform: translate(0,-60px); }
 }
 
-/* PARTICLES FLICKER */
-@keyframes particlesFlickerPerfect {
-  0%,100% { opacity: 0.1; }
+@keyframes particlesFlickerDynamic {
+  0%,100% { opacity: 0.12; }
   50%     { opacity: 0.4; }
 }
 
-/* HOVER EFFECT */
+/* Hover */
 .card:hover .fulfillment-anim {
   transform: scale(1.2);
   box-shadow: 0 0 120px rgba(0,255,255,0.9), 0 0 60px rgba(255,0,255,0.7);
 }
 
-/* RESPONSIVE */
+/* Responsive */
 @media(max-width:600px){
   .fulfillment-anim {
     height: 140px;
@@ -316,6 +315,7 @@ footer{
     font-size: 14px;
   }
 }
+
 
 </style>
 </head>
