@@ -411,6 +411,106 @@ html, body{
   flex-direction:column;
 }
 
+/* ===============================
+   INTERACTIVE CHARACTER ANIMATION
+   =============================== */
+
+/* efek nafas halus */
+.char-main,
+.char-front,
+.char-back{
+  animation: floatIdle 4s ease-in-out infinite;
+}
+
+/* delay biar tidak bareng */
+.char-front{ animation-delay: .5s; }
+.char-back{ animation-delay: 1s; }
+
+/* gerakan idle */
+@keyframes floatIdle{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-12px); }
+}
+
+/* PARALLAX saat mouse gerak */
+body:hover .decor-left{
+  transform: translateX(-6px);
+  transition: transform .4s ease;
+}
+body:hover .decor-right{
+  transform: translateX(6px);
+  transition: transform .4s ease;
+}
+
+/* bounce kecil saat hover card */
+.card:hover ~ .decor-left .char-main{
+  transform: translateY(-18px) scale(1.03);
+}
+.card:hover ~ .decor-right .char-front{
+  transform: translateY(-14px) rotate(-2deg);
+}
+
+/* ===============================
+   PERFECT MOBILE RESPONSIVE
+   =============================== */
+
+@media (max-width: 900px){
+
+  .container{
+    padding:25px;
+    margin:15px;
+  }
+
+  .grid{
+    gap:18px;
+  }
+
+  /* kecilkan karakter tapi tetap proporsional */
+  .char-main{ width:260px; }
+  .char-front{ width:160px; }
+  .char-back{ width:320px; }
+
+  .char-bubble{
+    bottom:220px;
+    left:105px;
+    width:55px;
+  }
+}
+
+@media (max-width: 600px){
+
+  header{
+    flex-direction:column;
+    gap:8px;
+    text-align:center;
+  }
+
+  .container{
+    padding:18px;
+    border-radius:22px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  /* karakter dibuat semi-fade supaya tidak ganggu UI */
+  .decor-left,
+  .decor-right{
+    opacity:.25;
+    pointer-events:none;
+  }
+
+  .char-main{ width:200px; }
+  .char-front{ width:130px; }
+  .char-back{ width:240px; }
+
+  .char-bubble{
+    bottom:170px;
+    left:80px;
+    width:45px;
+  }
+}
 
 </style>
 </head>
@@ -532,6 +632,17 @@ html, body{
     sessionStorage.removeItem("user");
     window.location.href = "login.html";
   }
+
+ document.addEventListener("mousemove", (e)=>{
+  const x = (e.clientX / window.innerWidth - 0.5) * 20;
+  const y = (e.clientY / window.innerHeight - 0.5) * 20;
+
+  document.querySelector(".decor-left")
+    .style.transform = `translate(${x * -1}px, ${y}px)`;
+
+  document.querySelector(".decor-right")
+    .style.transform = `translate(${x}px, ${y}px)`;
+});
 </script>
 
 
