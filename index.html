@@ -331,6 +331,40 @@ footer{
   }
 }
 
+/* FLOATING PNG ANIMASI INTERAKTIF */
+.floating-png {
+  position: fixed;
+  bottom: 20px; /* jarak dari bawah */
+  right: 20px;  /* jarak dari kanan */
+  width: 80px;  /* sesuaikan ukuran PNG */
+  height: auto;
+  z-index: 100; /* di atas konten lain */
+  animation: floatUpRotateScale 6s linear infinite;
+  pointer-events: none; /* supaya tidak mengganggu klik */
+}
+
+@keyframes floatUpRotateScale {
+  0% {
+    transform: translateY(100px) rotate(0deg) scale(0.8);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(80px) rotate(10deg) scale(1);
+  }
+  50% {
+    transform: translateY(-200px) rotate(180deg) scale(1.1);
+    opacity: 0.8;
+  }
+  80% {
+    transform: translateY(-400px) rotate(270deg) scale(0.9);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-500px) rotate(360deg) scale(1);
+    opacity: 0;
+  }
+}
 
 </style>
 </head>
@@ -414,10 +448,11 @@ footer{
       <p>Monitoring Stock, Inbound & Outbound Operations</p>
     </div>
 
-
+     <div class="floating-png">
+    <img src="008d9a8f-561e-4b1f-8e2b-248d1f1d2c59.png" alt="Floating PNG">
   </div>
 </div>
-
+ 
 <footer>
 © 2026 Performance Team
 </footer>
