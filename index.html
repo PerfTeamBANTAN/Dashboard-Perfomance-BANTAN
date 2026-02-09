@@ -332,68 +332,40 @@ footer{
 }
 
 /* ===============================
-   FLOATING PNG — SUPER PREMIUM
+   CHARACTER DECORATION (MATCH IMAGE)
    =============================== */
 
-.floating-png {
+.decor-left{
   position: fixed;
-  bottom: -140px;
-  right: 30px;
-  width: 95px;
-  z-index: 100;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
   pointer-events: none;
-
-  filter: drop-shadow(0 10px 25px rgba(0,0,0,0.25))
-          drop-shadow(0 0 20px rgba(255,255,255,0.25));
-
-  animation: floatCinematic 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-/* Gerakan utama naik ke atas */
-@keyframes floatCinematic {
-  0% {
-    transform: translateY(0) translateX(0) scale(0.95);
-    opacity: 0;
-  }
-
-  10% {
-    opacity: 1;
-  }
-
-  35% {
-    transform: translateY(-220px) translateX(-8px) scale(1);
-  }
-
-  60% {
-    transform: translateY(-380px) translateX(10px) scale(1.03);
-    opacity: 0.9;
-  }
-
-  85% {
-    opacity: 0.5;
-  }
-
-  100% {
-    transform: translateY(-560px) translateX(0) scale(1.05);
-    opacity: 0;
-  }
+.decor-left img{
+  width: 260px;
 }
 
-.delay1 { animation-delay: 0s; }
-.delay2 { animation-delay: 2.5s; }
-.delay3 { animation-delay: 5s; }
-.delay4 { animation-delay: 7.5s; }
-/* Wrapper untuk semua floating icon */
-.floating-wrapper{
+/* kanan */
+.decor-right{
   position: fixed;
-  inset: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  z-index: 5;
   pointer-events: none;
-  z-index: 90;
 }
 
-.container:hover .floating-png{
-  filter: drop-shadow(0 0 25px rgba(0,255,255,0.6))
-          drop-shadow(0 0 40px rgba(255,0,255,0.4));
+.decor-right .char-back{
+  width: 200px;
+  opacity: 0.9;
+}
+
+.decor-right .char-front{
+  width: 260px;
 }
  
 </style>
@@ -478,12 +450,15 @@ footer{
       <p>Monitoring Stock, Inbound & Outbound Operations</p>
     </div>
 
-     <div class="floating-wrapper">
-     <img src="assets/home/puji_manjat.png" class="floating-png delay1">
-     <img src="assets/home/tanda_seru.png" class="floating-png delay2">
-     <img src="assets/home/narik.png" class="floating-png delay3">
-     <img src="assets/home/susi_mikir.png" class="floating-png delay4">
-   </div>
+     <div class="decor-left">
+      <img src="assets/home/susi_mikir.png" class="char-main" alt="">
+      <img src="assets/home/tanda_seru.png" class="char-bubble" alt="">
+     </div>
+
+     <div class="decor-right">
+      <img src="assets/home/puji_manjat.png" class="char-back" alt="">
+      <img src="assets/home/narik.png" class="char-front" alt="">
+     </div>
 
 </div>
  
