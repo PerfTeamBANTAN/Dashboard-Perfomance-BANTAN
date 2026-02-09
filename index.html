@@ -340,21 +340,25 @@ footer{
   pointer-events: none;
 }
 
-/* SUSI → diperbesar signifikan */
+/* SUSI tetap besar */
 .decor-left .char-main{
-  width: 420px;     /* BESAR sesuai garis merah */
+  width: 420px;
   max-width: 32vw;
   display: block;
 }
 
-/* TANDA SERU → di atas kepala (bukan di kepala) */
+/* ❗ TANDA SERU – dinaikkan & tidak menyentuh kepala */
 .decor-left .char-bubble{
   position: absolute;
-  bottom: 310px;    /* naik jauh ke atas kepala */
-  left: 165px;      /* sejajar tengah kepala */
-  width: 85px;      /* proporsional dengan kepala */
+
+  /* gunakan referensi dari ATAS kepala */
+  bottom: 360px;     /* sebelumnya 310px → dinaikkan */
+  left: 175px;
+
+  width: 80px;       /* sedikit diperkecil biar elegan */
+
   animation: bubbleFloat 3s ease-in-out infinite;
-  filter: drop-shadow(0 8px 14px rgba(0,0,0,0.25));
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,0.25));
 }
 
 
