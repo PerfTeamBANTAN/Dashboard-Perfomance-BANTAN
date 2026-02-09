@@ -331,41 +331,71 @@ footer{
   }
 }
 
-/* FLOATING PNG ANIMASI INTERAKTIF */
+/* ===============================
+   FLOATING PNG — SUPER PREMIUM
+   =============================== */
+
 .floating-png {
   position: fixed;
-  bottom: 20px; /* jarak dari bawah */
-  right: 20px;  /* jarak dari kanan */
-  width: 80px;  /* sesuaikan ukuran PNG */
-  height: auto;
-  z-index: 100; /* di atas konten lain */
-  animation: floatUpRotateScale 6s linear infinite;
-  pointer-events: none; /* supaya tidak mengganggu klik */
+  bottom: -140px;
+  right: 30px;
+  width: 95px;
+  z-index: 100;
+  pointer-events: none;
+
+  filter: drop-shadow(0 10px 25px rgba(0,0,0,0.25))
+          drop-shadow(0 0 20px rgba(255,255,255,0.25));
+
+  animation: floatCinematic 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-@keyframes floatUpRotateScale {
+/* Gerakan utama naik ke atas */
+@keyframes floatCinematic {
   0% {
-    transform: translateY(100px) rotate(0deg) scale(0.8);
+    transform: translateY(0) translateX(0) scale(0.95);
     opacity: 0;
   }
+
   10% {
     opacity: 1;
-    transform: translateY(80px) rotate(10deg) scale(1);
   }
-  50% {
-    transform: translateY(-200px) rotate(180deg) scale(1.1);
-    opacity: 0.8;
+
+  35% {
+    transform: translateY(-220px) translateX(-8px) scale(1);
   }
-  80% {
-    transform: translateY(-400px) rotate(270deg) scale(0.9);
+
+  60% {
+    transform: translateY(-380px) translateX(10px) scale(1.03);
+    opacity: 0.9;
+  }
+
+  85% {
     opacity: 0.5;
   }
+
   100% {
-    transform: translateY(-500px) rotate(360deg) scale(1);
+    transform: translateY(-560px) translateX(0) scale(1.05);
     opacity: 0;
   }
 }
 
+.delay1 { animation-delay: 0s; }
+.delay2 { animation-delay: 2.5s; }
+.delay3 { animation-delay: 5s; }
+.delay4 { animation-delay: 7.5s; }
+/* Wrapper untuk semua floating icon */
+.floating-wrapper{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 90;
+}
+
+.container:hover .floating-png{
+  filter: drop-shadow(0 0 25px rgba(0,255,255,0.6))
+          drop-shadow(0 0 40px rgba(255,0,255,0.4));
+}
+ 
 </style>
 </head>
 
@@ -448,9 +478,13 @@ footer{
       <p>Monitoring Stock, Inbound & Outbound Operations</p>
     </div>
 
-     <div class="floating-png">
-    <img src="assets/home/puji_manjat.png" alt="Floating PNG">
-  </div>
+     <div class="floating-wrapper">
+     <img src="assets/home/puji_manjat.png" class="floating-png delay1">
+     <img src="assets/home/tanda_seru.png" class="floating-png delay2">
+     <img src="assets/home/narik.png" class="floating-png delay3">
+     <img src="assets/home/susi_mikir.png" class="floating-png delay4">
+   </div>
+
 </div>
  
 <footer>
