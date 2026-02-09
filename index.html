@@ -331,41 +331,67 @@ footer{
   }
 }
 
-/* ===============================
-   CHARACTER DECORATION (MATCH IMAGE)
-   =============================== */
-
+/* ===== LEFT CHARACTER (SUSI) ===== */
 .decor-left{
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: 40px;
   z-index: 5;
   pointer-events: none;
 }
 
-.decor-left img{
-  width: 260px;
+/* SUSI diperbesar sampai ± setengah tinggi card */
+.decor-left .char-main{
+  width: 320px;      /* diperbesar */
+  display: block;
 }
 
-/* kanan */
+/* TANDA SERU diperkecil & pas di kepala */
+.decor-left .char-bubble{
+  position: absolute;
+  bottom: 185px;     /* naik mengikuti tinggi susi */
+  left: 125px;       /* tepat di atas kepala */
+  width: 65px;       /* diperkecil proporsional */
+  animation: bubbleFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.25));
+}
+
+
+/* ===== RIGHT CHARACTER ===== */
 .decor-right{
   position: fixed;
   bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  z-index: 5;
+  right: 0;          /* paling kanan */
+  z-index: 4;
   pointer-events: none;
 }
 
+/* PUJI MANJAT → besar sampai batas atas card */
 .decor-right .char-back{
-  width: 200px;
-  opacity: 0.9;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 420px;      /* diperbesar signifikan */
+  max-height: 85vh;  /* mentok mendekati atas card */
 }
 
+/* NARIK → tetap (sudah benar) */
 .decor-right .char-front{
-  width: 260px;
+  position: relative;
+  width: 240px;
+  right: 40px;
+  bottom: 0;
+}
+
+@keyframes bubbleFloat{
+  0%,100%{
+    transform: translateY(0) scale(1);
+    opacity: 0.95;
+  }
+  50%{
+    transform: translateY(-6px) scale(1.05);
+    opacity: 1;
+  }
 }
  
 </style>
@@ -456,8 +482,8 @@ footer{
      </div>
 
      <div class="decor-right">
-      <img src="assets/home/puji_manjat.png" class="char-back" alt="">
       <img src="assets/home/narik.png" class="char-front" alt="">
+      <img src="assets/home/puji_manjat.png" class="char-back" alt="">
      </div>
 
 </div>
