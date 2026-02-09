@@ -279,7 +279,7 @@ function positionTablesBelowCards() {
   const bottomTeknik = tblTeknik.offsetTop + tblTeknik.offsetHeight;
 
   kesimpulanBox.style.position = "absolute";
-  kesimpulanBox.style.top = (bottomTeknik + 30) + "px";
+  kesimpulanBox.style.top = (bottomTeknik + 220) + "px";
   kesimpulanBox.style.left = "50%";
   kesimpulanBox.style.transform = "translateX(-50%)";
   kesimpulanBox.style.width = "90%";
