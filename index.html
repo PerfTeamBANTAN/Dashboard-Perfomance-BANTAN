@@ -331,51 +331,53 @@ footer{
   }
 }
 
-/* ===== LEFT CHARACTER (SUSI) ===== */
+/* ================= LEFT SIDE ================= */
 .decor-left{
   position: fixed;
   bottom: 0;
-  left: 40px;
+  left: 30px;
   z-index: 5;
   pointer-events: none;
 }
 
-/* SUSI diperbesar sampai ± setengah tinggi card */
+/* SUSI → diperbesar signifikan */
 .decor-left .char-main{
-  width: 320px;      /* diperbesar */
+  width: 420px;     /* BESAR sesuai garis merah */
+  max-width: 32vw;
   display: block;
 }
 
-/* TANDA SERU diperkecil & pas di kepala */
+/* TANDA SERU → di atas kepala (bukan di kepala) */
 .decor-left .char-bubble{
   position: absolute;
-  bottom: 185px;     /* naik mengikuti tinggi susi */
-  left: 125px;       /* tepat di atas kepala */
-  width: 65px;       /* diperkecil proporsional */
+  bottom: 310px;    /* naik jauh ke atas kepala */
+  left: 165px;      /* sejajar tengah kepala */
+  width: 85px;      /* proporsional dengan kepala */
   animation: bubbleFloat 3s ease-in-out infinite;
-  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.25));
+  filter: drop-shadow(0 8px 14px rgba(0,0,0,0.25));
 }
 
 
-/* ===== RIGHT CHARACTER ===== */
+/* ================= RIGHT SIDE ================= */
 .decor-right{
   position: fixed;
   bottom: 0;
-  right: 0;          /* paling kanan */
+  right: 0;
   z-index: 4;
   pointer-events: none;
 }
 
-/* PUJI MANJAT → besar sampai batas atas card */
+/* PUJI MANJAT → sangat besar sampai hampir atas card */
 .decor-right .char-back{
   position: absolute;
-  right: 0;
+  right: -10px;
   bottom: 0;
-  width: 420px;      /* diperbesar signifikan */
-  max-height: 85vh;  /* mentok mendekati atas card */
+  width: 560px;      /* diperbesar sesuai garis merah */
+  max-width: 40vw;
+  max-height: 92vh;  /* hampir menyentuh atas */
 }
 
-/* NARIK → tetap (sudah benar) */
+/* NARIK → tetap */
 .decor-right .char-front{
   position: relative;
   width: 240px;
@@ -389,7 +391,7 @@ footer{
     opacity: 0.95;
   }
   50%{
-    transform: translateY(-6px) scale(1.05);
+    transform: translateY(-8px) scale(1.06);
     opacity: 1;
   }
 }
