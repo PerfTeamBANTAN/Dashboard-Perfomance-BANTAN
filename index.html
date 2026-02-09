@@ -95,7 +95,7 @@ header span{
 /* GRID */
 .container{
   padding:40px;
-  min-height: calc(100vh - 140px);
+  flex: 1;                
   display:flex;
   align-items:center;
   justify-content:center;
@@ -107,7 +107,6 @@ header span{
 
   box-shadow:0 10px 40px rgba(0,0,0,0.08);
 }
-
 
 .grid{
   display:grid;
@@ -173,9 +172,10 @@ header span{
 /* FOOTER */
 footer{
   text-align:center;
-  padding:15px;
+  padding:18px 0;
   font-size:12px;
   color:#777;
+  background:transparent;
 }
 
 /* RESPONSIVE */
@@ -399,13 +399,27 @@ footer{
     opacity: 1;
   }
 }
- 
+
+html, body{
+  height:100%;
+}
+
+/* WRAPPER HALAMAN */
+.page{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+
 </style>
 </head>
 
 <body>
 
-<header>
+<div class="page">
+
+  <header>
   <div>
     <h1>Dashboard PERFORMANCE BANTAN</h1>
     <span>Performance Portal</span>
@@ -423,7 +437,7 @@ footer{
     <div class="card red" onclick="openPage('page/dashboard_huddle/huddle.html')">
       <h3>Dashboard Huddle performance</h3>
       <img src="assets/home/huddle_performance.png">
-      <p>Monitoring KPI performance oprational</p>
+      <p>Monitoring KPI performance operational</p>
     </div>
 
     <div class="card blue" onclick="openPage('pranpc.html')">
@@ -461,10 +475,10 @@ footer{
     </div>
 
     <div class="card purple" onclick="openPage('ocm.html')">
-      <h3>Construction Project & Iventory Dashboard</h3>
+      <h3>Construction Project & Inventory Dashboard</h3>
 
       <div class="fulfillment-anim">
-      <div class="line1">CONTRUCTION & INVENTORY</div>
+      <div class="line1">CONSTRUCTION & INVENTORY</div>
       <div class="line2">BRANCH TANGERANG</div>
    </div>
      
@@ -475,7 +489,7 @@ footer{
       <h3>Warehouse Management Dashboard</h3>
       
      <div class="fulfillment-anim">
-      <div class="line1">WAREHOSE & ASSET</div>
+      <div class="line1">WAREHOUSE & ASSET</div>
       <div class="line2">BRANCH TANGERANG</div>
    </div>
      
@@ -495,9 +509,12 @@ footer{
 </div>
  
 <footer>
-© 2026 Performance Team
+ © 2026 Performance Team
 </footer>
 
+</div>
+</body>
+ 
 <script>
   // ambil user dari localStorage atau sessionStorage
   const user = localStorage.getItem("user") || sessionStorage.getItem("user");
