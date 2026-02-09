@@ -18,15 +18,15 @@
 }
 
 /* KANVAS UTAMA */
-.tree-area{
-  position:relative;
-  width:1400px;
-  min-height:900px;
-  margin:10px auto;
-  background:#fff;
-  border:2px solid #000;
-  overflow:visible;        /* ganti dari auto */
-  padding-bottom:350px;   /* ruang khusus kesimpulan */
+.tree-area {
+  position: relative;
+  width: 1400px;          /* lebar tetap */
+  height: 1250px;         /* tinggi tetap total area */
+  margin: 10px auto;
+  background: #fff;
+  border: 2px solid #000;
+  padding-bottom: 200px;  /* ruang khusus kesimpulan */
+  overflow: auto;
 }
 
 
