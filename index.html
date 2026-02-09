@@ -187,60 +187,56 @@ footer{
 }
 
 /* ===============================
-   FULFILLMENT ANIMATED TEXT ULTIMATE FUTURISTIC
+   FULFILLMENT ANIMATED TEXT SUPER PERFECT FUTURISTIC
    =============================== */
 
 .fulfillment-anim {
   height: 160px;
   margin-top: 20px;
   border-radius: 15px;
-  background: linear-gradient(270deg, #0b0b0b, #1a1a1a, #0b0b0b);
-  background-size: 600% 600%;
+  background: linear-gradient(270deg, #0d0d1a, #1b1b36, #0d0d1a);
+  background-size: 800% 800%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  animation: bgGradientMove 12s ease infinite, bgPulse 6s ease-in-out infinite;
+  animation: bgGradientMovePerfect 15s ease infinite, bgPulsePerfect 6s ease-in-out infinite;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
-/* PARTICLES LAYER */
+/* Overlay gelap tipis untuk kontras */
+.fulfillment-anim::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  pointer-events: none;
+  border-radius: 15px;
+}
+
+/* PARTIKEL LAYER */
 .fulfillment-anim::after {
   content: "";
   position: absolute;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px);
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
   background-size: 15px 15px;
-  animation: particlesFly 8s linear infinite, particlesFlicker 3s infinite;
+  animation: particlesFlyPerfect 10s linear infinite, particlesFlickerPerfect 3s infinite;
   top: 0;
   left: 0;
   pointer-events: none;
-}
-
-/* SCAN LINE MULTI-COLOR & BOUNCE */
-.fulfillment-anim::before {
-  content: "";
-  position: absolute;
-  width: 180%;
-  height: 4px;
-  background: linear-gradient(90deg, transparent, #ff6b6b, #00ffff, #ff00ff, transparent);
-  animation: scanBounce 3s ease-in-out infinite;
-  opacity: 0.9;
-  top: 0;
-  left: -40%;
-  border-radius: 50%;
 }
 
 /* TEXT STYLES */
 .fulfillment-anim .line1 {
   font-size: 24px;
   font-weight: 800;
-  color: #fff;
+  color: #00ffff;
   letter-spacing: 2px;
-  animation: textGlowUltimate 4s ease-in-out infinite alternate;
+  animation: textGlowPerfect 4s ease-in-out infinite alternate;
   text-align: center;
 }
 
@@ -248,69 +244,64 @@ footer{
   font-size: 16px;
   font-weight: 600;
   margin-top: 6px;
+  color: #ff4bff;
   letter-spacing: 1.5px;
-  animation: textGlowUltimateRed 4s ease-in-out infinite alternate;
+  animation: textGlowPerfectRed 4s ease-in-out infinite alternate;
   text-align: center;
 }
 
-/* BACKGROUND & PULSE */
-@keyframes bgGradientMove {
+/* BACKGROUND GRADIENT MOVE */
+@keyframes bgGradientMovePerfect {
   0%   { background-position: 0% 50%; }
+  25%  { background-position: 50% 50%; }
   50%  { background-position: 100% 50%; }
+  75%  { background-position: 50% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-@keyframes bgPulse {
-  0%   { box-shadow: 0 0 30px rgba(255,107,107,0.3); }
-  50%  { box-shadow: 0 0 70px rgba(255,107,107,0.7); }
-  100% { box-shadow: 0 0 30px rgba(255,107,107,0.3); }
+/* PULSE HALO */
+@keyframes bgPulsePerfect {
+  0%   { box-shadow: 0 0 25px rgba(0,255,255,0.3); }
+  50%  { box-shadow: 0 0 60px rgba(255,0,255,0.5); }
+  100% { box-shadow: 0 0 25px rgba(0,255,255,0.3); }
 }
 
-/* SCAN LINE BOUNCE */
-@keyframes scanBounce {
-  0%   { top: 0; transform: translateX(0) rotate(0deg); }
-  25%  { top: 30%; transform: translateX(10%) rotate(2deg); }
-  50%  { top: 50%; transform: translateX(-10%) rotate(-3deg); }
-  75%  { top: 70%; transform: translateX(5%) rotate(2deg); }
-  100% { top: 100%; transform: translateX(0) rotate(0deg); }
+/* TEXT GLOW */
+@keyframes textGlowPerfect {
+  0%   { text-shadow: 0 0 5px #0ff; }
+  25%  { text-shadow: 0 0 20px #00f0ff, 0 0 15px #ff00ff; }
+  50%  { text-shadow: 0 0 35px #0ff, 0 0 25px #f0f; }
+  75%  { text-shadow: 0 0 45px #00ffff, 0 0 35px #ff00ff; }
+  100% { text-shadow: 0 0 15px #0ff; }
 }
 
-/* TEXT GLOW ULTIMATE */
-@keyframes textGlowUltimate {
-  0%   { text-shadow: 0 0 5px rgba(255,255,255,0.3); color: #fff; }
-  25%  { text-shadow: 0 0 30px #0ff, 0 0 20px #f0f; color: #0ff; }
-  50%  { text-shadow: 0 0 40px #f0f, 0 0 30px #ff0; color: #f0f; }
-  75%  { text-shadow: 0 0 50px #0ff, 0 0 40px #ff0; color: #ff0; }
-  100% { text-shadow: 0 0 15px #fff; color: #fff; }
-}
-
-@keyframes textGlowUltimateRed {
-  0%   { text-shadow: 0 0 5px #ff6b6b; color: #ff6b6b; }
-  25%  { text-shadow: 0 0 25px #ff0000, 0 0 20px #ff4b4b; color: #ff0000; }
-  50%  { text-shadow: 0 0 35px #ff4b4b, 0 0 30px #ff6b00; color: #ff4b4b; }
-  75%  { text-shadow: 0 0 45px #ff6b00, 0 0 35px #ff0000; color: #ff6b00; }
-  100% { text-shadow: 0 0 12px #ff6b6b; color: #ff6b6b; }
+@keyframes textGlowPerfectRed {
+  0%   { text-shadow: 0 0 5px #ff4bff; }
+  25%  { text-shadow: 0 0 20px #ff00ff, 0 0 15px #ff6bff; }
+  50%  { text-shadow: 0 0 35px #ff4bff, 0 0 25px #ff00ff; }
+  75%  { text-shadow: 0 0 45px #ff6bff, 0 0 35px #ff4bff; }
+  100% { text-shadow: 0 0 15px #ff4bff; }
 }
 
 /* PARTICLES FLY */
-@keyframes particlesFly {
-  0%   { transform: translate(0, 0) rotate(0deg); }
-  25%  { transform: translate(10px, -10px) rotate(10deg); }
-  50%  { transform: translate(-15px, -30px) rotate(-5deg); }
-  75%  { transform: translate(20px, -50px) rotate(15deg); }
-  100% { transform: translate(0, -80px) rotate(0deg); }
+@keyframes particlesFlyPerfect {
+  0%   { transform: translate(0,0); }
+  25%  { transform: translate(5px,-10px); }
+  50%  { transform: translate(-10px,-25px); }
+  75%  { transform: translate(15px,-40px); }
+  100% { transform: translate(0,-60px); }
 }
 
 /* PARTICLES FLICKER */
-@keyframes particlesFlicker {
-  0%, 100% { opacity: 0.15; }
-  50%      { opacity: 0.5; }
+@keyframes particlesFlickerPerfect {
+  0%,100% { opacity: 0.1; }
+  50%     { opacity: 0.4; }
 }
 
 /* HOVER EFFECT */
 .card:hover .fulfillment-anim {
   transform: scale(1.2);
-  box-shadow: 0 0 100px rgba(255,107,107,0.9);
+  box-shadow: 0 0 120px rgba(0,255,255,0.9), 0 0 60px rgba(255,0,255,0.7);
 }
 
 /* RESPONSIVE */
@@ -325,7 +316,6 @@ footer{
     font-size: 14px;
   }
 }
-
 
 </style>
 </head>
