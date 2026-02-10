@@ -68,19 +68,24 @@ body::before{
   text-align: center;
   margin-bottom: 25px;
   padding: 10px 0;
+
+  height: 140px;          /* tinggi area logo (sesuai kotak merah) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .logo img{
-  width: 260px;          /* BESAR sesuai kotak merah */
-  max-width: 90%;
-  max-height: 120px;     /* tinggi logo ideal */
+  width: 100%;
+  max-width: 360px;       /* PERBESAR logo */
+  height: 100%;
+  max-height: 130px;
+
   object-fit: contain;
 
-  margin-bottom: 10px;
-
-  filter: drop-shadow(0 3px 8px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
 }
-
+  
 .logo h2{
   margin: 6px 0 4px;
   font-size: 20px;
