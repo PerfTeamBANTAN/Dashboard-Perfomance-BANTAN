@@ -1,1 +1,280 @@
-aa
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<title>Fullfilment Telkomsel Branch | Enterprise Fullfilment Monitoring</title>
+
+<link rel="icon" type="image/png" href="../../favicon.png">
+<link rel="apple-touch-icon" href="../../favicon.png">
+<link rel="manifest" href="../../manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style"
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+onload="this.onload=null;this.rel='stylesheet'">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --platinum: #e5e4e2;
+  --silver: #c0c0c0;
+  --gold: #d4af37;
+  --gold-dark: #b8962e;
+  --bronze: #cd7f32;
+  --black: #111111;
+  --white: #ffffff;
+
+  --main-bg: linear-gradient(135deg, #e5e4e2, #c0c0c0);
+}
+
+body {
+  background: var(--main-bg);
+  font-family: 'Poppins', sans-serif;
+}
+
+/* NAVBAR */
+.navbar {
+  background: linear-gradient(90deg, var(--silver), var(--gold));
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+  color: #111 !important;
+  font-weight: 600;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--bronze) !important;
+}
+
+/* DROPDOWN */
+.dropdown-menu {
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.dropdown-item {
+  font-weight: 500;
+}
+
+.dropdown-item:hover {
+  background: linear-gradient(90deg, var(--gold), var(--bronze));
+  color: #fff;
+  padding-left: 20px;
+  transition: 0.3s;
+}
+
+/* SUBMENU */
+.dropdown-submenu .dropdown-menu {
+  margin-left: 5px;
+}
+
+/* HOME */
+.home-fullscreen {
+  min-height: calc(100vh - 56px);
+  padding: 25px;
+}
+
+.home-bg {
+  background: linear-gradient(145deg, var(--platinum), var(--silver));
+  border-radius: 20px;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.1);
+}
+
+/* CONTENT */
+#content-area {
+  background: linear-gradient(145deg, #ffffff, #f7f7f7);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* BUTTON */
+.btn-primary {
+  background: linear-gradient(90deg, var(--gold), var(--bronze));
+  border: none;
+  color: #111;
+  font-weight: 600;
+}
+.btn-primary:hover {
+  background: linear-gradient(90deg, var(--gold-dark), var(--bronze));
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--gold), var(--bronze));
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--platinum);
+}
+
+/* SPINNER */
+.spinner-border {
+  color: var(--gold);
+}
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+<div class="container-fluid">
+
+<a class="navbar-brand" href="#" onclick="location.reload()">
+  <img src="../../assets/home/performance-team.png" height="40" class="me-2">
+  Assurance & Maintenance Dashboard Monitoring
+</a>
+
+<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav">
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+      PERFORMANCE TANGERANG Branch Telkomsel
+    </a>
+
+    <ul class="dropdown-menu">
+      <li>
+        <a class="dropdown-item menu-link" data-menu="kpi-b2c">
+          KPI B2C TANGERANG Branch Telkomsel
+        </a>
+      </li>
+      <li>
+        <a class="dropdown-item menu-link" data-menu="kpi-b2b">
+          KPI B2C TANGERANG Branch Telkomsel
+        </a>
+      </li>
+      <li><hr class="dropdown-divider"></li>
+    </ul>
+  </li>
+
+</ul>
+
+<ul class="navbar-nav ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"><i class="fa fa-home"></i> Dashboard</a>
+  </li>
+  <li class="nav-item">
+    <span class="nav-link disabled" id="userLabel"></span>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-danger" href="#" onclick="logout()">
+      <i class="fa fa-sign-out-alt"></i> Logout
+    </a>
+  </li>
+</ul>
+
+</div>
+</div>
+</nav>
+
+<div class="home-fullscreen home-bg" id="home-fullscreen">
+<div id="content-area"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const B2B_API_URL = 'https://script.google.com/macros/s/AKfycbwUqQ9_EFnGsX0swiip-Mc7ZNavcxLnr7lZdl8bLDYBr4gkRyGeugFPd1elH7Z6QPJwuA/exec';
+
+const menuMap = {
+  "kpi-b2c": {
+    html: "partial/kpi-b2c.html",
+    js: "js/kpi-b2c.js",
+    css: "css/kpi-b2c.css",
+    init: "initKPIB2C"
+  },  // ✅ koma ditambahkan
+  "kpi-b2b": {
+    html: "partial/kpi-b2b.html",
+    js: "js/kpi-b2b.js",
+    css: "css/kpi-b2b.css",
+    init: "initKPIB2B"
+  }
+};
+
+
+async function loadPage(menu) {
+  const content = document.getElementById("content-area");
+  const home = document.getElementById("home-fullscreen");
+
+  home.classList.remove("home-bg");
+  content.innerHTML = `<div class="text-center"><div class="spinner-border"></div><div>Loading...</div></div>`;
+
+  if (!menuMap[menu]) return showUnderConstruction();
+
+  const cfg = menuMap[menu];
+
+  // LOAD CSS
+  if (cfg.css) {
+    loadCSS(cfg.css);
+  }
+
+  const res = await fetch(cfg.html);
+  content.innerHTML = await res.text();
+
+  const s = document.createElement("script");
+  s.src = cfg.js + "?v=" + Date.now();
+  s.onload = () => window[cfg.init](B2B_API_URL);
+  document.body.appendChild(s);
+}
+
+function loadCSS(href) {
+  if (document.querySelector(`link[href="${href}"]`)) return;
+
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = href;
+  document.head.appendChild(link);
+}
+  
+function showUnderConstruction() {
+  document.getElementById("content-area").innerHTML = `
+  <div class="text-center">
+    <img src="../../assets/home/under contruction.png" class="img-fluid">
+  </div>`;
+}
+
+document.querySelectorAll(".menu-link").forEach(el=>{
+  el.addEventListener("click", e=>{
+    e.preventDefault();
+    loadPage(el.dataset.menu);
+  });
+});
+
+const user = localStorage.getItem("user");
+if(user){
+  document.getElementById("userLabel").innerText = "Hi, " + user;
+}
+if (!localStorage.getItem("user")) {
+  window.location.href = "login.html";
+}
+function logout() {
+  if(confirm("Yakin mau logout?")) {
+    localStorage.removeItem("user");
+    window.location.href = "../../login.html";
+  }
+}
+  
+</script>
+
+</body>
+</html>
+
