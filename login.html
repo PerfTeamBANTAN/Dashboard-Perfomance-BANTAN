@@ -21,15 +21,17 @@ html, body {
   overflow-x: hidden;
 }
 
+/* BODY = FLEX CONTAINER */
 body {
   background: url("assets/home/login.png") no-repeat center center;
   background-size: cover;
   background-attachment: scroll;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;   /* ➜ dorong ke kanan untuk desktop */
   align-items: center;
   min-height: 100vh;
   position: relative;
+  padding-right: 40px;         /* jarak dari tepi kanan */
 }
 
 body::before {
@@ -39,14 +41,13 @@ body::before {
   background: rgba(0,0,0,0.4);
 }
 
-/* PANEL TRANSPARAN - FULL RESPONSIVE */
+/* PANEL LOGIN */
 .login-box {
   position: relative;
-  width: clamp(350px, 85vw, 520px);
+  width: clamp(350px, 30vw, 520px);
   max-height: 90vh;
-  max-width: 90vw;
-  padding: clamp(25px, 5vw, 40px);
-  margin: clamp(10px, 2vh, 20px);
+  padding: clamp(25px, 3vw, 40px);
+  margin: clamp(10px, 2vh, 20px) 0;
   
   background: rgba(30,30,30,0.35);
   backdrop-filter: blur(12px);
@@ -58,9 +59,10 @@ body::before {
     0 0 25px rgba(255,0,0,0.25),
     inset 0 0 10px rgba(255,255,255,0.05);
   overflow-y: auto;
+  z-index: 1;
 }
 
-/* LOGO RESPONSIVE */
+/* LOGO */
 .logo {
   text-align: center;
   margin-bottom: 25px;
@@ -70,7 +72,6 @@ body::before {
   align-items: center;
   justify-content: center;
 }
-
 .logo img {
   width: 100%;
   height: 100%;
@@ -123,9 +124,7 @@ button {
   box-shadow: 0 0 15px rgba(255,0,0,.5);
   width: 100%;
 }
-button:hover {
-  background: #b30000;
-}
+button:hover { background: #b30000; }
 
 /* REMEMBER */
 .remember {
@@ -156,15 +155,19 @@ button:hover {
   color: #ccc;
 }
 
-/* MOBILE OPTIMIZATION */
+/* MOBILE: form di tengah, bukan di kanan */
 @media (max-width: 768px) {
   body {
+    justify-content: center;    /* ➜ center di layar kecil */
+    align-items: center;
+    padding-right: 0;
+    padding: 10px;
     background-size: contain;
     background-position: top center;
   }
   .login-box {
     width: 95vw;
-    padding: clamp(20px, 8vw, 30px);
+    max-width: 95vw;
     margin: 5px;
   }
   .logo {
@@ -174,29 +177,23 @@ button:hover {
 
 /* TABLET */
 @media (max-width: 1024px) and (min-width: 769px) {
+  body {
+    justify-content: center;  /* tablet tengah juga, biar nyaman */
+    padding-right: 0;
+  }
   .login-box {
-    width: 80vw;
+    width: 70vw;
   }
 }
 
-/* DESKTOP BESAR - POSISI KANAN SEPERTI ASLI */
-@media (min-width: 1400px) {
-  .login-box {
-    margin-right: 360px !important;
-    margin-top: 260px !important;
-    align-self: flex-start !important;
-    width: 520px;
-    max-width: 520px;
-  }
-}
-
-/* ULTRA WIDE */
+/* ULTRA WIDE: tambah jarak kanan lebih besar jika mau */
 @media (min-width: 1920px) {
-  .login-box {
-    margin-right: clamp(360px, 20vw, 500px);
+  body {
+    padding-right: 80px;
   }
 }
 </style>
+
 </head>
 
 <body>
