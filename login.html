@@ -30,9 +30,9 @@ body {
   align-items: center;
   min-height: 100vh;
   position: relative;
-  padding-right: 120px;        /* WAS 40px → makin ke tengah */
+  padding-right: 60px;        /* WAS 120px → tarik ke tengah */
 }
-
+  
 body::before {
   content: "";
   position: absolute;
@@ -47,7 +47,7 @@ body::before {
   max-height: 90vh;
   padding: clamp(25px, 3vw, 40px);
   margin: clamp(10px, 2vh, 20px) 0;
-  margin-right: 20px;          /* tambahan buffer dari tepi kanan */
+  margin-right: 0;            /* WAS 20px → hilangin buffer ekstra */
   
   background: rgba(30,30,30,0.35);
   backdrop-filter: blur(12px);
