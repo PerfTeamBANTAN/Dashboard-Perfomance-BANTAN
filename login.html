@@ -2,203 +2,224 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Login Performance</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-*{
-  box-sizing:border-box;
-  font-family:"Poppins", sans-serif;
+* {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
 html, body {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
-body{
-  background: url("assets/home/login.png") no-repeat top center fixed;
-  background-size: cover;              /* full layar */
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  position:relative;
-  background-position: top center;
+body {
+  background: url("assets/home/login.png") no-repeat center center;
+  background-size: cover;
+  background-attachment: scroll;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
 }
+
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+}
+
+/* PANEL TRANSPARAN - FULL RESPONSIVE */
+.login-box {
+  position: relative;
+  width: clamp(350px, 85vw, 520px);
+  max-height: 90vh;
+  max-width: 90vw;
+  padding: clamp(25px, 5vw, 40px);
+  margin: clamp(10px, 2vh, 20px);
   
-/* overlay */
-body::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,0.4);
-}
-
-/* PANEL TRANSPARAN */
-.login-box{
-  position:absolute;
-  right:360px;      /* posisi ke kanan (atur sesuai kebutuhan) */
-  top:260px;        /* jarak dari atas */
-  bottom:40px;      /* nempel ke bawah tapi tidak bikin scroll */
-
-  width:520px;
-  height:auto;      /* biar memanjang otomatis */
-
-  background:rgba(30,30,30,0.35);
+  background: rgba(30,30,30,0.35);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-
-  border-radius:15px;
-  border:1px solid rgba(255,255,255,0.15);
-  padding:40px 35px;
-  color:#fff;
-
-  box-shadow:
+  border-radius: 15px;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  box-shadow: 
     0 0 25px rgba(255,0,0,0.25),
     inset 0 0 10px rgba(255,255,255,0.05);
-
-  overflow:hidden; /* tidak muncul scroll */
+  overflow-y: auto;
 }
 
-/* LOGO */
-.logo{
+/* LOGO RESPONSIVE */
+.logo {
   text-align: center;
   margin-bottom: 25px;
   padding: 10px 0;
-
-  height: 280px;          /* tinggi area logo (sesuai kotak merah) */
+  height: clamp(150px, 35vh, 280px);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.logo img{
+.logo img {
   width: 100%;
-  max-width: 520px;       /* PERBESAR logo */
   height: 100%;
-  max-height: 270px;
-
+  max-height: clamp(140px, 30vh, 270px);
   object-fit: contain;
-
   filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
 }
 
 /* INPUT */
-.form-group{
-  margin-top:20px;
-  position:relative;
+.form-group {
+  margin-top: 20px;
+  position: relative;
 }
-.form-group i{
-  position:absolute;
-  left:15px;
-  top:50%;
-  transform:translateY(-50%);
-  color:#ccc;
+.form-group i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ccc;
 }
-.form-group input{
-  width:100%;
-  padding:12px 12px 12px 45px;
-  border-radius:8px;
-  border:1px solid rgba(255,255,255,0.2);
-  background:rgba(0,0,0,0.25);
-  color:#fff;
-  outline:none;
+.form-group input {
+  width: 100%;
+  padding: 12px 12px 12px 45px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.25);
+  color: #fff;
+  outline: none;
+  font-size: clamp(14px, 2vw, 16px);
 }
-.form-group input::placeholder{
-  color:#ccc;
+.form-group input::placeholder {
+  color: #ccc;
 }
-.form-group input:focus{
-  border-color:#ff4d4d;
-  box-shadow:0 0 5px rgba(255,77,77,.6);
+.form-group input:focus {
+  border-color: #ff4d4d;
+  box-shadow: 0 0 5px rgba(255,77,77,.6);
 }
 
 /* BUTTON */
-button{
-  margin-top:25px;
-  padding:14px;
-  border:none;
-  border-radius:8px;
-  background:#e60000;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-  transition:.3s;
-  box-shadow:0 0 15px rgba(255,0,0,.5);
+button {
+  margin-top: 25px;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: #e60000;
+  color: white;
+  font-size: clamp(15px, 2.2vw, 16px);
+  cursor: pointer;
+  transition: .3s;
+  box-shadow: 0 0 15px rgba(255,0,0,.5);
+  width: 100%;
 }
-button:hover{
-  background:#b30000;
+button:hover {
+  background: #b30000;
 }
 
 /* REMEMBER */
-.remember{
-  margin-top:15px;
-  font-size:13px;
-  color:#ddd;
-  display:flex;
-  align-items:center;
-  gap:8px;
+.remember {
+  margin-top: 15px;
+  font-size: clamp(12px, 1.5vw, 13px);
+  color: #ddd;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.remember input{
-  accent-color:#ff4d4d;
-  cursor:pointer;
-}
-
-#error{
-  margin-top:10px;
-  color:#ff6b6b;
-  text-align:center;
+.remember input {
+  accent-color: #ff4d4d;
+  cursor: pointer;
+  transform: scale(1.1);
 }
 
-.footer{
-  margin-top:25px;
-  text-align:center;
-  font-size:12px;
-  color:#ccc;
+#error {
+  margin-top: 10px;
+  color: #ff6b6b;
+  text-align: center;
+  font-size: clamp(13px, 1.8vw, 14px);
 }
 
-/* RESPONSIVE */
-@media(max-width:768px){
-  body{
-    justify-content:center;
-    align-items:center;
-    padding-right:0;
-    padding-bottom:0;
+.footer {
+  margin-top: 25px;
+  text-align: center;
+  font-size: clamp(11px, 1.4vw, 12px);
+  color: #ccc;
+}
+
+/* MOBILE OPTIMIZATION */
+@media (max-width: 768px) {
+  body {
+    background-size: contain;
+    background-position: top center;
   }
-  .login-box{
-    width:90%;
+  .login-box {
+    width: 95vw;
+    padding: clamp(20px, 8vw, 30px);
+    margin: 5px;
+  }
+  .logo {
+    height: clamp(120px, 30vh, 180px);
   }
 }
-  
+
+/* TABLET */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .login-box {
+    width: 80vw;
+  }
+}
+
+/* DESKTOP BESAR - POSISI KANAN SEPERTI ASLI */
+@media (min-width: 1400px) {
+  .login-box {
+    margin-right: 360px !important;
+    margin-top: 260px !important;
+    align-self: flex-start !important;
+    width: 520px;
+    max-width: 520px;
+  }
+}
+
+/* ULTRA WIDE */
+@media (min-width: 1920px) {
+  .login-box {
+    margin-right: clamp(360px, 20vw, 500px);
+  }
+}
 </style>
 </head>
 
 <body>
-
 <div class="login-box">
-
   <div class="logo">
-    <img src="assets/home/logo2.png" alt="Logo">
-    
+    <img src="assets/home/logo2.png" alt="Logo" loading="lazy">
   </div>
 
   <div class="form-group">
     <i class="fa fa-user"></i>
-    <input type="text" id="username" placeholder="Username">
+    <input type="text" id="username" placeholder="Username" data-testid="username-input">
   </div>
 
   <div class="form-group">
     <i class="fa fa-lock"></i>
-    <input type="password" id="password" placeholder="Password">
+    <input type="password" id="password" placeholder="Password" data-testid="password-input">
   </div>
 
   <button onclick="login()">LOGIN</button>
 
   <div class="remember">
     <input type="checkbox" id="remember">
-    <label for="remember"> Remember Me</label>
+    <label for="remember">Remember Me</label>
   </div>
 
   <p id="error"></p>
@@ -206,49 +227,44 @@ button:hover{
   <div class="footer">
     © 2026 Performance Team
   </div>
-
 </div>
 
 <script src="js/api.js"></script>
 <script>
-if(localStorage.getItem("user")){
-  window.location.href="index.html";
+if (localStorage.getItem("user")) {
+  window.location.href = "index.html";
 }
 
-function login(){
+function login() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
   const remember = document.getElementById("remember").checked;
 
-  // validasi input
-  if(username === "" || password === ""){
+  if (username === "" || password === "") {
     document.getElementById("error").innerText = "Username dan password harus diisi!";
     return;
   }
 
-  // ✅ validasi remember me
-  if(!remember){
+  if (!remember) {
     document.getElementById("error").innerText = "Silakan centang Remember Me terlebih dahulu!";
     return;
   }
 
   document.getElementById("error").innerText = "Loading...";
 
-  sendRequest("login","login",{username,password})
-    .then(data=>{
-      if(data.status==="success"){
+  sendRequest("login", "login", { username, password })
+    .then(data => {
+      if (data.status === "success") {
         localStorage.setItem("user", data.user);
-        window.location.href="index.html";
-      }else{
-        document.getElementById("error").innerText="Username atau password salah!";
+        window.location.href = "index.html";
+      } else {
+        document.getElementById("error").innerText = "Username atau password salah!";
       }
     })
-    .catch(()=>{
-      document.getElementById("error").innerText="Server tidak dapat dihubungi!";
+    .catch(() => {
+      document.getElementById("error").innerText = "Server tidak dapat dihubungi!";
     });
 }
-
 </script>
-
 </body>
 </html>
