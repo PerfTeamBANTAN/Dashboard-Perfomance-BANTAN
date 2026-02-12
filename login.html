@@ -26,11 +26,11 @@ body {
   background-size: cover;
   background-attachment: scroll;
   display: flex;
-  justify-content: flex-end;   /* tetap kanan */
+  justify-content: flex-end;   /* default: kanan */
   align-items: center;
   min-height: 100vh;
   position: relative;
-  padding-right: 60px;        /* WAS 120px → tarik ke tengah */
+  padding-right: 60px;
 }
   
 body::before {
@@ -155,16 +155,17 @@ button:hover { background: #b30000; }
   color: #ccc;
 }
 
-/* MOBILE: form di tengah, bukan di kanan */
+/* 2. MOBILE: max 768 → tengah */
 @media (max-width: 768px) {
   body {
-    justify-content: center;    /* ➜ center di layar kecil */
+    justify-content: center;
     align-items: center;
     padding-right: 0;
     padding: 10px;
     background-size: contain;
     background-position: top center;
   }
+}
   .login-box {
     width: 95vw;
     max-width: 95vw;
@@ -175,18 +176,14 @@ button:hover { background: #b30000; }
   }
 }
 
-/* TABLET */
-@media (max-width: 1024px) and (min-width: 769px) {
+/* 3. TABLET: 769–1024 → tengah */
+@media (min-width: 769px) and (max-width: 1024px) {
   body {
-    justify-content: center;  /* tablet tengah juga, biar nyaman */
+    justify-content: center;
     padding-right: 0;
   }
-  .login-box {
-    width: 70vw;
-  }
 }
-
-/* ULTRA WIDE: tambah jarak kanan lebih besar jika mau */
+/* 4. ULTRA WIDE: >1920 → bisa geser sedikit lagi kalau mau */
 @media (min-width: 1920px) {
   body {
     padding-right: 80px;
