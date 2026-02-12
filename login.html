@@ -21,17 +21,17 @@ html, body {
   overflow-x: hidden;
 }
 
-/* DESKTOP: form di kanan tapi tidak terlalu mepet (pakai center + margin-right) */
+/* DESKTOP: form di kanan (sedikit geser, tidak mentok) */
 body {
   background: url("assets/home/login.png") no-repeat center center;
   background-size: cover;
   background-attachment: scroll;
   display: flex;
-  justify-content: center;      /* center dulu */
+  justify-content: flex-end;     /* ➜ dorong ke kanan */
   align-items: center;
   min-height: 100vh;
   position: relative;
-  padding: 0 20px;              /* sedikit padding kiri-kanan */
+  padding-right: 80px;           /* atur seberapa jauh dari tepi kanan */
 }
 
 body::before {
@@ -41,15 +41,14 @@ body::before {
   background: rgba(0,0,0,0.4);
 }
 
-/* PANEL LOGIN – posisi geser ke kanan via margin-right */
+/* PANEL LOGIN – FIX WIDTH */
 .login-box {
   position: relative;
-  width: 520px;                 /* lebar fix di desktop */
-  max-width: 90vw;              /* biar aman di layar kecil */
+  width: 520px;
+  max-width: 90vw;
   max-height: 90vh;
   padding: 30px 35px;
   margin: 0;
-  margin-right: 14vw;           /* INI YANG GESER KE KANAN, tapi tidak mentok */
 
   background: rgba(30,30,30,0.35);
   backdrop-filter: blur(12px);
@@ -166,10 +165,10 @@ button:hover {
   color: #ccc;
 }
 
-/* MOBILE ≤768px: form di tengah, full width */
+/* MOBILE ≤768px: form di tengah */
 @media (max-width: 768px) {
   body {
-    justify-content: center;
+    justify-content: center;    /* ➜ mobile tengah */
     align-items: center;
     padding: 10px;
     background-size: contain;
@@ -179,7 +178,6 @@ button:hover {
   .login-box {
     width: 95vw;
     max-width: 95vw;
-    margin-right: 0;          /* jangan geser kanan di mobile */
   }
 
   .logo {
@@ -191,7 +189,7 @@ button:hover {
   }
 }
 
-/* TABLET 769–1024px: form di tengah, sedikit lebih lebar */
+/* TABLET 769–1024px: form di tengah */
 @media (min-width: 769px) and (max-width: 1024px) {
   body {
     justify-content: center;
@@ -201,17 +199,8 @@ button:hover {
   .login-box {
     width: 70vw;
     max-width: 700px;
-    margin-right: 0;          /* tengah di tablet */
   }
 }
-
-/* ULTRA WIDE >1920px: geser sedikit lagi kanan kalau mau */
-@media (min-width: 1920px) {
-  .login-box {
-    margin-right: 14vw;       /* tambah sedikit geser kanan di layar sangat lebar */
-  }
-}
-
 
 </style>
 
