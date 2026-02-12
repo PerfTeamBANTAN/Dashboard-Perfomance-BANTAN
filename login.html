@@ -21,17 +21,16 @@ html, body {
   overflow-x: hidden;
 }
 
-/* BODY = FLEX CONTAINER */
 body {
   background: url("assets/home/login.png") no-repeat center center;
   background-size: cover;
   background-attachment: scroll;
   display: flex;
-  justify-content: flex-end;   /* ➜ dorong ke kanan untuk desktop */
+  justify-content: flex-end;   /* tetap kanan */
   align-items: center;
   min-height: 100vh;
   position: relative;
-  padding-right: 40px;         /* jarak dari tepi kanan */
+  padding-right: 120px;        /* WAS 40px → makin ke tengah */
 }
 
 body::before {
@@ -48,6 +47,7 @@ body::before {
   max-height: 90vh;
   padding: clamp(25px, 3vw, 40px);
   margin: clamp(10px, 2vh, 20px) 0;
+  margin-right: 20px;          /* tambahan buffer dari tepi kanan */
   
   background: rgba(30,30,30,0.35);
   backdrop-filter: blur(12px);
