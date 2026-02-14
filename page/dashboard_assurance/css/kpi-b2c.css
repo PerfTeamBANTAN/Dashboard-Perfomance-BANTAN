@@ -1,56 +1,61 @@
 .kpi-b2c-tangerang {
-  padding: 4px 0;
+  padding: 2px 0;
 }
 
-/* card lebih pendek & kecil */
+/* card super compact */
 .kpi-card {
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-  margin-bottom: 6px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  margin-bottom: 4px;
   border: 1px solid #e5e7eb;
-  border-left-width: 4px;
+  border-left-width: 3px;
 }
 
 .kpi-card .card-body {
-  padding: 6px 8px;
+  padding: 4px 6px;
 }
 
-/* judul & text diperkecil */
+/* header & text */
 .kpi-card-title {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  margin-bottom: 1px;
+  margin-bottom: 0;
 }
 
 .kpi-label {
-  font-size: 0.7rem;
+  font-size: 0.62rem;
 }
 
-/* angka lebih kecil */
+/* angka */
 .kpi-value {
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   font-weight: 600;
 }
 
-/* badge overall mini */
+/* icon status */
+.kpi-status {
+  font-size: 0.8rem;
+}
+
+/* badge overall */
 .kpi-pill-ok,
 .kpi-pill-nok {
-  padding: 1px 6px;
+  padding: 1px 5px;
   border-radius: 999px;
-  font-size: 0.65rem;
+  font-size: 0.6rem;
 }
 
-/* badge H-1 / HI mini */
+/* badge H-1 / HI */
 .kpi-mini {
-  font-size: 0.65rem;
-  padding: 1px 6px;
+  font-size: 0.58rem;
+  padding: 0 5px;
 }
 
-/* growth box lebih kecil */
+/* growth box super kecil */
 .kpi-growth-box {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
   border: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
@@ -61,12 +66,12 @@
 .growth-up,
 .growth-down,
 .growth-flat {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
 }
 
-/* tighter layout di mobile */
+/* rapat di mobile */
 @media (max-width: 767.98px) {
   .kpi-card .card-body {
-    padding: 6px 6px;
+    padding: 4px 4px;
   }
 }
