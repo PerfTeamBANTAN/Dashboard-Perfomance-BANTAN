@@ -128,6 +128,137 @@ function getQClass(value) {
 }
 
 // =========================
+// TABLE HSA BRANCH TANGERANG ('Dash B2C'!B3:R32)
+// =========================
+
+function loadKpiB2CHsaTable(config) {
+  const tableHsa = document.getElementById("kpi-b2c-table-hsa");
+  if (!tableHsa) return;
+
+  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+    "Dash B2C"
+  )}&range=${encodeURIComponent("B3:R32")}`;
+
+  fetch(url)
+    .then((resp) => resp.json())
+    .then((data) => {
+      if (!Array.isArray(data) || data.length < 4) return;
+
+      // Header fix sesuai merge:
+      // Indikator = B3:B4
+      // Target    = C3:C4
+      // DADY      = D3:F3 (GDS, TAN, JIA)
+      // EKA       = G3:I3 (CLD, PDR, PKU)
+      // HERLANDO  = J3:K3 (LKG, SRP)
+      // RISMAN    = L3:N3 (CPD, CKL, DTG)
+      // ZULFA     = O3:P3 (SRH, CPA)
+      // TANGERANG = Q3:R3 (TANGERANG, KPI HSA)
+      const thead = `
+        <thead>
+          <tr>
+            <th rowspan="2" class="th-gold text-center">Indikator</th>
+            <th rowspan="2" class="th-gold text-center">Target</th>
+
+            <th colspan="3" class="th-plat text-center">DADY</th>
+            <th colspan="3" class="th-plat text-center">EKA</th>
+            <th colspan="2" class="th-plat text-center">HERLANDO</th>
+            <th colspan="3" class="th-plat text-center">RISMAN</th>
+            <th colspan="2" class="th-plat text-center">ZULFA</th>
+            <th colspan="2" class="th-plat text-center">TANGERANG</th>
+          </tr>
+          <tr>
+            <!-- DADY -->
+            <th class="th-plat text-center">GDS</th>
+            <th class="th-plat text-center">TAN</th>
+            <th class="th-plat text-center">JIA</th>
+
+            <!-- EKA -->
+            <th class="th-plat text-center">CLD</th>
+            <th class="th-plat text-center">PDR</th>
+            <th class="th-plat text-center">PKU</th>
+
+            <!-- HERLANDO -->
+            <th class="th-plat text-center">LKG</th>
+            <th class="th-plat text-center">SRP</th>
+
+            <!-- RISMAN -->
+            <th class="th-plat text-center">CPD</th>
+            <th class="th-plat text-center">CKL</th>
+            <th class="th-plat text-center">DTG</th>
+
+            <!-- ZULFA -->
+            <th class="th-plat text-center">SRH</th>
+            <th class="th-plat text-center">CPA</th>
+
+            <!-- TANGERANG -->
+            <th class="th-plat text-center">TANGERANG</th>
+            <th class="th-bronze text-center">KPI HSA</th>
+          </tr>
+        </thead>
+      `;
+
+      // Body: 'Dash B2C'!B5:R31 -> index 2..data.length-2
+      const bodyRows = [];
+      for (let i = 2; i < data.length - 1; i++) {
+        const r = data[i];
+        if (!r || r.join("").toString().trim() === "") continue;
+        bodyRows.push(r);
+      }
+
+      // Total: 'Dash B2C'!B32:R32 -> baris terakhir (BRANCH TANGERANG, KPI HSA, dll)
+      const totalRow = data[data.length - 1] || [];
+
+      const tbody = `
+        <tbody>
+          ${bodyRows
+            .map((r) => `
+              <tr>
+                <td>${r[0] ?? ""}</td>  <!-- Indikator -->
+                <td>${r[1] ?? ""}</td>  <!-- Target -->
+
+                <td>${r[2] ?? ""}</td>  <!-- DADY: GDS -->
+                <td>${r[3] ?? ""}</td>  <!-- DADY: TAN -->
+                <td>${r[4] ?? ""}</td>  <!-- DADY: JIA -->
+
+                <td>${r[5] ?? ""}</td>  <!-- EKA: CLD -->
+                <td>${r[6] ?? ""}</td>  <!-- EKA: PDR -->
+                <td>${r[7] ?? ""}</td>  <!-- EKA: PKU -->
+
+                <td>${r[8] ?? ""}</td>  <!-- HERLANDO: LKG -->
+                <td>${r[9] ?? ""}</td>  <!-- HERLANDO: SRP -->
+
+                <td>${r[10] ?? ""}</td> <!-- RISMAN: CPD -->
+                <td>${r[11] ?? ""}</td> <!-- RISMAN: CKL -->
+                <td>${r[12] ?? ""}</td> <!-- RISMAN: DTG -->
+
+                <td>${r[13] ?? ""}</td> <!-- ZULFA: SRH -->
+                <td>${r[14] ?? ""}</td> <!-- ZULFA: CPA -->
+
+                <td>${r[15] ?? ""}</td> <!-- TANGERANG (branch) -->
+                <td>${r[16] ?? ""}</td> <!-- KPI HSA -->
+              </tr>
+            `)
+            .join("")}
+
+          <tr class="table-secondary fw-semibold">
+            ${totalRow
+              .slice(0, 17) // pastikan 17 kolom pertama (Indikator..KPI HSA)
+              .map((v) => `<td>${v ?? ""}</td>`)
+              .join("")}
+          </tr>
+        </tbody>
+      `;
+
+      tableHsa.innerHTML = thead + tbody;
+    })
+    .catch((err) => {
+      console.error("Error load tabel HSA KPI B2C:", err);
+      tableHsa.innerHTML =
+        "<tbody><tr><td>Gagal memuat data B2C HSA.</td></tr></tbody>";
+    });
+}
+
+// =========================
 // TABLE KANAN (REKAP TANGERANG)
 // =========================
 
@@ -684,6 +815,7 @@ function initKPIB2C(config) {
       initKpiFilter();
 
       // load tabel kanan setelah card selesai
+      loadKpiB2CHsaTable(config);
       loadKpiB2CRightTable(config);
       loadKpiB2CPrimaryTable(config);
       loadKpiB2CMajorTable(config);
