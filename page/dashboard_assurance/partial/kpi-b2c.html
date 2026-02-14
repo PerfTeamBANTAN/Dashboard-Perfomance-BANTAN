@@ -9,34 +9,58 @@
     <button class="btn btn-sm btn-outline-danger" data-kpi-filter="nok">❌ Not OK</button>
   </div>
 
-  <!-- FRAME 1: CARD KPI -->
+  <!-- FRAME 1: CARD KPI (full lebar) -->
   <div class="card mb-3 border-0 shadow-sm">
     <div class="card-body py-2">
       <div class="row" id="kpi-b2c-grid"></div>
     </div>
   </div>
 
-  <!-- FRAME 2: TABEL REKAP (DI KIRI) -->
-  <div class="card border-0 shadow-sm">
-    <div class="card-header py-2">
-      <h6 class="mb-0">B2C Critical KPI</h6>
+  <!-- FRAME 2: GRID KIRI–KANAN UNTUK TABEL -->
+  <div class="row g-3">
+
+    <!-- KIRI: kosong dulu / konten lain nanti -->
+    <div class="col-lg-8">
+      <!-- Bisa diisi ringkasan, chart, dll nanti -->
     </div>
-    <div class="card-body p-2">
-      <div class="row" id="kpi-b2c-tables-row">
-        <div class="col-12 col-lg-6">
+
+    <!-- KANAN: banyak frame tabel berdiri sendiri -->
+    <div class="col-lg-4">
+
+      <!-- FRAME TABEL 1: B2C Critical KPI -->
+      <div class="card mb-3 border-0 shadow-sm">
+        <div class="card-header py-2">
+          <h6 class="mb-0">B2C Critical KPI</h6>
+        </div>
+        <div class="card-body p-2">
           <div class="table-responsive">
-            <table class="table table-sm table-striped align-middle mb-0 kpi-table" id="kpi-b2c-table-right">
+            <table
+              class="table table-sm table-striped align-middle mb-0 kpi-table"
+              id="kpi-b2c-table-right">
               <!-- diisi via JS -->
             </table>
           </div>
         </div>
-        <div class="col-12 col-lg-6">
-          <!-- kosong dulu, nanti bisa isi tabel/charts lain -->
+      </div>
+
+      <div class="card mb-3 border-0 shadow-sm">
+        <div class="card-header py-2">
+          <h6 class="mb-0">B2C Primary Weight KPI</h6>
+        </div>
+        <div class="card-body p-2">
+          <div class="table-responsive">
+            <table
+              class="table table-sm table-striped align-middle mb-0 kpi-table"
+              id="kpi-b2c-table-primary">
+              <!-- diisi via JS -->
+            </table>
+          </div>
         </div>
       </div>
+
+      <!-- FRAME TABEL 3, 4, dst bisa ditambah di sini -->
+
     </div>
   </div>
-
-</div>
 
 </div>
