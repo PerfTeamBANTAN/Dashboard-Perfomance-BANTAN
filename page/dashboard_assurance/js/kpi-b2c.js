@@ -493,11 +493,10 @@ function loadKpiB2CCoreTable(config) {
             <th class="text-center th-plat">Target ODC</th>
 
             <th class="text-center th-plat">ODP (Quantity)</th>
-            <th class="text-center th-plat">ODP (Quality)</th>
+            <th class="text-center th-plat">ODP (%)</th>
             <th class="text-center th-plat">ODC (Quantity)</th>
-            <th class="text-center th-plat">ODC (Quality)</th>
+            <th class="text-center th-plat">ODC (%)</th>
 
-            <th class="text-center th-bronze">Input</th>
             <th class="text-center th-bronze">%</th>
           </tr>
         </thead>
