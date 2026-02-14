@@ -1,4 +1,6 @@
+<!-- WRAPPER HALAMAN KPI B2C -->
 <div class="kpi-b2c-tangerang container-fluid">
+
   <h3 class="mb-3">KPI B2C TANGERANG Branch Telkomsel</h3>
 
   <div class="d-flex flex-wrap align-items-center mb-3 gap-2">
@@ -8,24 +10,31 @@
     <button class="btn btn-sm btn-outline-danger" data-kpi-filter="nok">❌ Not OK</button>
   </div>
 
-  <!-- GRID CARD KPI -->
-  <div class="row mb-3" id="kpi-b2c-grid"></div>
+  <!-- SECTION CARD KPI -->
+  <div class="kpi-b2c-cards">
+    <div class="row mb-3" id="kpi-b2c-grid"></div>
+  </div>
 
-  <!-- HANYA TABEL KANAN DULU -->
-  <div class="row" id="kpi-b2c-tables-row">
-    <div class="col-12 col-lg-6 ms-auto">
-      <div class="card shadow-sm border-0">
-        <div class="card-header py-2">
-          <h6 class="mb-0">Rekap TANGERANG (Service Availability)</h6>
-        </div>
-        <div class="card-body p-2">
-          <div class="table-responsive">
-            <table class="table table-sm table-striped align-middle mb-0" id="kpi-b2c-table-right">
-              <!-- diisi via JS -->
-            </table>
+  <!-- SECTION TABEL REKAP (DI KIRI) -->
+  <div class="kpi-b2c-table mt-2">
+    <div class="row" id="kpi-b2c-tables-row">
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm border-0">
+          <div class="card-header py-2">
+            <h6 class="mb-0">Rekap TANGERANG (Service Availability)</h6>
+          </div>
+          <div class="card-body p-2">
+            <div class="table-responsive">
+              <table class="table table-sm table-striped align-middle mb-0" id="kpi-b2c-table-right">
+                <!-- diisi via JS -->
+              </table>
+            </div>
           </div>
         </div>
       </div>
+      <!-- kolom kanan kosong dulu, nanti bisa diisi tabel lain / chart -->
+      <div class="col-12 col-lg-6"></div>
     </div>
   </div>
+
 </div>
