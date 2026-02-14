@@ -362,6 +362,102 @@ function loadKpiB2CPrimaryTable(config) {
 }
 
 // =========================
+// TABLE MAJOR KPI (WEB!A110:K125)
+// =========================
+
+function loadKpiB2CMajorTable(config) {
+  const tableMajor = document.getElementById("kpi-b2c-table-major");
+  if (!tableMajor) return;
+
+  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+    config.sheet
+  )}&range=${encodeURIComponent("WEB!A110:K125")}`;
+
+  fetch(url)
+    .then((resp) => resp.json())
+    .then((data) => {
+      if (!Array.isArray(data) || data.length < 3) return;
+
+      // Header 2 baris: WEB!A110:K111
+      const thead = `
+        <thead>
+          <tr>
+            <th rowspan="2" class="th-gold">STO</th>
+            <th rowspan="2" class="th-gold">Telkomsel Cluster</th>
+            <th rowspan="2" class="th-gold">OM HAS</th>
+            <th rowspan="2" class="th-gold">OSA</th>
+            <th rowspan="2" class="th-gold">MITRA</th>
+
+            <th colspan="2" class="text-center th-plat">
+              TTR Comply SQM 4H<br>
+              <span class="small">(Exclude tiket diluar Jam Kerja)</span>
+            </th>
+
+            <th colspan="2" class="text-center th-plat">Underspec Non Warranty</th>
+            <th colspan="2" class="text-center th-plat">Closed SQM</th>
+          </tr>
+          <tr>
+            <th class="text-center th-plat">% TTR</th>
+            <th class="text-center th-plat">COMPLY</th>
+
+            <th class="text-center th-bronze">SCC-INET</th>
+            <th class="text-center th-plat">COMPLY</th>
+
+            <th class="text-center th-bronze">NOT COMPLY</th>
+            <th class="text-center th-plat">COMPLY</th>
+          </tr>
+        </thead>
+      `;
+
+      // Body: WEB!A112:K124 -> index 2 s/d data.length-2
+      const bodyRows = [];
+      for (let i = 2; i < data.length - 1; i++) {
+        const r = data[i];
+        if (!r || r.join("").toString().trim() === "") continue;
+        bodyRows.push(r);
+      }
+
+      // Total: WEB!A125:K125 -> baris terakhir
+      const totalRow = data[data.length - 1] || [];
+
+      const tbody = `
+        <tbody>
+          ${bodyRows
+            .map((r) => `
+              <tr>
+                <td>${r[0] ?? ""}</td>  <!-- STO -->
+                <td>${r[1] ?? ""}</td>  <!-- Cluster -->
+                <td>${r[2] ?? ""}</td>  <!-- OM HAS -->
+                <td>${r[3] ?? ""}</td>  <!-- OSA -->
+                <td>${r[4] ?? ""}</td>  <!-- MITRA -->
+
+                <td>${r[5] ?? ""}</td>  <!-- TTR Comply SQM 4H (nilai / %) -->
+                <td>${r[6] ?? ""}</td>  <!-- TTR % -->
+
+                <td>${r[7] ?? ""}</td>  <!-- Underspec Non Warranty (SCC-INET) -->
+                <td>${r[8] ?? ""}</td>  <!-- Underspec COMPLY -->
+
+                <td>${r[9]  ?? ""}</td> <!-- Closed SQM NOT COMPLY -->
+                <td>${r[10] ?? ""}</td> <!-- Closed SQM COMPLY -->
+              </tr>
+            `)
+            .join("")}
+          <tr class="table-secondary fw-semibold">
+            ${totalRow.map((v) => `<td>${v ?? ""}</td>`).join("")}
+          </tr>
+        </tbody>
+      `;
+
+      tableMajor.innerHTML = thead + tbody;
+    })
+    .catch((err) => {
+      console.error("Error load tabel Major KPI B2C:", err);
+      tableMajor.innerHTML =
+        "<tbody><tr><td>Gagal memuat data Major KPI.</td></tr></tbody>";
+    });
+}
+
+// =========================
 // INIT & FILTER
 // =========================
 
@@ -403,6 +499,7 @@ function initKPIB2C(config) {
       // load tabel kanan setelah card selesai
       loadKpiB2CRightTable(config);
       loadKpiB2CPrimaryTable(config);
+      loadKpiB2CMajorTable(config);
     })
     .catch((err) => {
       console.error("Error load KPI B2C:", err);
