@@ -459,6 +459,108 @@ function loadKpiB2CMajorTable(config) {
 }
 
 // =========================
+// TABLE CORE KPI (WEB!A70:K85)
+// =========================
+
+function loadKpiB2CCoreTable(config) {
+  const tableCore = document.getElementById("kpi-b2c-table-core");
+  if (!tableCore) return;
+
+  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+    config.sheet
+  )}&range=${encodeURIComponent("WEB!A70:K85")}`;
+
+  fetch(url)
+    .then((resp) => resp.json())
+    .then((data) => {
+      if (!Array.isArray(data) || data.length < 4) return;
+
+      // Header 2 baris: WEB!A70:K71
+      const thead = `
+        <thead>
+          <tr>
+            <th rowspan="2" class="th-gold">STO</th>
+            <th rowspan="2" class="th-gold">Telkomsel Cluster</th>
+            <th rowspan="2" class="th-gold">OM HAS</th>
+            <th rowspan="2" class="th-gold">SEKTOR</th>
+
+            <th colspan="2" class="text-center th-plat">Target</th>
+            <th colspan="4" class="text-center th-plat">Tangible</th>
+            <th colspan="2" class="text-center th-bronze">Dismantling ex CT0</th>
+          </tr>
+          <tr>
+            <th class="text-center th-plat">Target ODP</th>
+            <th class="text-center th-plat">Target ODC</th>
+
+            <th class="text-center th-plat">ODP (Quantity)</th>
+            <th class="text-center th-plat">ODP (Quality)</th>
+            <th class="text-center th-plat">ODC (Quantity)</th>
+            <th class="text-center th-plat">ODC (Quality)</th>
+
+            <th class="text-center th-bronze">Input</th>
+            <th class="text-center th-bronze">%</th>
+          </tr>
+        </thead>
+      `;
+
+      // Body: WEB!A72:K84 -> index 2..data.length-2
+      const bodyRows = [];
+      for (let i = 2; i < data.length - 1; i++) {
+        const r = data[i];
+        if (!r || r.join("").toString().trim() === "") continue;
+        bodyRows.push(r);
+      }
+
+      // Total: WEB!A85 -> baris terakhir ("BRANCH TANGERANG", dst)
+      const totalRow = data[data.length - 1] || [];
+
+      const tbody = `
+        <tbody>
+          ${bodyRows
+            .map((r) => `
+              <tr>
+                <td>${r[0] ?? ""}</td>  <!-- STO -->
+                <td>${r[1] ?? ""}</td>  <!-- Cluster -->
+                <td>${r[2] ?? ""}</td>  <!-- OM HAS -->
+                <td>${r[3] ?? ""}</td>  <!-- SEKTOR -->
+
+                <td>${r[4] ?? ""}</td>  <!-- Target ODP -->
+                <td>${r[5] ?? ""}</td>  <!-- Target ODC -->
+
+                <td>${r[6] ?? ""}</td>  <!-- Tangible ODP (Qty) -->
+                <td>${r[7] ?? ""}</td>  <!-- Tangible ODP (Qual/%) -->
+                <td>${r[8] ?? ""}</td>  <!-- Tangible ODC (Qty) -->
+                <td>${r[9] ?? ""}</td>  <!-- Tangible ODC (Qual/%) -->
+
+                <td>${r[10] ?? ""}</td> <!-- Dismantling ex CT0 (Qty / %) -->
+              </tr>
+            `)
+            .join("")}
+
+          <tr class="table-secondary fw-semibold">
+            <td colspan="4">${totalRow[0] ?? ""}</td>
+            <td>${totalRow[4] ?? ""}</td>
+            <td>${totalRow[5] ?? ""}</td>
+            <td>${totalRow[6] ?? ""}</td>
+            <td>${totalRow[7] ?? ""}</td>
+            <td>${totalRow[8] ?? ""}</td>
+            <td>${totalRow[9] ?? ""}</td>
+            <td>${totalRow[10] ?? ""}</td>
+          </tr>
+        </tbody>
+      `;
+
+      tableCore.innerHTML = thead + tbody;
+    })
+    .catch((err) => {
+      console.error("Error load tabel Core KPI B2C:", err);
+      tableCore.innerHTML =
+        "<tbody><tr><td>Gagal memuat data Core KPI.</td></tr></tbody>";
+    });
+}
+
+
+// =========================
 // INIT & FILTER
 // =========================
 
@@ -501,6 +603,7 @@ function initKPIB2C(config) {
       loadKpiB2CRightTable(config);
       loadKpiB2CPrimaryTable(config);
       loadKpiB2CMajorTable(config);
+      loadKpiB2CCoreTable(config); 
     })
     .catch((err) => {
       console.error("Error load KPI B2C:", err);
