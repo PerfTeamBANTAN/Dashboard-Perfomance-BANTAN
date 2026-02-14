@@ -258,7 +258,7 @@ function loadKpiB2CPrimaryTable(config) {
 
   const url = `${config.baseUrl}?sheet=${encodeURIComponent(
     config.sheet
-  )}&range=${encodeURIComponent("WEB!A50:T65")}`; // sesuaikan
+  )}&range=${encodeURIComponent("WEB!A50:T65")}`;
 
   fetch(url)
     .then((resp) => resp.json())
@@ -273,28 +273,37 @@ function loadKpiB2CPrimaryTable(config) {
             <th rowspan="2" class="th-gold">OM HAS</th>
             <th rowspan="2" class="th-gold">OSA</th>
             <th rowspan="2" class="th-gold">MITRA</th>
-            <th colspan="2" class="text-center th-plat">TTR36H (Non HVC)</th>
-            <th colspan="2" class="text-center th-plat">TTR3H (D,V)</th>
-            <th colspan="2" class="text-center th-plat">TTR3H (MANJA)</th>
-            <th colspan="2" class="text-center th-plat">TTR6H (P)</th>
-            <th colspan="2" class="text-center th-plat">TTR12H (G)</th>
+
+            <th colspan="3" class="text-center th-plat">TTR36H (Non HVC)</th>
+            <th colspan="3" class="text-center th-plat">TTR3H (D,V)</th>
+            <th colspan="3" class="text-center th-plat">TTR3H (MANJA)</th>
+            <th colspan="3" class="text-center th-plat">TTR6H (P)</th>
+            <th colspan="3" class="text-center th-plat">TTR12H (G)</th>
           </tr>
           <tr>
-            <th class="text-center th-plat">NOT COMP</th>
+            <th class="text-center th-bronze">NOT COMP</th>
             <th class="text-center th-plat">COMPLY</th>
-            <th class="text-center th-plat">NOT COMP</th>
+            <th class="text-center th-plat">% TTR36H</th>
+
+            <th class="text-center th-bronze">NOT COMP</th>
             <th class="text-center th-plat">COMPLY</th>
-            <th class="text-center th-plat">NOT COMP</th>
+            <th class="text-center th-plat">% TTR3H (D,V)</th>
+
+            <th class="text-center th-bronze">NOT COMP</th>
             <th class="text-center th-plat">COMPLY</th>
-            <th class="text-center th-plat">NOT COMP</th>
+            <th class="text-center th-plat">% TTR3H (MANJA)</th>
+
+            <th class="text-center th-bronze">NOT COMP</th>
             <th class="text-center th-plat">COMPLY</th>
-            <th class="text-center th-plat">NOT COMP</th>
+            <th class="text-center th-plat">% TTR6H (P)</th>
+
+            <th class="text-center th-bronze">NOT COMP</th>
             <th class="text-center th-plat">COMPLY</th>
+            <th class="text-center th-plat">% TTR12H (G)</th>
           </tr>
         </thead>
       `;
 
-      // body: mulai row ke-2 sampai sebelum total (tergantung struktur sheet)
       const bodyRows = [];
       for (let i = 2; i < data.length - 1; i++) {
         const r = data[i];
@@ -307,32 +316,35 @@ function loadKpiB2CPrimaryTable(config) {
       const tbody = `
         <tbody>
           ${bodyRows
-            .map((r) => {
-              return `
-                <tr>
-                  <td>${r[0] ?? ""}</td>   <!-- STO -->
-                  <td>${r[1] ?? ""}</td>   <!-- Cluster -->
-                  <td>${r[2] ?? ""}</td>   <!-- OM HAS -->
-                  <td>${r[3] ?? ""}</td>   <!-- OSA -->
-                  <td>${r[4] ?? ""}</td>   <!-- MITRA -->
+            .map((r) => `
+              <tr>
+                <td>${r[0] ?? ""}</td>   <!-- STO -->
+                <td>${r[1] ?? ""}</td>   <!-- Cluster -->
+                <td>${r[2] ?? ""}</td>   <!-- OM HAS -->
+                <td>${r[3] ?? ""}</td>   <!-- OSA -->
+                <td>${r[4] ?? ""}</td>   <!-- MITRA -->
 
-                  <td>${r[5] ?? ""}</td>   <!-- TTR36H NOT COMP -->
-                  <td>${r[6] ?? ""}</td>   <!-- TTR36H COMPLY -->
+                <td>${r[5]  ?? ""}</td>  <!-- TTR36H NOT COMP -->
+                <td>${r[6]  ?? ""}</td>  <!-- TTR36H COMPLY -->
+                <td>${r[7]  ?? ""}</td>  <!-- % TTR36H -->
 
-                  <td>${r[7] ?? ""}</td>   <!-- TTR3H D,V NOT COMP -->
-                  <td>${r[8] ?? ""}</td>   <!-- TTR3H D,V COMPLY -->
+                <td>${r[8]  ?? ""}</td>  <!-- TTR3H D,V NOT COMP -->
+                <td>${r[9]  ?? ""}</td>  <!-- TTR3H D,V COMPLY -->
+                <td>${r[10] ?? ""}</td>  <!-- % TTR3H D,V -->
 
-                  <td>${r[9] ?? ""}</td>   <!-- TTR3H MANJA NOT COMP -->
-                  <td>${r[10] ?? ""}</td>  <!-- TTR3H MANJA COMPLY -->
+                <td>${r[11] ?? ""}</td>  <!-- TTR3H MANJA NOT COMP -->
+                <td>${r[12] ?? ""}</td>  <!-- TTR3H MANJA COMPLY -->
+                <td>${r[13] ?? ""}</td>  <!-- % TTR3H MANJA -->
 
-                  <td>${r[11] ?? ""}</td>  <!-- TTR6H P NOT COMP -->
-                  <td>${r[12] ?? ""}</td>  <!-- TTR6H P COMPLY -->
+                <td>${r[14] ?? ""}</td>  <!-- TTR6H P NOT COMP -->
+                <td>${r[15] ?? ""}</td>  <!-- TTR6H P COMPLY -->
+                <td>${r[16] ?? ""}</td>  <!-- % TTR6H P -->
 
-                  <td>${r[13] ?? ""}</td>  <!-- TTR12H G NOT COMP -->
-                  <td>${r[14] ?? ""}</td>  <!-- TTR12H G COMPLY -->
-                </tr>
-              `;
-            })
+                <td>${r[17] ?? ""}</td>  <!-- TTR12H G NOT COMP -->
+                <td>${r[18] ?? ""}</td>  <!-- TTR12H G COMPLY -->
+                <td>${r[19] ?? ""}</td>  <!-- % TTR12H G -->
+              </tr>
+            `)
             .join("")}
           <tr class="table-secondary fw-semibold">
             ${totalRow.map((v) => `<td>${v ?? ""}</td>`).join("")}
