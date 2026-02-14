@@ -255,6 +255,11 @@ table.kpi-table td.kpi-text-red {
   background: linear-gradient(135deg, #fffbeb, #fed7aa);
 }
 
+/* Major: ungu */
+.kpi-section-header-major {
+  background: linear-gradient(135deg, #f5f3ff, #ddd6fe);
+}
+
 /* Core: cyan */
 .kpi-section-header-core {
   background: linear-gradient(135deg, #ecfeff, #bae6fd);
