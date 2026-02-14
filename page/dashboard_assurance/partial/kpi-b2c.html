@@ -1,4 +1,3 @@
-<!-- WRAPPER HALAMAN KPI B2C -->
 <div class="kpi-b2c-tangerang container-fluid">
 
   <h3 class="mb-3">KPI B2C TANGERANG Branch Telkomsel</h3>
@@ -10,30 +9,31 @@
     <button class="btn btn-sm btn-outline-danger" data-kpi-filter="nok">❌ Not OK</button>
   </div>
 
-  <!-- SECTION CARD KPI -->
-  <div class="kpi-b2c-cards">
-    <div class="row mb-3" id="kpi-b2c-grid"></div>
+  <!-- FRAME 1: CARD KPI -->
+  <div class="card mb-3 border-0 shadow-sm">
+    <div class="card-body py-2">
+      <div class="row" id="kpi-b2c-grid"></div>
+    </div>
   </div>
 
-  <!-- SECTION TABEL REKAP (DI KIRI) -->
-  <div class="kpi-b2c-table mt-2">
-    <div class="row" id="kpi-b2c-tables-row">
-      <div class="col-12 col-lg-6">
-        <div class="card shadow-sm border-0">
-          <div class="card-header py-2">
-            <h6 class="mb-0">B2C Critical KPI</h6>
-          </div>
-          <div class="card-body p-2">
-            <div class="table-responsive">
-              <table class="table table-sm table-striped align-middle mb-0" id="kpi-b2c-table-right">
-                <!-- diisi via JS -->
-              </table>
-            </div>
+  <!-- FRAME 2: TABEL REKAP (DI KIRI) -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-header py-2">
+      <h6 class="mb-0">B2C Critical KPI</h6>
+    </div>
+    <div class="card-body p-2">
+      <div class="row" id="kpi-b2c-tables-row">
+        <div class="col-12 col-lg-6">
+          <div class="table-responsive">
+            <table class="table table-sm table-striped align-middle mb-0" id="kpi-b2c-table-right">
+              <!-- diisi via JS -->
+            </table>
           </div>
         </div>
+        <div class="col-12 col-lg-6">
+          <!-- kosong dulu, nanti bisa isi tabel/charts lain -->
+        </div>
       </div>
-      <!-- kolom kanan kosong dulu, nanti bisa diisi tabel lain / chart -->
-      <div class="col-12 col-lg-6"></div>
     </div>
   </div>
 
