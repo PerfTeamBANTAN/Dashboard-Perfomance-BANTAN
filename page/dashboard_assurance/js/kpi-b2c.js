@@ -182,7 +182,7 @@ function loadKpiB2CRightTable(config) {
       <th rowspan="2" class="th-gold">MITRA</th>
       <th colspan="3" class="text-center th-plat">Asgar</th>
       <th rowspan="2" class="text-center th-silver">Service Availability</th>
-      <th colspan="2" class="text-center th-bronze">Q</th>
+      <th colspan="3" class="text-center th-bronze">Q</th>
     </tr>
     <tr>
       <th class="text-center th-plat">LINE</th>
