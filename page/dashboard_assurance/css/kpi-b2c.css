@@ -75,3 +75,24 @@
     padding: 4px 4px;
   }
 }
+
+#kpi-b2c-tables-row .card-header {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+#kpi-b2c-tables-row h6 {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+#kpi-b2c-table-right thead th {
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+#kpi-b2c-table-right tbody td {
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
