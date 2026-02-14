@@ -122,7 +122,7 @@ function loadKpiB2CRightTable(config) {
     .then((data) => {
       if (!Array.isArray(data) || data.length < 4) return;
 
-      // Header dua baris (tetap)
+      // Header dua baris
       const thead = `
         <thead>
           <tr>
@@ -146,179 +146,62 @@ function loadKpiB2CRightTable(config) {
         </thead>
       `;
 
-      const bodyRowsHtml = [];
+      // Body: gunakan semua baris mulai index 2 (row 32 = GDS) sampai akhir (row 45 = total)
+      const bodyRows = [];
       for (let i = 2; i < data.length; i++) {
         const r = data[i]; // A(row):L(row)
         if (!r || r.join("").toString().trim() === "") continue;
 
-        const sto = String(r[0] ?? "").trim();
-        const cluster = r[1];
-        const omhas = r[2];
-        const osa = r[3];
-        const mitra = r[4];
-        const asgarLine = Number(r[5] ?? 0);  // LINE Asgar
-        const asgarGaul = r[6];
-        const sa = r[8];
-        const qList = r[9];
-        const q30 = r[10];
-        const qPct = r[11];
-
-        // GAUL dari QGAUL
-        const gaulCount = countGaulForSto(sto);
-
-        // % Gaul = 100 - (GAUL / LINE * 100)
-        const lineVal = asgarLine || 0;
-        let pctGaul = 0;
-        if (lineVal > 0) {
-          pctGaul = 100 - (gaulCount / lineVal) * 100;
-        }
-        const pctGaulStr = lineVal > 0 ? pctGaul.toFixed(2) : "-";
-
-        // warna % Gaul
-        let pctGaulClass = "";
-        if (lineVal > 0) {
-          if (pctGaul < 91.71) {
-            pctGaulClass = "gaul-red";
-          } else if (pctGaul < 92.5) {
-            pctGaulClass = "gaul-yellow";
-          } else {
-            pctGaulClass = "gaul-green";
-          }
-        }
-
-        bodyRowsHtml.push(`
-          <tr>
-            <td>${sto}</td>
-            <td>${cluster ?? ""}</td>
-            <td>${omhas ?? ""}</td>
-            <td>${osa ?? ""}</td>
-            <td>${mitra ?? ""}</td>
-            <td>${asgarLine || ""}</td>
-            <td class="text-center gaul-cell" data-sto="${sto}">
-              <a href="javascript:void(0)" class="text-decoration-none fw-semibold">
-                ${gaulCount}
-              </a>
-            </td>
-            <td class="text-center ${pctGaulClass}">${pctGaulStr}</td>
-            <td>${sa ?? ""}</td>
-            <td>${qList ?? ""}</td>
-            <td>${q30 ?? ""}</td>
-            <td>${qPct ?? ""}</td>
-          </tr>
-        `);
+        // mapping:
+        // A = STO
+        // B = Cluster
+        // C = OM HAS
+        // D = OSA
+        // E = MITRA
+        // F = Asgar LINE
+        // G = Asgar GAUL
+        // H = Asgar % (Gaul)
+        // I = Service Availability
+        // J = Q LIST
+        // K = Q 30D
+        // L = % Q
+        bodyRows.push([
+          r[0],  // STO
+          r[1],  // Telkomsel Cluster
+          r[2],  // OM HAS
+          r[3],  // OSA
+          r[4],  // MITRA
+          r[5],  // Asgar LINE
+          r[6],  // Asgar GAUL
+          r[7],  // Asgar % Gaul
+          r[8],  // Service Availability
+          r[9],  // Q LIST
+          r[10], // Q 30D
+          r[11]  // % Q
+        ]);
       }
 
-      const tbody = `<tbody>${bodyRowsHtml.join("")}</tbody>`;
+      const tbody = `
+        <tbody>
+          ${bodyRows
+            .map(
+              (r) => `
+            <tr>
+              ${r.map((v) => `<td>${v ?? ""}</td>`).join("")}
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      `;
 
       tableRight.innerHTML = thead + tbody;
-
-      bindGaulClickEvents();
     })
     .catch((err) => {
       console.error("Error load tabel kanan KPI B2C:", err);
       tableRight.innerHTML =
         "<tbody><tr><td>Gagal memuat data</td></tr></tbody>";
     });
-}
-
-function bindGaulClickEvents() {
-  const cells = document.querySelectorAll("#kpi-b2c-table-right .gaul-cell a");
-  const modalEl = document.getElementById("gaulDetailModal");
-  if (!modalEl) return;
-
-  const modalStoSpan = document.getElementById("gaulModalSto");
-  const modalTableBody = document.querySelector("#gaulDetailTable tbody");
-
-  // pastikan Bootstrap JS sudah include
-  const bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
-
-  cells.forEach((a) => {
-    a.addEventListener("click", () => {
-      const sto = a.parentElement.getAttribute("data-sto");
-      const details = getGaulDetailsForSto(sto);
-
-      if (modalStoSpan) modalStoSpan.textContent = sto || "";
-
-      if (modalTableBody) {
-        modalTableBody.innerHTML = details
-          .map((row) => {
-            return `
-              <tr>
-                <td>${row[0] ?? ""}</td>  <!-- TROUBLE_NO -->
-                <td>${row[1] ?? ""}</td>  <!-- TROUBLE_NUMBER -->
-                <td>${row[2] ?? ""}</td>  <!-- TROUBLE_OPENTIME -->
-                <td>${row[3] ?? ""}</td>  <!-- TKASSETTYPE -->
-                <td>${row[4] ?? ""}</td>  <!-- FLAG_HVC -->
-                <td>${row[5] ?? ""}</td>  <!-- STO -->
-                <td>${row[6] ?? ""}</td>  <!-- JENIS_TIKET2 -->
-                <td>${row[8] ?? ""}</td>  <!-- LETAK_PERBAIKAN -->
-              </tr>
-            `;
-          })
-          .join("");
-      }
-
-      bsModal.show();
-    });
-  });
-}
-
-// =========================
-// QGAUL DATA
-// =========================
-
-let qGaulData = []; // simpan semua row QGAUL (tanpa header)
-
-/**
- * Load data QGAUL!A:K sekali, simpan ke qGaulData
- */
-function loadQGaulData(config) {
-  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
-    "QGAUL"
-  )}&range=${encodeURIComponent("A:K")}`;
-
-  return fetch(url)
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (!Array.isArray(data) || data.length < 2) {
-        qGaulData = [];
-        return;
-      }
-      // data[0] = header
-      qGaulData = data.slice(1);
-    })
-    .catch((err) => {
-      console.error("Error load QGAUL:", err);
-      qGaulData = [];
-    });
-}
-
-/**
- * GAUL = jumlah row dengan F = STO dan J = 1
- */
-function countGaulForSto(sto) {
-  if (!qGaulData || qGaulData.length === 0) return 0;
-  let count = 0;
-  qGaulData.forEach((row) => {
-    const stoVal = String(row[5] ?? "").trim();  // kolom F
-    const isGaul = String(row[9] ?? "").trim();  // kolom J
-    if (stoVal === sto && (isGaul === "1" || isGaul === "1,00" || isGaul === "1.00")) {
-      count++;
-    }
-  });
-  return count;
-}
-
-/**
- * Detail GAUL per STO
- */
-function getGaulDetailsForSto(sto) {
-  if (!qGaulData || qGaulData.length === 0) return [];
-  return qGaulData.filter((row) => {
-    const stoVal = String(row[5] ?? "").trim();  // F
-    const isGaul = String(row[9] ?? "").trim();  // J
-    return stoVal === sto && (isGaul === "1" || isGaul === "1,00" || isGaul === "1.00");
-  });
 }
 
 // =========================
@@ -359,9 +242,8 @@ function initKPIB2C(config) {
 
       grid.innerHTML = rows.map(createKpiCard).join("");
       initKpiFilter();
-      return loadQGaulData(config);
-    })
-    .then(() => {
+
+      // load tabel kanan setelah card selesai
       loadKpiB2CRightTable(config);
     })
     .catch((err) => {
