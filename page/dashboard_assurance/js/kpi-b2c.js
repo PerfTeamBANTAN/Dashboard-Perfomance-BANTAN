@@ -106,6 +106,28 @@ function createKpiCard(rowObj) {
 }
 
 // =========================
+// HELPER WARNA % GAUL & % Q
+// =========================
+
+function getGaulClass(value) {
+  const num = parseFloat(String(value).replace(",", "."));
+  if (isNaN(num)) return "";
+
+  if (num < 91.71) return "kpi-text-red";
+  if (num <= 92.50) return "kpi-text-yellow";
+  return "kpi-text-green";
+}
+
+function getQClass(value) {
+  const num = parseFloat(String(value).replace(",", "."));
+  if (isNaN(num)) return "";
+
+  if (num > 2.69) return "kpi-text-red";
+  if (num >= 2.50) return "kpi-text-yellow";
+  return "kpi-text-green";
+}
+
+// =========================
 // TABLE KANAN (REKAP TANGERANG)
 // =========================
 
@@ -182,19 +204,45 @@ function loadKpiB2CRightTable(config) {
       }
 
       const tbody = `
-        <tbody>
-          ${bodyRows
-            .map(
-              (r) => `
-            <tr>
-              ${r.map((v) => `<td>${v ?? ""}</td>`).join("")}
-            </tr>
-          `
-            )
-            .join("")}
-        </tbody>
-      `;
+  <tbody>
+    ${bodyRows
+      .map((r) => {
+        const sto = r[0];
+        const cluster = r[1];
+        const omHas = r[2];
+        const osa = r[3];
+        const mitra = r[4];
+        const asgarLine = r[5];
+        const asgarGaul = r[6];
+        const gaulPercent = r[7]; // % Gaul
+        const serviceAvail = r[8];
+        const qList = r[9];
+        const q30d = r[10];
+        const qPercent = r[11];   // % Q
 
+        const gaulClass = getGaulClass(gaulPercent);
+        const qClass = getQClass(qPercent);
+
+        return `
+          <tr>
+            <td>${sto ?? ""}</td>
+            <td>${cluster ?? ""}</td>
+            <td>${omHas ?? ""}</td>
+            <td>${osa ?? ""}</td>
+            <td>${mitra ?? ""}</td>
+            <td>${asgarLine ?? ""}</td>
+            <td>${asgarGaul ?? ""}</td>
+            <td class="${gaulClass}">${gaulPercent ?? ""}</td>
+            <td>${serviceAvail ?? ""}</td>
+            <td>${qList ?? ""}</td>
+            <td>${q30d ?? ""}</td>
+            <td class="${qClass}">${qPercent ?? ""}</td>
+          </tr>
+        `;
+      })
+      .join("")}
+  </tbody>
+`;
       tableRight.innerHTML = thead + tbody;
     })
     .catch((err) => {
