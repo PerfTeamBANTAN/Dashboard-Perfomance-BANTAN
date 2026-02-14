@@ -235,13 +235,13 @@ function loadKpiB2CHsaTable(config) {
     <tr class="table-secondary fw-semibold">
       <td colspan="2">${totalRow[0] ?? ""}</td>
 
-      <td colspan="3">${totalRow[3] ?? ""}</td>   
-      <td colspan="3">${totalRow[6] ?? ""}</td>  
+      <td colspan="3">${totalRow[2] ?? ""}</td>   
+      <td colspan="3">${totalRow[5] ?? ""}</td>  
 
-      <td colspan="2">${totalRow[9] ?? ""}</td> 
+      <td colspan="2">${totalRow[8] ?? ""}</td> 
 
-      <td colspan="3">${totalRow[11] ?? ""}</td>
-      <td colspan="2">${totalRow[14] ?? ""}</td>
+      <td colspan="3">${totalRow[10] ?? ""}</td>
+      <td colspan="2">${totalRow[13] ?? ""}</td>
     </tr>
   </tbody>
 `;
