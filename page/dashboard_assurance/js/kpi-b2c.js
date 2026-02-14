@@ -1,3 +1,6 @@
+// =========================
+// HELPER STATUS & GROWTH
+// =========================
 
 function getOverallStatus(rowObj) {
   if (rowObj.status_hi === "✅") return "ok";
@@ -23,6 +26,10 @@ function getGrowthInfo(rowObj) {
     return { icon: "minus", cls: "growth-flat", title: "HI sama dengan H-1" };
   }
 }
+
+// =========================
+// CARD KPI
+// =========================
 
 function createKpiCard(rowObj) {
   const overall = getOverallStatus(rowObj);
@@ -98,6 +105,131 @@ function createKpiCard(rowObj) {
   `;
 }
 
+// =========================
+// TABLE KANAN (REKAP TANGERANG)
+// =========================
+
+// header 1 baris, sesuai struktur yang disederhanakan
+function buildRightTableHeader() {
+  const cols = [
+    "STO",
+    "Telkomsel Cluster",
+    "OM HAS",
+    "OSA",
+    "MITRA",
+    "Asgar LINE",
+    "Asgar GAUL",
+    "Asgar %",
+    "Service Availability",
+    "Q LIST",
+    "Q %",
+    "LINE",
+    "GAUL",
+    "LIST",
+    "Q 30D"
+  ];
+
+  return `
+    <thead>
+      <tr>
+        ${cols.map((c) => `<th scope="col">${c}</th>`).join("")}
+      </tr>
+    </thead>
+  `;
+}
+
+function buildTableBody(rows) {
+  return `
+    <tbody>
+      ${rows
+        .map(
+          (r) => `
+        <tr>
+          ${r.map((cell) => `<td>${cell ?? ""}</td>`).join("")}
+        </tr>
+      `
+        )
+        .join("")}
+    </tbody>
+  `;
+}
+
+// ambil dari range A30:L45, Apps Script sudah mengembalikan [header,rowData] khusus
+function loadKpiB2CRightTable(config) {
+  const tableRight = document.getElementById("kpi-b2c-table-right");
+  if (!tableRight) return;
+
+  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+    config.sheet
+  )}&range=${encodeURIComponent("A30:L45")}`;
+
+  fetch(url)
+    .then((resp) => resp.json())
+    .then((data) => {
+      // kalau Apps Script sudah bentuk [header,rowData], pakai itu;
+      // kalau belum, kita pakai baris terakhir sebagai total.
+      let header, row;
+
+      if (Array.isArray(data) && data.length >= 2 && Array.isArray(data[0]) && typeof data[0][0] === "string") {
+        header = data[0];
+        row = data[1];
+        const thead = `
+          <thead>
+            <tr>
+              ${header.map((h) => `<th scope="col">${h}</th>`).join("")}
+            </tr>
+          </thead>
+        `;
+        const tbody = `
+          <tbody>
+            <tr>
+              ${row.map((v) => `<td>${v ?? ""}</td>`).join("")}
+            </tr>
+          </tbody>
+        `;
+        tableRight.innerHTML = thead + tbody;
+        return;
+      }
+
+      // fallback kalau endpoint masih 2D mentah: ambil baris terakhir (total)
+      const totalRow = data[data.length - 1];
+
+      // A45:E45 label, F45:L45 angka 1..7
+      const areaName = totalRow[0] || "TANGERANG";
+
+      const body = [
+        [
+          areaName,     // STO / Area
+          totalRow[1],  // Cluster
+          totalRow[2],  // OM HAS
+          totalRow[3],  // OSA
+          totalRow[4],  // MITRA
+          totalRow[5],  // Asgar LINE
+          totalRow[6],  // Asgar GAUL
+          totalRow[7],  // Asgar %
+          totalRow[8],  // Service Availability
+          totalRow[9],  // Q LIST
+          totalRow[10], // Q %
+          totalRow[5],  // LINE
+          totalRow[6],  // GAUL
+          totalRow[9],  // LIST
+          totalRow[10]  // Q 30D
+        ]
+      ];
+
+      tableRight.innerHTML = buildRightTableHeader() + buildTableBody(body);
+    })
+    .catch((err) => {
+      console.error("Error load tabel kanan KPI B2C:", err);
+      tableRight.innerHTML =
+        "<tbody><tr><td>Gagal memuat data</td></tr></tbody>";
+    });
+}
+
+// =========================
+// INIT & FILTER
+// =========================
+
 function initKPIB2C(config) {
   const grid = document.getElementById("kpi-b2c-grid");
   if (!grid) return;
@@ -126,12 +258,15 @@ function initKPIB2C(config) {
           h_1: r[2],
           status_h1: r[3],
           hi: r[4],
-          status_hi: r[5],
+          status_hi: r[5]
         });
       });
 
       grid.innerHTML = rows.map(createKpiCard).join("");
       initKpiFilter();
+
+      // load tabel kanan setelah card selesai
+      loadKpiB2CRightTable(config);
     })
     .catch((err) => {
       console.error("Error load KPI B2C:", err);
