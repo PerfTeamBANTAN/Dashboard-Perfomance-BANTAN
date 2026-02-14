@@ -230,7 +230,6 @@ async function loadPage(menu) {
 
   const cfg = menuMap[menu];
 
-  // LOAD CSS
   if (cfg.css) {
     loadCSS(cfg.css);
   }
@@ -240,7 +239,17 @@ async function loadPage(menu) {
 
   const s = document.createElement("script");
   s.src = cfg.js + "?v=" + Date.now();
-  s.onload = () => window[cfg.init](B2B_API_URL);
+  s.onload = () => {
+    // kirim 1 objek config ke init
+    const initFn = window[cfg.init];
+    if (typeof initFn === "function") {
+      initFn({
+        baseUrl: KPI_API_URL,
+        sheet: cfg.sheet,
+        range: cfg.range
+      });
+    }
+  };
   document.body.appendChild(s);
 }
 
