@@ -165,22 +165,70 @@ function loadKpiB2CRightTable(config) {
   fetch(url)
     .then((resp) => resp.json())
     .then((data) => {
-      if (!Array.isArray(data) || data.length < 2) return;
+      if (!Array.isArray(data) || data.length < 4) return;
 
-      const header = data[0];
-      const rows   = data.slice(1); // semua STO + total
+      const row30 = data[0]; // A30:L30
+      const row31 = data[1]; // A31:L31
 
+      // Header dua baris yang “bagus”, manual sesuai struktur merge:
       const thead = `
         <thead>
           <tr>
-            ${header.map((h) => `<th scope="col">${h}</th>`).join("")}
+            <th rowspan="2">STO</th>
+            <th rowspan="2">Telkomsel Cluster</th>
+            <th rowspan="2">OM HAS</th>
+            <th rowspan="2">OSA</th>
+            <th rowspan="2">MITRA</th>
+            <th colspan="3" class="text-center">Asgar</th>
+            <th rowspan="2" class="text-center">Service Availability</th>
+            <th colspan="2" class="text-center">Q</th>
+            <th rowspan="2" class="text-center">LINE</th>
+            <th rowspan="2" class="text-center">GAUL</th>
+            <th rowspan="2" class="text-center">LIST</th>
+            <th rowspan="2" class="text-center">Q 30D</th>
+          </tr>
+          <tr>
+            <th class="text-center">LINE</th>
+            <th class="text-center">GAUL</th>
+            <th class="text-center">%</th>
+            <th class="text-center">LIST</th>
+            <th class="text-center">%</th>
           </tr>
         </thead>
       `;
 
+      // Data body: STO (A32:L44) + total (A45:L45)
+      const bodyRows = [];
+      for (let i = 2; i < data.length; i++) {
+        const r = data[i];
+
+        // map ke urutan header:
+        // STO, Cluster, OM HAS, OSA, MITRA,
+        // Asgar LINE(F), Asgar GAUL(G), Asgar %(H),
+        // SA(I), Q LIST(J), Q %(K),
+        // LINE(F), GAUL(G), LIST(J), Q 30D(K)
+        bodyRows.push([
+          r[0],   // STO
+          r[1],   // Cluster
+          r[2],   // OM HAS
+          r[3],   // OSA
+          r[4],   // MITRA
+          r[5],   // Asgar LINE
+          r[6],   // Asgar GAUL
+          r[7],   // Asgar %
+          r[8],   // Service Availability
+          r[9],   // Q LIST
+          r[10],  // Q %
+          r[5],   // LINE
+          r[6],   // GAUL
+          r[9],   // LIST
+          r[10]   // Q 30D
+        ]);
+      }
+
       const tbody = `
         <tbody>
-          ${rows
+          ${bodyRows
             .map(
               (r) => `
             <tr>
