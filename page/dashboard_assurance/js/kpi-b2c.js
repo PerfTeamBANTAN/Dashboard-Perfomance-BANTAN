@@ -256,6 +256,117 @@ function loadKpiB2CHsaTable(config) {
 }
 
 // =========================
+// TABLE MITRA BRANCH TANGERANG ('Dash B2C'!U3:AI32)
+// =========================
+
+function loadKpiB2CMitraTable(config) {
+  const tableMitra = document.getElementById("kpi-b2c-table-mitra");
+  if (!tableMitra) return;
+
+  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+    "Dash B2C"
+  )}&range=${encodeURIComponent("U3:AI32")}`;
+
+  fetch(url)
+    .then((resp) => resp.json())
+    .then((data) => {
+      if (!Array.isArray(data) || data.length < 4) return;
+
+      const thead = `
+        <thead>
+          <tr>
+            <th rowspan="2" class="th-gold text-center">Indikator</th>
+            <th rowspan="2" class="th-gold text-center">Target</th>
+
+            <th colspan="5" class="th-plat text-center">TA</th>
+            <th colspan="2" class="th-plat text-center">SGN</th>
+            <th colspan="1" class="th-plat text-center">SKA</th>
+            <th colspan="3" class="th-plat text-center">FAMIKA</th>
+            <th colspan="2" class="th-plat text-center">FSL</th>
+
+            <th class="th-plat text-center">GDS</th>
+            <th class="th-plat text-center">DTG</th>
+            <th class="th-plat text-center">JIA</th>
+            <th class="th-plat text-center">CLD</th>
+            <th class="th-plat text-center">SRP</th>
+            
+            <th class="th-plat text-center">CPD</th>
+            <th class="th-plat text-center">CKL</th>
+            
+            <th class="th-plat text-center">TAN</th>
+            
+            <th class="th-plat text-center">PDR</th>
+            <th class="th-plat text-center">PKU</th>
+            <th class="th-plat text-center">LKG</th>
+            
+            <th class="th-plat text-center">SRH</th>
+            <th class="th-plat text-center">CPA</th>
+          </tr>
+        </thead>
+      `;
+
+      // Body: 'Dash B2C'!U5:AI31 -> index 2..data.length-2
+      const bodyRows = [];
+      for (let i = 2; i < data.length - 1; i++) {
+        const r = data[i];
+        if (!r || r.join("").toString().trim() === "") continue;
+        bodyRows.push(r);
+      }
+
+      // Total: 'Dash B2C'!U32:AI32 -> baris terakhir
+      const totalRow = data[data.length - 1] || [];
+
+      const tbody = `
+        <tbody>
+          ${bodyRows
+            .map((r) => `
+              <tr>
+                <td>${r[0] ?? ""}</td>
+                <td>${r[1] ?? ""}</td>
+
+                <td>${r[2] ?? ""}</td>
+                <td>${r[3] ?? ""}</td>
+                <td>${r[4] ?? ""}</td>
+                <td>${r[5] ?? ""}</td>
+                <td>${r[6] ?? ""}</td>
+
+                <td>${r[7] ?? ""}</td>
+                <td>${r[8] ?? ""}</td>
+                <td>${r[9] ?? ""}</td>
+                <td>${r[10] ?? ""}</td>
+                <td>${r[11] ?? ""}</td>
+                <td>${r[12] ?? ""}</td>
+                <td>${r[13] ?? ""}</td>
+                <td>${r[14] ?? ""}</td>
+              </tr>
+            `)
+            .join("")}
+
+    <!-- ROW TOTAL KPI HSA -->
+    <tr class="table-secondary fw-semibold">
+      <td colspan="2">${totalRow[0] ?? ""}</td>
+
+      <td colspan="5">${totalRow[2] ?? ""}</td>   
+      <td colspan="2">${totalRow[7] ?? ""}</td>  
+
+      <td colspan="1">${totalRow[9] ?? ""}</td> 
+
+      <td colspan="3">${totalRow[10] ?? ""}</td>
+      <td colspan="2">${totalRow[13] ?? ""}</td>
+    </tr>
+  </tbody>
+`;
+
+      tableMitra.innerHTML = thead + tbody;
+    })
+    .catch((err) => {
+      console.error("Error load tabel MITRA KPI B2C:", err);
+      tableMitra.innerHTML =
+        "<tbody><tr><td>Gagal memuat data B2C MITRA.</td></tr></tbody>";
+    });
+}
+
+// =========================
 // TABLE KANAN (REKAP TANGERANG)
 // =========================
 
@@ -813,6 +924,7 @@ function initKPIB2C(config) {
 
       // load tabel kanan setelah card selesai
       loadKpiB2CHsaTable(config);
+      loadKpiB2CMitraTable(config); 
       loadKpiB2CRightTable(config);
       loadKpiB2CPrimaryTable(config);
       loadKpiB2CMajorTable(config);
