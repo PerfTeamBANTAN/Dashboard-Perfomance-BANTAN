@@ -109,52 +109,6 @@ function createKpiCard(rowObj) {
 // TABLE KANAN (REKAP TANGERANG)
 // =========================
 
-// header 1 baris, sesuai struktur yang disederhanakan
-function buildRightTableHeader() {
-  const cols = [
-    "STO",
-    "Telkomsel Cluster",
-    "OM HAS",
-    "OSA",
-    "MITRA",
-    "Asgar LINE",
-    "Asgar GAUL",
-    "Asgar %",
-    "Service Availability",
-    "Q LIST",
-    "Q 30D",
-    "Q %",
-    "LINE",
-    "GAUL",
-    "LIST",
-    "Q 30D"
-  ];
-
-  return `
-    <thead>
-      <tr>
-        ${cols.map((c) => `<th scope="col">${c}</th>`).join("")}
-      </tr>
-    </thead>
-  `;
-}
-
-function buildTableBody(rows) {
-  return `
-    <tbody>
-      ${rows
-        .map(
-          (r) => `
-        <tr>
-          ${r.map((cell) => `<td>${cell ?? ""}</td>`).join("")}
-        </tr>
-      `
-        )
-        .join("")}
-    </tbody>
-  `;
-}
-
 function loadKpiB2CRightTable(config) {
   const tableRight = document.getElementById("kpi-b2c-table-right");
   if (!tableRight) return;
@@ -168,56 +122,62 @@ function loadKpiB2CRightTable(config) {
     .then((data) => {
       if (!Array.isArray(data) || data.length < 4) return;
 
-      const row30 = data[0]; // A30:L30
-      const row31 = data[1]; // A31:L31
-
-      // Header dua baris yang “bagus”, manual sesuai struktur merge:
+      // Header dua baris
       const thead = `
-  <thead>
-    <tr>
-      <th rowspan="2" class="th-gold">STO</th>
-      <th rowspan="2" class="th-gold">Telkomsel Cluster</th>
-      <th rowspan="2" class="th-gold">OM HAS</th>
-      <th rowspan="2" class="th-gold">OSA</th>
-      <th rowspan="2" class="th-gold">MITRA</th>
-      <th colspan="3" class="text-center th-plat">Asgar</th>
-      <th rowspan="2" class="text-center th-silver">Service Availability</th>
-      <th colspan="3" class="text-center th-bronze">Q</th>
-    </tr>
-    <tr>
-      <th class="text-center th-plat">LINE</th>
-      <th class="text-center th-plat">GAUL</th>
-      <th class="text-center th-plat">% Gaul</th>
-      <th class="text-center th-bronze">LIST</th>
-      <th class="text-center th-bronze">Q 30D</th>
-      <th class="text-center th-bronze">% Q</th>
-    </tr>
-  </thead>
-`;
+        <thead>
+          <tr>
+            <th rowspan="2" class="th-gold">STO</th>
+            <th rowspan="2" class="th-gold">Telkomsel Cluster</th>
+            <th rowspan="2" class="th-gold">OM HAS</th>
+            <th rowspan="2" class="th-gold">OSA</th>
+            <th rowspan="2" class="th-gold">MITRA</th>
+            <th colspan="3" class="text-center th-plat">Asgar</th>
+            <th rowspan="2" class="text-center th-silver">Service Availability</th>
+            <th colspan="3" class="text-center th-bronze">Q</th>
+          </tr>
+          <tr>
+            <th class="text-center th-plat">LINE</th>
+            <th class="text-center th-plat">GAUL</th>
+            <th class="text-center th-plat">% Gaul</th>
+            <th class="text-center th-bronze">LIST</th>
+            <th class="text-center th-bronze">Q 30D</th>
+            <th class="text-center th-bronze">% Q</th>
+          </tr>
+        </thead>
+      `;
 
-      // Data body: STO (A32:L44) + total (A45:L45)
+      // Body: gunakan semua baris mulai index 2 (row 32 = GDS) sampai akhir (row 45 = total)
       const bodyRows = [];
       for (let i = 2; i < data.length; i++) {
-        const r = data[i];
+        const r = data[i]; // A(row):L(row)
+        if (!r || r.join("").toString().trim() === "") continue;
 
-        // map ke urutan header:
-        // STO, Cluster, OM HAS, OSA, MITRA,
-        // Asgar LINE(F), Asgar GAUL(G), Asgar %(H),
-        // SA(I), Q LIST(J), Q %(K),
-        // LINE(F), GAUL(G), LIST(J), Q 30D(K)
+        // mapping:
+        // A = STO
+        // B = Cluster
+        // C = OM HAS
+        // D = OSA
+        // E = MITRA
+        // F = Asgar LINE
+        // G = Asgar GAUL
+        // H = Asgar % (Gaul)
+        // I = Service Availability
+        // J = Q LIST
+        // K = Q 30D
+        // L = % Q
         bodyRows.push([
-          r[0],   // STO
-          r[1],   // Cluster
-          r[2],   // OM HAS
-          r[3],   // OSA
-          r[4],   // MITRA
-          r[5],   // Asgar LINE
-          r[6],   // Asgar GAUL
-          r[7],   // Asgar %
-          r[8],   // Service Availability
-          r[9],   // Q LIST
-          r[10],  // Q 30D
-          r[11]   // Q %
+          r[0],  // STO
+          r[1],  // Telkomsel Cluster
+          r[2],  // OM HAS
+          r[3],  // OSA
+          r[4],  // MITRA
+          r[5],  // Asgar LINE
+          r[6],  // Asgar GAUL
+          r[7],  // Asgar % Gaul
+          r[8],  // Service Availability
+          r[9],  // Q LIST
+          r[10], // Q 30D
+          r[11]  // % Q
         ]);
       }
 
