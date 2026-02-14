@@ -129,6 +129,7 @@
 /* TABEL REKAP TANGERANG */
 #kpi-b2c-table-right {
   border-collapse: collapse;
+  background: #ffffff;
 }
 
 #kpi-b2c-table-right thead th {
@@ -138,47 +139,60 @@
   border: 1px solid #e5e7eb;
   vertical-align: middle;
   text-align: center;
+  padding: 6px 4px;
 }
 
-/* warna grup header */
+/* WARNA GRUP HEADER - FLAT, DASHBOARD LOOK */
 .th-gold {
-  background-color: #facc15;   /* kuning keemasan */
-  color: #111827;
+  background-color: #fef3c7; /* amber-100 */
+  color: #92400e;
+  border-bottom: 2px solid #f59e0b;
 }
 
 .th-plat {
-  background-color: #e5e4e2;   /* platinum abu muda */
+  background-color: #e5e7eb; /* gray-200 */
   color: #111827;
+  border-bottom: 2px solid #9ca3af;
 }
 
 .th-silver {
-  background-color: #e5e7eb;   /* silver abu */
-  color: #111827;
+  background-color: #f3f4f6; /* gray-100 */
+  color: #374151;
+  border-bottom: 2px solid #d1d5db;
 }
 
 .th-bronze {
-  background-color: #f97316;   /* oranye tembaga */
-  color: #111827;
+  background-color: #ffedd5; /* orange-100 */
+  color: #7c2d12;
+  border-bottom: 2px solid #fb923c;
 }
 
-/* sedikit pemisah visual antara baris header */
+/* baris header pertama sedikit lebih tegas */
 #kpi-b2c-table-right thead tr:first-child th {
-  border-bottom-width: 2px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
-/* warna untuk % Gaul */
-.gaul-red {
-  color: #b91c1c;
-  font-weight: 600;
+/* efek hover ringan */
+#kpi-b2c-table-right thead th:hover {
+  background-color: #e5e7eb;
+  cursor: default;
 }
 
-.gaul-yellow {
-  color: #a16207;
-  font-weight: 600;
+#kpi-b2c-table-right tbody td {
+  border: 1px solid #e5e7eb;
+  padding: 6px 4px;
+  font-size: 0.68rem;
 }
 
-.gaul-green {
-  color: #15803d;
-  font-weight: 600;
+#kpi-b2c-table-right tbody tr:nth-child(even) td {
+  background-color: #f9fafb;
 }
+
+#kpi-b2c-table-right tbody tr:hover td {
+  background-color: #eff6ff;
+}
+
 
