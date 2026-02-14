@@ -1,8 +1,7 @@
 .kpi-b2c-tangerang {
-  padding: 10px 15px;
+  padding: 10px 5px;
 }
 
-/* Card basic */
 .kpi-card {
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
@@ -16,34 +15,18 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.12);
 }
 
-/* Status warna border */
 .kpi-card.ok {
-  border-left-color: #28a745; /* green */
+  border-left-color: #28a745;
 }
 
 .kpi-card.nok {
-  border-left-color: #dc3545; /* red */
+  border-left-color: #dc3545;
 }
 
-/* Header indikator */
 .kpi-card-title {
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 4px;
-}
-
-.kpi-tag {
-  font-size: 0.75rem;
-  padding: 2px 6px;
-  border-radius: 999px;
-  background-color: #f1f3f5;
-  margin-left: 5px;
-}
-
-/* Nilai angka */
-.kpi-value {
-  font-size: 1.1rem;
-  font-weight: 600;
 }
 
 .kpi-label {
@@ -51,12 +34,15 @@
   color: #6c757d;
 }
 
-/* Status icon */
+.kpi-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
 .kpi-status {
   font-size: 1.3rem;
 }
 
-/* Warna background ringan per status */
 .kpi-pill-ok {
   color: #155724;
   background-color: #d4edda;
@@ -71,11 +57,4 @@
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 0.8rem;
-}
-
-/* Responsif */
-@media (max-width: 767.98px) {
-  .kpi-card {
-    margin-bottom: 10px;
-  }
 }
