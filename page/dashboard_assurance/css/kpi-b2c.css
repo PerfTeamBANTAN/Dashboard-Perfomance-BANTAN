@@ -166,3 +166,19 @@
   border-bottom-width: 2px;
 }
 
+/* warna untuk % Gaul */
+.gaul-red {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.gaul-yellow {
+  color: #a16207;
+  font-weight: 600;
+}
+
+.gaul-green {
+  color: #15803d;
+  font-weight: 600;
+}
+
