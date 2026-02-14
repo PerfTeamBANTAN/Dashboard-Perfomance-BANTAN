@@ -144,7 +144,6 @@ function loadKpiB2CRightTable(config) {
     .then((data) => {
       if (!Array.isArray(data) || data.length < 4) return;
 
-      // Header dua baris
       const thead = `
         <thead>
           <tr>
@@ -168,81 +167,66 @@ function loadKpiB2CRightTable(config) {
         </thead>
       `;
 
-      // Body: gunakan semua baris mulai index 2 (row 32 = GDS) sampai akhir (row 45 = total)
       const bodyRows = [];
-      for (let i = 2; i < data.length; i++) {
-        const r = data[i]; // A(row):L(row)
+      for (let i = 2; i < data.length - 1; i++) {
+        const r = data[i];
         if (!r || r.join("").toString().trim() === "") continue;
-
-        // mapping:
-        // A = STO
-        // B = Cluster
-        // C = OM HAS
-        // D = OSA
-        // E = MITRA
-        // F = Asgar LINE
-        // G = Asgar GAUL
-        // H = Asgar % (Gaul)
-        // I = Service Availability
-        // J = Q LIST
-        // K = Q 30D
-        // L = % Q
-        bodyRows.push([
-          r[0],  // STO
-          r[1],  // Telkomsel Cluster
-          r[2],  // OM HAS
-          r[3],  // OSA
-          r[4],  // MITRA
-          r[5],  // Asgar LINE
-          r[6],  // Asgar GAUL
-          r[7],  // Asgar % Gaul
-          r[8],  // Service Availability
-          r[9],  // Q LIST
-          r[10], // Q 30D
-          r[11]  // % Q
-        ]);
+        bodyRows.push(r);
       }
+      const totalRow = data[data.length - 1] || [];
 
       const tbody = `
-  <tbody>
-    ${bodyRows
-      .map((r) => {
-        const sto = r[0];
-        const cluster = r[1];
-        const omHas = r[2];
-        const osa = r[3];
-        const mitra = r[4];
-        const asgarLine = r[5];
-        const asgarGaul = r[6];
-        const gaulPercent = r[7]; // % Gaul
-        const serviceAvail = r[8];
-        const qList = r[9];
-        const q30d = r[10];
-        const qPercent = r[11];   // % Q
+        <tbody>
+          ${bodyRows
+            .map((r) => {
+              const sto = r[0];
+              const cluster = r[1];
+              const omHas = r[2];
+              const osa = r[3];
+              const mitra = r[4];
+              const asgarLine = r[5];
+              const asgarGaul = r[6];
+              const gaulPercent = r[7];
+              const serviceAvail = r[8];
+              const qList = r[9];
+              const q30d = r[10];
+              const qPercent = r[11];
 
-        const gaulClass = getGaulClass(gaulPercent);
-        const qClass = getQClass(qPercent);
+              const gaulClass = getGaulClass(gaulPercent);
+              const qClass = getQClass(qPercent);
 
-        return `
-          <tr>
-            <td>${sto ?? ""}</td>
-            <td>${cluster ?? ""}</td>
-            <td>${omHas ?? ""}</td>
-            <td>${osa ?? ""}</td>
-            <td>${mitra ?? ""}</td>
-            <td>${asgarLine ?? ""}</td>
-            <td>${asgarGaul ?? ""}</td>
-            <td class="${gaulClass}">${gaulPercent ?? ""}</td>
-            <td>${serviceAvail ?? ""}</td>
-            <td>${qList ?? ""}</td>
-            <td>${q30d ?? ""}</td>
-            <td class="${qClass}">${qPercent ?? ""}</td>
+              return `
+                <tr>
+                  <td>${sto ?? ""}</td>
+                  <td>${cluster ?? ""}</td>
+                  <td>${omHas ?? ""}</td>
+                  <td>${osa ?? ""}</td>
+                  <td>${mitra ?? ""}</td>
+                  <td>${asgarLine ?? ""}</td>
+                  <td>${asgarGaul ?? ""}</td>
+                  <td class="${gaulClass}">${gaulPercent ?? ""}</td>
+                  <td>${serviceAvail ?? ""}</td>
+                  <td>${qList ?? ""}</td>
+                  <td>${q30d ?? ""}</td>
+                  <td class="${qClass}">${qPercent ?? ""}</td>
+                </tr>
+              `;
+            })
+            .join("")}
+
+          <tr class="table-secondary fw-semibold">
+            <td colspan="5">${totalRow[0] ?? ""}</td>
+            <td>${totalRow[5] ?? ""}</td>
+            <td>${totalRow[6] ?? ""}</td>
+            <td>${totalRow[7] ?? ""}</td>
+            <td>${totalRow[8] ?? ""}</td>
+            <td>${totalRow[9] ?? ""}</td>
+            <td>${totalRow[10] ?? ""}</td>
+            <td>${totalRow[11] ?? ""}</td>
           </tr>
-        `;
-      })
-      .join("")}
-  </tbody>
-`;
+        </tbody>
+      `;
+
       tableRight.innerHTML = thead + tbody;
     })
     .catch((err) => {
@@ -251,6 +235,7 @@ function loadKpiB2CRightTable(config) {
         "<tbody><tr><td>Gagal memuat data</td></tr></tbody>";
     });
 }
+
 
 function loadKpiB2CPrimaryTable(config) {
   const tablePrimary = document.getElementById("kpi-b2c-table-primary");
@@ -346,11 +331,19 @@ function loadKpiB2CPrimaryTable(config) {
               </tr>
             `)
             .join("")}
-          <tr class="table-secondary fw-semibold">
-            ${totalRow.map((v) => `<td>${v ?? ""}</td>`).join("")}
-          </tr>
-        </tbody>
-      `;
+
+    <!-- ROW TOTAL: TANGERANG -->
+    <tr class="table-secondary fw-semibold">
+      <td colspan="5">${totalRow[0] ?? ""}</td>
+      <td>${totalRow[5] ?? ""}</td>
+      <td>${totalRow[6] ?? ""}</td>
+      <td>${totalRow[7] ?? ""}</td>
+      <td>${totalRow[8] ?? ""}</td>
+      <td>${totalRow[9] ?? ""}</td>
+      <td>${totalRow[10] ?? ""}</td>
+    </tr>
+  </tbody>
+`;
 
       tablePrimary.innerHTML = thead + tbody;
     })
@@ -421,32 +414,40 @@ function loadKpiB2CMajorTable(config) {
       const totalRow = data[data.length - 1] || [];
 
       const tbody = `
-        <tbody>
-          ${bodyRows
-            .map((r) => `
-              <tr>
-                <td>${r[0] ?? ""}</td>  <!-- STO -->
-                <td>${r[1] ?? ""}</td>  <!-- Cluster -->
-                <td>${r[2] ?? ""}</td>  <!-- OM HAS -->
-                <td>${r[3] ?? ""}</td>  <!-- OSA -->
-                <td>${r[4] ?? ""}</td>  <!-- MITRA -->
+  <tbody>
+    ${bodyRows
+      .map((r) => `
+        <tr>
+          <td>${r[0] ?? ""}</td>  <!-- STO -->
+          <td>${r[1] ?? ""}</td>  <!-- Cluster -->
+          <td>${r[2] ?? ""}</td>  <!-- OM HAS -->
+          <td>${r[3] ?? ""}</td>  <!-- OSA -->
+          <td>${r[4] ?? ""}</td>  <!-- MITRA -->
 
-                <td>${r[5] ?? ""}</td>  <!-- TTR Comply SQM 4H (nilai / %) -->
-                <td>${r[6] ?? ""}</td>  <!-- TTR % -->
+          <td>${r[5] ?? ""}</td>  <!-- TTR value -->
+          <td>${r[6] ?? ""}</td>  <!-- % TTR -->
 
-                <td>${r[7] ?? ""}</td>  <!-- Underspec Non Warranty (SCC-INET) -->
-                <td>${r[8] ?? ""}</td>  <!-- Underspec COMPLY -->
+          <td>${r[7] ?? ""}</td>  <!-- Underspec (SCC-INET) -->
+          <td>${r[8] ?? ""}</td>  <!-- Underspec COMPLY -->
 
-                <td>${r[9]  ?? ""}</td> <!-- Closed SQM NOT COMPLY -->
-                <td>${r[10] ?? ""}</td> <!-- Closed SQM COMPLY -->
-              </tr>
-            `)
-            .join("")}
-          <tr class="table-secondary fw-semibold">
-            ${totalRow.map((v) => `<td>${v ?? ""}</td>`).join("")}
-          </tr>
-        </tbody>
-      `;
+          <td>${r[9]  ?? ""}</td> <!-- Closed SQM NOT COMPLY -->
+          <td>${r[10] ?? ""}</td> <!-- Closed SQM COMPLY -->
+        </tr>
+      `)
+      .join("")}
+
+    <!-- ROW TOTAL: TANGERANG -->
+    <tr class="table-secondary fw-semibold">
+      <td colspan="5">${totalRow[0] ?? ""}</td>
+      <td>${totalRow[5] ?? ""}</td>
+      <td>${totalRow[6] ?? ""}</td>
+      <td>${totalRow[7] ?? ""}</td>
+      <td>${totalRow[8] ?? ""}</td>
+      <td>${totalRow[9] ?? ""}</td>
+      <td>${totalRow[10] ?? ""}</td>
+    </tr>
+  </tbody>
+`;
 
       tableMajor.innerHTML = thead + tbody;
     })
