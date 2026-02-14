@@ -122,6 +122,7 @@ function buildRightTableHeader() {
     "Asgar %",
     "Service Availability",
     "Q LIST",
+    "Q 30D",
     "Q %",
     "LINE",
     "GAUL",
@@ -188,7 +189,8 @@ function loadKpiB2CRightTable(config) {
       <th class="text-center th-plat">GAUL</th>
       <th class="text-center th-plat">% Gaul</th>
       <th class="text-center th-bronze">LIST</th>
-      <th class="text-center th-bronze">% Q30D</th>
+      <th class="text-center th-bronze">Q 30D</th>
+      <th class="text-center th-bronze">% Q</th>
     </tr>
   </thead>
 `;
@@ -214,8 +216,8 @@ function loadKpiB2CRightTable(config) {
           r[7],   // Asgar %
           r[8],   // Service Availability
           r[9],   // Q LIST
-          r[10],  // Q %
-          r[11]   // LINE
+          r[10],  // Q 30D
+          r[11]   // Q %
         ]);
       }
 
