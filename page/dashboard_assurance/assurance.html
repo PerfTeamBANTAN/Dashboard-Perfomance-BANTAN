@@ -198,23 +198,26 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-const B2B_API_URL = 'https://script.google.com/macros/s/AKfycbwUqQ9_EFnGsX0swiip-Mc7ZNavcxLnr7lZdl8bLDYBr4gkRyGeugFPd1elH7Z6QPJwuA/exec';
+const KPI_API_URL = 'https://script.google.com/macros/s/AKfycbxL_isP6OTrlirRz5ySpKWxE-GTumtsJocf2TJa57MlT-yYcdSx4JJ7RtoxvO3y3SqysA/exec';
 
 const menuMap = {
   "kpi-b2c": {
     html: "partial/kpi-b2c.html",
     js: "js/kpi-b2c.js",
     css: "css/kpi-b2c.css",
-    init: "initKPIB2C"
-  },  // ✅ koma ditambahkan
+    init: "initKPIB2C",
+    sheet: "WEB",
+    range: "A1:F28"
+  },
   "kpi-b2b": {
     html: "partial/kpi-b2b.html",
     js: "js/kpi-b2b.js",
     css: "css/kpi-b2b.css",
-    init: "initKPIB2B"
+    init: "initKPIB2B",
+    sheet: "WEB_B2B",
+    range: "A1:F28"
   }
 };
-
 
 async function loadPage(menu) {
   const content = document.getElementById("content-area");
