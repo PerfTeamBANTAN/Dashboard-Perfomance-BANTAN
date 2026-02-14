@@ -96,3 +96,45 @@
   white-space: nowrap;
 }
 
+/* header warna */
+#kpi-b2c-table-right thead th {
+  font-size: 0.7rem;
+  font-weight: 600;
+  border: 1px solid #e5e7eb;
+  vertical-align: middle;
+}
+
+/* gold group */
+.th-gold {
+  background: linear-gradient(135deg, #facc15, #d97706);
+  color: #111827;
+}
+
+/* platinum group */
+.th-plat {
+  background: linear-gradient(135deg, #e5e4e2, #cbd5f5);
+  color: #111827;
+}
+
+/* silver group */
+.th-silver {
+  background: linear-gradient(135deg, #e5e7eb, #c0c0c0);
+  color: #111827;
+}
+
+/* bronze group */
+.th-bronze {
+  background: linear-gradient(135deg, #f97316, #b45309);
+  color: #111827;
+}
+
+/* border body tabel */
+#kpi-b2c-table-right tbody td {
+  font-size: 0.7rem;
+  border: 1px solid #e5e7eb;
+}
+
+/* garis luar tabel */
+#kpi-b2c-table-right {
+  border-collapse: collapse;
+}
