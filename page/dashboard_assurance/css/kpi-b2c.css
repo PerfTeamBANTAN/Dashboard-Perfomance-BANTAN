@@ -213,3 +213,72 @@ table.kpi-table td.kpi-text-red {
   color: #b91c1c;
   font-weight: 600;
 }
+
+/* ====== JUDUL TABEL KPI B2C ====== */
+
+/* wrapper header khusus tabel KPI di row kpi-b2c-tables-row */
+.kpi-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: linear-gradient(
+    135deg,
+    #0f172a,
+    #1d4ed8
+  ); /* biru gelap elegan */
+  border-bottom: 1px solid rgba(15, 23, 42, 0.25);
+}
+
+/* teks judul */
+.kpi-section-title {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #f9fafb;
+}
+
+/* badge kategori di kanan */
+.kpi-section-badge {
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 1px solid transparent;
+  background: rgba(15, 23, 42, 0.6);
+  color: #e5e7eb;
+}
+
+/* varian warna per kategori */
+.kpi-badge-hsa {
+  border-color: rgba(34, 197, 94, 0.7);
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.3);
+}
+
+.kpi-badge-mitra {
+  border-color: rgba(59, 130, 246, 0.7);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.3);
+}
+
+.kpi-badge-critical {
+  border-color: rgba(239, 68, 68, 0.7);
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.3);
+}
+
+.kpi-badge-primary {
+  border-color: rgba(245, 158, 11, 0.8);
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.3);
+}
+
+.kpi-badge-core {
+  border-color: rgba(56, 189, 248, 0.8);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+}
+
+.kpi-badge-support {
+  border-color: rgba(148, 163, 184, 0.8);
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.3);
+}
