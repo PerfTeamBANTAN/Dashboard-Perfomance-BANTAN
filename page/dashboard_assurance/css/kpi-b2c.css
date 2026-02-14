@@ -200,18 +200,16 @@
   background-color: #eff6ff; /* blue-50 sebagai highlight */
 }
 
-/* WARNA ANGKA % GAUL & % Q */
-.kpi-text-red {
-  color: #b91c1c;    /* red-700 */
+/* lebih spesifik dari .table>:not(caption)>*>* */
+table.kpi-table td.kpi-text-green {
+  color: #15803d;
   font-weight: 600;
 }
-
-.kpi-text-yellow {
-  color: #a16207;    /* amber-700 */
+table.kpi-table td.kpi-text-yellow {
+  color: #a16207;
   font-weight: 600;
 }
-
-.kpi-text-green {
-  color: #15803d;    /* green-700 */
+table.kpi-table td.kpi-text-red {
+  color: #b91c1c;
   font-weight: 600;
 }
