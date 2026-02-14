@@ -1,17 +1,7 @@
 // =========================
-// CONFIG
-// =========================
-const KPI_B2C_SHEET_URL =
-  "https://script.google.com/macros/s/AKfycbxL_isP6OTrlirRz5ySpKWxE-GTumtsJocf2TJa57MlT-yYcdSx4JJ7RtoxvO3y3SqysA/exec";
-
-// =========================
-// HELPER & RENDER FUNCTION
+// HELPER & RENDER
 // =========================
 
-// Tentukan status overall indikator:
-// - Kalau HI ✅ -> ok
-// - Kalau HI ❌ -> nok
-// - Kalau kosong, pakai H-1
 function getOverallStatus(rowObj) {
   if (rowObj.status_hi === "✅") return "ok";
   if (rowObj.status_hi === "❌") return "nok";
@@ -20,7 +10,6 @@ function getOverallStatus(rowObj) {
   return "nok";
 }
 
-// Generate HTML 1 card KPI
 function createKpiCard(rowObj) {
   const overall = getOverallStatus(rowObj);
   const overallLabel = overall === "ok" ? "On Track" : "Not Meet";
@@ -35,7 +24,6 @@ function createKpiCard(rowObj) {
     <div class="col-12 col-sm-6 col-lg-4 mb-3 kpi-col" data-kpi-overall="${overall}">
       <div class="card kpi-card ${overall}">
         <div class="card-body">
-          <!-- Header indikator -->
           <div class="d-flex justify-content-between align-items-start mb-2">
             <div>
               <div class="kpi-card-title">
@@ -52,7 +40,6 @@ function createKpiCard(rowObj) {
             </div>
           </div>
 
-          <!-- Nilai Target, H-1, HI -->
           <div class="row mb-2">
             <div class="col-4">
               <div class="kpi-label">Target</div>
@@ -74,7 +61,6 @@ function createKpiCard(rowObj) {
             </div>
           </div>
 
-          <!-- Badge status kecil -->
           <div class="d-flex justify-content-between mt-1">
             <small class="${h1BadgeClass}">H-1 ${h1Icon}</small>
             <small class="${hiBadgeClass}">HI ${hiIcon}</small>
@@ -86,33 +72,28 @@ function createKpiCard(rowObj) {
 }
 
 // =========================
-// INIT & FETCH DATA
+// INIT (dipanggil dari index)
 // =========================
 
-function initKpiB2C() {
+// config: { baseUrl, sheet, range }
+function initKPIB2C(config) {
   const grid = document.getElementById("kpi-b2c-grid");
   if (!grid) return;
 
-  // Ambil data dari Apps Script (array 2D)
-  fetch(KPI_B2C_SHEET_URL)
+  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+    config.sheet
+  )}&range=${encodeURIComponent(config.range)}`;
+
+  fetch(url)
     .then((resp) => resp.json())
     .then((data) => {
-      // data = [
-      //   ["Indikator","Target","H-1","Status H-1","HI","Status HI"],
-      //   ["Assurance Guarantee",91.71,95.13,"✅",95.13,"✅"],
-      //   ...
-      // ]
-
       const rows = [];
 
       data.forEach((r, idx) => {
-        // Header di index 0, skip
-        if (idx === 0) return;
-
+        if (idx === 0) return; // header
         const indikator = r[0];
         if (!indikator) return;
 
-        // Skip baris KPI Branch TANGERANG kalau mau total saja ditampilkan di tempat lain
         if (String(indikator).toLowerCase().includes("kpi branch tangerang")) {
           return;
         }
@@ -127,27 +108,26 @@ function initKpiB2C() {
         });
       });
 
-      // Render semua card ke grid
       grid.innerHTML = rows.map(createKpiCard).join("");
+      initKpiFilter();
     })
     .catch((err) => {
       console.error("Error load KPI B2C:", err);
       grid.innerHTML =
         '<div class="col-12"><div class="alert alert-danger">Gagal memuat data KPI.</div></div>';
     });
+}
 
-  // Event filter All / OK / Not OK
+function initKpiFilter() {
   document.querySelectorAll("[data-kpi-filter]").forEach((btn) => {
     btn.addEventListener("click", function () {
       const filter = this.getAttribute("data-kpi-filter");
 
-      // Toggle button active
       document
         .querySelectorAll("[data-kpi-filter]")
         .forEach((b) => b.classList.remove("active"));
       this.classList.add("active");
 
-      // Tampilkan / sembunyikan card
       document
         .querySelectorAll("#kpi-b2c-grid .kpi-col")
         .forEach((col) => {
@@ -167,5 +147,4 @@ function initKpiB2C() {
   });
 }
 
-// Jalankan setelah DOM siap (atau setelah partial dimuat)
-document.addEventListener("DOMContentLoaded", initKpiB2C);
+window.initKPIB2C = initKPIB2C;
