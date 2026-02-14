@@ -122,7 +122,7 @@ function loadKpiB2CRightTable(config) {
     .then((data) => {
       if (!Array.isArray(data) || data.length < 4) return;
 
-      // Header dua baris
+      // Header dua baris (tetap)
       const thead = `
         <thead>
           <tr>
@@ -156,15 +156,35 @@ function loadKpiB2CRightTable(config) {
         const omhas = r[2];
         const osa = r[3];
         const mitra = r[4];
-        const asgarLine = r[5];
+        const asgarLine = Number(r[5] ?? 0);  // LINE Asgar
         const asgarGaul = r[6];
-        const asgarPct = r[7];
         const sa = r[8];
         const qList = r[9];
         const q30 = r[10];
         const qPct = r[11];
 
+        // GAUL dari QGAUL
         const gaulCount = countGaulForSto(sto);
+
+        // % Gaul = 100 - (GAUL / LINE * 100)
+        const lineVal = asgarLine || 0;
+        let pctGaul = 0;
+        if (lineVal > 0) {
+          pctGaul = 100 - (gaulCount / lineVal) * 100;
+        }
+        const pctGaulStr = lineVal > 0 ? pctGaul.toFixed(2) : "-";
+
+        // warna % Gaul
+        let pctGaulClass = "";
+        if (lineVal > 0) {
+          if (pctGaul < 91.71) {
+            pctGaulClass = "gaul-red";
+          } else if (pctGaul < 92.5) {
+            pctGaulClass = "gaul-yellow";
+          } else {
+            pctGaulClass = "gaul-green";
+          }
+        }
 
         bodyRowsHtml.push(`
           <tr>
@@ -173,13 +193,13 @@ function loadKpiB2CRightTable(config) {
             <td>${omhas ?? ""}</td>
             <td>${osa ?? ""}</td>
             <td>${mitra ?? ""}</td>
-            <td>${asgarLine ?? ""}</td>
+            <td>${asgarLine || ""}</td>
             <td class="text-center gaul-cell" data-sto="${sto}">
               <a href="javascript:void(0)" class="text-decoration-none fw-semibold">
                 ${gaulCount}
               </a>
             </td>
-            <td>${asgarPct ?? ""}</td>
+            <td class="text-center ${pctGaulClass}">${pctGaulStr}</td>
             <td>${sa ?? ""}</td>
             <td>${qList ?? ""}</td>
             <td>${q30 ?? ""}</td>
