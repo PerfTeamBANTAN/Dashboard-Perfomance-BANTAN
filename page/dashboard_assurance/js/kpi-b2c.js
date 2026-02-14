@@ -182,10 +182,6 @@ function loadKpiB2CRightTable(config) {
       <th colspan="3" class="text-center th-plat">Asgar</th>
       <th rowspan="2" class="text-center th-silver">Service Availability</th>
       <th colspan="2" class="text-center th-bronze">Q</th>
-      <th rowspan="2" class="text-center th-plat">LINE</th>
-      <th rowspan="2" class="text-center th-plat">GAUL</th>
-      <th rowspan="2" class="text-center th-bronze">LIST</th>
-      <th rowspan="2" class="text-center th-bronze">Q 30D</th>
     </tr>
     <tr>
       <th class="text-center th-plat">LINE</th>
@@ -219,10 +215,7 @@ function loadKpiB2CRightTable(config) {
           r[8],   // Service Availability
           r[9],   // Q LIST
           r[10],  // Q %
-          r[5],   // LINE
-          r[6],   // GAUL
-          r[9],   // LIST
-          r[10]   // Q 30D
+          r[11]   // LINE
         ]);
       }
 
