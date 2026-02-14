@@ -172,30 +172,30 @@ function loadKpiB2CRightTable(config) {
 
       // Header dua baris yang “bagus”, manual sesuai struktur merge:
       const thead = `
-        <thead>
-          <tr>
-            <th rowspan="2">STO</th>
-            <th rowspan="2">Telkomsel Cluster</th>
-            <th rowspan="2">OM HAS</th>
-            <th rowspan="2">OSA</th>
-            <th rowspan="2">MITRA</th>
-            <th colspan="3" class="text-center">Asgar</th>
-            <th rowspan="2" class="text-center">Service Availability</th>
-            <th colspan="2" class="text-center">Q</th>
-            <th rowspan="2" class="text-center">LINE</th>
-            <th rowspan="2" class="text-center">GAUL</th>
-            <th rowspan="2" class="text-center">LIST</th>
-            <th rowspan="2" class="text-center">Q 30D</th>
-          </tr>
-          <tr>
-            <th class="text-center">LINE</th>
-            <th class="text-center">GAUL</th>
-            <th class="text-center">%</th>
-            <th class="text-center">LIST</th>
-            <th class="text-center">%</th>
-          </tr>
-        </thead>
-      `;
+  <thead>
+    <tr>
+      <th rowspan="2" class="th-gold">STO</th>
+      <th rowspan="2" class="th-gold">Telkomsel Cluster</th>
+      <th rowspan="2" class="th-gold">OM HAS</th>
+      <th rowspan="2" class="th-gold">OSA</th>
+      <th rowspan="2" class="th-gold">MITRA</th>
+      <th colspan="3" class="text-center th-plat">Asgar</th>
+      <th rowspan="2" class="text-center th-silver">Service Availability</th>
+      <th colspan="2" class="text-center th-bronze">Q</th>
+      <th rowspan="2" class="text-center th-plat">LINE</th>
+      <th rowspan="2" class="text-center th-plat">GAUL</th>
+      <th rowspan="2" class="text-center th-bronze">LIST</th>
+      <th rowspan="2" class="text-center th-bronze">Q 30D</th>
+    </tr>
+    <tr>
+      <th class="text-center th-plat">LINE</th>
+      <th class="text-center th-plat">GAUL</th>
+      <th class="text-center th-plat">% Gaul</th>
+      <th class="text-center th-bronze">LIST</th>
+      <th class="text-center th-bronze">% Q30D</th>
+    </tr>
+  </thead>
+`;
 
       // Data body: STO (A32:L44) + total (A45:L45)
       const bodyRows = [];
