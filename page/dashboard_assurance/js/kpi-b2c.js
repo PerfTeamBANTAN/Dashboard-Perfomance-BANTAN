@@ -37,7 +37,7 @@ function createKpiCard(rowObj) {
   const growth = getGrowthInfo(rowObj);
 
   return `
-    <div class="col-12 col-sm-4 col-lg-3 mb-2 kpi-col" data-kpi-overall="${overall}">
+    <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-1 kpi-col" data-kpi-overall="${overall}">
       <div class="card kpi-card ${overall}">
         <div class="card-body">
           <!-- header -->
