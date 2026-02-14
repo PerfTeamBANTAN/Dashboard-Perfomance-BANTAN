@@ -7,6 +7,23 @@ function getOverallStatus(rowObj) {
   return "nok";
 }
 
+function getGrowthInfo(rowObj) {
+  const hi = parseFloat(String(rowObj.hi).replace(",", "."));
+  const h1 = parseFloat(String(rowObj.h_1).replace(",", "."));
+
+  if (isNaN(hi) || isNaN(h1)) {
+    return { icon: "minus", cls: "growth-flat", title: "No data" };
+  }
+
+  if (hi > h1) {
+    return { icon: "arrow-up", cls: "growth-up", title: "HI lebih baik dari H-1" };
+  } else if (hi < h1) {
+    return { icon: "arrow-down", cls: "growth-down", title: "HI lebih buruk dari H-1" };
+  } else {
+    return { icon: "minus", cls: "growth-flat", title: "HI sama dengan H-1" };
+  }
+}
+
 function createKpiCard(rowObj) {
   const overall = getOverallStatus(rowObj);
   const overallLabel = overall === "ok" ? "On Track" : "Not Meet";
@@ -17,50 +34,63 @@ function createKpiCard(rowObj) {
   const hiBadgeClass = rowObj.status_hi === "✅" ? "kpi-pill-ok" : "kpi-pill-nok";
   const h1BadgeClass = rowObj.status_h1 === "✅" ? "kpi-pill-ok" : "kpi-pill-nok";
 
+  const growth = getGrowthInfo(rowObj);
+
   return `
-    <div class="col-12 col-sm-6 col-lg-4 mb-3 kpi-col" data-kpi-overall="${overall}">
+    <div class="col-12 col-md-6 col-xl-4 mb-2 kpi-col" data-kpi-overall="${overall}">
       <div class="card kpi-card ${overall}">
         <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-2">
+          <!-- header -->
+          <div class="d-flex justify-content-between align-items-start mb-1">
             <div>
-              <div class="kpi-card-title">
-                ${rowObj.indikator}
-              </div>
-              <div class="kpi-label">
-                KPI B2C • Tangerang
-              </div>
+              <div class="kpi-card-title">${rowObj.indikator}</div>
+              <div class="kpi-label">KPI B2C • Tangerang</div>
             </div>
-            <div class="text-end">
-              <span class="${overall === "ok" ? "kpi-pill-ok" : "kpi-pill-nok"}">
-                ${overallLabel}
-              </span>
-            </div>
+            <span class="${overall === "ok" ? "kpi-pill-ok" : "kpi-pill-nok"}">
+              ${overallLabel}
+            </span>
           </div>
 
-          <div class="row mb-2">
-            <div class="col-4">
-              <div class="kpi-label">Target</div>
-              <div class="kpi-value">${rowObj.target ?? "-"}</div>
-            </div>
-            <div class="col-4">
-              <div class="kpi-label">H-1</div>
-              <div class="d-flex align-items-center gap-1">
-                <span class="kpi-value me-1">${rowObj.h_1 ?? "-"}</span>
-                <span class="kpi-status">${h1Icon}</span>
+          <!-- content utama: Target / H-1 / Growth / HI -->
+          <div class="d-flex align-items-center mt-1">
+            <!-- sisi kiri: target & H-1 -->
+            <div class="flex-grow-1">
+              <div class="d-flex">
+                <div class="me-3">
+                  <div class="kpi-label">Target</div>
+                  <div class="kpi-value">${rowObj.target ?? "-"}</div>
+                </div>
+                <div>
+                  <div class="kpi-label">H-1</div>
+                  <div class="d-flex align-items-center">
+                    <span class="kpi-value me-1">${rowObj.h_1 ?? "-"}</span>
+                    <span class="kpi-status">${h1Icon}</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col-4">
+
+            <!-- tengah: growth box -->
+            <div class="mx-3">
+              <div class="kpi-growth-box" title="${growth.title}">
+                <i class="fa-solid fa-${growth.icon} ${growth.cls}"></i>
+              </div>
+            </div>
+
+            <!-- kanan: HI -->
+            <div class="text-end">
               <div class="kpi-label">HI</div>
-              <div class="d-flex align-items-center gap-1">
+              <div class="d-flex align-items-center justify-content-end">
                 <span class="kpi-value me-1">${rowObj.hi ?? "-"}</span>
                 <span class="kpi-status">${hiIcon}</span>
               </div>
             </div>
           </div>
 
-          <div class="d-flex justify-content-between mt-1">
-            <small class="${h1BadgeClass}">H-1 ${h1Icon}</small>
-            <small class="${hiBadgeClass}">HI ${hiIcon}</small>
+          <!-- footer kecil -->
+          <div class="d-flex justify-content-between align-items-center mt-2">
+            <span class="${h1BadgeClass} kpi-mini">H-1 ${h1Icon || ""}</span>
+            <span class="${hiBadgeClass} kpi-mini">HI ${hiIcon || ""}</span>
           </div>
         </div>
       </div>
@@ -68,11 +98,6 @@ function createKpiCard(rowObj) {
   `;
 }
 
-// =========================
-// INIT (dipanggil dari index)
-// =========================
-
-// config: { baseUrl, sheet, range }
 function initKPIB2C(config) {
   const grid = document.getElementById("kpi-b2c-grid");
   if (!grid) return;
