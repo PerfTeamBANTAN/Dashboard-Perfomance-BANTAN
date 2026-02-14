@@ -339,11 +339,11 @@ function initKPIB2C(config) {
 
       grid.innerHTML = rows.map(createKpiCard).join("");
       initKpiFilter();
-
-      // load QGAUL dulu, lalu tabel kanan
-      loadQGaulData(config).then(() => {
-        loadKpiB2CRightTable(config);
-      });
+      return loadQGaulData(config);
+    })
+    .then(() => {
+      loadKpiB2CRightTable(config);
+    })
     .catch((err) => {
       console.error("Error load KPI B2C:", err);
       grid.innerHTML =
