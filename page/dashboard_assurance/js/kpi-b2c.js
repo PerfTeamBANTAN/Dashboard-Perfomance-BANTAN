@@ -283,7 +283,8 @@ function loadKpiB2CMitraTable(config) {
             <th colspan="1" class="th-plat text-center">SKA</th>
             <th colspan="3" class="th-plat text-center">FAMIKA</th>
             <th colspan="2" class="th-plat text-center">FSL</th>
-
+          </tr>
+          <tr>
             <th class="th-plat text-center">GDS</th>
             <th class="th-plat text-center">DTG</th>
             <th class="th-plat text-center">JIA</th>
