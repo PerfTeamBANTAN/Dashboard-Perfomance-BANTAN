@@ -558,6 +558,91 @@ function loadKpiB2CCoreTable(config) {
     });
 }
 
+// =========================
+// TABLE SUPPORT KPI (WEB!A90:J104)
+// =========================
+
+function loadKpiB2CSupportTable(config) {
+  const tableSupport = document.getElementById("kpi-b2c-table-support");
+  if (!tableSupport) return;
+
+  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+    config.sheet
+  )}&range=${encodeURIComponent("WEB!A90:J104")}`;
+
+  fetch(url)
+    .then((resp) => resp.json())
+    .then((data) => {
+      if (!Array.isArray(data) || data.length < 3) return;
+
+      // Header: WEB!A90:J90
+      const thead = `
+        <thead>
+          <tr>
+            <th class="th-gold">STO</th>
+            <th class="th-gold">Telkomsel Cluster</th>
+            <th class="th-gold">OM HAS</th>
+            <th class="th-gold">OSA</th>
+            <th class="th-gold">MITRA</th>
+            <th class="th-plat text-center">VALINS DC QR code &amp; Service</th>
+            <th class="th-plat text-center">VALINS Visit ODP</th>
+            <th class="th-plat text-center">Validasi ODC</th>
+            <th class="th-plat text-center">Validasi Connect ODP-OLT</th>
+            <th class="th-plat text-center">Validasi Tiang</th>
+          </tr>
+        </thead>
+      `;
+
+      // Body: WEB!A91:J103 -> index 1..data.length-2
+      const bodyRows = [];
+      for (let i = 1; i < data.length - 1; i++) {
+        const r = data[i];
+        if (!r || r.join("").toString().trim() === "") continue;
+        bodyRows.push(r);
+      }
+
+      // Total: WEB!A104:J104 -> baris terakhir (BRANCH TANGERANG)
+      const totalRow = data[data.length - 1] || [];
+
+      const tbody = `
+        <tbody>
+          ${bodyRows
+            .map((r) => `
+              <tr>
+                <td>${r[0] ?? ""}</td>  <!-- STO -->
+                <td>${r[1] ?? ""}</td>  <!-- Cluster -->
+                <td>${r[2] ?? ""}</td>  <!-- OM HAS -->
+                <td>${r[3] ?? ""}</td>  <!-- OSA -->
+                <td>${r[4] ?? ""}</td>  <!-- MITRA -->
+
+                <td>${r[5] ?? ""}</td>  <!-- VALINS DC QR & Service -->
+                <td>${r[6] ?? ""}</td>  <!-- VALINS Visit ODP -->
+                <td>${r[7] ?? ""}</td>  <!-- Validasi ODC -->
+                <td>${r[8] ?? ""}</td>  <!-- Validasi Connect ODP-OLT -->
+                <td>${r[9] ?? ""}</td>  <!-- Validasi Tiang -->
+              </tr>
+            `)
+            .join("")}
+
+          <tr class="table-secondary fw-semibold">
+            <td colspan="5">${totalRow[0] ?? ""}</td>
+            <td>${totalRow[5] ?? ""}</td>
+            <td>${totalRow[6] ?? ""}</td>
+            <td>${totalRow[7] ?? ""}</td>
+            <td>${totalRow[8] ?? ""}</td>
+            <td>${totalRow[9] ?? ""}</td>
+          </tr>
+        </tbody>
+      `;
+
+      tableSupport.innerHTML = thead + tbody;
+    })
+    .catch((err) => {
+      console.error("Error load tabel Support KPI B2C:", err);
+      tableSupport.innerHTML =
+        "<tbody><tr><td>Gagal memuat data Support KPI.</td></tr></tbody>";
+    });
+}
 
 // =========================
 // INIT & FILTER
@@ -603,6 +688,7 @@ function initKPIB2C(config) {
       loadKpiB2CPrimaryTable(config);
       loadKpiB2CMajorTable(config);
       loadKpiB2CCoreTable(config); 
+      loadKpiB2CSupportTable(config);
     })
     .catch((err) => {
       console.error("Error load KPI B2C:", err);
