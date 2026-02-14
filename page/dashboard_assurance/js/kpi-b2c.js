@@ -1,6 +1,3 @@
-// =========================
-// HELPER & RENDER
-// =========================
 
 function getOverallStatus(rowObj) {
   if (rowObj.status_hi === "✅") return "ok";
