@@ -1,62 +1,119 @@
 .kpi-b2c-tangerang {
-  padding: 10px 5px;
+  padding: 8px 0;
 }
 
+/* Card lebih kecil & compact */
 .kpi-card {
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  margin-bottom: 15px;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  margin-bottom: 10px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-  border-left: 5px solid transparent;
+  border: 1px solid #e3e6ea;
+  border-left-width: 4px;
+  border-left-style: solid;
+  padding: 4px 4px;
 }
 
 .kpi-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
+/* Slim layout */
+.kpi-card .card-body {
+  padding: 10px 14px;
+}
+
+/* Status warna border */
 .kpi-card.ok {
-  border-left-color: #28a745;
+  border-left-color: #22c55e; /* green */
 }
 
 .kpi-card.nok {
-  border-left-color: #dc3545;
+  border-left-color: #ef4444; /* red */
 }
 
+/* Judul & label */
 .kpi-card-title {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  color: #111827;
 }
 
 .kpi-label {
-  font-size: 0.8rem;
-  color: #6c757d;
+  font-size: 0.74rem;
+  color: #6b7280;
 }
 
+/* Angka */
 .kpi-value {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
+  color: #111827;
 }
 
 .kpi-status {
-  font-size: 1.3rem;
+  font-size: 1rem;
+}
+
+/* Badge status overall */
+.kpi-pill-ok,
+.kpi-pill-nok {
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 500;
 }
 
 .kpi-pill-ok {
-  color: #155724;
-  background-color: #d4edda;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 0.8rem;
+  color: #166534;
+  background-color: #dcfce7;
 }
 
 .kpi-pill-nok {
-  color: #721c24;
-  background-color: #f8d7da;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 0.8rem;
+  color: #991b1b;
+  background-color: #fee2e2;
 }
 
+/* Badge kecil H-1 / HI */
+.kpi-mini {
+  font-size: 0.7rem;
+  border-radius: 999px;
+  padding: 1px 7px;
+}
 
+/* Growth area di tengah card */
+.kpi-growth-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9fafb;
+}
+
+/* ikon growth */
+.growth-up {
+  color: #16a34a;
+  font-size: 1.5rem;
+}
+
+.growth-down {
+  color: #dc2626;
+  font-size: 1.5rem;
+}
+
+.growth-flat {
+  color: #ca8a04;
+  font-size: 1.5rem;
+}
+
+/* Responsif: lebih rapat di layar kecil */
+@media (max-width: 767.98px) {
+  .kpi-card .card-body {
+    padding: 8px 10px;
+  }
+}
