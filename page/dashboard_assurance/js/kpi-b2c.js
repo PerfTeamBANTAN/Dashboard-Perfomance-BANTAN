@@ -143,16 +143,7 @@ function loadKpiB2CHsaTable(config) {
     .then((resp) => resp.json())
     .then((data) => {
       if (!Array.isArray(data) || data.length < 4) return;
-
-      // Header fix sesuai merge:
-      // Indikator = B3:B4
-      // Target    = C3:C4
-      // DADY      = D3:F3 (GDS, TAN, JIA)
-      // EKA       = G3:I3 (CLD, PDR, PKU)
-      // HERLANDO  = J3:K3 (LKG, SRP)
-      // RISMAN    = L3:N3 (CPD, CKL, DTG)
-      // ZULFA     = O3:P3 (SRH, CPA)
-      // TANGERANG = Q3:R3 (TANGERANG, KPI HSA)
+      
       const thead = `
         <thead>
           <tr>
@@ -209,45 +200,51 @@ function loadKpiB2CHsaTable(config) {
       const totalRow = data[data.length - 1] || [];
 
       const tbody = `
-        <tbody>
-          ${bodyRows
-            .map((r) => `
-              <tr>
-                <td>${r[0] ?? ""}</td>  <!-- Indikator -->
-                <td>${r[1] ?? ""}</td>  <!-- Target -->
+  <tbody>
+    ${bodyRows
+      .map((r) => `
+        <tr>
+          <td>${r[0] ?? ""}</td>
+          <td>${r[1] ?? ""}</td>
 
-                <td>${r[2] ?? ""}</td>  <!-- DADY: GDS -->
-                <td>${r[3] ?? ""}</td>  <!-- DADY: TAN -->
-                <td>${r[4] ?? ""}</td>  <!-- DADY: JIA -->
+          <td>${r[2] ?? ""}</td>
+          <td>${r[3] ?? ""}</td>
+          <td>${r[4] ?? ""}</td>
 
-                <td>${r[5] ?? ""}</td>  <!-- EKA: CLD -->
-                <td>${r[6] ?? ""}</td>  <!-- EKA: PDR -->
-                <td>${r[7] ?? ""}</td>  <!-- EKA: PKU -->
+          <td>${r[5] ?? ""}</td>
+          <td>${r[6] ?? ""}</td>
+          <td>${r[7] ?? ""}</td>
 
-                <td>${r[8] ?? ""}</td>  <!-- HERLANDO: LKG -->
-                <td>${r[9] ?? ""}</td>  <!-- HERLANDO: SRP -->
+          <td>${r[8] ?? ""}</td>
+          <td>${r[9] ?? ""}</td>
 
-                <td>${r[10] ?? ""}</td> <!-- RISMAN: CPD -->
-                <td>${r[11] ?? ""}</td> <!-- RISMAN: CKL -->
-                <td>${r[12] ?? ""}</td> <!-- RISMAN: DTG -->
+          <td>${r[10] ?? ""}</td>
+          <td>${r[11] ?? ""}</td>
+          <td>${r[12] ?? ""}</td>
 
-                <td>${r[13] ?? ""}</td> <!-- ZULFA: SRH -->
-                <td>${r[14] ?? ""}</td> <!-- ZULFA: CPA -->
+          <td>${r[13] ?? ""}</td>
+          <td>${r[14] ?? ""}</td>
 
-                <td>${r[15] ?? ""}</td> <!-- TANGERANG (branch) -->
-                <td>${r[16] ?? ""}</td> <!-- KPI HSA -->
-              </tr>
-            `)
-            .join("")}
+          <td>${r[15] ?? ""}</td>
+          <td>${r[16] ?? ""}</td>
+        </tr>
+      `)
+      .join("")}
 
-          <tr class="table-secondary fw-semibold">
-            ${totalRow
-              .slice(0, 17) // pastikan 17 kolom pertama (Indikator..KPI HSA)
-              .map((v) => `<td>${v ?? ""}</td>`)
-              .join("")}
-          </tr>
-        </tbody>
-      `;
+    <!-- ROW TOTAL KPI HSA -->
+    <tr class="table-secondary fw-semibold">
+      <td colspan="2">${totalRow[0] ?? ""}</td>
+
+      <td colspan="3">${totalRow[3] ?? ""}</td>   
+      <td colspan="3">${totalRow[6] ?? ""}</td>  
+
+      <td colspan="2">${totalRow[9] ?? ""}</td> 
+
+      <td colspan="3">${totalRow[11] ?? ""}</td>
+      <td colspan="2">${totalRow[14] ?? ""}</td>
+    </tr>
+  </tbody>
+`;
 
       tableHsa.innerHTML = thead + tbody;
     })
