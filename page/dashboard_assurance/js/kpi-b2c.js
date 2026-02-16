@@ -877,6 +877,8 @@ function loadKpiB2CSupportTable(config) {
 // =========================
 
 function loadKpiB2CRanking(config) {
+  console.log("HSA RANKING START");   // ← tambahkan log ini di paling atas
+
   const rankTitle1 = document.getElementById("rank-title-1");
   const rankTitle2 = document.getElementById("rank-title-2");
   const rankScore1 = document.getElementById("rank-score-1");
@@ -894,6 +896,14 @@ function loadKpiB2CRanking(config) {
   const img4 = document.getElementById("rank-img-4");
   const img5 = document.getElementById("rank-img-5");
 
+  console.log("ELEMENTS HSA:", {
+    rankTitle1, rankTitle2,
+    rankScore1, rankScore2,
+    rankDesc1, rankDesc2,
+    rankItem3, rankItem4, rankItem5,
+    img1, img2, img3, img4, img5
+  });
+
   if (
     !rankTitle1 || !rankTitle2 ||
     !rankScore1 || !rankScore2 ||
@@ -901,6 +911,7 @@ function loadKpiB2CRanking(config) {
     !rankItem3 || !rankItem4 || !rankItem5 ||
     !img1 || !img2 || !img3 || !img4 || !img5
   ) {
+    console.warn("HSA RANKING: element tidak lengkap, fungsi stop");
     return;
   }
 
@@ -908,25 +919,26 @@ function loadKpiB2CRanking(config) {
     "WEB"
   )}&range=${encodeURIComponent("A130:B135")}`;
 
+  console.log("HSA URL:", url);
+
   fetch(url)
-  .then((resp) => resp.json())
-  .then((data) => {
-    console.log("RAW HSA RANK DATA:", data);  // ← tambahkan di sini
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log("RAW HSA RANK DATA:", data);
 
-    // Expect:
-    // ["RANK","HSA"]
-    // ["1","ZULFA"]
-    // ...
-    if (!Array.isArray(data) || data.length < 6) return;
+      if (!Array.isArray(data) || data.length < 6) {
+        console.warn("HSA RANKING: data kurang dari 6 baris");
+        return;
+      }
 
-    const rows = data.slice(1, 6).map((r) => ({
-      rank: r[0],
-      nama: r[1],
-    }));
+      const rows = data.slice(1, 6).map((r) => ({
+        rank: r[0],
+        nama: r[1],
+      }));
 
-    console.log("PARSED HSA ROWS:", rows);     // opsional, boleh tambah ini juga
+      console.log("PARSED HSA ROWS:", rows);
 
-    function getSlugFromNama(nama) {
+      function getSlugFromNama(nama) {
         if (!nama) return "";
         const n = String(nama).toLowerCase().trim();
         if (n === "zulfa")    return "zulfa";
