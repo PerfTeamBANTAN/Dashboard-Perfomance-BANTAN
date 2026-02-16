@@ -872,13 +872,11 @@ function loadKpiB2CSupportTable(config) {
         "<tbody><tr><td>Gagal memuat data Support KPI.</td></tr></tbody>";
     });
 }
-
 // =========================
-// RANKING TOP 5 (WEB!A130:B135) + AVATAR PNG
+// RANKING TOP 5 HSA (WEB!A130:B135) + AVATAR PNG
 // =========================
 
 function loadKpiB2CRanking(config) {
-  // Elemen hero / rank 1 & 2
   const rankTitle1 = document.getElementById("rank-title-1");
   const rankTitle2 = document.getElementById("rank-title-2");
   const rankScore1 = document.getElementById("rank-score-1");
@@ -886,14 +884,12 @@ function loadKpiB2CRanking(config) {
   const rankDesc1  = document.getElementById("rank-desc-1");
   const rankDesc2  = document.getElementById("rank-desc-2");
 
+  const rankItem3  = document.getElementById("rank-item-3");
+  const rankItem4  = document.getElementById("rank-item-4");
+  const rankItem5  = document.getElementById("rank-item-5");
+
   const img1 = document.getElementById("rank-img-1");
   const img2 = document.getElementById("rank-img-2");
-
-  // Elemen list rank 3–5
-  const rankItem3 = document.getElementById("rank-item-3");
-  const rankItem4 = document.getElementById("rank-item-4");
-  const rankItem5 = document.getElementById("rank-item-5");
-
   const img3 = document.getElementById("rank-img-3");
   const img4 = document.getElementById("rank-img-4");
   const img5 = document.getElementById("rank-img-5");
@@ -917,20 +913,18 @@ function loadKpiB2CRanking(config) {
     .then((data) => {
       if (!Array.isArray(data) || data.length < 2) return;
 
-      // Parsing rows: A = rank, B = nama
       const rows = [];
       data.forEach((r, idx) => {
-        if (idx === 0) return; // header
+        if (idx === 0) return;
         if (!r || r.join("").toString().trim() === "") return;
         rows.push({
-          rank: r[0],  // 1..5
-          nama: r[1]   // ZULFA, RISMAN, HERLANDO, DADY, EKA
+          rank: r[0],
+          nama: r[1]
         });
       });
 
       if (rows.length < 5) return;
 
-      // Mapping nama → slug file PNG (tanpa _juara/_kalah)
       function getSlugFromNama(nama) {
         if (!nama) return "";
         const n = String(nama).toLowerCase().trim();
@@ -942,11 +936,10 @@ function loadKpiB2CRanking(config) {
         return n.split(/\s+/)[0];
       }
 
-      // Base path gambar – sesuaikan dengan struktur project kamu
       const basePath = "../../assets/home/img";
 
       function setImgWithFallback(imgEl, slug, type) {
-        const src = `${basePath}/${slug}_${type}.png`; // type: juara/kalah
+        const src = `${basePath}/${slug}_${type}.png`;
         imgEl.onerror = null;
         imgEl.src = src;
         imgEl.onerror = function () {
@@ -955,33 +948,25 @@ function loadKpiB2CRanking(config) {
         };
       }
 
-      // ======================
-      // RANK 1 – HERO CARD
-      // ======================
+      // Rank 1 (HSA hero)
       const r1 = rows[0];
       const slug1 = getSlugFromNama(r1.nama);
-
-      rankScore1.textContent = r1.nama || "-";  // nama di baris besar
+      rankScore1.textContent = r1.nama || "-";
       rankTitle1.textContent = `Rank ${r1.rank || "1"}`;
       rankDesc1.textContent =
         "Performa terbaik, menjadi acuan pencapaian KPI B2C Tangerang.";
       setImgWithFallback(img1, slug1, "juara");
 
-      // ======================
-      // RANK 2 – ROW KEDUA
-      // ======================
+      // Rank 2 (HSA row kedua)
       const r2 = rows[1];
       const slug2 = getSlugFromNama(r2.nama);
-
       rankScore2.textContent = r2.nama || "-";
       rankTitle2.textContent = `Rank ${r2.rank || "2"}`;
       rankDesc2.textContent =
         "Konsisten di papan atas dan sangat berkontribusi pada total performa.";
       setImgWithFallback(img2, slug2, "juara");
 
-      // ======================
-      // RANK 3–5 – LIST SIMPLE
-      // ======================
+      // Rank 3–5 (HSA list)
       const rankRows345 = [rows[2], rows[3], rows[4]];
       const liElems  = [rankItem3, rankItem4, rankItem5];
       const imgElems = [img3, img4, img5];
@@ -990,8 +975,8 @@ function loadKpiB2CRanking(config) {
         const li = liElems[idx];
         if (!li) return;
 
-        const nameEl = li.querySelector(".rank-score"); // span.nama
-        const rankEl = li.querySelector(".rank-title"); // span.rank
+        const nameEl = li.querySelector(".rank-score");
+        const rankEl = li.querySelector(".rank-title");
         const imgEl  = imgElems[idx];
         const slug   = getSlugFromNama(item.nama);
 
@@ -1001,7 +986,7 @@ function loadKpiB2CRanking(config) {
       });
     })
     .catch((err) => {
-      console.error("Error load ranking KPI B2C:", err);
+      console.error("Error load ranking KPI B2C (HSA):", err);
     });
 }
 
@@ -1015,7 +1000,6 @@ function loadKpiB2CRankingMitra(config) {
   const score1 = document.getElementById("rank-mitra-score-1");
   const score2 = document.getElementById("rank-mitra-score-2");
   const desc1  = document.getElementById("rank-mitra-desc-1");
-  const desc2  = document.getElementById("rank-mitra-desc-2"); // opsional, belum ada di HTML
 
   const item3 = document.getElementById("rank-mitra-item-3");
   const item4 = document.getElementById("rank-mitra-item-4");
@@ -1047,26 +1031,25 @@ function loadKpiB2CRankingMitra(config) {
 
       const rows = [];
       data.forEach((r, idx) => {
-        if (idx === 0) return; // header
+        if (idx === 0) return;
         if (!r || r.join("").toString().trim() === "") return;
         rows.push({
-          rank: r[0],   // 1..5 (MITRA)
-          nama: r[1]    // nama mitra
+          rank: r[0],
+          nama: r[1]
         });
       });
 
       if (rows.length < 5) return;
 
-      // mapping nama mitra -> slug file PNG mitra
       function getMitraSlug(nama) {
         if (!nama) return "";
         const n = String(nama).toLowerCase().trim();
-        // contoh mapping – silakan sesuaikan dgn nama file PNG mitra yg kamu punya
-        if (n.includes("ta"))   return "ta";
-        if (n.includes("sgn"))  return "sgn";
-        if (n.includes("ska"))  return "ska";
+        // Sesuaikan mapping dengan nama mitra di sheet dan nama file PNG
+        if (n.includes("ta"))     return "ta";
+        if (n.includes("sgn"))    return "sgn";
+        if (n.includes("ska"))    return "ska";
         if (n.includes("famika")) return "famika";
-        if (n.includes("fsl"))  return "fsl";
+        if (n.includes("fsl"))    return "fsl";
         return n.split(/\s+/)[0];
       }
 
@@ -1082,7 +1065,7 @@ function loadKpiB2CRankingMitra(config) {
         };
       }
 
-      // Rank 1 MITRA
+      // Rank 1 mitra
       const m1   = rows[0];
       const slug1 = getMitraSlug(m1.nama);
       score1.textContent = m1.nama || "-";
@@ -1093,18 +1076,14 @@ function loadKpiB2CRankingMitra(config) {
       }
       setMitraImg(img1, slug1, "juara");
 
-      // Rank 2 MITRA
+      // Rank 2 mitra
       const m2   = rows[1];
       const slug2 = getMitraSlug(m2.nama);
       score2.textContent = m2.nama || "-";
       title2.textContent = `Rank ${m2.rank || "2"}`;
-      if (desc2) {
-        desc2.textContent =
-          "Mitra yang konsisten mendukung pencapaian KPI utama.";
-      }
       setMitraImg(img2, slug2, "juara");
 
-      // Rank 3–5 MITRA
+      // Rank 3–5 mitra
       const rankRows345 = [rows[2], rows[3], rows[4]];
       const liElems  = [item3, item4, item5];
       const imgElems = [img3, img4, img5];
@@ -1120,7 +1099,7 @@ function loadKpiB2CRankingMitra(config) {
 
         if (nameEl) nameEl.textContent = item.nama || "-";
         if (rankEl) rankEl.textContent = `Rank ${item.rank || (idx + 3)}`;
-        if (imgEl)  setMitraImg(imgEl, slug, "kalah");
+        if (imgEl)  setMitraImg(imgEl, slug, "kalah";
       });
     })
     .catch((err) => {
