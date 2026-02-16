@@ -928,15 +928,11 @@ function loadKpiB2CRanking(config) {
       data.forEach((r, idx) => {
         if (idx === 0) return; // header
         if (!r || r.join("").toString().trim() === "") return;
-        rows.push({
-          nama: r[0],
-          nilai: r[1]
-        });
+        rows.push({ nama: r[0], nilai: r[1] });
       });
 
       if (rows.length < 5) return;
 
-      // mapping nama → slug file PNG
       function getSlugFromNama(nama) {
         if (!nama) return "";
         const n = String(nama).toLowerCase();
@@ -945,12 +941,17 @@ function loadKpiB2CRanking(config) {
         if (n.includes("herlando")) return "herlando";
         if (n.includes("zulfa")) return "zulfa";
         if (n.includes("risman")) return "risman";
-        return n.split(/\s+/)[0]; // fallback
+        return n.split(/\s+/)[0];
       }
 
-      function buildImgPath(slug, type) {
-        // type: "juara" | "kalah"
-        return `assets/home/img/${slug}_${type}.png`;
+      function setImgWithFallback(imgEl, slug, type) {
+        const base = `../../assets/home/img/${slug}_${type}.png`;
+        imgEl.src = base;
+        imgEl.onerror = function () {
+          // kalau file ga ada, jangan infinite loop
+          this.onerror = null;
+          this.src = "../../assets/home/img/default_avatar.png";
+        };
       }
 
       // Rank 1 (juara)
@@ -960,7 +961,7 @@ function loadKpiB2CRanking(config) {
       rankScore1.textContent = r1.nilai || "-";
       rankDesc1.textContent =
         "Performa terbaik, jadi role model pencapaian KPI B2C Tangerang.";
-      img1.src = buildImgPath(slug1, "juara");
+      setImgWithFallback(img1, slug1, "juara");
 
       // Rank 2 (juara)
       const r2 = rows[1];
@@ -969,11 +970,11 @@ function loadKpiB2CRanking(config) {
       rankScore2.textContent = r2.nilai || "-";
       rankDesc2.textContent =
         "Stabil di papan atas dan sangat berkontribusi pada hasil keseluruhan.";
-      img2.src = buildImgPath(slug2, "juara");
+      setImgWithFallback(img2, slug2, "juara");
 
       // Rank 3–5 (kalah)
       const rankRows345 = [rows[2], rows[3], rows[4]];
-      const liElems = [rankItem3, rankItem4, rankItem5];
+      const liElems  = [rankItem3, rankItem4, rankItem5];
       const imgElems = [img3, img4, img5];
 
       rankRows345.forEach((item, idx) => {
@@ -984,13 +985,14 @@ function loadKpiB2CRanking(config) {
 
         if (titleSpan) titleSpan.textContent = item.nama || "-";
         if (scoreSpan) scoreSpan.textContent = item.nilai || "-";
-        imgElems[idx].src = buildImgPath(slug, "kalah");
+        setImgWithFallback(imgElems[idx], slug, "kalah");
       });
     })
     .catch((err) => {
       console.error("Error load ranking KPI B2C:", err);
     });
 }
+
 // =========================
 // INIT & FILTER
 // =========================
