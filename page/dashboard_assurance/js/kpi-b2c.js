@@ -933,22 +933,24 @@ function loadKpiB2CRanking(config) {
 
       if (rows.length < 5) return;
 
+      // mapping nama → slug
       function getSlugFromNama(nama) {
         if (!nama) return "";
         const n = String(nama).toLowerCase();
-        if (n.includes("dady") || n.includes("dadi")) return "dadi";
-        if (n.includes("eka")) return "eka";
-        if (n.includes("herlando")) return "herlando";
-        if (n.includes("zulfa")) return "zulfa";
-        if (n.includes("risman")) return "risman";
+        if (n.includes("DADY") || n.includes("DADI")) return "dadi";
+        if (n.includes("EKA")) return "eka";
+        if (n.includes("HERLANDO")) return "herlando";
+        if (n.includes("ZULFA")) return "zulfa";
+        if (n.includes("RISMAN")) return "risman";
         return n.split(/\s+/)[0];
       }
 
       function setImgWithFallback(imgEl, slug, type) {
-        const base = `../../assets/home/img/${slug}_${type}.png`;
-        imgEl.src = base;
+        // type: "juara" | "kalah"
+        const src = `../../assets/home/img/${slug}_${type}.png`;
+        imgEl.onerror = null; // reset
+        imgEl.src = src;
         imgEl.onerror = function () {
-          // kalau file ga ada, jangan infinite loop
           this.onerror = null;
           this.src = "../../assets/home/img/default_avatar.png";
         };
@@ -960,7 +962,7 @@ function loadKpiB2CRanking(config) {
       rankTitle1.textContent = r1.nama || "-";
       rankScore1.textContent = r1.nilai || "-";
       rankDesc1.textContent =
-        "Performa terbaik, jadi role model pencapaian KPI B2C Tangerang.";
+        "Performa terbaik, jadi role model utama pencapaian KPI B2C Tangerang.";
       setImgWithFallback(img1, slug1, "juara");
 
       // Rank 2 (juara)
@@ -969,7 +971,7 @@ function loadKpiB2CRanking(config) {
       rankTitle2.textContent = r2.nama || "-";
       rankScore2.textContent = r2.nilai || "-";
       rankDesc2.textContent =
-        "Stabil di papan atas dan sangat berkontribusi pada hasil keseluruhan.";
+        "Konsisten di papan atas dan sangat berkontribusi pada total performa.";
       setImgWithFallback(img2, slug2, "juara");
 
       // Rank 3–5 (kalah)
@@ -992,6 +994,7 @@ function loadKpiB2CRanking(config) {
       console.error("Error load ranking KPI B2C:", err);
     });
 }
+
 
 // =========================
 // INIT & FILTER
