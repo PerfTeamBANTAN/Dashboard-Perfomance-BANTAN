@@ -872,6 +872,7 @@ function loadKpiB2CSupportTable(config) {
         "<tbody><tr><td>Gagal memuat data Support KPI.</td></tr></tbody>";
     });
 }
+
 // =========================
 // RANKING TOP 5 HSA (WEB!A130:B135) + AVATAR PNG
 // =========================
@@ -911,6 +912,10 @@ function loadKpiB2CRanking(config) {
   fetch(url)
     .then((resp) => resp.json())
     .then((data) => {
+      // Expect:
+      // ["RANK","HSA"]
+      // ["1","ZULFA"]
+      // ...
       if (!Array.isArray(data) || data.length < 6) return;
 
       // langsung ambil 5 baris setelah header
@@ -927,7 +932,7 @@ function loadKpiB2CRanking(config) {
         if (n === "herlando") return "herlando";
         if (n === "dady" || n === "dadi") return "dadi";
         if (n === "eka")      return "eka";
-        return n.split(/\s+/)[0];   // ← regex sudah benar
+        return n.split(/\s+/)[0];
       }
 
       const basePath = "../../assets/home/img";
