@@ -271,29 +271,73 @@ table.kpi-table td.kpi-text-red {
 }
 
 /* KPI RANKING */
+/* WRAPPER LEADERBOARD */
 .kpi-rank-wrapper {
-  background: linear-gradient(135deg, #0d6efd, #6610f2);
+  background: radial-gradient(circle at top left, #1d4ed8, #0f172a 60%);
   color: #fff;
+  border-radius: 1.1rem;
   overflow: hidden;
+  position: relative;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.6);
 }
 
+.kpi-rank-wrapper::before {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  top: -80px;
+  right: -60px;
+  background: radial-gradient(circle, rgba(96,165,250,0.7), transparent 70%);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+/* HEADER */
+.kpi-rank-header {
+  background: rgba(15,23,42,0.65);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(148,163,184,0.5);
+}
+
+.kpi-rank-chip {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(59,130,246,0.25);
+  border: 1px solid rgba(96,165,250,0.6);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* BODY */
 .kpi-rank-wrapper .card-body {
-  background: rgba(15, 23, 42, 0.92);
-  backdrop-filter: blur(10px);
-  border-radius: 0 0 1rem 1rem;
+  background: rgba(15,23,42,0.92);
+  backdrop-filter: blur(18px);
 }
 
+/* CARD RANK 1 & 2 */
 .kpi-rank-card {
   display: flex;
   align-items: center;
   padding: 0.8rem 1rem;
-  border-radius: 0.9rem;
+  border-radius: 1rem;
   position: relative;
-  border: 1px solid rgba(148, 163, 184, 0.5);
+  border: 1px solid rgba(148,163,184,0.55);
+  overflow: hidden;
+}
+
+.kpi-rank-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.15), transparent 60%);
+  pointer-events: none;
 }
 
 .kpi-rank-1 {
-  background: linear-gradient(135deg, #f97316, #facc15);
+  background: linear-gradient(135deg, #fbbf24, #f97316);
   color: #111827;
 }
 
@@ -302,27 +346,30 @@ table.kpi-table td.kpi-text-red {
   color: #0b1120;
 }
 
-.kpi-rank-medal {
-  width: 32px;
-  height: 32px;
+/* BADGE NOMOR BESAR */
+.kpi-rank-badge {
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: rgba(15, 23, 42, 0.15);
-  border: 2px solid rgba(15, 23, 42, 0.3);
+  background: rgba(15,23,42,0.1);
+  border: 2px solid rgba(15,23,42,0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   margin-right: 0.6rem;
+  font-size: 0.9rem;
 }
 
+/* AVATAR */
 .kpi-rank-avatar {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
   overflow: hidden;
   margin-right: 0.75rem;
-  border: 2px solid rgba(15, 23, 42, 0.4);
-  background: rgba(15, 23, 42, 0.2);
+  border: 2px solid rgba(15,23,42,0.4);
+  background: rgba(15,23,42,0.2);
 }
 
 .kpi-rank-avatar img,
@@ -332,6 +379,7 @@ table.kpi-table td.kpi-text-red {
   object-fit: cover;
 }
 
+/* TEKS */
 .kpi-rank-main {
   flex: 1;
   min-width: 0;
@@ -350,24 +398,26 @@ table.kpi-table td.kpi-text-red {
   opacity: 0.85;
 }
 
+/* SCORE */
 .kpi-rank-score {
   text-align: right;
-  min-width: 70px;
+  min-width: 66px;
 }
 
 .kpi-rank-score-label {
   font-size: 0.65rem;
   text-transform: uppercase;
-  opacity: 0.8;
+  opacity: 0.78;
 }
 
 .kpi-rank-score-value {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 800;
 }
 
+/* DIVIDER 3–5 */
 .kpi-rank-divider {
-  margin: 0.4rem 0 0.5rem;
+  margin: 0.5rem 0 0.4rem;
   text-align: center;
   position: relative;
   font-size: 0.7rem;
@@ -383,15 +433,16 @@ table.kpi-table td.kpi-text-red {
   top: 50%;
   width: 30%;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(148,163,184,0.7));
+  background: linear-gradient(to right, transparent, rgba(148,163,184,0.8));
 }
 
 .kpi-rank-divider::before { left: 0; }
-.kpi-rank-divider::after { right: 0; }
+.kpi-rank-divider::after  { right: 0; }
 
+/* LIST 3–5 */
 .kpi-rank-list .kpi-rank-item {
   background: transparent;
-  border-color: rgba(55, 65, 81, 0.6);
+  border-color: rgba(55,65,81,0.7);
   color: #e5e7eb;
   padding: 0.5rem 0.6rem;
 }
@@ -399,8 +450,8 @@ table.kpi-table td.kpi-text-red {
 .kpi-rank-number {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
-  border: 1px solid rgba(148,163,184,0.8);
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.85);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -411,7 +462,7 @@ table.kpi-table td.kpi-text-red {
 .kpi-rank-avatar-sm {
   width: 26px;
   height: 26px;
-  border-radius: 50%;
+  border-radius: 999px;
   overflow: hidden;
   margin: 0 0.45rem;
   border: 1px solid rgba(148,163,184,0.7);
@@ -429,3 +480,11 @@ table.kpi-table td.kpi-text-red {
   font-size: 0.85rem;
   font-weight: 700;
 }
+
+/* RESPONSIVE */
+@media (max-width: 991.98px) {
+  .kpi-rank-wrapper {
+    margin-top: 0.5rem;
+  }
+}
+
