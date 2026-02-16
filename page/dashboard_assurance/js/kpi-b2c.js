@@ -933,48 +933,51 @@ function loadKpiB2CRanking(config) {
 
       if (rows.length < 5) return;
 
+      // mapping nama dari sheet ke slug file PNG
       function getSlugFromNama(nama) {
-  if (!nama) return "";
-  const n = String(nama).toLowerCase().trim();
+        if (!nama) return "";
+        const n = String(nama).toLowerCase().trim();
 
-  if (n.includes("zulfa")) return "zulfa";
-  if (n.includes("risman")) return "risman";
-  if (n.includes("herlando")) return "herlando";
-  if (n.includes("dady") || n.includes("dadi")) return "dadi";
-  if (n.includes("eka")) return "eka";
+        if (n.includes("zulfa")) return "zulfa";
+        if (n.includes("risman")) return "risman";
+        if (n.includes("herlando")) return "herlando";
+        if (n.includes("dady") || n.includes("dadi")) return "dadi";
+        if (n.includes("eka")) return "eka";
 
-  return n.split(/\s+/)[0];
-}
+        return n.split(/\s+/)[0];
+      }
+
+      const basePath = "../../assets/home/img";
 
       function setImgWithFallback(imgEl, slug, type) {
-        const src = `../../../assets/home/img/${slug}_${type}.png`;
-        imgEl.onerror = null; // reset
+        const src = `${basePath}/${slug}_${type}.png`;
+        imgEl.onerror = null;
         imgEl.src = src;
         imgEl.onerror = function () {
           this.onerror = null;
-          this.src = "../../../assets/home/img/default_avatar.png";
+          this.src = `${basePath}/default_avatar.png`;
         };
       }
 
-      // Rank 1 (juara)
+ 
       const r1 = rows[0];
       const slug1 = getSlugFromNama(r1.nama);
-      rankTitle1.textContent = r1.nama || "-";
-      rankScore1.textContent = r1.nilai || "-";
+      rankTitle1.textContent = "1";
+      rankScore1.textContent = r1.nama || "-";
       rankDesc1.textContent =
         "Performa terbaik, jadi role model utama pencapaian KPI B2C Tangerang.";
       setImgWithFallback(img1, slug1, "juara");
 
-      // Rank 2 (juara)
+     
       const r2 = rows[1];
       const slug2 = getSlugFromNama(r2.nama);
-      rankTitle2.textContent = r2.nama || "-";
-      rankScore2.textContent = r2.nilai || "-";
+      rankTitle2.textContent = "2";
+      rankScore2.textContent = r2.nama || "-";
       rankDesc2.textContent =
         "Konsisten di papan atas dan sangat berkontribusi pada total performa.";
       setImgWithFallback(img2, slug2, "juara");
 
-      // Rank 3–5 (kalah)
+
       const rankRows345 = [rows[2], rows[3], rows[4]];
       const liElems  = [rankItem3, rankItem4, rankItem5];
       const imgElems = [img3, img4, img5];
@@ -985,8 +988,9 @@ function loadKpiB2CRanking(config) {
         const scoreSpan = li.querySelector(".rank-score");
         const slug = getSlugFromNama(item.nama);
 
-        if (titleSpan) titleSpan.textContent = item.nama || "-";
-        if (scoreSpan) scoreSpan.textContent = item.nilai || "-";
+
+        if (titleSpan) titleSpan.textContent = String(idx + 3);
+        if (scoreSpan) scoreSpan.textContent = item.nama || "-";
         setImgWithFallback(imgElems[idx], slug, "kalah");
       });
     })
@@ -994,7 +998,6 @@ function loadKpiB2CRanking(config) {
       console.error("Error load ranking KPI B2C:", err);
     });
 }
-
 
 // =========================
 // INIT & FILTER
