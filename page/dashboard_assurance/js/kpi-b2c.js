@@ -933,26 +933,26 @@ function loadKpiB2CRanking(config) {
 
       if (rows.length < 5) return;
 
-      // mapping nama → slug
       function getSlugFromNama(nama) {
-        if (!nama) return "";
-        const n = String(nama).toLowerCase();
-        if (n.includes("DADY") || n.includes("DADI")) return "dadi";
-        if (n.includes("EKA")) return "eka";
-        if (n.includes("HERLANDO")) return "herlando";
-        if (n.includes("ZULFA")) return "zulfa";
-        if (n.includes("RISMAN")) return "risman";
-        return n.split(/\s+/)[0];
-      }
+  if (!nama) return "";
+  const n = String(nama).toLowerCase().trim();
+
+  if (n.includes("zulfa")) return "zulfa";
+  if (n.includes("risman")) return "risman";
+  if (n.includes("herlando")) return "herlando";
+  if (n.includes("dady") || n.includes("dadi")) return "dadi";
+  if (n.includes("eka")) return "eka";
+
+  return n.split(/\s+/)[0];
+}
 
       function setImgWithFallback(imgEl, slug, type) {
-        // type: "juara" | "kalah"
-        const src = `../../assets/home/img/${slug}_${type}.png`;
+        const src = `../../../assets/home/img/${slug}_${type}.png`;
         imgEl.onerror = null; // reset
         imgEl.src = src;
         imgEl.onerror = function () {
           this.onerror = null;
-          this.src = "../../assets/home/img/default_avatar.png";
+          this.src = "../../../assets/home/img/default_avatar.png";
         };
       }
 
