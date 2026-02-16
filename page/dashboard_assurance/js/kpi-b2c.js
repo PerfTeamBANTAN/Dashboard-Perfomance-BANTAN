@@ -306,7 +306,6 @@ function loadKpiB2CMitraTable(config) {
         </thead>
       `;
 
-      // Body: 'Dash B2C'!U5:AI31 -> index 2..data.length-2
       const bodyRows = [];
       for (let i = 2; i < data.length - 1; i++) {
         const r = data[i];
@@ -314,7 +313,6 @@ function loadKpiB2CMitraTable(config) {
         bodyRows.push(r);
       }
 
-      // Total: 'Dash B2C'!U32:AI32 -> baris terakhir
       const totalRow = data[data.length - 1] || [];
 
       const tbody = `
@@ -611,7 +609,6 @@ function loadKpiB2CMajorTable(config) {
     .then((data) => {
       if (!Array.isArray(data) || data.length < 3) return;
 
-      // Header 2 baris: WEB!A110:K111
       const thead = `
         <thead>
           <tr>
@@ -642,7 +639,6 @@ function loadKpiB2CMajorTable(config) {
         </thead>
       `;
 
-      // Body: WEB!A112:K124 -> index 2 s/d data.length-2
       const bodyRows = [];
       for (let i = 2; i < data.length - 1; i++) {
         const r = data[i];
@@ -650,7 +646,6 @@ function loadKpiB2CMajorTable(config) {
         bodyRows.push(r);
       }
 
-      // Total: WEB!A125:K125 -> baris terakhir
       const totalRow = data[data.length - 1] || [];
 
       const tbody = `
@@ -715,7 +710,6 @@ function loadKpiB2CCoreTable(config) {
     .then((data) => {
       if (!Array.isArray(data) || data.length < 4) return;
 
-      // Header 2 baris: WEB!A70:K71
       const thead = `
         <thead>
           <tr>
@@ -742,7 +736,6 @@ function loadKpiB2CCoreTable(config) {
         </thead>
       `;
 
-      // Body: WEB!A72:K84 -> index 2..data.length-2
       const bodyRows = [];
       for (let i = 2; i < data.length - 1; i++) {
         const r = data[i];
@@ -750,7 +743,6 @@ function loadKpiB2CCoreTable(config) {
         bodyRows.push(r);
       }
 
-      // Total: WEB!A85 -> baris terakhir ("BRANCH TANGERANG", dst)
       const totalRow = data[data.length - 1] || [];
 
       const tbody = `
@@ -815,7 +807,6 @@ function loadKpiB2CSupportTable(config) {
     .then((data) => {
       if (!Array.isArray(data) || data.length < 3) return;
 
-      // Header: WEB!A90:J90
       const thead = `
         <thead>
           <tr>
@@ -833,7 +824,6 @@ function loadKpiB2CSupportTable(config) {
         </thead>
       `;
 
-      // Body: WEB!A91:J103 -> index 1..data.length-2
       const bodyRows = [];
       for (let i = 1; i < data.length - 1; i++) {
         const r = data[i];
@@ -841,7 +831,6 @@ function loadKpiB2CSupportTable(config) {
         bodyRows.push(r);
       }
 
-      // Total: WEB!A104:J104 -> baris terakhir (BRANCH TANGERANG)
       const totalRow = data[data.length - 1] || [];
 
       const tbody = `
@@ -926,11 +915,11 @@ function loadKpiB2CRanking(config) {
 
       const rows = [];
       data.forEach((r, idx) => {
-        if (idx === 0) return; // header
+        if (idx === 0) return;
         if (!r || r.join("").toString().trim() === "") return;
         rows.push({
-          rank: r[0],   // kolom A = 1..5
-          nama: r[1]    // kolom B = ZULFA, RISMAN, HERLANDO, DADY, EKA
+          rank: r[0],
+          nama: r[1]  
         });
       });
 
@@ -962,13 +951,12 @@ function loadKpiB2CRanking(config) {
       // Rank 1
       const r1 = rows[0];
       const slug1 = getSlugFromNama(r1.nama);
-      rankTitle1.textContent = r1.rank || "1";   // misal "1"
-      rankScore1.textContent = r1.nama || "-";   // misal "ZULFA"
+      rankTitle1.textContent = r1.rank || "1";
+      rankScore1.textContent = r1.nama || "-";
       rankDesc1.textContent =
         "Performa terbaik, jadi role model utama pencapaian KPI B2C Tangerang.";
       setImgWithFallback(img1, slug1, "juara");
 
-      // Rank 2
       const r2 = rows[1];
       const slug2 = getSlugFromNama(r2.nama);
       rankTitle2.textContent = r2.rank || "2";
@@ -977,7 +965,6 @@ function loadKpiB2CRanking(config) {
         "Konsisten di papan atas dan sangat berkontribusi pada total performa.";
       setImgWithFallback(img2, slug2, "juara");
 
-      // Rank 3–5 – SESUAI HTML BARU
       const rankRows345 = [rows[2], rows[3], rows[4]];
       const liElems  = [rankItem3, rankItem4, rankItem5];
       const imgElems = [img3, img4, img5];
@@ -986,15 +973,14 @@ function loadKpiB2CRanking(config) {
         const li = liElems[idx];
         if (!li) return;
 
-        // nama ada di .rank-score, rank di .rank-title
         const nameEl = li.querySelector(".rank-score");
         const rankEl = li.querySelector(".rank-title");
         const imgEl  = imgElems[idx];
 
         const slug = getSlugFromNama(item.nama);
 
-        if (nameEl) nameEl.textContent = item.nama || "-";          // HERLANDO/DADY/EKA
-        if (rankEl) rankEl.textContent = item.rank || String(idx+3); // 3 / 4 / 5
+        if (nameEl) nameEl.textContent = item.nama || "-";
+        if (rankEl) rankEl.textContent = item.rank || String(idx+3);
 
         if (imgEl) setImgWithFallback(imgEl, slug, "kalah");
       });
@@ -1021,7 +1007,7 @@ function initKPIB2C(config) {
       const rows = [];
 
       data.forEach((r, idx) => {
-        if (idx === 0) return; // header
+        if (idx === 0) return;
         const indikator = r[0];
         if (!indikator) return;
 
