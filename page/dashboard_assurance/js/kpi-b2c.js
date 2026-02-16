@@ -1099,7 +1099,7 @@ function loadKpiB2CRankingMitra(config) {
 
         if (nameEl) nameEl.textContent = item.nama || "-";
         if (rankEl) rankEl.textContent = `Rank ${item.rank || (idx + 3)}`;
-        if (imgEl)  setMitraImg(imgEl, slug, "kalah";
+        if (imgEl)  setMitraImg(imgEl, slug, "kalah");
       });
     })
     .catch((err) => {
