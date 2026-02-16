@@ -128,101 +128,104 @@
     </div>
 <!-- KOLOM RANKING (KANAN) -->
 <div class="col-lg-4">
-
-  <div class="card mb-3 border-0 shadow-sm kpi-rank-wrapper">
-    <div class="card-header d-flex justify-content-between align-items-center kpi-rank-header">
+  <div class="card mb-3 border-0 shadow-sm kpi-rank-panel">
+    <!-- HEADER -->
+    <div class="kpi-rank-panel-header">
       <div>
-        <div class="kpi-rank-chip">Leaderboard</div>
-        <h6 class="kpi-section-title mb-0">Top 5 KPI B2C Tangerang</h6>
+        <div class="kpi-rank-chip">Top Performer</div>
+        <h6 class="kpi-rank-title-main">KPI B2C Branch Tangerang</h6>
+        <div class="kpi-rank-subtitle">Top 5 HSA </div>
       </div>
-      <div class="text-end">
-        <div class="small text-muted">Branch Tangerang</div>
-        <span class="badge bg-light text-dark kpi-rank-date small">
-          HI Update
-        </span>
+      <div class="kpi-rank-meta">
+        <span class="kpi-rank-meta-label">HI Update</span>
       </div>
     </div>
 
-    <div class="card-body p-3">
-
-      <!-- Rank 1 -->
-      <div class="kpi-rank-card kpi-rank-1 mb-3">
-        <div class="kpi-rank-badge">#1</div>
-        <div class="kpi-rank-avatar">
-          <img id="rank-img-1" src="" alt="rank 1" class="img-fluid">
-        </div>
-        <div class="kpi-rank-main">
-          <div class="kpi-rank-title" id="rank-title-1">–</div>
-          <div class="kpi-rank-sub" id="rank-desc-1">
-            Performa terbaik, jadi benchmark KPI branch Tangerang.
+    <div class="kpi-rank-panel-body">
+      <!-- JUARA 1: CARD BESAR HORIZONTAL -->
+      <div class="kpi-rank-hero">
+        <div class="kpi-rank-hero-left">
+          <div class="kpi-rank-hero-badge">#1</div>
+          <div class="kpi-rank-hero-avatar">
+            <img id="rank-img-1" src="" alt="Juara 1" />
           </div>
         </div>
-        <div class="kpi-rank-score">
-          <div class="kpi-rank-score-label">HI</div>
-          <div class="kpi-rank-score-value" id="rank-score-1">–</div>
-        </div>
-      </div>
-
-      <!-- Rank 2 -->
-      <div class="kpi-rank-card kpi-rank-2 mb-3">
-        <div class="kpi-rank-badge">#2</div>
-        <div class="kpi-rank-avatar">
-          <img id="rank-img-2" src="" alt="rank 2" class="img-fluid">
-        </div>
-        <div class="kpi-rank-main">
-          <div class="kpi-rank-title" id="rank-title-2">–</div>
-          <div class="kpi-rank-sub" id="rank-desc-2">
-            Kontributor utama yang menjaga performa tetap stabil.
+        <div class="kpi-rank-hero-info">
+          <div class="kpi-rank-hero-name" id="rank-score-1">–</div>
+          <div class="kpi-rank-hero-rank" id="rank-title-1">–</div>
+          <div class="kpi-rank-hero-desc" id="rank-desc-1">
+            Performa terbaik, menjadi acuan pencapaian KPI B2C Tangerang.
           </div>
         </div>
-        <div class="kpi-rank-score">
-          <div class="kpi-rank-score-label">HI</div>
-          <div class="kpi-rank-score-value" id="rank-score-2">–</div>
+        <div class="kpi-rank-hero-hi">
+          <div class="kpi-rank-hero-hi-label">HI</div>
+          <div class="kpi-rank-hero-hi-value">✓</div>
         </div>
       </div>
 
-      <!-- Divider -->
-      <div class="kpi-rank-divider">
-        <span>Rank 3 — 5</span>
+      <!-- JUARA 2: ITEM TERSENDIRI DI BAWAHNYA -->
+      <div class="kpi-rank-row kpi-rank-row-2">
+        <div class="kpi-rank-row-left">
+          <span class="kpi-rank-row-badge">#2</span>
+          <div class="kpi-rank-row-avatar">
+            <img id="rank-img-2" src="" alt="Peringkat 2" />
+          </div>
+          <div class="kpi-rank-row-text">
+            <div class="kpi-rank-row-name" id="rank-score-2">–</div>
+            <div class="kpi-rank-row-rank" id="rank-title-2">–</div>
+          </div>
+        </div>
+        <div class="kpi-rank-row-hi">
+          <span class="kpi-rank-row-hi-label">HI</span>
+        </div>
       </div>
 
-      <!-- Rank 3–5 -->
-      <ol class="list-group list-group-flush kpi-rank-list">
-        <li class="list-group-item d-flex align-items-center kpi-rank-item" id="rank-item-3">
-          <div class="kpi-rank-number">3</div>
-          <div class="kpi-rank-avatar-sm">
-            <img id="rank-img-3" src="" alt="rank 3" class="img-fluid">
-          </div>
-          <div class="flex-grow-1 ms-1">
-            <div class="kpi-rank-item-title rank-title">–</div>
-          </div>
-          <div class="kpi-rank-item-score rank-score">–</div>
-        </li>
-        <li class="list-group-item d-flex align-items-center kpi-rank-item" id="rank-item-4">
-          <div class="kpi-rank-number">4</div>
-          <div class="kpi-rank-avatar-sm">
-            <img id="rank-img-4" src="" alt="rank 4" class="img-fluid">
-          </div>
-          <div class="flex-grow-1 ms-1">
-            <div class="kpi-rank-item-title rank-title">–</div>
-          </div>
-          <div class="kpi-rank-item-score rank-score">–</div>
-        </li>
-        <li class="list-group-item d-flex align-items-center kpi-rank-item" id="rank-item-5">
-          <div class="kpi-rank-number">5</div>
-          <div class="kpi-rank-avatar-sm">
-            <img id="rank-img-5" src="" alt="rank 5" class="img-fluid">
-          </div>
-          <div class="flex-grow-1 ms-1">
-            <div class="kpi-rank-item-title rank-title">–</div>
-          </div>
-          <div class="kpi-rank-item-score rank-score">–</div>
-        </li>
-      </ol>
+      <!-- GARIS PEMBATAS -->
+      <div class="kpi-rank-panel-divider">
+        <span>Rank 3 s/d 5</span>
+      </div>
 
+      <!-- RANK 3–5: LIST RINGKAS -->
+      <div class="kpi-rank-list-simple">
+        <!-- Rank 3 -->
+        <div class="kpi-rank-list-item" id="rank-item-3">
+          <div class="kpi-rank-list-main">
+            <span class="kpi-rank-list-pos">3</span>
+            <div class="kpi-rank-list-avatar">
+              <img id="rank-img-3" src="" alt="Rank 3">
+            </div>
+            <span class="kpi-rank-list-name rank-score">–</span>
+          </div>
+          <span class="kpi-rank-list-rank rank-title">–</span>
+        </div>
+
+        <!-- Rank 4 -->
+        <div class="kpi-rank-list-item" id="rank-item-4">
+          <div class="kpi-rank-list-main">
+            <span class="kpi-rank-list-pos">4</span>
+            <div class="kpi-rank-list-avatar">
+              <img id="rank-img-4" src="" alt="Rank 4">
+            </div>
+            <span class="kpi-rank-list-name rank-score">–</span>
+          </div>
+          <span class="kpi-rank-list-rank rank-title">–</span>
+        </div>
+
+        <!-- Rank 5 -->
+        <div class="kpi-rank-list-item" id="rank-item-5">
+          <div class="kpi-rank-list-main">
+            <span class="kpi-rank-list-pos">5</span>
+            <div class="kpi-rank-list-avatar">
+              <img id="rank-img-5" src="" alt="Rank 5">
+            </div>
+            <span class="kpi-rank-list-name rank-score">–</span>
+          </div>
+          <span class="kpi-rank-list-rank rank-title">–</span>
+        </div>
+      </div>
     </div>
   </div>
-
 </div>
+
 
 
