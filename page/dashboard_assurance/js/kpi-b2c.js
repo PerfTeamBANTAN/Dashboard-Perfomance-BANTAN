@@ -875,16 +875,13 @@ function loadKpiB2CSupportTable(config) {
 // =========================
 // RANKING TOP 5 HSA (WEB!A130:B135) + AVATAR PNG
 // =========================
-
 function loadKpiB2CRanking(config) {
-  console.log("HSA RANKING START");
-
   const rankTitle1 = document.getElementById("rank-title-1");
   const rankTitle2 = document.getElementById("rank-title-2");
   const rankScore1 = document.getElementById("rank-score-1");
   const rankScore2 = document.getElementById("rank-score-2");
   const rankDesc1  = document.getElementById("rank-desc-1");
-  const rankDesc2  = document.getElementById("rank-desc-2"); // boleh null
+  const rankDesc2  = document.getElementById("rank-desc-2"); // opsional
 
   const rankItem3  = document.getElementById("rank-item-3");
   const rankItem4  = document.getElementById("rank-item-4");
@@ -896,15 +893,6 @@ function loadKpiB2CRanking(config) {
   const img4 = document.getElementById("rank-img-4");
   const img5 = document.getElementById("rank-img-5");
 
-  console.log("ELEMENTS HSA:", {
-    rankTitle1, rankTitle2,
-    rankScore1, rankScore2,
-    rankDesc1, rankDesc2,
-    rankItem3, rankItem4, rankItem5,
-    img1, img2, img3, img4, img5
-  });
-
-  // rankDesc2 TIDAK WAJIB, jadi tidak ikut di cek
   if (
     !rankTitle1 || !rankTitle2 ||
     !rankScore1 || !rankScore2 ||
@@ -912,7 +900,6 @@ function loadKpiB2CRanking(config) {
     !rankItem3 || !rankItem4 || !rankItem5 ||
     !img1 || !img2 || !img3 || !img4 || !img5
   ) {
-    console.warn("HSA RANKING: element tidak lengkap, fungsi stop");
     return;
   }
 
@@ -920,15 +907,10 @@ function loadKpiB2CRanking(config) {
     "WEB"
   )}&range=${encodeURIComponent("A130:B135")}`;
 
-  console.log("HSA URL:", url);
-
   fetch(url)
     .then((resp) => resp.json())
     .then((data) => {
-      console.log("RAW HSA RANK DATA:", data);
-
       if (!Array.isArray(data) || data.length < 6) {
-        console.warn("HSA RANKING: data kurang dari 6 baris");
         return;
       }
 
@@ -936,8 +918,6 @@ function loadKpiB2CRanking(config) {
         rank: r[0],
         nama: r[1],
       }));
-
-      console.log("PARSED HSA ROWS:", rows);
 
       function getSlugFromNama(nama) {
         if (!nama) return "";
