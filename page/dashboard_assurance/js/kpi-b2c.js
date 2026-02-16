@@ -872,7 +872,6 @@ function loadKpiB2CSupportTable(config) {
         "<tbody><tr><td>Gagal memuat data Support KPI.</td></tr></tbody>";
     });
 }
-
 // =========================
 // RANKING TOP 5 HSA (WEB!A130:B135) + AVATAR PNG
 // =========================
@@ -912,13 +911,9 @@ function loadKpiB2CRanking(config) {
   fetch(url)
     .then((resp) => resp.json())
     .then((data) => {
-      // Expect:
-      // ["RANK","HSA"]
-      // ["1","ZULFA"]
-      // ...
+      // HARUS ada 6 baris: header + 5 rank
       if (!Array.isArray(data) || data.length < 6) return;
 
-      // langsung ambil 5 baris setelah header
       const rows = data.slice(1, 6).map((r) => ({
         rank: r[0],
         nama: r[1],
