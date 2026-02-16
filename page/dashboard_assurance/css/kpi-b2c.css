@@ -270,6 +270,7 @@ table.kpi-table td.kpi-text-red {
   background: linear-gradient(135deg, #f4f4f5, #e5e7eb);
 }
 
+/* KPI RANKING */
 .kpi-rank-wrapper {
   background: linear-gradient(135deg, #0d6efd, #6610f2);
   color: #fff;
@@ -428,4 +429,3 @@ table.kpi-table td.kpi-text-red {
   font-size: 0.85rem;
   font-weight: 700;
 }
-
