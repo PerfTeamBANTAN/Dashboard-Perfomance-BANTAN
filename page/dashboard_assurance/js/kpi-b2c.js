@@ -926,30 +926,35 @@ function loadKpiB2CRanking(config) {
 
       const rows = [];
       data.forEach((r, idx) => {
-        if (idx === 0) return; 
+        if (idx === 0) return; // header
         if (!r || r.join("").toString().trim() === "") return;
         rows.push({
-          rank: r[0],   
-          nama: r[1]    
+          rank: r[0],   // 1..5
+          nama: r[1]    // ZULFA, RISMAN, HERLANDO, DADY, EKA
         });
       });
 
       if (rows.length < 5) return;
 
+      // mapping NAMA → nama file (tanpa _juara/_kalah)
       function getSlugFromNama(nama) {
         if (!nama) return "";
         const n = String(nama).toLowerCase().trim();
-        if (n.includes("zulfa")) return "zulfa";
-        if (n.includes("risman")) return "risman";
-        if (n.includes("herlando")) return "herlando";
-        if (n.includes("dady") || n.includes("dadi")) return "dadi";
-        if (n.includes("eka")) return "eka";
-        return n.split(/\s+/)[0];
+
+        if (n === "zulfa")    return "zulfa";
+        if (n === "risman")   return "risman";
+        if (n === "herlando") return "herlando";
+        if (n === "dady" || n === "dadi") return "dadi";
+        if (n === "eka")      return "eka";
+
+        return n.split(/\s+/)[0]; // fallback
       }
 
+      // base path MENGIKUTI HTML kamu
       const basePath = "../../assets/home/img";
 
       function setImgWithFallback(imgEl, slug, type) {
+        // type: "juara" | "kalah"
         const src = `${basePath}/${slug}_${type}.png`;
         imgEl.onerror = null;
         imgEl.src = src;
@@ -959,16 +964,16 @@ function loadKpiB2CRanking(config) {
         };
       }
 
-      // Rank 1 (ZULFA)
+      // Rank 1
       const r1 = rows[0];
       const slug1 = getSlugFromNama(r1.nama);
-      rankTitle1.textContent = r1.rank || "1";     // angka rank
-      rankScore1.textContent = r1.nama || "-";     // nama yang ditampilkan
+      rankTitle1.textContent = r1.rank || "1";
+      rankScore1.textContent = r1.nama || "-";
       rankDesc1.textContent =
         "Performa terbaik, jadi role model utama pencapaian KPI B2C Tangerang.";
       setImgWithFallback(img1, slug1, "juara");
 
-      // Rank 2 (RISMAN)
+      // Rank 2
       const r2 = rows[1];
       const slug2 = getSlugFromNama(r2.nama);
       rankTitle2.textContent = r2.rank || "2";
@@ -977,7 +982,7 @@ function loadKpiB2CRanking(config) {
         "Konsisten di papan atas dan sangat berkontribusi pada total performa.";
       setImgWithFallback(img2, slug2, "juara");
 
-      // Rank 3–5 (HERLANDO, DADY, EKA)
+      // Rank 3–5
       const rankRows345 = [rows[2], rows[3], rows[4]];
       const liElems  = [rankItem3, rankItem4, rankItem5];
       const imgElems = [img3, img4, img5];
@@ -988,7 +993,6 @@ function loadKpiB2CRanking(config) {
         const scoreSpan = li.querySelector(".rank-score");
         const slug = getSlugFromNama(item.nama);
 
-        // titleSpan = angka rank (3/4/5), scoreSpan = nama
         if (titleSpan) titleSpan.textContent = item.rank || String(idx + 3);
         if (scoreSpan) scoreSpan.textContent = item.nama || "-";
         setImgWithFallback(imgElems[idx], slug, "kalah");
@@ -998,6 +1002,7 @@ function loadKpiB2CRanking(config) {
       console.error("Error load ranking KPI B2C:", err);
     });
 }
+
 // =========================
 // INIT & FILTER
 // =========================
