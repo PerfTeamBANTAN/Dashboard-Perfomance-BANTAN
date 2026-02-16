@@ -885,11 +885,10 @@ function loadKpiB2CSupportTable(config) {
 }
 
 // =========================
-// RANKING TOP 5 (WEB!A130:B135)
+// RANKING TOP 5 (WEB!A130:B135) + AVATAR PNG
 // =========================
 
 function loadKpiB2CRanking(config) {
-  // elemen di kolom kanan
   const rankTitle1 = document.getElementById("rank-title-1");
   const rankTitle2 = document.getElementById("rank-title-2");
   const rankScore1 = document.getElementById("rank-score-1");
@@ -901,12 +900,19 @@ function loadKpiB2CRanking(config) {
   const rankItem4  = document.getElementById("rank-item-4");
   const rankItem5  = document.getElementById("rank-item-5");
 
+  const img1 = document.getElementById("rank-img-1");
+  const img2 = document.getElementById("rank-img-2");
+  const img3 = document.getElementById("rank-img-3");
+  const img4 = document.getElementById("rank-img-4");
+  const img5 = document.getElementById("rank-img-5");
+
   if (
     !rankTitle1 || !rankTitle2 ||
     !rankScore1 || !rankScore2 ||
-    !rankItem3 || !rankItem4 || !rankItem5
+    !rankItem3 || !rankItem4 || !rankItem5 ||
+    !img1 || !img2 || !img3 || !img4 || !img5
   ) {
-    return; // kalau HTML ranking belum ada, skip
+    return;
   }
 
   const url = `${config.baseUrl}?sheet=${encodeURIComponent(
@@ -918,10 +924,9 @@ function loadKpiB2CRanking(config) {
     .then((data) => {
       if (!Array.isArray(data) || data.length < 2) return;
 
-      // data: baris pertama header, baris berikutnya isi
       const rows = [];
       data.forEach((r, idx) => {
-        if (idx === 0) return; // header (jika ada)
+        if (idx === 0) return; // header
         if (!r || r.join("").toString().trim() === "") return;
         rows.push({
           nama: r[0],
@@ -929,37 +934,63 @@ function loadKpiB2CRanking(config) {
         });
       });
 
-      // pastikan minimal 5
       if (rows.length < 5) return;
 
-      // Rank 1 & 2 (konten lebih bagus)
-      rankTitle1.textContent = rows[0].nama || "-";
-      rankScore1.textContent = rows[0].nilai || "-";
+      // mapping nama → slug file PNG
+      function getSlugFromNama(nama) {
+        if (!nama) return "";
+        const n = String(nama).toLowerCase();
+        if (n.includes("dady") || n.includes("dadi")) return "dadi";
+        if (n.includes("eka")) return "eka";
+        if (n.includes("herlando")) return "herlando";
+        if (n.includes("zulfa")) return "zulfa";
+        if (n.includes("risman")) return "risman";
+        return n.split(/\s+/)[0]; // fallback
+      }
+
+      function buildImgPath(slug, type) {
+        // type: "juara" | "kalah"
+        return `assets/home/img/${slug}_${type}.png`;
+      }
+
+      // Rank 1 (juara)
+      const r1 = rows[0];
+      const slug1 = getSlugFromNama(r1.nama);
+      rankTitle1.textContent = r1.nama || "-";
+      rankScore1.textContent = r1.nilai || "-";
       rankDesc1.textContent =
-        "Performa terbaik, konsisten menjaga pencapaian di atas target branch.";
+        "Performa terbaik, jadi role model pencapaian KPI B2C Tangerang.";
+      img1.src = buildImgPath(slug1, "juara");
 
-      rankTitle2.textContent = rows[1].nama || "-";
-      rankScore2.textContent = rows[1].nilai || "-";
+      // Rank 2 (juara)
+      const r2 = rows[1];
+      const slug2 = getSlugFromNama(r2.nama);
+      rankTitle2.textContent = r2.nama || "-";
+      rankScore2.textContent = r2.nilai || "-";
       rankDesc2.textContent =
-        "Kontributor utama yang sangat mendukung keberhasilan KPI B2C Tangerang.";
+        "Stabil di papan atas dan sangat berkontribusi pada hasil keseluruhan.";
+      img2.src = buildImgPath(slug2, "juara");
 
-      // Rank 3–5 (biasa)
+      // Rank 3–5 (kalah)
       const rankRows345 = [rows[2], rows[3], rows[4]];
       const liElems = [rankItem3, rankItem4, rankItem5];
+      const imgElems = [img3, img4, img5];
 
       rankRows345.forEach((item, idx) => {
         const li = liElems[idx];
         const titleSpan = li.querySelector(".rank-title");
         const scoreSpan = li.querySelector(".rank-score");
+        const slug = getSlugFromNama(item.nama);
+
         if (titleSpan) titleSpan.textContent = item.nama || "-";
         if (scoreSpan) scoreSpan.textContent = item.nilai || "-";
+        imgElems[idx].src = buildImgPath(slug, "kalah");
       });
     })
     .catch((err) => {
       console.error("Error load ranking KPI B2C:", err);
     });
 }
-
 // =========================
 // INIT & FILTER
 // =========================
