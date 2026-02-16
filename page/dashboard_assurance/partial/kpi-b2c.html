@@ -127,89 +127,94 @@
 
     </div>
 <!-- KOLOM RANKING (KANAN) -->
-  <div class="col-lg-4">
+    <div class="col-lg-4">
 
-    <div class="card mb-3 border-0 shadow-sm">
-      <div class="card-header kpi-section-header kpi-section-header-primary">
-        <h6 class="kpi-section-title mb-0">Top 5 KPI B2C Tangerang</h6>
-      </div>
-      <div class="card-body p-2">
-
-        <!-- Rank 1 -->
-        <div class="card mb-2 border-0 shadow-sm bg-warning-subtle">
-          <div class="card-body py-2 px-3 d-flex align-items-center">
-            <div class="me-3 text-center">
-              <div class="badge bg-warning text-dark fs-6 fw-bold">#1</div>
-            </div>
-            <div>
-              <div class="fw-bold text-dark" id="rank-title-1">
-                <!-- rankingData[0].nama -->
-              </div>
-              <div class="small text-muted" id="rank-desc-1">
-                <!-- "Performa terbaik, konsisten di atas target branch." -->
-              </div>
-              <div class="fw-bold text-success small" id="rank-score-1">
-                <!-- rankingData[0].nilai -->
-              </div>
-            </div>
-          </div>
+      <div class="card mb-3 border-0 shadow-sm kpi-rank-wrapper">
+        <div class="card-header kpi-section-header kpi-section-header-primary d-flex justify-content-between align-items-center">
+          <h6 class="kpi-section-title mb-0">🏆 Top 5 KPI B2C Tangerang</h6>
+          <span class="badge bg-light text-dark kpi-rank-date small">
+            HI Update
+          </span>
         </div>
 
-        <!-- Rank 2 -->
-        <div class="card mb-2 border-0 shadow-sm bg-info-subtle">
-          <div class="card-body py-2 px-3 d-flex align-items-center">
-            <div class="me-3 text-center">
-              <div class="badge bg-info text-dark fs-6 fw-bold">#2</div>
+        <div class="card-body p-3">
+
+          <!-- Rank 1 highlight -->
+          <div class="kpi-rank-card kpi-rank-1 mb-3">
+            <div class="kpi-rank-avatar">
+              <img id="rank-img-1" src="" alt="avatar rank 1" class="img-fluid">
             </div>
-            <div>
-              <div class="fw-bold text-dark" id="rank-title-2">
-                <!-- rankingData[1].nama -->
+            <div class="kpi-rank-main">
+              <div class="kpi-rank-title" id="rank-title-1">–</div>
+              <div class="kpi-rank-sub" id="rank-desc-1">
+                Performa terbaik, jadi benchmark KPI branch Tangerang.
               </div>
-              <div class="small text-muted" id="rank-desc-2">
-                <!-- "Kontributor utama keberhasilan KPI B2C Tangerang." -->
-              </div>
-              <div class="fw-bold text-success small" id="rank-score-2">
-                <!-- rankingData[1].nilai -->
-              </div>
+            </div>
+            <div class="kpi-rank-score">
+              <div class="kpi-rank-score-label">HI</div>
+              <div class="kpi-rank-score-value" id="rank-score-1">–</div>
             </div>
           </div>
+
+          <!-- Rank 2 highlight -->
+          <div class="kpi-rank-card kpi-rank-2 mb-3">
+            <div class="kpi-rank-avatar">
+              <img id="rank-img-2" src="" alt="avatar rank 2" class="img-fluid">
+            </div>
+            <div class="kpi-rank-main">
+              <div class="kpi-rank-title" id="rank-title-2">–</div>
+              <div class="kpi-rank-sub" id="rank-desc-2">
+                Kontributor utama menjaga pencapaian KPI B2C tetap stabil.
+              </div>
+            </div>
+            <div class="kpi-rank-score">
+              <div class="kpi-rank-score-label">HI</div>
+              <div class="kpi-rank-score-value" id="rank-score-2">–</div>
+            </div>
+          </div>
+
+          <!-- Divider kecil -->
+          <div class="kpi-rank-divider">
+            <span>Rank 3 — 5</span>
+          </div>
+
+          <!-- List rank 3–5 -->
+          <ol class="list-group list-group-flush kpi-rank-list">
+            <li class="list-group-item d-flex align-items-center kpi-rank-item" id="rank-item-3">
+              <div class="kpi-rank-number">3</div>
+              <div class="kpi-rank-avatar-sm">
+                <img id="rank-img-3" src="" alt="avatar rank 3" class="img-fluid">
+              </div>
+              <div class="flex-grow-1 ms-1">
+                <div class="kpi-rank-item-title rank-title">–</div>
+              </div>
+              <div class="kpi-rank-item-score rank-score">–</div>
+            </li>
+            <li class="list-group-item d-flex align-items-center kpi-rank-item" id="rank-item-4">
+              <div class="kpi-rank-number">4</div>
+              <div class="kpi-rank-avatar-sm">
+                <img id="rank-img-4" src="" alt="avatar rank 4" class="img-fluid">
+              </div>
+              <div class="flex-grow-1 ms-1">
+                <div class="kpi-rank-item-title rank-title">–</div>
+              </div>
+              <div class="kpi-rank-item-score rank-score">–</div>
+            </li>
+            <li class="list-group-item d-flex align-items-center kpi-rank-item" id="rank-item-5">
+              <div class="kpi-rank-number">5</div>
+              <div class="kpi-rank-avatar-sm">
+                <img id="rank-img-5" src="" alt="avatar rank 5" class="img-fluid">
+              </div>
+              <div class="flex-grow-1 ms-1">
+                <div class="kpi-rank-item-title rank-title">–</div>
+              </div>
+              <div class="kpi-rank-item-score rank-score">–</div>
+            </li>
+          </ol>
+
         </div>
-
-        <!-- Rank 3–5 biasa -->
-        <ul class="list-group list-group-flush small">
-          <li class="list-group-item d-flex justify-content-between align-items-center px-2"
-              id="rank-item-3">
-            <div>
-              <span class="badge bg-secondary me-2">#3</span>
-              <span class="rank-title"><!-- rankingData[2].nama --></span>
-            </div>
-            <span class="fw-bold text-success rank-score">
-              <!-- rankingData[2].nilai -->
-            </span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center px-2"
-              id="rank-item-4">
-            <div>
-              <span class="badge bg-secondary me-2">#4</span>
-              <span class="rank-title"><!-- rankingData[3].nama --></span>
-            </div>
-            <span class="fw-bold text-success rank-score">
-              <!-- rankingData[3].nilai -->
-            </span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center px-2"
-              id="rank-item-5">
-            <div>
-              <span class="badge bg-secondary me-2">#5</span>
-              <span class="rank-title"><!-- rankingData[4].nama --></span>
-            </div>
-            <span class="fw-bold text-success rank-score">
-              <!-- rankingData[4].nilai -->
-            </span>
-          </li>
-        </ul>
-
       </div>
+
     </div>
 
   </div>
