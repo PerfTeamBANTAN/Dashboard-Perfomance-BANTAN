@@ -929,32 +929,27 @@ function loadKpiB2CRanking(config) {
         if (idx === 0) return; // header
         if (!r || r.join("").toString().trim() === "") return;
         rows.push({
-          rank: r[0],   // 1..5
-          nama: r[1]    // ZULFA, RISMAN, HERLANDO, DADY, EKA
+          rank: r[0],   // kolom A = 1..5
+          nama: r[1]    // kolom B = ZULFA, RISMAN, HERLANDO, DADY, EKA
         });
       });
 
       if (rows.length < 5) return;
 
-      // mapping NAMA → nama file (tanpa _juara/_kalah)
       function getSlugFromNama(nama) {
         if (!nama) return "";
         const n = String(nama).toLowerCase().trim();
-
         if (n === "zulfa")    return "zulfa";
         if (n === "risman")   return "risman";
         if (n === "herlando") return "herlando";
         if (n === "dady" || n === "dadi") return "dadi";
         if (n === "eka")      return "eka";
-
-        return n.split(/\s+/)[0]; // fallback
+        return n.split(/\s+/)[0];
       }
 
-      // base path MENGIKUTI HTML kamu
       const basePath = "../../assets/home/img";
 
       function setImgWithFallback(imgEl, slug, type) {
-        // type: "juara" | "kalah"
         const src = `${basePath}/${slug}_${type}.png`;
         imgEl.onerror = null;
         imgEl.src = src;
@@ -967,8 +962,8 @@ function loadKpiB2CRanking(config) {
       // Rank 1
       const r1 = rows[0];
       const slug1 = getSlugFromNama(r1.nama);
-      rankTitle1.textContent = r1.rank || "1";
-      rankScore1.textContent = r1.nama || "-";
+      rankTitle1.textContent = r1.rank || "1";   // misal "1"
+      rankScore1.textContent = r1.nama || "-";   // misal "ZULFA"
       rankDesc1.textContent =
         "Performa terbaik, jadi role model utama pencapaian KPI B2C Tangerang.";
       setImgWithFallback(img1, slug1, "juara");
@@ -982,27 +977,32 @@ function loadKpiB2CRanking(config) {
         "Konsisten di papan atas dan sangat berkontribusi pada total performa.";
       setImgWithFallback(img2, slug2, "juara");
 
-      // Rank 3–5
+      // Rank 3–5 – SESUAI HTML BARU
       const rankRows345 = [rows[2], rows[3], rows[4]];
       const liElems  = [rankItem3, rankItem4, rankItem5];
       const imgElems = [img3, img4, img5];
 
       rankRows345.forEach((item, idx) => {
         const li = liElems[idx];
-        const titleSpan = li.querySelector(".rank-title");
-        const scoreSpan = li.querySelector(".rank-score");
+        if (!li) return;
+
+        // nama ada di .rank-score, rank di .rank-title
+        const nameEl = li.querySelector(".rank-score");
+        const rankEl = li.querySelector(".rank-title");
+        const imgEl  = imgElems[idx];
+
         const slug = getSlugFromNama(item.nama);
 
-        if (titleSpan) titleSpan.textContent = item.rank || String(idx + 3);
-        if (scoreSpan) scoreSpan.textContent = item.nama || "-";
-        setImgWithFallback(imgElems[idx], slug, "kalah");
+        if (nameEl) nameEl.textContent = item.nama || "-";          // HERLANDO/DADY/EKA
+        if (rankEl) rankEl.textContent = item.rank || String(idx+3); // 3 / 4 / 5
+
+        if (imgEl) setImgWithFallback(imgEl, slug, "kalah");
       });
     })
     .catch((err) => {
       console.error("Error load ranking KPI B2C:", err);
     });
 }
-
 // =========================
 // INIT & FILTER
 // =========================
