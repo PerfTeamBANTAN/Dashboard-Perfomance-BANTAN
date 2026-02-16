@@ -878,6 +878,7 @@ function loadKpiB2CSupportTable(config) {
 // =========================
 
 function loadKpiB2CRanking(config) {
+  // Elemen hero / rank 1 & 2
   const rankTitle1 = document.getElementById("rank-title-1");
   const rankTitle2 = document.getElementById("rank-title-2");
   const rankScore1 = document.getElementById("rank-score-1");
@@ -885,12 +886,14 @@ function loadKpiB2CRanking(config) {
   const rankDesc1  = document.getElementById("rank-desc-1");
   const rankDesc2  = document.getElementById("rank-desc-2");
 
-  const rankItem3  = document.getElementById("rank-item-3");
-  const rankItem4  = document.getElementById("rank-item-4");
-  const rankItem5  = document.getElementById("rank-item-5");
-
   const img1 = document.getElementById("rank-img-1");
   const img2 = document.getElementById("rank-img-2");
+
+  // Elemen list rank 3–5
+  const rankItem3 = document.getElementById("rank-item-3");
+  const rankItem4 = document.getElementById("rank-item-4");
+  const rankItem5 = document.getElementById("rank-item-5");
+
   const img3 = document.getElementById("rank-img-3");
   const img4 = document.getElementById("rank-img-4");
   const img5 = document.getElementById("rank-img-5");
@@ -898,6 +901,7 @@ function loadKpiB2CRanking(config) {
   if (
     !rankTitle1 || !rankTitle2 ||
     !rankScore1 || !rankScore2 ||
+    !rankDesc1  || !rankDesc2  ||
     !rankItem3 || !rankItem4 || !rankItem5 ||
     !img1 || !img2 || !img3 || !img4 || !img5
   ) {
@@ -913,18 +917,20 @@ function loadKpiB2CRanking(config) {
     .then((data) => {
       if (!Array.isArray(data) || data.length < 2) return;
 
+      // Parsing rows: A = rank, B = nama
       const rows = [];
       data.forEach((r, idx) => {
-        if (idx === 0) return;
+        if (idx === 0) return; // header
         if (!r || r.join("").toString().trim() === "") return;
         rows.push({
-          rank: r[0],
-          nama: r[1]  
+          rank: r[0],  // 1..5
+          nama: r[1]   // ZULFA, RISMAN, HERLANDO, DADY, EKA
         });
       });
 
       if (rows.length < 5) return;
 
+      // Mapping nama → slug file PNG (tanpa _juara/_kalah)
       function getSlugFromNama(nama) {
         if (!nama) return "";
         const n = String(nama).toLowerCase().trim();
@@ -936,10 +942,11 @@ function loadKpiB2CRanking(config) {
         return n.split(/\s+/)[0];
       }
 
+      // Base path gambar – sesuaikan dengan struktur project kamu
       const basePath = "../../assets/home/img";
 
       function setImgWithFallback(imgEl, slug, type) {
-        const src = `${basePath}/${slug}_${type}.png`;
+        const src = `${basePath}/${slug}_${type}.png`; // type: juara/kalah
         imgEl.onerror = null;
         imgEl.src = src;
         imgEl.onerror = function () {
@@ -948,23 +955,33 @@ function loadKpiB2CRanking(config) {
         };
       }
 
-      // Rank 1
+      // ======================
+      // RANK 1 – HERO CARD
+      // ======================
       const r1 = rows[0];
       const slug1 = getSlugFromNama(r1.nama);
-      rankTitle1.textContent = r1.rank || "1";
-      rankScore1.textContent = r1.nama || "-";
+
+      rankScore1.textContent = r1.nama || "-";  // nama di baris besar
+      rankTitle1.textContent = `Rank ${r1.rank || "1"}`;
       rankDesc1.textContent =
-        "Performa terbaik, jadi role model utama pencapaian KPI B2C Tangerang.";
+        "Performa terbaik, menjadi acuan pencapaian KPI B2C Tangerang.";
       setImgWithFallback(img1, slug1, "juara");
 
+      // ======================
+      // RANK 2 – ROW KEDUA
+      // ======================
       const r2 = rows[1];
       const slug2 = getSlugFromNama(r2.nama);
-      rankTitle2.textContent = r2.rank || "2";
+
       rankScore2.textContent = r2.nama || "-";
+      rankTitle2.textContent = `Rank ${r2.rank || "2"}`;
       rankDesc2.textContent =
         "Konsisten di papan atas dan sangat berkontribusi pada total performa.";
       setImgWithFallback(img2, slug2, "juara");
 
+      // ======================
+      // RANK 3–5 – LIST SIMPLE
+      // ======================
       const rankRows345 = [rows[2], rows[3], rows[4]];
       const liElems  = [rankItem3, rankItem4, rankItem5];
       const imgElems = [img3, img4, img5];
@@ -973,22 +990,21 @@ function loadKpiB2CRanking(config) {
         const li = liElems[idx];
         if (!li) return;
 
-        const nameEl = li.querySelector(".rank-score");
-        const rankEl = li.querySelector(".rank-title");
+        const nameEl = li.querySelector(".rank-score"); // span.nama
+        const rankEl = li.querySelector(".rank-title"); // span.rank
         const imgEl  = imgElems[idx];
-
-        const slug = getSlugFromNama(item.nama);
+        const slug   = getSlugFromNama(item.nama);
 
         if (nameEl) nameEl.textContent = item.nama || "-";
-        if (rankEl) rankEl.textContent = item.rank || String(idx+3);
-
-        if (imgEl) setImgWithFallback(imgEl, slug, "kalah");
+        if (rankEl) rankEl.textContent = `Rank ${item.rank || (idx + 3)}`;
+        if (imgEl)  setImgWithFallback(imgEl, slug, "kalah");
       });
     })
     .catch((err) => {
       console.error("Error load ranking KPI B2C:", err);
     });
 }
+
 // =========================
 // INIT & FILTER
 // =========================
