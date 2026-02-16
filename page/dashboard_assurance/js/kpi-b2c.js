@@ -909,17 +909,24 @@ function loadKpiB2CRanking(config) {
   )}&range=${encodeURIComponent("A130:B135")}`;
 
   fetch(url)
-    .then((resp) => resp.json())
-    .then((data) => {
-      // HARUS ada 6 baris: header + 5 rank
-      if (!Array.isArray(data) || data.length < 6) return;
+  .then((resp) => resp.json())
+  .then((data) => {
+    console.log("RAW HSA RANK DATA:", data);  // ← tambahkan di sini
 
-      const rows = data.slice(1, 6).map((r) => ({
-        rank: r[0],
-        nama: r[1],
-      }));
+    // Expect:
+    // ["RANK","HSA"]
+    // ["1","ZULFA"]
+    // ...
+    if (!Array.isArray(data) || data.length < 6) return;
 
-      function getSlugFromNama(nama) {
+    const rows = data.slice(1, 6).map((r) => ({
+      rank: r[0],
+      nama: r[1],
+    }));
+
+    console.log("PARSED HSA ROWS:", rows);     // opsional, boleh tambah ini juga
+
+    function getSlugFromNama(nama) {
         if (!nama) return "";
         const n = String(nama).toLowerCase().trim();
         if (n === "zulfa")    return "zulfa";
