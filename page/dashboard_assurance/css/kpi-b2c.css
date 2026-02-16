@@ -270,223 +270,302 @@ table.kpi-table td.kpi-text-red {
   background: linear-gradient(135deg, #f4f4f5, #e5e7eb);
 }
 
-/* KPI RANKING */
-/* WRAPPER LEADERBOARD */
-.kpi-rank-wrapper {
-  background: radial-gradient(circle at top left, #0f172a, #1e293b 65%);
-  color: #f9fafb;
-  border-radius: 1.1rem;
+/* PANEL UTAMA LEADERBOARD */
+.kpi-rank-panel {
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
   overflow: hidden;
-  position: relative;
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.6);
 }
 
-.kpi-rank-wrapper::before {
-  content: "";
-  position: absolute;
-  width: 260px;
-  height: 260px;
-  top: -80px;
-  right: -60px;
-  background: radial-gradient(circle, rgba(59,130,246,0.5), transparent 70%);
-  opacity: 0.8;
-  pointer-events: none;
-}
-
-/* HEADER */
-.kpi-rank-header {
-  background: rgba(15,23,42,0.65);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(148,163,184,0.5);
+/* HEADER PANEL */
+.kpi-rank-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 10px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .kpi-rank-chip {
   display: inline-block;
-  padding: 0.15rem 0.6rem;
+  padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(59,130,246,0.25);
-  border: 1px solid rgba(96,165,250,0.6);
-  font-size: 0.65rem;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  font-size: 0.62rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
 }
 
-/* BODY */
-.kpi-rank-wrapper .card-body {
-  background: rgba(15,23,42,0.92);
-  backdrop-filter: blur(18px);
-}
-
-/* CARD RANK 1 & 2 */
-.kpi-rank-card {
-  display: flex;
-  align-items: center;
-  padding: 0.8rem 1rem;
-  border-radius: 1rem;
-  position: relative;
-  border: 1px solid rgba(148,163,184,0.55);
-  overflow: hidden;
-}
-
-.kpi-rank-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top left, rgba(255,255,255,0.15), transparent 60%);
-  pointer-events: none;
-}
-
-.kpi-rank-1 {
-  background: linear-gradient(135deg, #fef3c7, #fbbf24);  /* amber family */
+.kpi-rank-title-main {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+  font-weight: 700;
   color: #111827;
 }
 
-.kpi-rank-2 {
-  background: linear-gradient(135deg, #dcfce7, #22c55e);  /* emerald family */
-  color: #052e16;
+.kpi-rank-subtitle {
+  font-size: 0.68rem;
+  color: #6b7280;
 }
 
-/* BADGE NOMOR BESAR */
-.kpi-rank-badge {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(15,23,42,0.1);
-  border: 2px solid rgba(15,23,42,0.3);
+.kpi-rank-meta-label {
+  font-size: 0.65rem;
+  color: #6b7280;
+}
+
+/* BODY PANEL */
+.kpi-rank-panel-body {
+  padding: 8px 10px 10px;
+  background: #f3f4f6;
+}
+
+/* JUARA 1 – HERO CARD */
+.kpi-rank-hero {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 8px;
+}
+
+.kpi-rank-hero-left {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+}
+
+/* badge #1 */
+.kpi-rank-hero-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.75rem;
   font-weight: 700;
-  margin-right: 0.6rem;
-  font-size: 0.9rem;
+  color: #92400e;
+  margin-right: 6px;
 }
 
-/* AVATAR – BESAR DAN KONTRAS */
-.kpi-rank-avatar {
-  width: 72px;          /* dulu 48px */
+/* foto besar */
+.kpi-rank-hero-avatar {
+  width: 72px;
   height: 72px;
-  border-radius: 999px;
+  border-radius: 16px;
   overflow: hidden;
-  margin-right: 0.9rem;
-  border: 3px solid rgba(15,23,42,0.7);
-  background: #f9fafb;
-  box-shadow: 0 6px 18px rgba(15,23,42,0.45);
+  border: 2px solid #111827;
+  background: #111827;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.35);
 }
-
-.kpi-rank-avatar img,
-.kpi-rank-avatar-sm img {
+.kpi-rank-hero-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* TEKS */
-.kpi-rank-main {
+.kpi-rank-hero-info {
   flex: 1;
   min-width: 0;
+  margin: 0 6px;
 }
 
-.kpi-rank-title {
+.kpi-rank-hero-name {
+  font-size: 0.9rem;
   font-weight: 700;
-  font-size: 0.95rem;
+  color: #111827;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
-.kpi-rank-sub {
-  font-size: 0.75rem;
-  opacity: 0.85;
-}
-
-/* SCORE */
-.kpi-rank-score {
-  text-align: right;
-  min-width: 66px;
-}
-
-.kpi-rank-score-label {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  opacity: 0.78;
-}
-
-.kpi-rank-score-value {
-  font-size: 1.15rem;
-  font-weight: 800;
-}
-
-/* DIVIDER 3–5 */
-.kpi-rank-divider {
-  margin: 0.5rem 0 0.4rem;
-  text-align: center;
-  position: relative;
+.kpi-rank-hero-rank {
   font-size: 0.7rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.kpi-rank-hero-desc {
+  font-size: 0.68rem;
+  color: #6b7280;
+}
+
+/* info HI di kanan */
+.kpi-rank-hero-hi {
+  text-align: right;
+  min-width: 46px;
+}
+.kpi-rank-hero-hi-label {
+  font-size: 0.6rem;
+  color: #6b7280;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #e5e7eb;
+}
+.kpi-rank-hero-hi-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #16a34a;
 }
 
-.kpi-rank-divider::before,
-.kpi-rank-divider::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 30%;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(148,163,184,0.8));
+/* JUARA 2 – ROW KECIL */
+.kpi-rank-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
 }
 
-.kpi-rank-divider::before { left: 0; }
-.kpi-rank-divider::after  { right: 0; }
-
-/* LIST 3–5 */
-.kpi-rank-list .kpi-rank-item {
-  background: transparent;
-  border-color: rgba(55,65,81,0.7);
-  color: #e5e7eb;
-  padding: 0.5rem 0.6rem;
+.kpi-rank-row-2 {
+  border-left: 4px solid #22c55e; /* emerald */
+  margin-top: 6px;
 }
 
-.kpi-rank-number {
+.kpi-rank-row-left {
+  display: flex;
+  align-items: center;
+}
+
+/* badge #2 */
+.kpi-rank-row-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 24px;
   height: 24px;
   border-radius: 999px;
-  border: 1px solid rgba(148,163,184,0.85);
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #dcfce7;
+  color: #166534;
+  margin-right: 6px;
+}
+
+/* foto rank 2 */
+.kpi-rank-row-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #111827;
+  background: #111827;
+  margin-right: 6px;
+}
+.kpi-rank-row-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kpi-rank-row-text {
+  display: flex;
+  flex-direction: column;
+}
+.kpi-rank-row-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #111827;
+}
+.kpi-rank-row-rank {
+  font-size: 0.68rem;
+  color: #6b7280;
+}
+
+/* label HI */
+.kpi-rank-row-hi-label {
+  font-size: 0.62rem;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+/* DIVIDER 3–5 */
+.kpi-rank-panel-divider {
+  margin: 8px 0 4px;
+  text-align: center;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #6b7280;
+}
+
+/* LIST RANK 3–5 */
+.kpi-rank-list-simple {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* satu baris rank 3/4/5 */
+.kpi-rank-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+.kpi-rank-list-main {
+  display: flex;
+  align-items: center;
+}
+
+/* angka posisi */
+.kpi-rank-list-pos {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
+  color: #4b5563;
+  margin-right: 6px;
 }
 
-.kpi-rank-avatar-sm {
-  width: 40px;          
-  height: 40px;
+/* avatar kecil 3–5 */
+.kpi-rank-list-avatar {
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
   overflow: hidden;
-  margin: 0 0.55rem;
-  border: 2px solid rgba(148,163,184,0.9);
-  background: #f9fafb;
-  box-shadow: 0 4px 12px rgba(15,23,42,0.5);
+  border: 1px solid #111827;
+  background: #111827;
+  margin-right: 6px;
+}
+.kpi-rank-list-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.kpi-rank-item-title {
-  font-size: 0.8rem;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+/* nama & rank */
+.kpi-rank-list-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #111827;
+}
+.kpi-rank-list-rank {
+  font-size: 0.7rem;
+  color: #6b7280;
 }
 
-.kpi-rank-item-score {
-  font-size: 0.85rem;
-  font-weight: 700;
+.kpi-rank-hero:hover,
+.kpi-rank-row:hover,
+.kpi-rank-list-item:hover {
+  box-shadow: 0 4px 10px rgba(15,23,42,0.1);
+  transform: translateY(-1px);
+  transition: all 0.12s ease;
 }
-
-/* RESPONSIVE */
-@media (max-width: 991.98px) {
-  .kpi-rank-wrapper {
-    margin-top: 0.5rem;
-  }
-}
-
