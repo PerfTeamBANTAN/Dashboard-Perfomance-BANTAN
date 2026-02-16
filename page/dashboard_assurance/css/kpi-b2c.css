@@ -273,8 +273,8 @@ table.kpi-table td.kpi-text-red {
 /* KPI RANKING */
 /* WRAPPER LEADERBOARD */
 .kpi-rank-wrapper {
-  background: radial-gradient(circle at top left, #1d4ed8, #0f172a 60%);
-  color: #fff;
+  background: radial-gradient(circle at top left, #0f172a, #1e293b 65%);
+  color: #f9fafb;
   border-radius: 1.1rem;
   overflow: hidden;
   position: relative;
@@ -288,8 +288,8 @@ table.kpi-table td.kpi-text-red {
   height: 260px;
   top: -80px;
   right: -60px;
-  background: radial-gradient(circle, rgba(96,165,250,0.7), transparent 70%);
-  opacity: 0.75;
+  background: radial-gradient(circle, rgba(59,130,246,0.5), transparent 70%);
+  opacity: 0.8;
   pointer-events: none;
 }
 
@@ -337,13 +337,13 @@ table.kpi-table td.kpi-text-red {
 }
 
 .kpi-rank-1 {
-  background: linear-gradient(135deg, #fbbf24, #f97316);
+  background: linear-gradient(135deg, #fef3c7, #fbbf24);  /* amber family */
   color: #111827;
 }
 
 .kpi-rank-2 {
-  background: linear-gradient(135deg, #38bdf8, #a855f7);
-  color: #0b1120;
+  background: linear-gradient(135deg, #dcfce7, #22c55e);  /* emerald family */
+  color: #052e16;
 }
 
 /* BADGE NOMOR BESAR */
@@ -361,15 +361,16 @@ table.kpi-table td.kpi-text-red {
   font-size: 0.9rem;
 }
 
-/* AVATAR */
+/* AVATAR – BESAR DAN KONTRAS */
 .kpi-rank-avatar {
-  width: 48px;
-  height: 48px;
+  width: 72px;          /* dulu 48px */
+  height: 72px;
   border-radius: 999px;
   overflow: hidden;
-  margin-right: 0.75rem;
-  border: 2px solid rgba(15,23,42,0.4);
-  background: rgba(15,23,42,0.2);
+  margin-right: 0.9rem;
+  border: 3px solid rgba(15,23,42,0.7);
+  background: #f9fafb;
+  box-shadow: 0 6px 18px rgba(15,23,42,0.45);
 }
 
 .kpi-rank-avatar img,
@@ -460,13 +461,14 @@ table.kpi-table td.kpi-text-red {
 }
 
 .kpi-rank-avatar-sm {
-  width: 26px;
-  height: 26px;
+  width: 40px;          
+  height: 40px;
   border-radius: 999px;
   overflow: hidden;
-  margin: 0 0.45rem;
-  border: 1px solid rgba(148,163,184,0.7);
-  background: rgba(15,23,42,0.4);
+  margin: 0 0.55rem;
+  border: 2px solid rgba(148,163,184,0.9);
+  background: #f9fafb;
+  box-shadow: 0 4px 12px rgba(15,23,42,0.5);
 }
 
 .kpi-rank-item-title {
