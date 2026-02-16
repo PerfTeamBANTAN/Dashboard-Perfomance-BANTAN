@@ -877,14 +877,14 @@ function loadKpiB2CSupportTable(config) {
 // =========================
 
 function loadKpiB2CRanking(config) {
-  console.log("HSA RANKING START");   // ← tambahkan log ini di paling atas
+  console.log("HSA RANKING START");
 
   const rankTitle1 = document.getElementById("rank-title-1");
   const rankTitle2 = document.getElementById("rank-title-2");
   const rankScore1 = document.getElementById("rank-score-1");
   const rankScore2 = document.getElementById("rank-score-2");
   const rankDesc1  = document.getElementById("rank-desc-1");
-  const rankDesc2  = document.getElementById("rank-desc-2");
+  const rankDesc2  = document.getElementById("rank-desc-2"); // boleh null
 
   const rankItem3  = document.getElementById("rank-item-3");
   const rankItem4  = document.getElementById("rank-item-4");
@@ -904,10 +904,11 @@ function loadKpiB2CRanking(config) {
     img1, img2, img3, img4, img5
   });
 
+  // rankDesc2 TIDAK WAJIB, jadi tidak ikut di cek
   if (
     !rankTitle1 || !rankTitle2 ||
     !rankScore1 || !rankScore2 ||
-    !rankDesc1  || !rankDesc2  ||
+    !rankDesc1  ||
     !rankItem3 || !rankItem4 || !rankItem5 ||
     !img1 || !img2 || !img3 || !img4 || !img5
   ) {
@@ -967,7 +968,7 @@ function loadKpiB2CRanking(config) {
       rankScore1.textContent = r1.nama || "-";
       rankTitle1.textContent = `Rank ${r1.rank || "1"}`;
       rankDesc1.textContent =
-        "Performa terbaik, menjadi acuan pencapaian KPI B2C Tangerang.";
+        "HSA dengan performa terbaik di KPI B2C Tangerang.";
       setImgWithFallback(img1, slug1, "juara");
 
       // Rank 2
@@ -975,8 +976,10 @@ function loadKpiB2CRanking(config) {
       const slug2 = getSlugFromNama(r2.nama);
       rankScore2.textContent = r2.nama || "-";
       rankTitle2.textContent = `Rank ${r2.rank || "2"}`;
-      rankDesc2.textContent =
-        "Konsisten di papan atas dan sangat berkontribusi pada total performa.";
+      if (rankDesc2) {
+        rankDesc2.textContent =
+          "HSA yang konsisten di papan atas dan berkontribusi besar.";
+      }
       setImgWithFallback(img2, slug2, "juara");
 
       // Rank 3–5
