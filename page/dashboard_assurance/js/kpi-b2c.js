@@ -911,19 +911,13 @@ function loadKpiB2CRanking(config) {
   fetch(url)
     .then((resp) => resp.json())
     .then((data) => {
-      if (!Array.isArray(data) || data.length < 2) return;
+      if (!Array.isArray(data) || data.length < 6) return;
 
-      const rows = [];
-      data.forEach((r, idx) => {
-        if (idx === 0) return;
-        if (!r || r.join("").toString().trim() === "") return;
-        rows.push({
-          rank: r[0],
-          nama: r[1]
-        });
-      });
-
-      if (rows.length < 5) return;
+      // langsung ambil 5 baris setelah header
+      const rows = data.slice(1, 6).map((r) => ({
+        rank: r[0],
+        nama: r[1],
+      }));
 
       function getSlugFromNama(nama) {
         if (!nama) return "";
@@ -933,7 +927,7 @@ function loadKpiB2CRanking(config) {
         if (n === "herlando") return "herlando";
         if (n === "dady" || n === "dadi") return "dadi";
         if (n === "eka")      return "eka";
-        return n.split(/\s+/)[0];
+        return n.split(/\s+/)[0];   // ← regex sudah benar
       }
 
       const basePath = "../../assets/home/img";
@@ -948,7 +942,7 @@ function loadKpiB2CRanking(config) {
         };
       }
 
-      // Rank 1 (HSA hero)
+      // Rank 1
       const r1 = rows[0];
       const slug1 = getSlugFromNama(r1.nama);
       rankScore1.textContent = r1.nama || "-";
@@ -957,7 +951,7 @@ function loadKpiB2CRanking(config) {
         "Performa terbaik, menjadi acuan pencapaian KPI B2C Tangerang.";
       setImgWithFallback(img1, slug1, "juara");
 
-      // Rank 2 (HSA row kedua)
+      // Rank 2
       const r2 = rows[1];
       const slug2 = getSlugFromNama(r2.nama);
       rankScore2.textContent = r2.nama || "-";
@@ -966,7 +960,7 @@ function loadKpiB2CRanking(config) {
         "Konsisten di papan atas dan sangat berkontribusi pada total performa.";
       setImgWithFallback(img2, slug2, "juara");
 
-      // Rank 3–5 (HSA list)
+      // Rank 3–5
       const rankRows345 = [rows[2], rows[3], rows[4]];
       const liElems  = [rankItem3, rankItem4, rankItem5];
       const imgElems = [img3, img4, img5];
