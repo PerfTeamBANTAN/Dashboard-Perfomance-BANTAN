@@ -1088,7 +1088,7 @@ function mapRowsToSqmTickets(rows) {
     troubleNumber: r[COL_SQM.TROUBLE_NUMBER],
     troubleNo: r[COL_SQM.TROUBLE_NO],
     troubleOpenTime: r[COL_SQM.TROUBLE_OPENTIME],
-    sto: (r[COL_SQM.CMDF] || "").toString().trim().toUpperCase(), // CMDF = STO
+    sto: (r[COL_SQM.CMDF] || "").toString().trim().toUpperCase(),
     odp: r[COL_SQM.ODP],
     flagHvc: (r[COL_SQM.FLAG_HVC] || "").toString().trim().toUpperCase(),
     ttr: r[COL_SQM.TTR],
@@ -1167,7 +1167,7 @@ function renderSqmDetailPage(page) {
   modalEl.dataset.currentPage = String(currentPage);
 
   if (total === 0) {
-    tbody.innerHTML = `<tr><td colspan="9" class="text-center">Tidak ada data tiket SQM.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="text-center">Tidak ada data tiket SQM.</td></tr>`;
     pageInfo.textContent = "";
     totalInfo.textContent = "0 tiket";
     btnPrev.disabled = true;
@@ -1181,13 +1181,12 @@ function renderSqmDetailPage(page) {
 
   tbody.innerHTML = slice.map(t => `
     <tr>
+      <td>${t.troubleNumber || ""}</td>
       <td>${t.troubleNo || ""}</td>
+      <td>${t.troubleOpenTime || ""}</td>
       <td>${t.sto || ""}</td>
       <td>${t.flagHvc || ""}</td>
-      <td>${t.status || ""}</td>
-      <td>${t.sqm4 || ""}</td>
-      <td>${t.troubleOpenTime || ""}</td>
-      <td>${t.odp || ""}</td>
+      <td>${t.ttr || ""}</td>
       <td>${t.mapping || ""}</td>
       <td>${t.laborCode || ""}</td>
     </tr>
@@ -1199,7 +1198,6 @@ function renderSqmDetailPage(page) {
   btnPrev.disabled = currentPage === 1;
   btnNext.disabled = currentPage === totalPages;
 }
-
 // pagination wiring yang sudah ada, tinggal tambah cabang jenis detail
 function wireTicketDetailPagination() {
   const modalEl = document.getElementById("ticketDetailModal");
@@ -1239,6 +1237,23 @@ function showSqmDetailModal(title, tickets) {
 
   const modalEl = document.getElementById("ticketDetailModal");
   const titleEl = document.getElementById("ticketDetailTitle");
+
+  // header kolom khusus SQM (8 kolom)
+  const thead = modalEl.querySelector("thead");
+  if (thead) {
+    thead.innerHTML = `
+      <tr>
+        <th>TROUBLE_NUMBER</th>
+        <th>TROUBLE_NO</th>
+        <th>TROUBLE_OPENTIME</th>
+        <th>CMDF</th>
+        <th>FLAG_HVC</th>
+        <th>TTR</th>
+        <th>MAPPING</th>
+        <th>LABORCODE</th>
+      </tr>
+    `;
+  }
 
   modalEl.dataset.tickets = JSON.stringify(tickets);
   modalEl.dataset.currentPage = "1";
