@@ -530,7 +530,6 @@ function loadKpiB2CRightTable(config) {
     });
 }
 
-
 // ---------- HELPER DTTR UNTUK PRIMARY TABLE ----------
 
 const COL_DTTR = {
@@ -553,6 +552,13 @@ const COL_DTTR = {
   COMPLY36: 16
 };
 
+function toBin(val) {
+  if (val === undefined || val === null) return 0;
+  const num = Number(String(val).replace(",", "."));
+  if (isNaN(num)) return 0;
+  return num >= 1 ? 1 : 0; // 1,00 -> 1 ; 0,00 -> 0
+}
+
 function mapRowsToTickets(rows) {
   return rows.map(r => ({
     troubleNo: r[COL_DTTR.TROUBLE_NO],
@@ -567,11 +573,11 @@ function mapRowsToTickets(rows) {
     odc: r[COL_DTTR.ODC],
     laborCode: r[COL_DTTR.LABORCODE],
     ttrOpenTclose: r[COL_DTTR.TTR_OPEN_TCLOSE],
-    comply3: Number(r[COL_DTTR.COMPLY3] || 0),
-    comply6: Number(r[COL_DTTR.COMPLY6] || 0),
-    comply12: Number(r[COL_DTTR.COMPLY12] || 0),
-    comply3Manja: Number(r[COL_DTTR.COMPLY3_MANJA] || 0),
-    comply36: Number(r[COL_DTTR.COMPLY36] || 0)
+    comply3: toBin(r[COL_DTTR.COMPLY3]),
+    comply6: toBin(r[COL_DTTR.COMPLY6]),
+    comply12: toBin(r[COL_DTTR.COMPLY12]),
+    comply3Manja: toBin(r[COL_DTTR.COMPLY3_MANJA]),
+    comply36: toBin(r[COL_DTTR.COMPLY36])
   }));
 }
 
@@ -579,7 +585,6 @@ function aggregateKpiBySto(tickets) {
   const bySto = {};
 
   console.log("TOTAL TIKET DTTR:", tickets.length);
-  // cek beberapa sample first rows
   console.log("SAMPLE TIKET:", tickets.slice(0, 5));
 
   for (const t of tickets) {
@@ -588,16 +593,22 @@ function aggregateKpiBySto(tickets) {
     if (!bySto[t.sto]) {
       bySto[t.sto] = {
         sto: t.sto,
+
         ttr36_not: 0,
         ttr36_comp: 0,
+
         ttr3dv_not: 0,
         ttr3dv_comp: 0,
+
         ttr3manja_not: 0,
         ttr3manja_comp: 0,
+
         ttr6p_not: 0,
         ttr6p_comp: 0,
+
         ttr12g_not: 0,
         ttr12g_comp: 0,
+
         detail: {
           ttr36_not: [],
           ttr36_comp: [],
@@ -615,7 +626,7 @@ function aggregateKpiBySto(tickets) {
 
     const s = bySto[t.sto];
 
-    // sesuaikan literal string ke uppercase
+    // TTR36H (Non HVC): TEKNIS, COMPLY36
     if (t.jenisTiket === "TEKNIS") {
       if (t.comply36 === 0) {
         s.ttr36_not++;
@@ -626,6 +637,7 @@ function aggregateKpiBySto(tickets) {
       }
     }
 
+    // TTR3H (D,V): TEKNIS, FLAG_HVC = HVC_DIAMOND / HVC_VVIP, COMPLY3
     if (
       t.jenisTiket === "TEKNIS" &&
       (t.flagHvc === "HVC_DIAMOND" || t.flagHvc === "HVC_VVIP")
@@ -639,6 +651,7 @@ function aggregateKpiBySto(tickets) {
       }
     }
 
+    // TTR3H (MANJA): TEKNIS, FIRST_ASSIGN_BY = CUSTOMERASSIGNED, COMPLY3_MANJA
     if (
       t.jenisTiket === "TEKNIS" &&
       t.firstAssignBy === "CUSTOMERASSIGNED"
@@ -652,6 +665,7 @@ function aggregateKpiBySto(tickets) {
       }
     }
 
+    // TTR6H (P): TEKNIS, FLAG_HVC = HVC_PLATINUM, COMPLY6
     if (t.jenisTiket === "TEKNIS" && t.flagHvc === "HVC_PLATINUM") {
       if (t.comply6 === 0) {
         s.ttr6p_not++;
@@ -662,6 +676,7 @@ function aggregateKpiBySto(tickets) {
       }
     }
 
+    // TTR12H (G): TEKNIS, FLAG_HVC = HVC_GOLD, COMPLY12
     if (t.jenisTiket === "TEKNIS" && t.flagHvc === "HVC_GOLD") {
       if (t.comply12 === 0) {
         s.ttr12g_not++;
@@ -752,7 +767,7 @@ function showTicketDetailModal(title, tickets) {
   modal.show();
 }
 
-// ---------- GANTI loadKpiB2CPrimaryTable LAMA DENGAN INI ----------
+// ---------- FUNGSI UTAMA: PRIMARY TABLE ----------
 
 function loadKpiB2CPrimaryTable(config) {
   const tablePrimary = document.getElementById("kpi-b2c-table-primary");
@@ -816,19 +831,20 @@ function loadKpiB2CPrimaryTable(config) {
       `;
 
       const bodyRows = [];
-for (let i = 2; i < layoutData.length - 1; i++) {
-  const r = layoutData[i];
-  if (!r || r.join("").toString().trim() === "") continue;
-  bodyRows.push(r);
-}
-console.log("LAYOUT STO:", bodyRows.map(r => r[0]));
+      for (let i = 2; i < layoutData.length - 1; i++) {
+        const r = layoutData[i];
+        if (!r || r.join("").toString().trim() === "") continue;
+        bodyRows.push(r);
+      }
       const totalRow = layoutData[layoutData.length - 1] || [];
+
+      console.log("LAYOUT STO:", bodyRows.map(r => r[0]));
 
       const tbody = `
         <tbody>
           ${bodyRows
             .map((r) => {
-              const sto = r[0];
+              const sto = (r[0] || "").toString().trim().toUpperCase();
               const k = kpiBySto[sto] || {};
 
               const cell = (val, key, label) => {
