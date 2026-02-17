@@ -149,40 +149,44 @@ function loadKpiB2CHsaTable(config) {
           <tr>
             <th rowspan="2" class="th-gold text-center">Indikator</th>
             <th rowspan="2" class="th-gold text-center">Target</th>
-            <th colspan="3" class="th-plat text-center">DADY</th>
-            <th colspan="3" class="th-plat text-center">EKA</th>
-            <th colspan="2" class="th-plat text-center">HERLANDO</th>
-            <th colspan="3" class="th-plat text-center">RISMAN</th>
-            <th colspan="2" class="th-plat text-center">ZULFA</th>
+            <th colspan="3" class="th-hsa-dady text-center">DADY</th>
+            <th colspan="3" class="th-hsa-eka text-center">EKA</th>
+            <th colspan="2" class="th-hsa-herlando text-center">HERLANDO</th>
+            <th colspan="3" class="th-hsa-risman text-center">RISMAN</th>
+            <th colspan="2" class="th-hsa-zulfa text-center">ZULFA</th>
             <th colspan="2" class="th-plat text-center">TANGERANG</th>
           </tr>
           <tr>
             <!-- DADY -->
-            <th class="th-plat text-center">GDS</th>
-            <th class="th-plat text-center">TAN</th>
-            <th class="th-plat text-center">JIA</th>
+            <th class="th-hsa-dady text-center">GDS</th>
+            <th class="th-hsa-dady text-center">TAN</th>
+            <th class="th-hsa-dady text-center">JIA</th>
+
             <!-- EKA -->
-            <th class="th-plat text-center">CLD</th>
-            <th class="th-plat text-center">PDR</th>
-            <th class="th-plat text-center">PKU</th>
+            <th class="th-hsa-eka text-center">CLD</th>
+            <th class="th-hsa-eka text-center">PDR</th>
+            <th class="th-hsa-eka text-center">PKU</th>
+
             <!-- HERLANDO -->
-            <th class="th-plat text-center">LKG</th>
-            <th class="th-plat text-center">SRP</th>
+            <th class="th-hsa-herlando text-center">LKG</th>
+            <th class="th-hsa-herlando text-center">SRP</th>
+
             <!-- RISMAN -->
-            <th class="th-plat text-center">CPD</th>
-            <th class="th-plat text-center">CKL</th>
-            <th class="th-plat text-center">DTG</th>
+            <th class="th-hsa-risman text-center">CPD</th>
+            <th class="th-hsa-risman text-center">CKL</th>
+            <th class="th-hsa-risman text-center">DTG</th>
+
             <!-- ZULFA -->
-            <th class="th-plat text-center">SRH</th>
-            <th class="th-plat text-center">CPA</th>
+            <th class="th-hsa-zulfa text-center">SRH</th>
+            <th class="th-hsa-zulfa text-center">CPA</th>
+
             <!-- TANGERANG -->
             <th class="th-plat text-center">TANGERANG</th>
             <th class="th-bronze text-center">KPI HSA</th>
-          </tr>
+        </tr>
         </thead>
       `;
 
-      // Body: 'Dash B2C'!B5:R31 -> index 2..data.length-2
       const bodyRows = [];
       for (let i = 2; i < data.length - 1; i++) {
         const r = data[i];
