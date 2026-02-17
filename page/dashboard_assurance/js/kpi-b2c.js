@@ -529,7 +529,6 @@ function loadKpiB2CRightTable(config) {
         "<tbody><tr><td>Gagal memuat data</td></tr></tbody>";
     });
 }
-
 // ---------- HELPER DTTR UNTUK PRIMARY TABLE ----------
 
 const COL_DTTR = {
@@ -840,6 +839,26 @@ function loadKpiB2CPrimaryTable(config) {
 
       console.log("LAYOUT STO:", bodyRows.map(r => r[0]));
 
+      // --- Hitung total BRANCH TANGERANG dari kpiByStoArr ---
+      const sum = (field) =>
+        kpiByStoArr.reduce((acc, s) => acc + (s[field] || 0), 0);
+
+      const ttr36_not_total = sum("ttr36_not");
+      const ttr36_comp_total = sum("ttr36_comp");
+      const ttr3dv_not_total = sum("ttr3dv_not");
+      const ttr3dv_comp_total = sum("ttr3dv_comp");
+      const ttr3manja_not_total = sum("ttr3manja_not");
+      const ttr3manja_comp_total = sum("ttr3manja_comp");
+      const ttr6p_not_total = sum("ttr6p_not");
+      const ttr6p_comp_total = sum("ttr6p_comp");
+      const ttr12g_not_total = sum("ttr12g_not");
+      const ttr12g_comp_total = sum("ttr12g_comp");
+
+      const pct = (comp, not) => {
+        const total = comp + not;
+        return total === 0 ? 0 : (comp / total) * 100;
+      };
+
       const tbody = `
         <tbody>
           ${bodyRows
@@ -896,14 +915,29 @@ function loadKpiB2CPrimaryTable(config) {
             })
             .join("")}
 
+          <!-- ROW TOTAL: BRANCH TANGERANG -->
           <tr class="table-secondary fw-semibold">
-            <td colspan="5">${totalRow[0] ?? ""}</td>
-            <td>${totalRow[5] ?? ""}</td>
-            <td>${totalRow[6] ?? ""}</td>
-            <td>${totalRow[7] ?? ""}</td>
-            <td>${totalRow[8] ?? ""}</td>
-            <td>${totalRow[9] ?? ""}</td>
-            <td>${totalRow[10] ?? ""}</td>
+            <td colspan="5">${totalRow[0] ?? "BRANCH TANGERANG"}</td>
+
+            <td>${ttr36_not_total}</td>
+            <td>${ttr36_comp_total}</td>
+            <td>${pct(ttr36_comp_total, ttr36_not_total).toFixed(2)}%</td>
+
+            <td>${ttr3dv_not_total}</td>
+            <td>${ttr3dv_comp_total}</td>
+            <td>${pct(ttr3dv_comp_total, ttr3dv_not_total).toFixed(2)}%</td>
+
+            <td>${ttr3manja_not_total}</td>
+            <td>${ttr3manja_comp_total}</td>
+            <td>${pct(ttr3manja_comp_total, ttr3manja_not_total).toFixed(2)}%</td>
+
+            <td>${ttr6p_not_total}</td>
+            <td>${ttr6p_comp_total}</td>
+            <td>${pct(ttr6p_comp_total, ttr6p_not_total).toFixed(2)}%</td>
+
+            <td>${ttr12g_not_total}</td>
+            <td>${ttr12g_comp_total}</td>
+            <td>${pct(ttr12g_comp_total, ttr12g_not_total).toFixed(2)}%</td>
           </tr>
         </tbody>
       `;
