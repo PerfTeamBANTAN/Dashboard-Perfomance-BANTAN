@@ -740,3 +740,125 @@ table.kpi-table td.kpi-text-red {
   text-align: center;
   vertical-align: middle;
 }
+
+/* ---------- MODAL DETAIL TIKET KPI B2C ---------- */
+
+.ticket-modal {
+  border-radius: 0.75rem;
+  border: none;
+  box-shadow:
+    0 12px 30px rgba(15, 23, 42, 0.18),
+    0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.ticket-modal-header {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+  background: linear-gradient(135deg, #0f172a, #1d283a);
+  color: #f9fafb;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.ticket-modal-header .modal-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.ticket-modal-subtitle {
+  margin-top: 0.1rem;
+  color: rgba(226, 232, 240, 0.7) !important;
+}
+
+.ticket-modal-body {
+  background: #f8fafc;
+  padding: 0.75rem 1rem 1rem;
+}
+
+/* toolbar atas: info total + pagination */
+
+.ticket-modal-toolbar {
+  padding: 0.25rem 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.ticket-modal-page-info {
+  min-width: 130px;
+  text-align: right;
+}
+
+.ticket-modal-pager .btn {
+  min-width: 60px;
+  border-radius: 999px !important;
+  padding-inline: 0.9rem;
+}
+
+.ticket-modal-pager .btn-outline-secondary {
+  border-color: #cbd5e1;
+  color: #0f172a;
+  background-color: #ffffff;
+}
+
+.ticket-modal-pager .btn-outline-secondary:hover:not(:disabled) {
+  background-color: #e2e8f0;
+}
+
+.ticket-modal-pager .btn-outline-secondary:disabled {
+  opacity: 0.55;
+}
+
+/* tabel */
+
+.ticket-modal-table {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+}
+
+.ticket-modal-table table {
+  margin-bottom: 0;
+}
+
+.ticket-modal-table thead.table-light {
+  background: #f1f5f9;
+}
+
+.ticket-modal-table thead th {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #64748b;
+  border-bottom-color: #e2e8f0;
+  white-space: nowrap;
+}
+
+.ticket-modal-table tbody td {
+  font-size: 0.78rem;
+  vertical-align: middle;
+}
+
+.ticket-modal-table tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+.ticket-modal-table tbody tr:hover {
+  background-color: #e5f0ff;
+}
+
+/* responsive: kalau viewport kecil, modal sedikit mengecil */
+
+@media (max-width: 992px) {
+  .ticket-modal {
+    border-radius: 0.5rem;
+  }
+
+  .ticket-modal-body {
+    padding: 0.75rem;
+  }
+
+  .ticket-modal-table thead th,
+  .ticket-modal-table tbody td {
+    font-size: 0.72rem;
+  }
+}
+
