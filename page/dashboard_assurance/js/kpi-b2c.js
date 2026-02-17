@@ -149,7 +149,6 @@ function loadKpiB2CHsaTable(config) {
           <tr>
             <th rowspan="2" class="th-gold text-center">Indikator</th>
             <th rowspan="2" class="th-gold text-center">Target</th>
-
             <th colspan="3" class="th-plat text-center">DADY</th>
             <th colspan="3" class="th-plat text-center">EKA</th>
             <th colspan="2" class="th-plat text-center">HERLANDO</th>
@@ -162,25 +161,20 @@ function loadKpiB2CHsaTable(config) {
             <th class="th-plat text-center">GDS</th>
             <th class="th-plat text-center">TAN</th>
             <th class="th-plat text-center">JIA</th>
-
             <!-- EKA -->
             <th class="th-plat text-center">CLD</th>
             <th class="th-plat text-center">PDR</th>
             <th class="th-plat text-center">PKU</th>
-
             <!-- HERLANDO -->
             <th class="th-plat text-center">LKG</th>
             <th class="th-plat text-center">SRP</th>
-
             <!-- RISMAN -->
             <th class="th-plat text-center">CPD</th>
             <th class="th-plat text-center">CKL</th>
             <th class="th-plat text-center">DTG</th>
-
             <!-- ZULFA -->
             <th class="th-plat text-center">SRH</th>
             <th class="th-plat text-center">CPA</th>
-
             <!-- TANGERANG -->
             <th class="th-plat text-center">TANGERANG</th>
             <th class="th-bronze text-center">KPI HSA</th>
@@ -196,55 +190,10 @@ function loadKpiB2CHsaTable(config) {
         bodyRows.push(r);
       }
 
-      // Total: 'Dash B2C'!B32:R32 -> baris terakhir (BRANCH TANGERANG, KPI HSA, dll)
+      // Total: 'Dash B2C'!B32:R32 -> baris terakhir
       const totalRow = data[data.length - 1] || [];
 
-      const tbody = `
-  <tbody>
-    ${bodyRows
-      .map((r) => `
-        <tr>
-          <td>${r[0] ?? ""}</td>
-          <td>${r[1] ?? ""}</td>
-
-          <td>${r[2] ?? ""}</td>
-          <td>${r[3] ?? ""}</td>
-          <td>${r[4] ?? ""}</td>
-
-          <td>${r[5] ?? ""}</td>
-          <td>${r[6] ?? ""}</td>
-          <td>${r[7] ?? ""}</td>
-
-          <td>${r[8] ?? ""}</td>
-          <td>${r[9] ?? ""}</td>
-
-          <td>${r[10] ?? ""}</td>
-          <td>${r[11] ?? ""}</td>
-          <td>${r[12] ?? ""}</td>
-
-          <td>${r[13] ?? ""}</td>
-          <td>${r[14] ?? ""}</td>
-
-          <td>${r[15] ?? ""}</td>
-          <td>${r[16] ?? ""}</td>
-        </tr>
-      `)
-      .join("")}
-
-    <!-- ROW TOTAL KPI HSA -->
-    <tr class="table-secondary fw-semibold">
-      <td colspan="2">${totalRow[0] ?? ""}</td>
-
-      <td colspan="3">${totalRow[2] ?? ""}</td>   
-      <td colspan="3">${totalRow[5] ?? ""}</td>  
-
-      <td colspan="2">${totalRow[8] ?? ""}</td> 
-
-      <td colspan="3">${totalRow[10] ?? ""}</td>
-      <td colspan="2">${totalRow[13] ?? ""}</td>
-    </tr>
-  </tbody>
-`;
+      const tbody = generateTbodyWithColoring(bodyRows, totalRow);
 
       tableHsa.innerHTML = thead + tbody;
     })
@@ -253,6 +202,76 @@ function loadKpiB2CHsaTable(config) {
       tableHsa.innerHTML =
         "<tbody><tr><td>Gagal memuat data B2C HSA.</td></tr></tbody>";
     });
+}
+
+// Fungsi untuk pewarnaan berdasarkan indikator
+function generateTbodyWithColoring(bodyRows, totalRow) {
+  // Mapping indikator ke aturan pewarnaan (true = merah jika STO >= target)
+  const redIfStoGreaterOrEqual = new Set([
+    "Q Gangguan (All Teknis)",
+    "Underspec Non Warranty"
+  ]);
+
+  return `
+    <tbody>
+      ${bodyRows
+        .map((r, rowIndex) => {
+          const indikator = (r[0] ?? "").toString().trim();
+          const target = parseFloat(r[1]) || 0;
+          const isRedIfStoGE = redIfStoGreaterOrEqual.has(indikator);
+          
+          return `
+            <tr>
+              <td>${r[0] ?? ""}</td>
+              <td>${r[1] ?? ""}</td>
+              
+              ${generateColoredCells(r.slice(2,5), target, isRedIfStoGE, 'GDS,TAN,JIA')}
+              ${generateColoredCells(r.slice(5,8), target, isRedIfStoGE, 'CLD,PDR,PKU')}
+              ${generateColoredCells(r.slice(8,10), target, isRedIfStoGE, 'LKG,SRP')}
+              ${generateColoredCells(r.slice(10,13), target, isRedIfStoGE, 'CPD,CKL,DTG')}
+              ${generateColoredCells(r.slice(13,15), target, isRedIfStoGE, 'SRH,CPA')}
+              
+              <td class="fw-bold">${r[15] ?? ""}</td>
+              <td class="th-bronze fw-bold">${r[16] ?? ""}</td>
+            </tr>
+          `;
+        })
+        .join("")}
+
+      <!-- ROW TOTAL KPI HSA -->
+      <tr class="table-secondary fw-semibold">
+        <td colspan="2">${totalRow[0] ?? ""}</td>
+        <td colspan="3">${totalRow[2] ?? ""}</td>   
+        <td colspan="3">${totalRow[5] ?? ""}</td>  
+        <td colspan="2">${totalRow[8] ?? ""}</td> 
+        <td colspan="3">${totalRow[10] ?? ""}</td>
+        <td colspan="2">${totalRow[13] ?? ""}</td>
+      </tr>
+    </tbody>
+  `;
+}
+
+// Fungsi helper untuk generate cell dengan pewarnaan
+function generateColoredCells(values, target, isRedIfStoGE, kolomNames) {
+  return values.map((value, colIndex) => {
+    const stoValue = parseFloat(value) || 0;
+    
+    // Logika pewarnaan
+    let cellClass = '';
+    if (isRedIfStoGE) {
+      // Merah jika STO >= target
+      if (stoValue >= target) {
+        cellClass = 'bg-danger text-white fw-bold';
+      }
+    } else {
+      // Merah jika STO <= target (default untuk sebagian besar indikator)
+      if (stoValue <= target) {
+        cellClass = 'bg-danger text-white fw-bold';
+      }
+    }
+    
+    return `<td class="${cellClass}">${value ?? ""}</td>`;
+  }).join('');
 }
 
 // =========================
