@@ -574,19 +574,17 @@ table.kpi-table td.kpi-text-red {
 /* KPI TABLE COLORING OVERRIDES */
 /* ============================ */
 
-/* 1. FORCE RED COLORING - Prioritas Tertinggi */
 .kpi-table .bg-danger-custom {
-    background-color: #dc3545 !important;
-    color: #ffffff !important;
+    background: linear-gradient(135deg, #fef2f2, #fecaca) !important;
+    color: #991b1b !important;       
     font-weight: 700 !important;
-    border: 2px solid #b02a37 !important;
+    border: 1px solid #fecaca !important;
 }
 
-/* 2. HOVER EFFECT untuk cell merah */
 .kpi-table tr:hover .bg-danger-custom {
-    background-color: #c82333 !important;
+    background: linear-gradient(135deg, #fee2e2, #fecaca) !important;
     transform: scale(1.01) !important;
-    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4) !important;
+    box-shadow: 0 2px 8px rgba(248, 113, 113, 0.5) !important; /* merah muda */
     transition: all 0.2s ease !important;
 }
 
