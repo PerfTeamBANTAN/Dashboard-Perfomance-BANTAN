@@ -297,30 +297,35 @@ function loadKpiB2CMitraTable(config) {
             <th rowspan="2" class="th-gold text-center">Indikator</th>
             <th rowspan="2" class="th-gold text-center">Target</th>
 
-            <th colspan="5" class="th-plat text-center">TA</th>
-            <th colspan="2" class="th-plat text-center">SGN</th>
-            <th colspan="1" class="th-plat text-center">SKA</th>
-            <th colspan="3" class="th-plat text-center">FAMIKA</th>
-            <th colspan="2" class="th-plat text-center">FSL</th>
+            <th colspan="5" class="th-mitra-ta text-center">TA</th>
+            <th colspan="2" class="th-mitra-sgn text-center">SGN</th>
+            <th colspan="1" class="th-mitra-ska text-center">SKA</th>
+            <th colspan="3" class="th-mitra-famika text-center">FAMIKA</th>
+            <th colspan="2" class="th-mitra-fsl text-center">FSL</th>
           </tr>
           <tr>
-            <th class="th-plat text-center">GDS</th>
-            <th class="th-plat text-center">DTG</th>
-            <th class="th-plat text-center">JIA</th>
-            <th class="th-plat text-center">CLD</th>
-            <th class="th-plat text-center">SRP</th>
+            <!-- TA -->
+            <th class="th-mitra-ta text-center">GDS</th>
+            <th class="th-mitra-ta text-center">DTG</th>
+            <th class="th-mitra-ta text-center">JIA</th>
+            <th class="th-mitra-ta text-center">CLD</th>
+            <th class="th-mitra-ta text-center">SRP</th>
             
-            <th class="th-plat text-center">CPD</th>
-            <th class="th-plat text-center">CKL</th>
+            <!-- SGN -->
+            <th class="th-mitra-sgn text-center">CPD</th>
+            <th class="th-mitra-sgn text-center">CKL</th>
             
-            <th class="th-plat text-center">TAN</th>
+            <!-- SKA -->
+            <th class="th-mitra-ska text-center">TAN</th>
             
-            <th class="th-plat text-center">PDR</th>
-            <th class="th-plat text-center">PKU</th>
-            <th class="th-plat text-center">LKG</th>
+            <!-- FAMIKA -->
+            <th class="th-mitra-famika text-center">PDR</th>
+            <th class="th-mitra-famika text-center">PKU</th>
+            <th class="th-mitra-famika text-center">LKG</th>
             
-            <th class="th-plat text-center">SRH</th>
-            <th class="th-plat text-center">CPA</th>
+            <!-- FSL -->
+            <th class="th-mitra-fsl text-center">SRH</th>
+            <th class="th-mitra-fsl text-center">CPA</th>
           </tr>
         </thead>
       `;
@@ -334,46 +339,7 @@ function loadKpiB2CMitraTable(config) {
 
       const totalRow = data[data.length - 1] || [];
 
-      const tbody = `
-        <tbody>
-          ${bodyRows
-            .map((r) => `
-              <tr>
-                <td>${r[0] ?? ""}</td>
-                <td>${r[1] ?? ""}</td>
-
-                <td>${r[2] ?? ""}</td>
-                <td>${r[3] ?? ""}</td>
-                <td>${r[4] ?? ""}</td>
-                <td>${r[5] ?? ""}</td>
-                <td>${r[6] ?? ""}</td>
-
-                <td>${r[7] ?? ""}</td>
-                <td>${r[8] ?? ""}</td>
-                <td>${r[9] ?? ""}</td>
-                <td>${r[10] ?? ""}</td>
-                <td>${r[11] ?? ""}</td>
-                <td>${r[12] ?? ""}</td>
-                <td>${r[13] ?? ""}</td>
-                <td>${r[14] ?? ""}</td>
-              </tr>
-            `)
-            .join("")}
-
-    <!-- ROW TOTAL KPI HSA -->
-    <tr class="table-secondary fw-semibold">
-      <td colspan="2">${totalRow[0] ?? ""}</td>
-
-      <td colspan="5">${totalRow[2] ?? ""}</td>   
-      <td colspan="2">${totalRow[7] ?? ""}</td>  
-
-      <td colspan="1">${totalRow[9] ?? ""}</td> 
-
-      <td colspan="3">${totalRow[10] ?? ""}</td>
-      <td colspan="2">${totalRow[13] ?? ""}</td>
-    </tr>
-  </tbody>
-`;
+      const tbody = generateMitraTbodyWithColoring(bodyRows, totalRow);
 
       tableMitra.innerHTML = thead + tbody;
     })
@@ -382,6 +348,77 @@ function loadKpiB2CMitraTable(config) {
       tableMitra.innerHTML =
         "<tbody><tr><td>Gagal memuat data B2C MITRA.</td></tr></tbody>";
     });
+}
+
+// =========================
+// BODY + LOGIC MERAH MITRA
+// =========================
+
+function generateMitraTbodyWithColoring(bodyRows, totalRow) {
+  // indikator yang merah jika STO >= target
+  const redIfStoGreaterOrEqual = new Set([
+    "Q Gangguan (All Teknis)",
+    "Underspec Non Warranty"
+  ]);
+
+  return `
+    <tbody>
+      ${bodyRows
+        .map((r) => {
+          const indikator = (r[0] ?? "").toString().trim();
+          const target = parseFloat(r[1]) || 0;
+          const isRedIfStoGE = redIfStoGreaterOrEqual.has(indikator);
+
+          return `
+            <tr>
+              <td>${r[0] ?? ""}</td>
+              <td>${r[1] ?? ""}</td>
+
+              ${generateMitraColoredCells(r.slice(2, 7),  target, isRedIfStoGE)}  <!-- TA: 5 kolom -->
+              ${generateMitraColoredCells(r.slice(7, 9),  target, isRedIfStoGE)}  <!-- SGN: 2 kolom -->
+              ${generateMitraColoredCells(r.slice(9, 10), target, isRedIfStoGE)}  <!-- SKA: 1 kolom -->
+              ${generateMitraColoredCells(r.slice(10,13), target, isRedIfStoGE)}  <!-- FAMIKA: 3 kolom -->
+              ${generateMitraColoredCells(r.slice(13,15), target, isRedIfStoGE)}  <!-- FSL: 2 kolom -->
+            </tr>
+          `;
+        })
+        .join("")}
+
+      <!-- ROW TOTAL KPI MITRA -->
+      <tr class="table-secondary fw-semibold">
+        <td colspan="2">${totalRow[0] ?? ""}</td>
+
+        <td colspan="5">${totalRow[2] ?? ""}</td>   
+        <td colspan="2">${totalRow[7] ?? ""}</td>  
+        <td colspan="1">${totalRow[9] ?? ""}</td> 
+        <td colspan="3">${totalRow[10] ?? ""}</td>
+        <td colspan="2">${totalRow[13] ?? ""}</td>
+      </tr>
+    </tbody>
+  `;
+}
+
+function generateMitraColoredCells(values, target, isRedIfStoGE) {
+  return values
+    .map((value) => {
+      const stoValue = parseFloat(value) || 0;
+
+      let cellClass = "";
+      if (isRedIfStoGE) {
+        // indikator merah jika STO >= target
+        if (stoValue >= target) {
+          cellClass = "bg-danger-custom";
+        }
+      } else {
+        // indikator merah jika STO <= target (default)
+        if (stoValue <= target) {
+          cellClass = "bg-danger-custom";
+        }
+      }
+
+      return `<td class="${cellClass}">${value ?? ""}</td>`;
+    })
+    .join("");
 }
 
 // =========================
