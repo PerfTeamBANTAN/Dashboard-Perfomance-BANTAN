@@ -705,8 +705,104 @@ function aggregateKpiBySto(tickets) {
   return result;
 }
 
-function showTicketDetailModal(title, tickets) {
-  const modalBody = tickets.map(t => `
+// panggil sekali saja di awal (misal di init page) untuk sisipkan HTML modal kosong
+function initTicketDetailModal() {
+  if (document.getElementById("ticketDetailModal")) return;
+
+  const container = document.createElement("div");
+  container.id = "ticket-detail-container";
+  container.innerHTML = `
+    <div class="modal fade" id="ticketDetailModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ticketDetailTitle"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="small text-muted">
+                <span id="ticketDetailTotal"></span>
+              </div>
+              <div class="btn-group btn-group-sm" role="group">
+                <button type="button" class="btn btn-outline-secondary" id="ticketDetailPrev">Prev</button>
+                <button type="button" class="btn btn-outline-secondary" id="ticketDetailNext">Next</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-sm table-striped mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>TROUBLE_NO</th>
+                    <th>STO</th>
+                    <th>Jenis</th>
+                    <th>FLAG_HVC</th>
+                    <th>First Assign</th>
+                    <th>Open Time</th>
+                    <th>ND Group</th>
+                    <th>DP</th>
+                    <th>ODC</th>
+                  </tr>
+                </thead>
+                <tbody id="ticketDetailBody">
+                  <tr><td colspan="9" class="text-center">Tidak ada data tiket.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="d-flex justify-content-end align-items-center mt-2">
+              <small class="text-muted" id="ticketDetailPageInfo"></small>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(container);
+
+  // simpan state di dataset element modal
+  const modalEl = document.getElementById("ticketDetailModal");
+  modalEl.dataset.pageSize = "10";
+  modalEl.dataset.currentPage = "1";
+}
+
+function renderTicketDetailPage(page) {
+  const modalEl = document.getElementById("ticketDetailModal");
+  if (!modalEl) return;
+
+  const tbody = document.getElementById("ticketDetailBody");
+  const pageInfo = document.getElementById("ticketDetailPageInfo");
+  const totalInfo = document.getElementById("ticketDetailTotal");
+  const btnPrev = document.getElementById("ticketDetailPrev");
+  const btnNext = document.getElementById("ticketDetailNext");
+
+  const ticketsJson = modalEl.dataset.tickets || "[]";
+  const tickets = JSON.parse(ticketsJson);
+
+  const pageSize = Number(modalEl.dataset.pageSize || 10);
+  const total = tickets.length;
+  const totalPages = total === 0 ? 1 : Math.ceil(total / pageSize);
+  const currentPage = Math.min(Math.max(page, 1), totalPages);
+
+  modalEl.dataset.currentPage = String(currentPage);
+
+  if (total === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" class="text-center">Tidak ada data tiket.</td></tr>`;
+    pageInfo.textContent = "";
+    totalInfo.textContent = "0 tiket";
+    btnPrev.disabled = true;
+    btnNext.disabled = true;
+    return;
+  }
+
+  const start = (currentPage - 1) * pageSize;
+  const end = Math.min(start + pageSize, total);
+  const slice = tickets.slice(start, end);
+
+  tbody.innerHTML = slice.map(t => `
     <tr>
       <td>${t.troubleNo || ""}</td>
       <td>${t.sto || ""}</td>
@@ -720,48 +816,52 @@ function showTicketDetailModal(title, tickets) {
     </tr>
   `).join("");
 
-  const html = `
-    <div class="modal fade" id="ticketDetailModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">${title}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <table class="table table-sm table-striped">
-              <thead class="table-light">
-                <tr>
-                  <th>TROUBLE_NO</th>
-                  <th>STO</th>
-                  <th>Jenis</th>
-                  <th>FLAG_HVC</th>
-                  <th>First Assign</th>
-                  <th>Open Time</th>
-                  <th>ND Group</th>
-                  <th>DP</th>
-                  <th>ODC</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${modalBody || `<tr><td colspan="9" class="text-center">Tidak ada data tiket.</td></tr>`}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
+  totalInfo.textContent = `${total} tiket (showing ${start + 1}–${end})`;
+  pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
 
-  let container = document.getElementById("ticket-detail-container");
-  if (!container) {
-    container = document.createElement("div");
-    container.id = "ticket-detail-container";
-    document.body.appendChild(container);
-  }
-  container.innerHTML = html;
+  btnPrev.disabled = currentPage === 1;
+  btnNext.disabled = currentPage === totalPages;
+}
+
+function wireTicketDetailPagination() {
+  const modalEl = document.getElementById("ticketDetailModal");
+  if (!modalEl) return;
+
+  const btnPrev = document.getElementById("ticketDetailPrev");
+  const btnNext = document.getElementById("ticketDetailNext");
+
+  if (btnPrev.dataset.wired === "1") return; // sudah dipasang
+
+  btnPrev.addEventListener("click", () => {
+    const current = Number(modalEl.dataset.currentPage || 1);
+    renderTicketDetailPage(current - 1);
+  });
+
+  btnNext.addEventListener("click", () => {
+    const current = Number(modalEl.dataset.currentPage || 1);
+    renderTicketDetailPage(current + 1);
+  });
+
+  btnPrev.dataset.wired = "1";
+  btnNext.dataset.wired = "1";
+}
+
+// dipanggil dari tabel utama (setiap user klik jumlah tiket)
+function showTicketDetailModal(title, tickets) {
+  initTicketDetailModal();
 
   const modalEl = document.getElementById("ticketDetailModal");
+  const titleEl = document.getElementById("ticketDetailTitle");
+
+  // simpan tickets di dataset sebagai JSON
+  modalEl.dataset.tickets = JSON.stringify(tickets);
+  modalEl.dataset.currentPage = "1";
+
+  titleEl.textContent = title;
+
+  wireTicketDetailPagination();
+  renderTicketDetailPage(1);
+
   const modal = new bootstrap.Modal(modalEl);
   modal.show();
 }
