@@ -1096,18 +1096,15 @@ function loadKpiB2CMajorTable(config) {
               <span class="small">(Exclude tiket diluar Jam Kerja)</span>
             </th>
 
-            <th colspan="2" class="text-center th-plat">Underspec Non Warranty</th>
-            <th colspan="2" class="text-center th-plat">Closed SQM</th>
+            <th rowspan="2" class="th-gold">% SQM 4H</th>
+            <th rowspan="2" class="th-gold">Underspec Non Warranty</th>
+            <th rowspan="2" class="th-gold">Closed SQM</th>
+            <th rowspan="2" class="th-gold">SCC inet</th>
           </tr>
           <tr>
-            <th class="text-center th-plat">% TTR</th>
+            <th class="text-center th-plat">NOT COMPLY</th>
             <th class="text-center th-plat">COMPLY</th>
 
-            <th class="text-center th-bronze">SCC-INET</th>
-            <th class="text-center th-plat">COMPLY</th>
-
-            <th class="text-center th-bronze">NOT COMPLY</th>
-            <th class="text-center th-plat">COMPLY</th>
           </tr>
         </thead>
       `;
