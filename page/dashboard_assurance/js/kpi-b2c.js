@@ -531,18 +531,253 @@ function loadKpiB2CRightTable(config) {
 }
 
 
+// ---------- HELPER DTTR UNTUK PRIMARY TABLE ----------
+
+const COL_DTTR = {
+  TROUBLE_NO: 0,
+  TROUBLE_OPENTIME: 1,
+  FIRST_ASSIGN_BY: 2,
+  JENIS_TIKET1: 3,
+  FLAG_HVC: 4,
+  ND_GROUP: 5,
+  TKASSETTYPE: 6,
+  STO: 7,
+  DP: 8,
+  ODC: 9,
+  LABORCODE: 10,
+  TTR_OPEN_TCLOSE: 11,
+  COMPLY3: 12,
+  COMPLY6: 13,
+  COMPLY12: 14,
+  COMPLY3_MANJA: 15,
+  COMPLY36: 16
+};
+
+function mapRowsToTickets(rows) {
+  return rows.map(r => ({
+    troubleNo: r[COL_DTTR.TROUBLE_NO],
+    troubleOpenTime: r[COL_DTTR.TROUBLE_OPENTIME],
+    firstAssignBy: r[COL_DTTR.FIRST_ASSIGN_BY],
+    jenisTiket: r[COL_DTTR.JENIS_TIKET1],
+    flagHvc: r[COL_DTTR.FLAG_HVC],
+    ndGroup: r[COL_DTTR.ND_GROUP],
+    tkAssetType: r[COL_DTTR.TKASSETTYPE],
+    sto: r[COL_DTTR.STO],
+    dp: r[COL_DTTR.DP],
+    odc: r[COL_DTTR.ODC],
+    laborCode: r[COL_DTTR.LABORCODE],
+    ttrOpenTclose: r[COL_DTTR.TTR_OPEN_TCLOSE],
+    comply3: Number(r[COL_DTTR.COMPLY3] || 0),
+    comply6: Number(r[COL_DTTR.COMPLY6] || 0),
+    comply12: Number(r[COL_DTTR.COMPLY12] || 0),
+    comply3Manja: Number(r[COL_DTTR.COMPLY3_MANJA] || 0),
+    comply36: Number(r[COL_DTTR.COMPLY36] || 0)
+  }));
+}
+
+function aggregateKpiBySto(tickets) {
+  const bySto = {};
+
+  for (const t of tickets) {
+    if (!t.sto) continue;
+
+    if (!bySto[t.sto]) {
+      bySto[t.sto] = {
+        sto: t.sto,
+
+        ttr36_not: 0,
+        ttr36_comp: 0,
+
+        ttr3dv_not: 0,
+        ttr3dv_comp: 0,
+
+        ttr3manja_not: 0,
+        ttr3manja_comp: 0,
+
+        ttr6p_not: 0,
+        ttr6p_comp: 0,
+
+        ttr12g_not: 0,
+        ttr12g_comp: 0,
+
+        detail: {
+          ttr36_not: [],
+          ttr36_comp: [],
+          ttr3dv_not: [],
+          ttr3dv_comp: [],
+          ttr3manja_not: [],
+          ttr3manja_comp: [],
+          ttr6p_not: [],
+          ttr6p_comp: [],
+          ttr12g_not: [],
+          ttr12g_comp: []
+        }
+      };
+    }
+
+    const s = bySto[t.sto];
+
+    // TTR36H (Non HVC)
+    if (t.jenisTiket === "TEKNIS") {
+      if (t.comply36 === 0) {
+        s.ttr36_not++;
+        s.detail.ttr36_not.push(t);
+      } else if (t.comply36 === 1) {
+        s.ttr36_comp++;
+        s.detail.ttr36_comp.push(t);
+      }
+    }
+
+    // TTR3H (D,V)
+    if (
+      t.jenisTiket === "TEKNIS" &&
+      (t.flagHvc === "HVC_DIAMOND" || t.flagHvc === "HVC_VVIP")
+    ) {
+      if (t.comply3 === 0) {
+        s.ttr3dv_not++;
+        s.detail.ttr3dv_not.push(t);
+      } else if (t.comply3 === 1) {
+        s.ttr3dv_comp++;
+        s.detail.ttr3dv_comp.push(t);
+      }
+    }
+
+    // TTR3H (MANJA)
+    if (
+      t.jenisTiket === "TEKNIS" &&
+      t.firstAssignBy === "CUSTOMERASSIGNED"
+    ) {
+      if (t.comply3Manja === 0) {
+        s.ttr3manja_not++;
+        s.detail.ttr3manja_not.push(t);
+      } else if (t.comply3Manja === 1) {
+        s.ttr3manja_comp++;
+        s.detail.ttr3manja_comp.push(t);
+      }
+    }
+
+    // TTR6H (P)
+    if (t.jenisTiket === "TEKNIS" && t.flagHvc === "HVC_PLATINUM") {
+      if (t.comply6 === 0) {
+        s.ttr6p_not++;
+        s.detail.ttr6p_not.push(t);
+      } else if (t.comply6 === 1) {
+        s.ttr6p_comp++;
+        s.detail.ttr6p_comp.push(t);
+      }
+    }
+
+    // TTR12H (G)
+    if (t.jenisTiket === "TEKNIS" && t.flagHvc === "HVC_GOLD") {
+      if (t.comply12 === 0) {
+        s.ttr12g_not++;
+        s.detail.ttr12g_not.push(t);
+      } else if (t.comply12 === 1) {
+        s.ttr12g_comp++;
+        s.detail.ttr12g_comp.push(t);
+      }
+    }
+  }
+
+  const pct = (comp, not) => {
+    const total = comp + not;
+    return total === 0 ? 0 : (comp / total) * 100;
+  };
+
+  return Object.values(bySto).map(s => ({
+    ...s,
+    ttr36_pct: pct(s.ttr36_comp, s.ttr36_not),
+    ttr3dv_pct: pct(s.ttr3dv_comp, s.ttr3dv_not),
+    ttr3manja_pct: pct(s.ttr3manja_comp, s.ttr3manja_not),
+    ttr6p_pct: pct(s.ttr6p_comp, s.ttr6p_not),
+    ttr12g_pct: pct(s.ttr12g_comp, s.ttr12g_not)
+  }));
+}
+
+function showTicketDetailModal(title, tickets) {
+  const modalBody = tickets.map(t => `
+    <tr>
+      <td>${t.troubleNo || ""}</td>
+      <td>${t.sto || ""}</td>
+      <td>${t.jenisTiket || ""}</td>
+      <td>${t.flagHvc || ""}</td>
+      <td>${t.firstAssignBy || ""}</td>
+      <td>${t.troubleOpenTime || ""}</td>
+      <td>${t.ndGroup || ""}</td>
+      <td>${t.dp || ""}</td>
+      <td>${t.odc || ""}</td>
+    </tr>
+  `).join("");
+
+  const html = `
+    <div class="modal fade" id="ticketDetailModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">${title}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-sm table-striped">
+              <thead class="table-light">
+                <tr>
+                  <th>TROUBLE_NO</th>
+                  <th>STO</th>
+                  <th>Jenis</th>
+                  <th>FLAG_HVC</th>
+                  <th>First Assign</th>
+                  <th>Open Time</th>
+                  <th>ND Group</th>
+                  <th>DP</th>
+                  <th>ODC</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${modalBody || `<tr><td colspan="9" class="text-center">Tidak ada data tiket.</td></tr>`}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  let container = document.getElementById("ticket-detail-container");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "ticket-detail-container";
+    document.body.appendChild(container);
+  }
+  container.innerHTML = html;
+
+  const modalEl = document.getElementById("ticketDetailModal");
+  const modal = new bootstrap.Modal(modalEl);
+  modal.show();
+}
+
+// ---------- GANTI loadKpiB2CPrimaryTable LAMA DENGAN INI ----------
+
 function loadKpiB2CPrimaryTable(config) {
   const tablePrimary = document.getElementById("kpi-b2c-table-primary");
   if (!tablePrimary) return;
 
-  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+  const urlLayout = `${config.baseUrl}?sheet=${encodeURIComponent(
     config.sheet
   )}&range=${encodeURIComponent("WEB!A50:T65")}`;
 
-  fetch(url)
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (!Array.isArray(data) || data.length < 3) return;
+  const urlDttr = `${config.baseUrl}?sheet=${encodeURIComponent(
+    "DTTR"
+  )}&range=${encodeURIComponent("DTTR!A:Q")}`;
+
+  Promise.all([fetch(urlLayout), fetch(urlDttr)])
+    .then(([respLayout, respDttr]) => Promise.all([respLayout.json(), respDttr.json()]))
+    .then(([layoutData, dttrData]) => {
+      if (!Array.isArray(layoutData) || layoutData.length < 3) return;
+
+      const tickets = mapRowsToTickets(dttrData.slice(1)); // skip header
+      const kpiByStoArr = aggregateKpiBySto(tickets);
+      const kpiBySto = {};
+      kpiByStoArr.forEach(k => { kpiBySto[k.sto] = k; });
 
       const thead = `
         <thead>
@@ -584,62 +819,93 @@ function loadKpiB2CPrimaryTable(config) {
       `;
 
       const bodyRows = [];
-      for (let i = 2; i < data.length - 1; i++) {
-        const r = data[i];
+      for (let i = 2; i < layoutData.length - 1; i++) {
+        const r = layoutData[i];
         if (!r || r.join("").toString().trim() === "") continue;
         bodyRows.push(r);
       }
-
-      const totalRow = data[data.length - 1] || [];
+      const totalRow = layoutData[layoutData.length - 1] || [];
 
       const tbody = `
         <tbody>
           ${bodyRows
-            .map((r) => `
-              <tr>
-                <td>${r[0] ?? ""}</td>   <!-- STO -->
-                <td>${r[1] ?? ""}</td>   <!-- Cluster -->
-                <td>${r[2] ?? ""}</td>   <!-- OM HAS -->
-                <td>${r[3] ?? ""}</td>   <!-- OSA -->
-                <td>${r[4] ?? ""}</td>   <!-- MITRA -->
+            .map((r) => {
+              const sto = r[0];
+              const k = kpiBySto[sto] || {};
 
-                <td>${r[5]  ?? ""}</td>  <!-- TTR36H NOT COMP -->
-                <td>${r[6]  ?? ""}</td>  <!-- TTR36H COMPLY -->
-                <td>${r[7]  ?? ""}</td>  <!-- % TTR36H -->
+              const cell = (val, key, label) => {
+                const count = val ?? 0;
+                const list = (k.detail && k.detail[key]) || [];
+                if (!count || list.length === 0) {
+                  return `<span>${count}</span>`;
+                }
+                return `
+                  <button
+                    type="button"
+                    class="btn btn-link p-0 kpi-detail-link"
+                    data-sto="${sto}"
+                    data-key="${key}"
+                    data-label="${label}"
+                  >${count}</button>
+                `;
+              };
 
-                <td>${r[8]  ?? ""}</td>  <!-- TTR3H D,V NOT COMP -->
-                <td>${r[9]  ?? ""}</td>  <!-- TTR3H D,V COMPLY -->
-                <td>${r[10] ?? ""}</td>  <!-- % TTR3H D,V -->
+              return `
+                <tr>
+                  <td>${sto ?? ""}</td>
+                  <td>${r[1] ?? ""}</td>
+                  <td>${r[2] ?? ""}</td>
+                  <td>${r[3] ?? ""}</td>
+                  <td>${r[4] ?? ""}</td>
 
-                <td>${r[11] ?? ""}</td>  <!-- TTR3H MANJA NOT COMP -->
-                <td>${r[12] ?? ""}</td>  <!-- TTR3H MANJA COMPLY -->
-                <td>${r[13] ?? ""}</td>  <!-- % TTR3H MANJA -->
+                  <td>${cell(k.ttr36_not, "ttr36_not", "TTR36H Non HVC - NOT COMP")}</td>
+                  <td>${cell(k.ttr36_comp, "ttr36_comp", "TTR36H Non HVC - COMPLY")}</td>
+                  <td>${(k.ttr36_pct ?? 0).toFixed(2)}%</td>
 
-                <td>${r[14] ?? ""}</td>  <!-- TTR6H P NOT COMP -->
-                <td>${r[15] ?? ""}</td>  <!-- TTR6H P COMPLY -->
-                <td>${r[16] ?? ""}</td>  <!-- % TTR6H P -->
+                  <td>${cell(k.ttr3dv_not, "ttr3dv_not", "TTR3H (D,V) - NOT COMP")}</td>
+                  <td>${cell(k.ttr3dv_comp, "ttr3dv_comp", "TTR3H (D,V) - COMPLY")}</td>
+                  <td>${(k.ttr3dv_pct ?? 0).toFixed(2)}%</td>
 
-                <td>${r[17] ?? ""}</td>  <!-- TTR12H G NOT COMP -->
-                <td>${r[18] ?? ""}</td>  <!-- TTR12H G COMPLY -->
-                <td>${r[19] ?? ""}</td>  <!-- % TTR12H G -->
-              </tr>
-            `)
+                  <td>${cell(k.ttr3manja_not, "ttr3manja_not", "TTR3H (MANJA) - NOT COMP")}</td>
+                  <td>${cell(k.ttr3manja_comp, "ttr3manja_comp", "TTR3H (MANJA) - COMPLY")}</td>
+                  <td>${(k.ttr3manja_pct ?? 0).toFixed(2)}%</td>
+
+                  <td>${cell(k.ttr6p_not, "ttr6p_not", "TTR6H (P) - NOT COMP")}</td>
+                  <td>${cell(k.ttr6p_comp, "ttr6p_comp", "TTR6H (P) - COMPLY")}</td>
+                  <td>${(k.ttr6p_pct ?? 0).toFixed(2)}%</td>
+
+                  <td>${cell(k.ttr12g_not, "ttr12g_not", "TTR12H (G) - NOT COMP")}</td>
+                  <td>${cell(k.ttr12g_comp, "ttr12g_comp", "TTR12H (G) - COMPLY")}</td>
+                  <td>${(k.ttr12g_pct ?? 0).toFixed(2)}%</td>
+                </tr>
+              `;
+            })
             .join("")}
 
-    <!-- ROW TOTAL: TANGERANG -->
-    <tr class="table-secondary fw-semibold">
-      <td colspan="5">${totalRow[0] ?? ""}</td>
-      <td>${totalRow[5] ?? ""}</td>
-      <td>${totalRow[6] ?? ""}</td>
-      <td>${totalRow[7] ?? ""}</td>
-      <td>${totalRow[8] ?? ""}</td>
-      <td>${totalRow[9] ?? ""}</td>
-      <td>${totalRow[10] ?? ""}</td>
-    </tr>
-  </tbody>
-`;
+          <tr class="table-secondary fw-semibold">
+            <td colspan="5">${totalRow[0] ?? ""}</td>
+            <td>${totalRow[5] ?? ""}</td>
+            <td>${totalRow[6] ?? ""}</td>
+            <td>${totalRow[7] ?? ""}</td>
+            <td>${totalRow[8] ?? ""}</td>
+            <td>${totalRow[9] ?? ""}</td>
+            <td>${totalRow[10] ?? ""}</td>
+          </tr>
+        </tbody>
+      `;
 
       tablePrimary.innerHTML = thead + tbody;
+
+      tablePrimary.addEventListener("click", (e) => {
+        const btn = e.target.closest(".kpi-detail-link");
+        if (!btn) return;
+        const sto = btn.dataset.sto;
+        const key = btn.dataset.key;
+        const label = btn.dataset.label;
+        const k = kpiBySto[sto];
+        if (!k || !k.detail || !k.detail[key]) return;
+        showTicketDetailModal(`${label} – STO ${sto}`, k.detail[key]);
+      });
     })
     .catch((err) => {
       console.error("Error load tabel Primary KPI B2C:", err);
