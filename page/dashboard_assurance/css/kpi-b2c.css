@@ -569,3 +569,62 @@ table.kpi-table td.kpi-text-red {
   transform: translateY(-1px);
   transition: all 0.12s ease;
 }
+
+/* ============================ */
+/* KPI TABLE COLORING OVERRIDES */
+/* ============================ */
+
+/* 1. FORCE RED COLORING - Prioritas Tertinggi */
+.kpi-table .bg-danger-custom {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    border: 2px solid #b02a37 !important;
+}
+
+/* 2. HOVER EFFECT untuk cell merah */
+.kpi-table tr:hover .bg-danger-custom {
+    background-color: #c82333 !important;
+    transform: scale(1.01) !important;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4) !important;
+    transition: all 0.2s ease !important;
+}
+
+/* 3. DISABLE STRIPED CONFLICT pada cell berwarna */
+.kpi-table tbody tr:nth-of-type(odd) > .bg-danger-custom {
+    --bs-table-striped-bg: transparent !important;
+    --bs-table-bg: #dc3545 !important;
+}
+
+/* 4. TABLE CELL BASE STYLING */
+.kpi-table tbody td {
+    border: 1px solid #e5e7eb !important;
+    padding: 8px 6px !important;
+    font-size: 0.75rem !important;
+    position: relative;
+    transition: all 0.15s ease;
+}
+
+/* 5. TOTAL ROW STYLING */
+.kpi-table .table-secondary td {
+    background-color: #f8f9fa !important;
+    font-weight: 600 !important;
+    border: 2px solid #dee2e6 !important;
+}
+
+/* 6. HEADER CELL ENHANCEMENT */
+.kpi-table th {
+    border: 1px solid #dee2e6 !important;
+    font-size: 0.8rem !important;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* 7. RESPONSIVE FONT SIZE */
+@media (max-width: 768px) {
+    .kpi-table tbody td {
+        padding: 6px 4px !important;
+        font-size: 0.7rem !important;
+    }
+}
