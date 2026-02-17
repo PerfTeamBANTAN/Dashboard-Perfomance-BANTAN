@@ -845,6 +845,22 @@ table.kpi-table td.kpi-text-red {
   background-color: #e5f0ff;
 }
 
+/* Bikin tombol X di modal detail tiket terlihat di header gelap */
+.ticket-modal-header .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+  opacity: 0.85;
+}
+
+.ticket-modal-header .btn-close:hover {
+  opacity: 1;
+}
+
+.ticket-modal-header .btn-close {
+  filter: invert(1) grayscale(100%) brightness(220%);
+  border-radius: 999px;
+  background-color: transparent;
+}
+
 /* responsive: kalau viewport kecil, modal sedikit mengecil */
 
 @media (max-width: 992px) {
