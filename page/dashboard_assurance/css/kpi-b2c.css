@@ -235,6 +235,57 @@
   filter: brightness(0.97);
 }
 
+/* HEADER MITRA – FLAT, SOFT, NYAMBUNG DENGAN TEMA */
+
+/* TA – biru lembut (karena section MITRA sudah biru) */
+.kpi-table thead th.th-mitra-ta {
+  background-color: #dbeafe;        /* blue-100 */
+  color: #1d4ed8;                   /* blue-700 */
+  border-bottom: 2px solid #3b82f6; /* blue-500 */
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.6);
+}
+
+/* SGN – teal/biru kehijauan */
+.kpi-table thead th.th-mitra-sgn {
+  background-color: #e0f2f1;        /* teal-50/100 */
+  color: #115e59;                   /* teal-800 */
+  border-bottom: 2px solid #14b8a6; /* teal-500 */
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.6);
+}
+
+/* SKA – biru sedikit lebih strong */
+.kpi-table thead th.th-mitra-ska {
+  background-color: #c7d2fe;        /* indigo-200 */
+  color: #3730a3;                   /* indigo-800 */
+  border-bottom: 2px solid #6366f1; /* indigo-500 */
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.6);
+}
+
+/* FAMIKA – ungu lembut */
+.kpi-table thead th.th-mitra-famika {
+  background-color: #ede9fe;        /* violet-100 */
+  color: #4c1d95;                   /* violet-900 */
+  border-bottom: 2px solid #8b5cf6; /* violet-500 */
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.6);
+}
+
+/* FSL – cyan/sky lembut */
+.kpi-table thead th.th-mitra-fsl {
+  background-color: #e0f2fe;        /* sky-100 */
+  color: #0369a1;                   /* sky-800 */
+  border-bottom: 2px solid #0ea5e9; /* sky-500 */
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.6);
+}
+
+/* Hover halus */
+.kpi-table thead th.th-mitra-ta:hover,
+.kpi-table thead th.th-mitra-sgn:hover,
+.kpi-table thead th.th-mitra-ska:hover,
+.kpi-table thead th.th-mitra-famika:hover,
+.kpi-table thead th.th-mitra-fsl:hover {
+  filter: brightness(0.97);
+}
+
 /* BODY */
 .kpi-table tbody td {
   border: 1px solid #e5e7eb;
