@@ -1351,9 +1351,9 @@ function loadKpiB2CMajorTable(config) {
                 detail: { sqm_not_comp: [], sqm_comp: [] }
               };
 
-              const underspecNonWarranty = r[7];
-              const closedSqm = r[8];
-              const sccInet = r[9];
+              const underspecNonWarranty = r[8];
+              const closedSqm = r[9];
+              const sccInet = r[10];
 
               const cellSqm = (val, key, label) => {
                 const count = val ?? 0;
