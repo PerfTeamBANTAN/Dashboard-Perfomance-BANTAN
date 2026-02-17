@@ -557,12 +557,12 @@ function mapRowsToTickets(rows) {
   return rows.map(r => ({
     troubleNo: r[COL_DTTR.TROUBLE_NO],
     troubleOpenTime: r[COL_DTTR.TROUBLE_OPENTIME],
-    firstAssignBy: r[COL_DTTR.FIRST_ASSIGN_BY],
-    jenisTiket: r[COL_DTTR.JENIS_TIKET1],
-    flagHvc: r[COL_DTTR.FLAG_HVC],
+    firstAssignBy: (r[COL_DTTR.FIRST_ASSIGN_BY] || "").toString().trim().toUpperCase(),
+    jenisTiket: (r[COL_DTTR.JENIS_TIKET1] || "").toString().trim().toUpperCase(),
+    flagHvc: (r[COL_DTTR.FLAG_HVC] || "").toString().trim().toUpperCase(),
     ndGroup: r[COL_DTTR.ND_GROUP],
     tkAssetType: r[COL_DTTR.TKASSETTYPE],
-    sto: r[COL_DTTR.STO],
+    sto: (r[COL_DTTR.STO] || "").toString().trim().toUpperCase(),
     dp: r[COL_DTTR.DP],
     odc: r[COL_DTTR.ODC],
     laborCode: r[COL_DTTR.LABORCODE],
@@ -578,28 +578,26 @@ function mapRowsToTickets(rows) {
 function aggregateKpiBySto(tickets) {
   const bySto = {};
 
+  console.log("TOTAL TIKET DTTR:", tickets.length);
+  // cek beberapa sample first rows
+  console.log("SAMPLE TIKET:", tickets.slice(0, 5));
+
   for (const t of tickets) {
     if (!t.sto) continue;
 
     if (!bySto[t.sto]) {
       bySto[t.sto] = {
         sto: t.sto,
-
         ttr36_not: 0,
         ttr36_comp: 0,
-
         ttr3dv_not: 0,
         ttr3dv_comp: 0,
-
         ttr3manja_not: 0,
         ttr3manja_comp: 0,
-
         ttr6p_not: 0,
         ttr6p_comp: 0,
-
         ttr12g_not: 0,
         ttr12g_comp: 0,
-
         detail: {
           ttr36_not: [],
           ttr36_comp: [],
@@ -617,7 +615,7 @@ function aggregateKpiBySto(tickets) {
 
     const s = bySto[t.sto];
 
-    // TTR36H (Non HVC)
+    // sesuaikan literal string ke uppercase
     if (t.jenisTiket === "TEKNIS") {
       if (t.comply36 === 0) {
         s.ttr36_not++;
@@ -628,7 +626,6 @@ function aggregateKpiBySto(tickets) {
       }
     }
 
-    // TTR3H (D,V)
     if (
       t.jenisTiket === "TEKNIS" &&
       (t.flagHvc === "HVC_DIAMOND" || t.flagHvc === "HVC_VVIP")
@@ -642,7 +639,6 @@ function aggregateKpiBySto(tickets) {
       }
     }
 
-    // TTR3H (MANJA)
     if (
       t.jenisTiket === "TEKNIS" &&
       t.firstAssignBy === "CUSTOMERASSIGNED"
@@ -656,7 +652,6 @@ function aggregateKpiBySto(tickets) {
       }
     }
 
-    // TTR6H (P)
     if (t.jenisTiket === "TEKNIS" && t.flagHvc === "HVC_PLATINUM") {
       if (t.comply6 === 0) {
         s.ttr6p_not++;
@@ -667,7 +662,6 @@ function aggregateKpiBySto(tickets) {
       }
     }
 
-    // TTR12H (G)
     if (t.jenisTiket === "TEKNIS" && t.flagHvc === "HVC_GOLD") {
       if (t.comply12 === 0) {
         s.ttr12g_not++;
@@ -684,7 +678,7 @@ function aggregateKpiBySto(tickets) {
     return total === 0 ? 0 : (comp / total) * 100;
   };
 
-  return Object.values(bySto).map(s => ({
+  const result = Object.values(bySto).map(s => ({
     ...s,
     ttr36_pct: pct(s.ttr36_comp, s.ttr36_not),
     ttr3dv_pct: pct(s.ttr3dv_comp, s.ttr3dv_not),
@@ -692,6 +686,9 @@ function aggregateKpiBySto(tickets) {
     ttr6p_pct: pct(s.ttr6p_comp, s.ttr6p_not),
     ttr12g_pct: pct(s.ttr12g_comp, s.ttr12g_not)
   }));
+
+  console.log("KPI BY STO:", result);
+  return result;
 }
 
 function showTicketDetailModal(title, tickets) {
@@ -819,11 +816,12 @@ function loadKpiB2CPrimaryTable(config) {
       `;
 
       const bodyRows = [];
-      for (let i = 2; i < layoutData.length - 1; i++) {
-        const r = layoutData[i];
-        if (!r || r.join("").toString().trim() === "") continue;
-        bodyRows.push(r);
-      }
+for (let i = 2; i < layoutData.length - 1; i++) {
+  const r = layoutData[i];
+  if (!r || r.join("").toString().trim() === "") continue;
+  bodyRows.push(r);
+}
+console.log("LAYOUT STO:", bodyRows.map(r => r[0]));
       const totalRow = layoutData[layoutData.length - 1] || [];
 
       const tbody = `
