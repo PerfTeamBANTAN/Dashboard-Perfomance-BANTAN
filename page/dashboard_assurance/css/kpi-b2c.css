@@ -753,8 +753,8 @@ table.kpi-table td.kpi-text-red {
 
 .ticket-modal-header {
   border-bottom: 1px solid rgba(148, 163, 184, 0.25);
-  background: linear-gradient(135deg, #0f172a, #1d283a);
-  color: #f9fafb;
+  background: linear-gradient(90deg, var(--silver), var(--gold));
+  color: #0f172a;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
 }
@@ -843,22 +843,6 @@ table.kpi-table td.kpi-text-red {
 
 .ticket-modal-table tbody tr:hover {
   background-color: #e5f0ff;
-}
-
-/* Bikin tombol X di modal detail tiket terlihat di header gelap */
-.ticket-modal-header .btn-close {
-  filter: invert(1) grayscale(100%) brightness(200%);
-  opacity: 0.85;
-}
-
-.ticket-modal-header .btn-close:hover {
-  opacity: 1;
-}
-
-.ticket-modal-header .btn-close {
-  filter: invert(1) grayscale(100%) brightness(220%);
-  border-radius: 999px;
-  background-color: transparent;
 }
 
 /* responsive: kalau viewport kecil, modal sedikit mengecil */
