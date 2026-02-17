@@ -251,22 +251,18 @@ function generateTbodyWithColoring(bodyRows, totalRow) {
   `;
 }
 
-// Fungsi helper untuk generate cell dengan pewarnaan
 function generateColoredCells(values, target, isRedIfStoGE, kolomNames) {
   return values.map((value, colIndex) => {
     const stoValue = parseFloat(value) || 0;
     
-    // Logika pewarnaan
     let cellClass = '';
     if (isRedIfStoGE) {
-      // Merah jika STO >= target
       if (stoValue >= target) {
-        cellClass = 'bg-danger text-white fw-bold';
+        cellClass = 'bg-danger-custom';  // ✅ GANTI INI
       }
     } else {
-      // Merah jika STO <= target (default untuk sebagian besar indikator)
       if (stoValue <= target) {
-        cellClass = 'bg-danger text-white fw-bold';
+        cellClass = 'bg-danger-custom';  // ✅ GANTI INI
       }
     }
     
