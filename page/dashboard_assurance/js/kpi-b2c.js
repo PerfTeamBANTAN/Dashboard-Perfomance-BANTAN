@@ -705,7 +705,6 @@ function aggregateKpiBySto(tickets) {
   return result;
 }
 
-// panggil sekali saja di awal (misal di init page) untuk sisipkan HTML modal kosong
 function initTicketDetailModal() {
   if (document.getElementById("ticketDetailModal")) return;
 
@@ -714,24 +713,33 @@ function initTicketDetailModal() {
   container.innerHTML = `
     <div class="modal fade" id="ticketDetailModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="ticketDetailTitle"></h5>
+        <div class="modal-content ticket-modal">
+          <div class="modal-header ticket-modal-header">
+            <div>
+              <h5 class="modal-title" id="ticketDetailTitle"></h5>
+              <div class="ticket-modal-subtitle text-muted small">
+                Detail tiket per STO • KPI B2C Tangerang
+              </div>
+            </div>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
 
-            <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="modal-body ticket-modal-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-2 ticket-modal-toolbar">
               <div class="small text-muted">
                 <span id="ticketDetailTotal"></span>
               </div>
-              <div class="btn-group btn-group-sm" role="group">
-                <button type="button" class="btn btn-outline-secondary" id="ticketDetailPrev">Prev</button>
-                <button type="button" class="btn btn-outline-secondary" id="ticketDetailNext">Next</button>
+              <div class="d-flex align-items-center gap-2">
+                <div class="ticket-modal-page-info small text-muted" id="ticketDetailPageInfo"></div>
+                <div class="btn-group btn-group-sm ticket-modal-pager" role="group">
+                  <button type="button" class="btn btn-outline-secondary" id="ticketDetailPrev">Prev</button>
+                  <button type="button" class="btn btn-outline-secondary" id="ticketDetailNext">Next</button>
+                </div>
               </div>
             </div>
 
-            <div class="table-responsive">
+            <div class="table-responsive ticket-modal-table">
               <table class="table table-sm table-striped mb-0">
                 <thead class="table-light">
                   <tr>
@@ -752,10 +760,6 @@ function initTicketDetailModal() {
               </table>
             </div>
 
-            <div class="d-flex justify-content-end align-items-center mt-2">
-              <small class="text-muted" id="ticketDetailPageInfo"></small>
-            </div>
-
           </div>
         </div>
       </div>
@@ -763,7 +767,6 @@ function initTicketDetailModal() {
   `;
   document.body.appendChild(container);
 
-  // simpan state di dataset element modal
   const modalEl = document.getElementById("ticketDetailModal");
   modalEl.dataset.pageSize = "10";
   modalEl.dataset.currentPage = "1";
