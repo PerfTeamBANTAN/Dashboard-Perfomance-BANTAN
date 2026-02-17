@@ -184,6 +184,52 @@
   cursor: default;
 }
 
+/* HEADER PER HSA – GRADIENT LEMBUT */
+
+/* DADY – hijau kebiruan */
+.kpi-table thead th.th-hsa-dady {
+  background: linear-gradient(135deg, #ecfeff, #a5f3fc);
+  color: #0f172a;
+  border-bottom: 2px solid #06b6d4;
+}
+
+/* EKA – biru */
+.kpi-table thead th.th-hsa-eka {
+  background: linear-gradient(135deg, #eff6ff, #bfdbfe);
+  color: #111827;
+  border-bottom: 2px solid #3b82f6;
+}
+
+/* HERLANDO – hijau */
+.kpi-table thead th.th-hsa-herlando {
+  background: linear-gradient(135deg, #ecfdf5, #bbf7d0);
+  color: #064e3b;
+  border-bottom: 2px solid #22c55e;
+}
+
+/* RISMAN – ungu */
+.kpi-table thead th.th-hsa-risman {
+  background: linear-gradient(135deg, #f5f3ff, #ddd6fe);
+  color: #312e81;
+  border-bottom: 2px solid #8b5cf6;
+}
+
+/* ZULFA – orange/amber */
+.kpi-table thead th.th-hsa-zulfa {
+  background: linear-gradient(135deg, #fffbeb, #fed7aa);
+  color: #7c2d12;
+  border-bottom: 2px solid #fb923c;
+}
+
+/* Hover ringan tetap konsisten */
+.kpi-table thead th.th-hsa-dady:hover,
+.kpi-table thead th.th-hsa-eka:hover,
+.kpi-table thead th.th-hsa-herlando:hover,
+.kpi-table thead th.th-hsa-risman:hover,
+.kpi-table thead th.th-hsa-zulfa:hover {
+  filter: brightness(0.97);
+}
+
 /* BODY */
 .kpi-table tbody td {
   border: 1px solid #e5e7eb;
