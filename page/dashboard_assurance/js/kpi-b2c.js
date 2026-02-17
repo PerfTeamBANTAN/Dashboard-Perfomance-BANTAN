@@ -1065,22 +1065,215 @@ function loadKpiB2CPrimaryTable(config) {
     });
 }
 
-// =========================
-// TABLE MAJOR KPI (WEB!A110:K125)
-// =========================
+// ---------- HELPER DATA SQM UNTUK MAJOR TABLE ----------
+
+const COL_SQM = {
+  TROUBLE_NUMBER: 0,
+  TROUBLE_NO: 1,
+  TROUBLE_OPENTIME: 2,
+  CMDF: 3,          // STO
+  ODP: 4,
+  FLAG_HVC: 5,
+  TTR: 6,
+  MAPPING: 7,
+  LABORCODE: 8,
+  IS_EXCLUDE: 9,
+  TROUBLENO_PARENT: 10,
+  SQM4: 11,
+  STATUS: 12
+};
+
+function mapRowsToSqmTickets(rows) {
+  return rows.map(r => ({
+    troubleNumber: r[COL_SQM.TROUBLE_NUMBER],
+    troubleNo: r[COL_SQM.TROUBLE_NO],
+    troubleOpenTime: r[COL_SQM.TROUBLE_OPENTIME],
+    sto: (r[COL_SQM.CMDF] || "").toString().trim().toUpperCase(), // CMDF = STO
+    odp: r[COL_SQM.ODP],
+    flagHvc: (r[COL_SQM.FLAG_HVC] || "").toString().trim().toUpperCase(),
+    ttr: r[COL_SQM.TTR],
+    mapping: r[COL_SQM.MAPPING],
+    laborCode: r[COL_SQM.LABORCODE],
+    isExclude: Number(String(r[COL_SQM.IS_EXCLUDE] || "0").replace(",", ".")) || 0,
+    troubleNoParent: r[COL_SQM.TROUBLENO_PARENT],
+    sqm4: (r[COL_SQM.SQM4] || "").toString().trim().toUpperCase(),
+    status: (r[COL_SQM.STATUS] || "").toString().trim().toUpperCase()
+  }));
+}
+
+function aggregateSqmBySto(tickets) {
+  const bySto = {};
+
+  for (const t of tickets) {
+    // COUNTIFS logic: CMDF=STO, IS_EXCLUDE=0, SQM4=OPEN
+    if (!t.sto) continue;
+    if (t.isExclude !== 0) continue;
+    if (t.sqm4 !== "OPEN") continue;
+
+    if (!bySto[t.sto]) {
+      bySto[t.sto] = {
+        sto: t.sto,
+        sqm_not_comp: 0,
+        sqm_comp: 0,
+        detail: {
+          sqm_not_comp: [],
+          sqm_comp: []
+        }
+      };
+    }
+
+    const s = bySto[t.sto];
+
+    if (t.status === "NOT COMPLY") {
+      s.sqm_not_comp++;
+      s.detail.sqm_not_comp.push(t);
+    } else if (t.status === "COMPLY") {
+      s.sqm_comp++;
+      s.detail.sqm_comp.push(t);
+    }
+  }
+
+  const pct = (comp, not) => {
+    const total = comp + not;
+    return total === 0 ? 0 : (comp / total) * 100;
+  };
+
+  return Object.values(bySto).map(s => ({
+    ...s,
+    sqm_pct: pct(s.sqm_comp, s.sqm_not_comp)
+  }));
+}
+
+// ---------- RENDER DETAIL MODAL UNTUK DATA SQM ----------
+
+function renderSqmDetailPage(page) {
+  const modalEl = document.getElementById("ticketDetailModal");
+  if (!modalEl) return;
+
+  const tbody = document.getElementById("ticketDetailBody");
+  const pageInfo = document.getElementById("ticketDetailPageInfo");
+  const totalInfo = document.getElementById("ticketDetailTotal");
+  const btnPrev = document.getElementById("ticketDetailPrev");
+  const btnNext = document.getElementById("ticketDetailNext");
+
+  const ticketsJson = modalEl.dataset.tickets || "[]";
+  const tickets = JSON.parse(ticketsJson);
+
+  const pageSize = Number(modalEl.dataset.pageSize || 10);
+  const total = tickets.length;
+  const totalPages = total === 0 ? 1 : Math.ceil(total / pageSize);
+  const currentPage = Math.min(Math.max(page, 1), totalPages);
+
+  modalEl.dataset.currentPage = String(currentPage);
+
+  if (total === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" class="text-center">Tidak ada data tiket SQM.</td></tr>`;
+    pageInfo.textContent = "";
+    totalInfo.textContent = "0 tiket";
+    btnPrev.disabled = true;
+    btnNext.disabled = true;
+    return;
+  }
+
+  const start = (currentPage - 1) * pageSize;
+  const end = Math.min(start + pageSize, total);
+  const slice = tickets.slice(start, end);
+
+  tbody.innerHTML = slice.map(t => `
+    <tr>
+      <td>${t.troubleNo || ""}</td>
+      <td>${t.sto || ""}</td>
+      <td>${t.flagHvc || ""}</td>
+      <td>${t.status || ""}</td>
+      <td>${t.sqm4 || ""}</td>
+      <td>${t.troubleOpenTime || ""}</td>
+      <td>${t.odp || ""}</td>
+      <td>${t.mapping || ""}</td>
+      <td>${t.laborCode || ""}</td>
+    </tr>
+  `).join("");
+
+  totalInfo.textContent = `${total} tiket SQM (showing ${start + 1}–${end})`;
+  pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
+
+  btnPrev.disabled = currentPage === 1;
+  btnNext.disabled = currentPage === totalPages;
+}
+
+// pagination wiring yang sudah ada, tinggal tambah cabang jenis detail
+function wireTicketDetailPagination() {
+  const modalEl = document.getElementById("ticketDetailModal");
+  if (!modalEl) return;
+
+  const btnPrev = document.getElementById("ticketDetailPrev");
+  const btnNext = document.getElementById("ticketDetailNext");
+
+  if (btnPrev.dataset.wired === "1") return;
+
+  btnPrev.addEventListener("click", () => {
+    const current = Number(modalEl.dataset.currentPage || 1);
+    const mode = modalEl.dataset.detailMode || "PRIMARY";
+    if (mode === "SQM") {
+      renderSqmDetailPage(current - 1);
+    } else {
+      renderTicketDetailPage(current - 1); // fungsi lama untuk DTTR Primary
+    }
+  });
+
+  btnNext.addEventListener("click", () => {
+    const current = Number(modalEl.dataset.currentPage || 1);
+    const mode = modalEl.dataset.detailMode || "PRIMARY";
+    if (mode === "SQM") {
+      renderSqmDetailPage(current + 1);
+    } else {
+      renderTicketDetailPage(current + 1);
+    }
+  });
+
+  btnPrev.dataset.wired = "1";
+  btnNext.dataset.wired = "1";
+}
+
+function showSqmDetailModal(title, tickets) {
+  initTicketDetailModal();
+
+  const modalEl = document.getElementById("ticketDetailModal");
+  const titleEl = document.getElementById("ticketDetailTitle");
+
+  modalEl.dataset.tickets = JSON.stringify(tickets);
+  modalEl.dataset.currentPage = "1";
+  modalEl.dataset.detailMode = "SQM";
+
+  titleEl.textContent = title;
+
+  wireTicketDetailPagination();
+  renderSqmDetailPage(1);
+
+  const modal = new bootstrap.Modal(modalEl);
+  modal.show();
+}
 
 function loadKpiB2CMajorTable(config) {
   const tableMajor = document.getElementById("kpi-b2c-table-major");
   if (!tableMajor) return;
 
-  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+  const urlLayout = `${config.baseUrl}?sheet=${encodeURIComponent(
     config.sheet
   )}&range=${encodeURIComponent("WEB!A110:K125")}`;
 
-  fetch(url)
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (!Array.isArray(data) || data.length < 3) return;
+  const urlSqm = `${config.baseUrl}?sheet=${encodeURIComponent(
+    "DATA SQM"
+  )}&range=${encodeURIComponent("DATA SQM!A:M")}`;
+
+  Promise.all([fetch(urlLayout), fetch(urlSqm)])
+    .then(([respLayout, respSqm]) => Promise.all([respLayout.json(), respSqm.json()]))
+    .then(([layoutData, sqmData]) => {
+      if (!Array.isArray(layoutData) || layoutData.length < 3) return;
+
+      const sqmTickets = mapRowsToSqmTickets(sqmData.slice(1)); // skip header
+      const sqmByStoArr = aggregateSqmBySto(sqmTickets);
+      const sqmBySto = {};
+      sqmByStoArr.forEach(s => { sqmBySto[s.sto] = s; });
 
       const thead = `
         <thead>
@@ -1104,57 +1297,112 @@ function loadKpiB2CMajorTable(config) {
           <tr>
             <th class="text-center th-plat">NOT COMPLY</th>
             <th class="text-center th-plat">COMPLY</th>
-
           </tr>
         </thead>
       `;
 
       const bodyRows = [];
-      for (let i = 2; i < data.length - 1; i++) {
-        const r = data[i];
+      for (let i = 2; i < layoutData.length - 1; i++) {
+        const r = layoutData[i];
         if (!r || r.join("").toString().trim() === "") continue;
         bodyRows.push(r);
       }
+      const totalRow = layoutData[layoutData.length - 1] || [];
 
-      const totalRow = data[data.length - 1] || [];
+      const sum = (field) =>
+        sqmByStoArr.reduce((acc, s) => acc + (s[field] || 0), 0);
+
+      const sqm_not_comp_total = sum("sqm_not_comp");
+      const sqm_comp_total = sum("sqm_comp");
+      const pct = (comp, not) => {
+        const total = comp + not;
+        return total === 0 ? 0 : (comp / total) * 100;
+      };
 
       const tbody = `
-  <tbody>
-    ${bodyRows
-      .map((r) => `
-        <tr>
-          <td>${r[0] ?? ""}</td>  <!-- STO -->
-          <td>${r[1] ?? ""}</td>  <!-- Cluster -->
-          <td>${r[2] ?? ""}</td>  <!-- OM HAS -->
-          <td>${r[3] ?? ""}</td>  <!-- OSA -->
-          <td>${r[4] ?? ""}</td>  <!-- MITRA -->
+        <tbody>
+          ${bodyRows
+            .map((r) => {
+              const sto = (r[0] || "").toString().trim().toUpperCase();
+              const cluster = r[1];
+              const omHas = r[2];
+              const osa = r[3];
+              const mitra = r[4];
 
-          <td>${r[5] ?? ""}</td>  <!-- TTR value -->
-          <td>${r[6] ?? ""}</td>  <!-- % TTR -->
+              const sqm = sqmBySto[sto] || {
+                sqm_not_comp: 0,
+                sqm_comp: 0,
+                sqm_pct: 0,
+                detail: { sqm_not_comp: [], sqm_comp: [] }
+              };
 
-          <td>${r[7] ?? ""}</td>  <!-- Underspec (SCC-INET) -->
-          <td>${r[8] ?? ""}</td>  <!-- Underspec COMPLY -->
+              const underspecNonWarranty = r[7];
+              const closedSqm = r[8];
+              const sccInet = r[9];
 
-          <td>${r[9]  ?? ""}</td> <!-- Closed SQM NOT COMPLY -->
-          <td>${r[10] ?? ""}</td> <!-- Closed SQM COMPLY -->
-        </tr>
-      `)
-      .join("")}
+              const cellSqm = (val, key, label) => {
+                const count = val ?? 0;
+                const list = (sqm.detail && sqm.detail[key]) || [];
+                if (!count || list.length === 0) {
+                  return `<span>${count}</span>`;
+                }
+                return `
+                  <button
+                    type="button"
+                    class="btn btn-link p-0 kpi-detail-link-sqm"
+                    data-sto="${sto}"
+                    data-key="${key}"
+                    data-label="${label}"
+                  >${count}</button>
+                `;
+              };
 
-    <!-- ROW TOTAL: TANGERANG -->
-    <tr class="table-secondary fw-semibold">
-      <td colspan="5">${totalRow[0] ?? ""}</td>
-      <td>${totalRow[5] ?? ""}</td>
-      <td>${totalRow[6] ?? ""}</td>
-      <td>${totalRow[7] ?? ""}</td>
-      <td>${totalRow[8] ?? ""}</td>
-      <td>${totalRow[9] ?? ""}</td>
-      <td>${totalRow[10] ?? ""}</td>
-    </tr>
-  </tbody>
-`;
+              return `
+                <tr>
+                  <td>${sto ?? ""}</td>
+                  <td>${cluster ?? ""}</td>
+                  <td>${omHas ?? ""}</td>
+                  <td>${osa ?? ""}</td>
+                  <td>${mitra ?? ""}</td>
+
+                  <td>${cellSqm(sqm.sqm_not_comp, "sqm_not_comp", "SQM 4H - NOT COMPLY")}</td>
+                  <td>${cellSqm(sqm.sqm_comp, "sqm_comp", "SQM 4H - COMPLY")}</td>
+                  <td>${sqm.sqm_pct.toFixed(2)}%</td>
+
+                  <td>${underspecNonWarranty ?? ""}</td>
+                  <td>${closedSqm ?? ""}</td>
+                  <td>${sccInet ?? ""}</td>
+                </tr>
+              `;
+            })
+            .join("")}
+
+          <!-- ROW TOTAL: BRANCH TANGERANG -->
+          <tr class="table-secondary fw-semibold">
+            <td colspan="5">${totalRow[0] ?? "BRANCH TANGERANG"}</td>
+            <td>${sqm_not_comp_total}</td>
+            <td>${sqm_comp_total}</td>
+            <td>${pct(sqm_comp_total, sqm_not_comp_total).toFixed(2)}%</td>
+            <td>${totalRow[7] ?? ""}</td>
+            <td>${totalRow[8] ?? ""}</td>
+            <td>${totalRow[9] ?? ""}</td>
+          </tr>
+        </tbody>
+      `;
 
       tableMajor.innerHTML = thead + tbody;
+
+      // event delegation untuk detail SQM
+      tableMajor.addEventListener("click", (e) => {
+        const btn = e.target.closest(".kpi-detail-link-sqm");
+        if (!btn) return;
+        const sto = btn.dataset.sto;
+        const key = btn.dataset.key;
+        const label = btn.dataset.label;
+        const s = sqmBySto[sto];
+        if (!s || !s.detail || !s.detail[key]) return;
+        showSqmDetailModal(`${label} – STO ${sto}`, s.detail[key]);
+      });
     })
     .catch((err) => {
       console.error("Error load tabel Major KPI B2C:", err);
