@@ -628,3 +628,16 @@ table.kpi-table td.kpi-text-red {
         font-size: 0.7rem !important;
     }
 }
+
+/* CENTER TEXT UNTUK NILAI DI TABEL KPI HSA */
+
+/* Indikator & Target tetap kiri */
+.kpi-table tbody td:nth-child(1),
+.kpi-table tbody td:nth-child(2) {
+  text-align: left;
+}
+
+.kpi-table tbody td:nth-child(n+3) {
+  text-align: center;
+  vertical-align: middle;
+}
