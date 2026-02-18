@@ -751,7 +751,7 @@ function initTicketDetailModal() {
                     <th>Open Time</th>
                     <th>ND Group</th>
                     <th>DP</th>
-                    <th>ODC</th>
+                    <th>TTR</th>
                   </tr>
                 </thead>
                 <tbody id="ticketDetailBody">
@@ -806,18 +806,18 @@ function renderTicketDetailPage(page) {
   const slice = tickets.slice(start, end);
 
   tbody.innerHTML = slice.map(t => `
-    <tr>
-      <td>${t.troubleNo || ""}</td>
-      <td>${t.sto || ""}</td>
-      <td>${t.jenisTiket || ""}</td>
-      <td>${t.flagHvc || ""}</td>
-      <td>${t.firstAssignBy || ""}</td>
-      <td>${t.troubleOpenTime || ""}</td>
-      <td>${t.ndGroup || ""}</td>
-      <td>${t.dp || ""}</td>
-      <td>${t.odc || ""}</td>
-    </tr>
-  `).join("");
+  <tr>
+    <td>${t.troubleNo || ""}</td>
+    <td>${t.sto || ""}</td>
+    <td>${t.jenisTiket || ""}</td>
+    <td>${t.flagHvc || ""}</td>
+    <td>${t.firstAssignBy || ""}</td>
+    <td>${t.troubleOpenTime || ""}</td>
+    <td>${t.ndGroup || ""}</td>
+    <td>${t.dp || ""}</td>
+    <td>${t.ttrOpenTclose || ""}</td>
+  </tr>
+`).join("");
 
   totalInfo.textContent = `${total} tiket (showing ${start + 1}–${end})`;
   pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
@@ -865,11 +865,13 @@ function showTicketDetailModal(title, tickets) {
   const modalEl = document.getElementById("ticketDetailModal");
   const titleEl = document.getElementById("ticketDetailTitle");
 
+  // pastikan header kembali ke layout DTTR
+  setDttrHeader();
+
   modalEl.dataset.tickets = JSON.stringify(tickets);
   modalEl.dataset.currentPage = "1";
-  modalEl.dataset.detailMode = "DTTR"; // <== penting
+  modalEl.dataset.detailMode = "DTTR";
 
-  // header DTTR sudah fixed di initTicketDetailModal, jadi tidak perlu diubah di sini
   titleEl.textContent = title;
 
   wireTicketDetailPagination();
@@ -878,6 +880,28 @@ function showTicketDetailModal(title, tickets) {
   const modal = new bootstrap.Modal(modalEl);
   modal.show();
 }
+
+function setDttrHeader() {
+  const modalEl = document.getElementById("ticketDetailModal");
+  if (!modalEl) return;
+  const thead = modalEl.querySelector("thead");
+  if (!thead) return;
+
+  thead.innerHTML = `
+    <tr>
+      <th>TROUBLE_NO</th>
+      <th>STO</th>
+      <th>Jenis</th>
+      <th>FLAG_HVC</th>
+      <th>First Assign</th>
+      <th>Open Time</th>
+      <th>ND Group</th>
+      <th>DP</th>
+      <th>TTR_OPEN_TCLOSE</th>
+    </tr>
+  `;
+}
+
 
 // ---------- FUNGSI UTAMA: PRIMARY TABLE ----------
 
