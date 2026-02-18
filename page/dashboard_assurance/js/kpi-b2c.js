@@ -27,10 +27,11 @@ function getGrowthInfo(rowObj) {
   }
 }
 
-function createSummaryCards(rows) {
+function createSummaryCards(summaryRow, rows) {
 
-  let kpiBranchH1 = "-";
-  let kpiBranchHI = "-";
+  // ambil langsung dari summaryRow
+  let kpiBranchH1 = summaryRow ? summaryRow.h_1 : "-";
+  let kpiBranchHI = summaryRow ? summaryRow.hi : "-";
 
   let okH1 = 0;
   let okHI = 0;
@@ -38,15 +39,6 @@ function createSummaryCards(rows) {
   let nokHI = 0;
 
   rows.forEach(r => {
-    const indikator = String(r.indikator).trim().toLowerCase();
-
-    // KPI Branch Tangerang (ambil nilai, bukan hitung)
-    if (indikator === "kpi branch tangerang") {
-      kpiBranchH1 = r.h_1 || "-";
-      kpiBranchHI = r.hi || "-";
-    }
-
-    // Count status
     if (r.status_h1 === "✅") okH1++;
     if (r.status_hi === "✅") okHI++;
     if (r.status_h1 === "❌") nokH1++;
