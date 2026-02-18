@@ -27,6 +27,54 @@ function getGrowthInfo(rowObj) {
   }
 }
 
+function createSummaryCards(rows) {
+
+  const totalKPI = rows.length;
+
+  let complyH1 = 0;
+  let complyHI = 0;
+  let notComplyH1 = 0;
+  let notComplyHI = 0;
+
+  rows.forEach(r => {
+    if (r.status_h1 === "✅") complyH1++;
+    if (r.status_hi === "✅") complyHI++;
+    if (r.status_h1 === "❌") notComplyH1++;
+    if (r.status_hi === "❌") notComplyHI++;
+  });
+
+  const html = `
+    <div class="col-md-4 col-sm-12 mb-2">
+      <div class="kpi-summary-card kpi-summary-gold">
+        <div class="kpi-summary-title">KPI Branch Tangerang</div>
+        <div class="kpi-summary-value">${totalKPI}</div>
+        <div class="kpi-summary-sub">H-1 & HI Indicators</div>
+        <i class="fa-solid fa-chart-line kpi-summary-icon"></i>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-12 mb-2">
+      <div class="kpi-summary-card kpi-summary-green">
+        <div class="kpi-summary-title">✅ Comply</div>
+        <div class="kpi-summary-value">${complyH1 + complyHI}</div>
+        <div class="kpi-summary-sub">H-1: ${complyH1} | HI: ${complyHI}</div>
+        <i class="fa-solid fa-circle-check kpi-summary-icon"></i>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-12 mb-2">
+      <div class="kpi-summary-card kpi-summary-red">
+        <div class="kpi-summary-title">❌ Not Comply</div>
+        <div class="kpi-summary-value">${notComplyH1 + notComplyHI}</div>
+        <div class="kpi-summary-sub">H-1: ${notComplyH1} | HI: ${notComplyHI}</div>
+        <i class="fa-solid fa-triangle-exclamation kpi-summary-icon"></i>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("kpi-summary-row").innerHTML = html;
+}
+
 // =========================
 // CARD KPI
 // =========================
@@ -1905,7 +1953,8 @@ function initKPIB2C(config) {
           status_hi: r[5]
         });
       });
-
+      createSummaryCards(rows);
+      
       grid.innerHTML = rows.map(createKpiCard).join("");
       initKpiFilter();
 
