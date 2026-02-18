@@ -1,3 +1,68 @@
+/* ========================= */
+/* KPI SUMMARY CARDS (TOP)  */
+/* ========================= */
+
+.kpi-summary-card {
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(15,23,42,0.08);
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.kpi-summary-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(15,23,42,0.12);
+}
+
+/* title */
+.kpi-summary-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* big number */
+.kpi-summary-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* subtitle */
+.kpi-summary-sub {
+  font-size: 0.65rem;
+  color: #6b7280;
+}
+
+/* icon watermark */
+.kpi-summary-icon {
+  position: absolute;
+  right: 10px;
+  bottom: 6px;
+  font-size: 48px;
+  opacity: 0.08;
+}
+
+/* themes */
+.kpi-summary-gold {
+  background: linear-gradient(135deg, #fffbeb, #fde68a);
+  border-color: #fbbf24;
+}
+
+.kpi-summary-green {
+  background: linear-gradient(135deg, #ecfdf5, #bbf7d0);
+  border-color: #22c55e;
+}
+
+.kpi-summary-red {
+  background: linear-gradient(135deg, #fef2f2, #fecaca);
+  border-color: #ef4444;
+}
+
 .kpi-b2c-tangerang {
   padding: 4px 0;
   background-color: #f3f4f6;
