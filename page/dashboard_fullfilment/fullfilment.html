@@ -143,6 +143,11 @@ body {
 
     <ul class="dropdown-menu">
       <li>
+        <a class="dropdown-item menu-link" data-menu="kpi-fullfilment">
+          KPI Fullfilment Branch TANGERANG
+        </a>
+      </li>
+      <li>
         <a class="dropdown-item menu-link" data-menu="progres-indihome">
           Funneling OnHand Fullfilment Indihome
         </a>
@@ -187,6 +192,12 @@ body {
 const B2B_API_URL = 'https://script.google.com/macros/s/AKfycbwUqQ9_EFnGsX0swiip-Mc7ZNavcxLnr7lZdl8bLDYBr4gkRyGeugFPd1elH7Z6QPJwuA/exec';
 
 const menuMap = {
+  "kpi-fullfilment": {
+    html: "partial/kpi-fullfilment.html",
+    js: "js/kpi-fullfilment.js",
+    css: "css/progres-indihome.css",
+    init: "initKpiFullfilment"
+  },
   "progres-indihome": {
     html: "partial/progres-indihome.html",
     js: "js/progres-indihome.js",
