@@ -29,14 +29,22 @@ function getGrowthInfo(rowObj) {
 
 function createSummaryCards(rows) {
 
-  const totalKPI = rows.length;
-
   let complyH1 = 0;
   let complyHI = 0;
   let notComplyH1 = 0;
   let notComplyHI = 0;
 
+  let kpiBranchH1 = "-";
+  let kpiBranchHI = "-";
+
   rows.forEach(r => {
+
+    // ambil KPI Branch Tangerang
+    if (String(r.indikator).toLowerCase().includes("kpi branch tangerang")) {
+      kpiBranchH1 = r.h_1;
+      kpiBranchHI = r.hi;
+    }
+
     if (r.status_h1 === "✅") complyH1++;
     if (r.status_hi === "✅") complyHI++;
     if (r.status_h1 === "❌") notComplyH1++;
@@ -44,15 +52,17 @@ function createSummaryCards(rows) {
   });
 
   const html = `
+    <!-- KOTAK 1 -->
     <div class="col-md-4 col-sm-12 mb-2">
       <div class="kpi-summary-card kpi-summary-gold">
         <div class="kpi-summary-title">KPI Branch Tangerang</div>
-        <div class="kpi-summary-value">${totalKPI}</div>
-        <div class="kpi-summary-sub">H-1 & HI Indicators</div>
+        <div class="kpi-summary-value">${kpiBranchHI}%</div>
+        <div class="kpi-summary-sub">H-1: ${kpiBranchH1}% | HI: ${kpiBranchHI}%</div>
         <i class="fa-solid fa-chart-line kpi-summary-icon"></i>
       </div>
     </div>
 
+    <!-- KOTAK 2 -->
     <div class="col-md-4 col-sm-12 mb-2">
       <div class="kpi-summary-card kpi-summary-green">
         <div class="kpi-summary-title">✅ Comply</div>
@@ -62,6 +72,7 @@ function createSummaryCards(rows) {
       </div>
     </div>
 
+    <!-- KOTAK 3 -->
     <div class="col-md-4 col-sm-12 mb-2">
       <div class="kpi-summary-card kpi-summary-red">
         <div class="kpi-summary-title">❌ Not Comply</div>
