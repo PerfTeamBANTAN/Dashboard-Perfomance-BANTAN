@@ -833,33 +833,43 @@ function wireTicketDetailPagination() {
   const btnPrev = document.getElementById("ticketDetailPrev");
   const btnNext = document.getElementById("ticketDetailNext");
 
-  if (btnPrev.dataset.wired === "1") return; // sudah dipasang
+  if (btnPrev.dataset.wired === "1") return;
 
   btnPrev.addEventListener("click", () => {
     const current = Number(modalEl.dataset.currentPage || 1);
-    renderTicketDetailPage(current - 1);
+    const mode = modalEl.dataset.detailMode || "DTTR";
+    if (mode === "SQM") {
+      renderSqmDetailPage(current - 1);
+    } else {
+      renderTicketDetailPage(current - 1);
+    }
   });
 
   btnNext.addEventListener("click", () => {
     const current = Number(modalEl.dataset.currentPage || 1);
-    renderTicketDetailPage(current + 1);
+    const mode = modalEl.dataset.detailMode || "DTTR";
+    if (mode === "SQM") {
+      renderSqmDetailPage(current + 1);
+    } else {
+      renderTicketDetailPage(current + 1); // DTTR
+    }
   });
 
   btnPrev.dataset.wired = "1";
   btnNext.dataset.wired = "1";
 }
 
-// dipanggil dari tabel utama (setiap user klik jumlah tiket)
 function showTicketDetailModal(title, tickets) {
   initTicketDetailModal();
 
   const modalEl = document.getElementById("ticketDetailModal");
   const titleEl = document.getElementById("ticketDetailTitle");
 
-  // simpan tickets di dataset sebagai JSON
   modalEl.dataset.tickets = JSON.stringify(tickets);
   modalEl.dataset.currentPage = "1";
+  modalEl.dataset.detailMode = "DTTR"; // <== penting
 
+  // header DTTR sudah fixed di initTicketDetailModal, jadi tidak perlu diubah di sini
   titleEl.textContent = title;
 
   wireTicketDetailPagination();
