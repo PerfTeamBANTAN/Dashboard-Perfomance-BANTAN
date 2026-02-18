@@ -29,14 +29,11 @@ function getGrowthInfo(rowObj) {
 
 function createSummaryCards(summaryRow, rows) {
 
-  // ambil langsung dari summaryRow
   let kpiBranchH1 = summaryRow ? summaryRow.h_1 : "-";
   let kpiBranchHI = summaryRow ? summaryRow.hi : "-";
 
-  let okH1 = 0;
-  let okHI = 0;
-  let nokH1 = 0;
-  let nokHI = 0;
+  let okH1 = 0, okHI = 0;
+  let nokH1 = 0, nokHI = 0;
 
   rows.forEach(r => {
     if (r.status_h1 === "✅") okH1++;
@@ -46,27 +43,33 @@ function createSummaryCards(summaryRow, rows) {
   });
 
   const html = `
-    <div class="col-md-4 mb-3">
-      <div class="kpi-summary-card kpi-branch">
-        <h5>KPI Branch Tangerang</h5>
-        <div class="kpi-big">${kpiBranchHI}%</div>
-        <div class="kpi-sub">H-1: ${kpiBranchH1}% | HI: ${kpiBranchHI}%</div>
+    <!-- KPI Branch -->
+    <div class="col-md-4 mb-2">
+      <div class="kpi-summary-card kpi-summary-gold">
+        <div class="kpi-summary-title">KPI Branch Tangerang</div>
+        <div class="kpi-summary-value">${kpiBranchHI}%</div>
+        <div class="kpi-summary-sub">H-1: ${kpiBranchH1}% | HI: ${kpiBranchHI}%</div>
+        <div class="kpi-summary-icon">🏆</div>
       </div>
     </div>
 
-    <div class="col-md-4 mb-3">
-      <div class="kpi-summary-card kpi-ok">
-        <h5>✅ Not Comply (OK)</h5>
-        <div class="kpi-big">${okHI}</div>
-        <div class="kpi-sub">H-1: ${okH1} | HI: ${okHI}</div>
+    <!-- OK -->
+    <div class="col-md-4 mb-2">
+      <div class="kpi-summary-card kpi-summary-green">
+        <div class="kpi-summary-title">✅ Not Comply (OK)</div>
+        <div class="kpi-summary-value">${okHI}</div>
+        <div class="kpi-summary-sub">H-1: ${okH1} | HI: ${okHI}</div>
+        <div class="kpi-summary-icon">✔</div>
       </div>
     </div>
 
-    <div class="col-md-4 mb-3">
-      <div class="kpi-summary-card kpi-nok">
-        <h5>❌ Not Comply (NOK)</h5>
-        <div class="kpi-big">${nokHI}</div>
-        <div class="kpi-sub">H-1: ${nokH1} | HI: ${nokHI}</div>
+    <!-- NOK -->
+    <div class="col-md-4 mb-2">
+      <div class="kpi-summary-card kpi-summary-red">
+        <div class="kpi-summary-title">❌ Not Comply (NOK)</div>
+        <div class="kpi-summary-value">${nokHI}</div>
+        <div class="kpi-summary-sub">H-1: ${nokH1} | HI: ${nokHI}</div>
+        <div class="kpi-summary-icon">⚠</div>
       </div>
     </div>
   `;
@@ -76,7 +79,6 @@ function createSummaryCards(summaryRow, rows) {
     container.innerHTML = html;
   }
 }
-
 // =========================
 // CARD KPI
 // =========================
