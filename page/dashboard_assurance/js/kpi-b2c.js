@@ -38,12 +38,16 @@ function createSummaryCards(rows) {
   let kpiBranchHI = "-";
 
   rows.forEach(r => {
+  console.log("INDIKATOR:", r.indikator);
 
-    // ambil KPI Branch Tangerang
-    if (String(r.indikator).toLowerCase().includes("kpi branch tangerang")) {
-      kpiBranchH1 = r.h_1;
-      kpiBranchHI = r.hi;
-    }
+  const indikator = String(r.indikator).trim().toLowerCase();
+
+  if (indikator === "kpi branch tangerang") {
+    kpiBranchH1 = r.h_1;
+    kpiBranchHI = r.hi;
+  }
+});
+
 
     if (r.status_h1 === "✅") complyH1++;
     if (r.status_hi === "✅") complyHI++;
