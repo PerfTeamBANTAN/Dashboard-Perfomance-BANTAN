@@ -1943,32 +1943,38 @@ function initKPIB2C(config) {
   fetch(url)
     .then((resp) => resp.json())
     .then((data) => {
+
       const rows = [];
+      let summaryRow = null;
 
       data.forEach((r, idx) => {
         if (idx === 0) return;
+
         const indikator = r[0];
         if (!indikator) return;
 
-        if (String(indikator).toLowerCase().includes("kpi branch tangerang")) {
-          return;
-        }
-
-        rows.push({
+        const obj = {
           indikator: indikator,
           target: r[1],
           h_1: r[2],
           status_h1: r[3],
           hi: r[4],
           status_hi: r[5]
-        });
+        };
+
+        if (String(indikator).toLowerCase().trim() === "kpi branch tangerang") {
+          summaryRow = obj;
+          return; 
+        }
+
+        rows.push(obj);
       });
-      
+
       grid.innerHTML = rows.map(createKpiCard).join("");
-      createSummaryCards(rows);
+      createSummaryCards(summaryRow, rows);
+
       initKpiFilter();
 
-      // load tabel kanan setelah card selesai
       loadKpiB2CHsaTable(config);
       loadKpiB2CMitraTable(config);
       loadKpiB2CRanking(config);
@@ -1985,6 +1991,7 @@ function initKPIB2C(config) {
         '<div class="col-12"><div class="alert alert-danger">Gagal memuat data KPI.</div></div>';
     });
 }
+
 
 function initKpiFilter() {
   document.querySelectorAll("[data-kpi-filter]").forEach((btn) => {
