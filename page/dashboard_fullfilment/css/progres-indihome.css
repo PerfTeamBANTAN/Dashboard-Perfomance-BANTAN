@@ -749,3 +749,35 @@
 .kpi-hi-table thead th span {
   display: block;
 }
+
+/* row untuk STO table + konten samping */
+.kpi-layout-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-top: 18px;
+}
+
+/* wrapper STO table: tidak full width */
+.kpi-table-wrapper-sto {
+  flex: 0 0 55%;           /* sekitar 55% lebar */
+  max-width: 55%;
+}
+
+/* area konten samping */
+.kpi-side-content {
+  flex: 1;
+  max-width: 45%;
+}
+
+/* responsive: di mobile tetap full */
+@media (max-width: 992px) {
+  .kpi-layout-row {
+    flex-direction: column;
+  }
+  .kpi-table-wrapper-sto,
+  .kpi-side-content {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
