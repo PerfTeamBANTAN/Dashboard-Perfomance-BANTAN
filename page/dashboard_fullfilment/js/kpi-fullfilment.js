@@ -155,29 +155,35 @@ function renderHiTable(headerRow, rows) {
   const tbody = document.getElementById('kpiHiTbody');
   if (!thead || !tbody) return;
 
-  // HEADER
+  // ===== HEADER =====
   thead.innerHTML = '';
   const trHead = document.createElement('tr');
   headerRow.forEach((h, idx) => {
     const th = document.createElement('th');
     th.textContent = h;
-    if (idx === 0 || idx === 1) {
-      th.style.position = 'sticky';
-      th.style.left = idx === 0 ? '0' : '90px'; // kalau mau bikin fixed first column di future
-    }
+    th.style.whiteSpace = 'nowrap';
+    th.style.fontSize = '0.75rem';
+
+    // sedikit atur lebar
+    if (idx === 0) th.style.minWidth = '70px';      // STO
+    if (idx === 1) th.style.minWidth = '90px';      // Cluster
+    if (idx >= 2 && idx <= 6) th.style.minWidth = '70px';
+    if (idx >= 7 && idx <= 15) th.style.minWidth = '80px';
+    if (idx >= 16) th.style.minWidth = '80px';
+
     if (idx > 1) th.classList.add('text-center');
+
     trHead.appendChild(th);
   });
   thead.appendChild(trHead);
 
-  // BODY
+  // ===== BODY =====
   tbody.innerHTML = '';
 
   rows.forEach(r => {
     const sto = String(r[0] || '');
-    const cluster = String(r[1] || '');
-    const kecukupan = String(r[20] || '').toUpperCase(); // KECUKUPAN TEAM
-    const psreKpro = String(r[26] || ''); // % PS/RE KPRO
+    const kecukupan = String(r[20] || '').toUpperCase();
+    const psreKproRaw = r[26];
 
     const isTotal = sto.toUpperCase().includes('TOTAL');
     const isBranch = sto.toUpperCase().includes('BRANCH');
@@ -188,16 +194,39 @@ function renderHiTable(headerRow, rows) {
 
     r.forEach((val, idx) => {
       const td = document.createElement('td');
-      const text = val === undefined || val === null ? '' : val;
 
+      // default: text
+      let text = val;
+
+      // --- Format khusus beberapa kolom ---
+      // kolom rasio/desimal yang harus 2 digit
+      const decimalCols = [7, 8, 13, 14, 21, 22, 25, 26]; // ONHAND/KOMIT, PS/KOMIT, ONHAND/RE, ONHAND/WO, PROD TEAM, IDLE CAP, %PS/RE KPRO dll
+      if (decimalCols.includes(idx)) {
+        const num = parseFloat(val);
+        text = (!isNaN(num)) ? num.toFixed(2) : val;
+      }
+
+      // kolom %PS/RE KPRO (26) → tampilkan dengan '%'
+      if (idx === 26) {
+        const num = parseFloat(val);
+        text = (!isNaN(num)) ? num.toFixed(2) + '%' : val;
+      }
+
+      // kolom GAP RE, GAP PS (integer) biarkan apa adanya, tapi center
+      if (idx === 12 || idx === 25 || idx === 27) {
+        td.classList.add('text-center');
+      }
+
+      // set text
+      td.textContent = (text === undefined || text === null) ? '' : text;
+
+      // alignment
       if (idx === 0) {
-        td.textContent = text;
         td.classList.add('kpi-sto-name');
       } else if (idx === 1) {
-        td.textContent = text;
+        // cluster
       } else {
         td.classList.add('text-center');
-        td.textContent = text;
       }
 
       // KECUKUPAN TEAM coloring (kolom 20)
@@ -208,9 +237,8 @@ function renderHiTable(headerRow, rows) {
 
       // %PS/RE KPRO coloring (kolom 26)
       if (idx === 26) {
-        // ambil angka persen
-        const num = parseFloat(String(psreKpro).replace('%','').replace(',','.')) || 0;
-        const good = num >= 75; // example threshold, bisa sesuaikan
+        const num = parseFloat(psreKproRaw);
+        const good = !isNaN(num) && num >= 0.75; // 0.75 = 75% target, sesuaikan kalau beda
         td.classList.add(good ? 'kpi-hi-cell-psre-good' : 'kpi-hi-cell-psre-bad');
       }
 
