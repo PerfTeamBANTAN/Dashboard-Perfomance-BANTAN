@@ -122,3 +122,41 @@ function formatNumber(val) {
   if (val === '-' || isNaN(val)) return '-';
   return val.toFixed(2);
 }
+
+async function initKpiFullfilment(apiUrl) {
+  try {
+    const res = await fetch(apiUrl + '?action=getkpifullfilment');
+    const data = await res.json();
+
+    const msa = data.msa || [];
+    const wsa = data.wsa || [];
+    const periode = data.periode || "-";
+    const stoHeader = data.stoTableHeader || [];
+    const stoRows = data.stoTable || [];
+
+    document.getElementById('kpiPeriodeText').innerText = 'Periode: ' + periode;
+
+    renderKpiCards('msaCardList', msa);
+    renderKpiCards('wsaCardList', wsa);
+
+    renderStoTable(stoHeader, stoRows);
+
+    const msaStats = calcSummary(msa);
+    const wsaStats = calcSummary(wsa);
+
+    document.getElementById('msaAvgHminus1').innerText = msaStats.avgH1;
+    document.getElementById('msaAvgHI').innerText = msaStats.avgHI;
+    document.getElementById('msaOnTarget').innerText = msaStats.onTarget;
+
+    document.getElementById('wsaAvgHminus1').innerText = wsaStats.avgH1;
+    document.getElementById('wsaAvgHI').innerText = wsaStats.avgHI;
+    document.getElementById('wsaOnTarget').innerText = wsaStats.onTarget;
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById('content-area').innerHTML = `
+      <div class="alert alert-danger">
+        Gagal memuat data KPI Fullfilment. Silakan coba lagi.
+      </div>`;
+  }
+}
