@@ -797,17 +797,15 @@
   background: linear-gradient(135deg, #263238, #455a64);
 }
 
-/* Blok B: RE / WO / KOMITMEN (misal kolom 4–7) = merah lembut */
 .kpi-hi-table thead th:nth-child(4),
 .kpi-hi-table thead th:nth-child(5),
 .kpi-hi-table thead th:nth-child(6),
 .kpi-hi-table thead th:nth-child(7),
 .kpi-hi-table thead th:nth-child(8),
-.kpi-hi-table thead th:nth-child(9),{
-  background: linear-gradient(135deg, #c62828, #ef5350);
+.kpi-hi-table thead th:nth-child(9) {
+  background: linear-gradient(135deg, #2e7d32, #66bb6a);
 }
 
-/* Blok C: ONHAND / GAP / rasio (kolom 8–15) = biru keunguan */
 
 .kpi-hi-table thead th:nth-child(10),
 .kpi-hi-table thead th:nth-child(11),
