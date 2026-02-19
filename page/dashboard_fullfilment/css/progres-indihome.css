@@ -521,19 +521,37 @@
   overflow: hidden;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
+
+/* overlay default */
 .kpi-indikator-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top left, rgba(198,40,40,0.12), transparent 60%);
   opacity: 0;
   transition: opacity 0.2s ease;
 }
-.kpi-indikator-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 26px rgba(0,0,0,0.1);
+
+/* good = hijau */
+.kpi-indikator-card.good::before {
+  background: radial-gradient(circle at top left, rgba(67,160,71,0.20), transparent 60%);
 }
-.kpi-indikator-card:hover::before {
+.kpi-indikator-card.good:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 26px rgba(56,142,60,0.35);
+}
+.kpi-indikator-card.good:hover::before {
+  opacity: 1;
+}
+
+/* bad = merah */
+.kpi-indikator-card.bad::before {
+  background: radial-gradient(circle at top left, rgba(229,57,53,0.20), transparent 60%);
+}
+.kpi-indikator-card.bad:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 26px rgba(211,47,47,0.35);
+}
+.kpi-indikator-card.bad:hover::before {
   opacity: 1;
 }
 
