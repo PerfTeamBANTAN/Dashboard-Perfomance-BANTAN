@@ -470,11 +470,17 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
   }
 
   if (contentEl) {
-    contentEl.innerHTML = `
-      <div class="text-center py-4 text-muted small">
-        Memuat data (${count} data)...
-      </div>`;
-  }
+  contentEl.innerHTML = `
+    <div class="py-4 text-center text-muted small">
+      <div class="kpi-modal-loading">
+        <div class="spinner-border spinner-border-sm text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <span>Memuat data (${count} data)...</span>
+      </div>
+    </div>`;
+}
+
 
   try {
     const url = kpiApiUrl + `?action=getkpipsredetail&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(typeKey)}`;
@@ -596,3 +602,44 @@ function renderKendalaTablePage() {
   });
 }
 
+function makeClickableCell(value, label, typeKey) {
+  const td = document.createElement('td');
+  const count = Number(value) || 0;
+  td.textContent = count;
+  td.classList.add('text-center');
+
+  if (count > 0 && !isBranch) {
+    td.classList.add('kpi-kendala-clickable');
+    td.style.cursor = 'pointer';
+    td.addEventListener('click', async () => {
+      // prevent double-click saat loading
+      if (td.classList.contains('loading')) return;
+
+      td.classList.add('loading');
+      const originalText = td.textContent;
+      td.innerHTML = `
+        <div class="kpi-modal-loading">
+          <div class="spinner-border spinner-border-sm text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <span>${originalText}</span>
+        </div>
+      `;
+
+      try {
+        await openKendalaModal({
+          sto,
+          hsa,
+          label,
+          typeKey,
+          count
+        });
+      } finally {
+        // balikin tampilan sel setelah modal selesai dibuka
+        td.classList.remove('loading');
+        td.textContent = originalText;
+      }
+    });
+  }
+  return td;
+}
