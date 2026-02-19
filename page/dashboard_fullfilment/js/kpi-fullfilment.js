@@ -14,6 +14,9 @@ async function initKpiFullfilment(apiUrl) {
     const hiHeader  = data.hiTableHeader || [];
     const hiRows    = data.hiTable || [];
 
+    const kendalaHeader = data.kendalaHeader || [];
+    const kendalaRows   = data.kendalaTable || [];
+
     // ====== SET PERIODE ======
     const periodeEl = document.getElementById('kpiPeriodeText');
     if (periodeEl) {
@@ -30,24 +33,27 @@ async function initKpiFullfilment(apiUrl) {
     // ====== TABEL FULLFILMENT HI ('fullfilment HI'!B2:AC18) ======
     renderHiTable(hiHeader, hiRows);
 
+    // ====== TABEL KENDALA (WEB!A145:E159) DI SIDE CONTENT ======
+    renderKendalaTable(kendalaHeader, kendalaRows);
+
     // ====== SUMMARY KPI MSA & WSA ======
     const msaStats = calcSummary(msa);
     const wsaStats = calcSummary(wsa);
 
-    const msaAvgH1El  = document.getElementById('msaAvgHminus1');
-    const msaAvgHIEl  = document.getElementById('msaAvgHI');
+    const msaAvgH1El    = document.getElementById('msaAvgHminus1');
+    const msaAvgHIEl    = document.getElementById('msaAvgHI');
     const msaOnTargetEl = document.getElementById('msaOnTarget');
 
-    const wsaAvgH1El  = document.getElementById('wsaAvgHminus1');
-    const wsaAvgHIEl  = document.getElementById('wsaAvgHI');
+    const wsaAvgH1El    = document.getElementById('wsaAvgHminus1');
+    const wsaAvgHIEl    = document.getElementById('wsaAvgHI');
     const wsaOnTargetEl = document.getElementById('wsaOnTarget');
 
-    if (msaAvgH1El)  msaAvgH1El.innerText  = msaStats.avgH1;
-    if (msaAvgHIEl)  msaAvgHIEl.innerText  = msaStats.avgHI;
+    if (msaAvgH1El)    msaAvgH1El.innerText    = msaStats.avgH1;
+    if (msaAvgHIEl)    msaAvgHIEl.innerText    = msaStats.avgHI;
     if (msaOnTargetEl) msaOnTargetEl.innerText = msaStats.onTarget;
 
-    if (wsaAvgH1El)  wsaAvgH1El.innerText  = wsaStats.avgH1;
-    if (wsaAvgHIEl)  wsaAvgHIEl.innerText  = wsaStats.avgHI;
+    if (wsaAvgH1El)    wsaAvgH1El.innerText    = wsaStats.avgH1;
+    if (wsaAvgHIEl)    wsaAvgHIEl.innerText    = wsaStats.avgHI;
     if (wsaOnTargetEl) wsaOnTargetEl.innerText = wsaStats.onTarget;
 
   } catch (err) {
