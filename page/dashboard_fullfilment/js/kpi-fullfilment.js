@@ -160,16 +160,35 @@ function renderHiTable(headerRow, rows) {
   const trHead = document.createElement('tr');
   headerRow.forEach((h, idx) => {
     const th = document.createElement('th');
-    th.textContent = h;
-    th.style.whiteSpace = 'nowrap';
-    th.style.fontSize = '0.75rem';
 
-    // sedikit atur lebar
-    if (idx === 0) th.style.minWidth = '70px';      // STO
-    if (idx === 1) th.style.minWidth = '90px';      // Cluster
-    if (idx >= 2 && idx <= 6) th.style.minWidth = '70px';
-    if (idx >= 7 && idx <= 15) th.style.minWidth = '80px';
-    if (idx >= 16) th.style.minWidth = '80px';
+    // Bungkus text biar bisa multi-line
+    const span = document.createElement('span');
+    span.textContent = h;
+    span.style.display = 'block';
+    span.style.whiteSpace = 'normal';
+    span.style.lineHeight = '1.1';
+    th.appendChild(span);
+
+    th.style.fontSize = '0.72rem';
+    th.style.verticalAlign = 'middle';
+
+    // Lebar kolom konsisten
+    if (idx === 0) {             // STO
+      th.style.minWidth = '70px';
+      th.style.maxWidth = '80px';
+    } else if (idx === 1) {      // Cluster
+      th.style.minWidth = '90px';
+      th.style.maxWidth = '100px';
+    } else if (idx >= 2 && idx <= 6) {   // HSA, RE HI, TOTAL WO, KOMIT, dst
+      th.style.minWidth = '80px';
+      th.style.maxWidth = '90px';
+    } else if (idx >= 7 && idx <= 15) {  // rasio ONHAND, GAP, dll
+      th.style.minWidth = '90px';
+      th.style.maxWidth = '100px';
+    } else {                             // kolom belakang (TEAM, PROD, GAP PS, %PS/RE)
+      th.style.minWidth = '90px';
+      th.style.maxWidth = '110px';
+    }
 
     if (idx > 1) th.classList.add('text-center');
 
@@ -177,68 +196,52 @@ function renderHiTable(headerRow, rows) {
   });
   thead.appendChild(trHead);
 
-  // ===== BODY =====
+  // ===== BODY (tetap pakai versi rapi sebelumnya) =====
   tbody.innerHTML = '';
-
   rows.forEach(r => {
-    const sto = String(r[0] || '');
+    const sto       = String(r[0] || '');
     const kecukupan = String(r[20] || '').toUpperCase();
     const psreKproRaw = r[26];
 
-    const isTotal = sto.toUpperCase().includes('TOTAL');
+    const isTotal  = sto.toUpperCase().includes('TOTAL');
     const isBranch = sto.toUpperCase().includes('BRANCH');
 
     const tr = document.createElement('tr');
-    if (isTotal) tr.classList.add('kpi-hi-row-total');
+    if (isTotal)  tr.classList.add('kpi-hi-row-total');
     if (isBranch) tr.classList.add('kpi-hi-row-branch');
 
     r.forEach((val, idx) => {
       const td = document.createElement('td');
-
-      // default: text
       let text = val;
 
-      // --- Format khusus beberapa kolom ---
-      // kolom rasio/desimal yang harus 2 digit
-      const decimalCols = [7, 8, 13, 14, 21, 22, 25, 26]; // ONHAND/KOMIT, PS/KOMIT, ONHAND/RE, ONHAND/WO, PROD TEAM, IDLE CAP, %PS/RE KPRO dll
+      const decimalCols = [7, 8, 13, 14, 21, 22, 25, 26];
       if (decimalCols.includes(idx)) {
         const num = parseFloat(val);
         text = (!isNaN(num)) ? num.toFixed(2) : val;
       }
-
-      // kolom %PS/RE KPRO (26) → tampilkan dengan '%'
       if (idx === 26) {
         const num = parseFloat(val);
         text = (!isNaN(num)) ? num.toFixed(2) + '%' : val;
       }
 
-      // kolom GAP RE, GAP PS (integer) biarkan apa adanya, tapi center
-      if (idx === 12 || idx === 25 || idx === 27) {
-        td.classList.add('text-center');
-      }
-
-      // set text
       td.textContent = (text === undefined || text === null) ? '' : text;
 
-      // alignment
       if (idx === 0) {
         td.classList.add('kpi-sto-name');
       } else if (idx === 1) {
-        // cluster
+        // cluster kiri
       } else {
         td.classList.add('text-center');
       }
 
-      // KECUKUPAN TEAM coloring (kolom 20)
       if (idx === 20) {
         const good = kecukupan === 'CUKUP';
         td.classList.add(good ? 'kpi-hi-cell-kecukupan-good' : 'kpi-hi-cell-kecukupan-bad');
       }
 
-      // %PS/RE KPRO coloring (kolom 26)
       if (idx === 26) {
         const num = parseFloat(psreKproRaw);
-        const good = !isNaN(num) && num >= 0.75; // 0.75 = 75% target, sesuaikan kalau beda
+        const good = !isNaN(num) && num >= 0.75;
         td.classList.add(good ? 'kpi-hi-cell-psre-good' : 'kpi-hi-cell-psre-bad');
       }
 
