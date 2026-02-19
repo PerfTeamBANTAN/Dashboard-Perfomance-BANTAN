@@ -842,19 +842,38 @@
 }
 
 /* total (Total KOTANG & Total TANGSEL) */
-.kpi-hi-row-total {
-  background: rgba(21, 101, 192, 0.10) !important;  /* biru lembut */
+.kpi-hi-table tbody tr.kpi-hi-row-total {
+  background-color: rgba(21, 101, 192, 0.10) !important;
   font-weight: 600;
   border-top: 2px solid rgba(21, 101, 192, 0.5);
   border-bottom: 2px solid rgba(21, 101, 192, 0.5);
 }
+.kpi-hi-table tbody tr.kpi-hi-row-total > td {
+  background-color: transparent !important;
+}
 
 /* branch TANGERANG */
-.kpi-hi-row-branch {
-  background: rgba(158, 158, 158, 0.12) !important;  /* abu-abu lembut */
+.kpi-hi-table tbody tr.kpi-hi-row-branch {
+  background-color: rgba(158, 158, 158, 0.12) !important;
   font-weight: 700;
   border-top: 2px solid rgba(97, 97, 97, 0.5);
   border-bottom: 2px solid rgba(97, 97, 97, 0.5);
+}
+.kpi-hi-table tbody tr.kpi-hi-row-branch > td {
+  background-color: transparent !important;
+}
+
+/* kalau pakai .table-striped atau .table-hover, paksa juga di sini */
+.kpi-hi-table.table-striped > tbody > tr.kpi-hi-row-total:nth-of-type(odd),
+.kpi-hi-table.table-striped > tbody > tr.kpi-hi-row-total:nth-of-type(even),
+.kpi-hi-table.table-hover   > tbody > tr.kpi-hi-row-total:hover {
+  background-color: rgba(21, 101, 192, 0.10) !important;
+}
+
+.kpi-hi-table.table-striped > tbody > tr.kpi-hi-row-branch:nth-of-type(odd),
+.kpi-hi-table.table-striped > tbody > tr.kpi-hi-row-branch:nth-of-type(even),
+.kpi-hi-table.table-hover   > tbody > tr.kpi-hi-row-branch:hover {
+  background-color: rgba(158, 158, 158, 0.12) !important;
 }
 
 .kpi-hi-table tbody tr:hover {
