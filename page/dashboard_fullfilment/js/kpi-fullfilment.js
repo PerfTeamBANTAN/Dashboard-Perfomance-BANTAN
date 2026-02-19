@@ -343,3 +343,66 @@ function renderStoTable(headerRow, rows) {
   });
 }
 
+function renderKendalaTable(headerRow, rows) {
+  const thead = document.getElementById('kpiKendalaThead');
+  const tbody = document.getElementById('kpiKendalaTbody');
+  if (!thead || !tbody) return;
+
+  // HEADER: STO, HSA, Kendala Pelanggan, Kendala Teknis
+  thead.innerHTML = '';
+  const trHead = document.createElement('tr');
+  headerRow.forEach((h, idx) => {
+    if (idx === 0 || idx === 1 || idx === 3 || idx === 4) {
+      const th = document.createElement('th');
+      const span = document.createElement('span');
+      span.textContent = h;
+      span.style.display = 'block';
+      span.style.whiteSpace = 'normal';
+      span.style.lineHeight = '1.1';
+      th.appendChild(span);
+
+      th.style.fontSize = '0.72rem';
+      th.style.verticalAlign = 'middle';
+      th.style.minWidth = idx === 0 ? '70px' : '90px';
+      if (idx >= 3) th.classList.add('text-center');
+
+      trHead.appendChild(th);
+    }
+  });
+  thead.appendChild(trHead);
+
+  // BODY
+  tbody.innerHTML = '';
+  rows.forEach(r => {
+    const sto = r[0];
+    const isBranch = String(sto || '').toUpperCase().includes('BRANCH');
+
+    const tr = document.createElement('tr');
+    if (isBranch) tr.classList.add('kpi-kendala-row-branch');
+
+    // STO
+    const tdSto = document.createElement('td');
+    tdSto.textContent = r[0] || '';
+    tdSto.classList.add('kpi-sto-name');
+    tr.appendChild(tdSto);
+
+    // HSA
+    const tdHsa = document.createElement('td');
+    tdHsa.textContent = r[1] || '';
+    tr.appendChild(tdHsa);
+
+    // Kendala Pelanggan (D)
+    const tdPel = document.createElement('td');
+    tdPel.textContent = r[3] || '';
+    tdPel.classList.add('text-center');
+    tr.appendChild(tdPel);
+
+    // Kendala Teknis (E)
+    const tdTek = document.createElement('td');
+    tdTek.textContent = r[4] || '';
+    tdTek.classList.add('text-center');
+    tr.appendChild(tdTek);
+
+    tbody.appendChild(tr);
+  });
+}
