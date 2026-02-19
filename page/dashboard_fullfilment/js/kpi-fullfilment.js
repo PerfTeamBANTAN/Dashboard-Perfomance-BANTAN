@@ -439,18 +439,38 @@ function renderKendalaTable(headerRow, rows) {
 }
 
 async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
-  const titleEl   = document.getElementById('kendalaModalLabel');
-  const stoEl     = document.getElementById('kendalaSto');
-  const hsaEl     = document.getElementById('kendalaHsa');
-  const contentEl = document.getElementById('kendalaDetailContent');
+  const titleEl    = document.getElementById('kendalaModalLabel');
+  const stoEl      = document.getElementById('kendalaSto');
+  const hsaEl      = document.getElementById('kendalaHsa');
+  const contentEl  = document.getElementById('kendalaDetailContent');
+  const summaryEl  = document.getElementById('kendalaDetailSummary');
 
   if (titleEl) titleEl.textContent = `Detail ${label}`;
   if (stoEl)   stoEl.textContent   = sto || '-';
   if (hsaEl)   hsaEl.textContent   = hsa || '-';
 
-  // kosongkan dulu
+  if (summaryEl) {
+    summaryEl.innerHTML = `
+      <div class="d-flex align-items-center justify-content-between flex-wrap">
+        <div>
+          <div class="text-muted small mb-1">Ringkasan</div>
+          <div class="fw-semibold">${label} - STO ${sto || '-'}</div>
+        </div>
+        <div class="text-end">
+          <div class="kpi-modal-chip-count">
+            <span class="kpi-chip-label">Total WO</span>
+            <span class="kpi-chip-value">${count}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   if (contentEl) {
-    contentEl.innerHTML = `<p>Memuat data (${count} data)...</p>`;
+    contentEl.innerHTML = `
+      <div class="text-center py-4 text-muted small">
+        Memuat data (${count} data)...
+      </div>`;
   }
 
   try {
@@ -459,37 +479,52 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
     const data = await res.json();
     const rows = data.data || [];
 
-    let html = `<p><strong>${label}</strong> di STO <strong>${sto}</strong> (${hsa}) : <strong>${rows.length}</strong> data.</p>`;
+    if (summaryEl) {
+      summaryEl.querySelector('.kpi-chip-value').textContent = rows.length;
+    }
+
+    let html = '';
 
     if (rows.length) {
       html += `
-        <div class="table-responsive mt-2">
-          <table class="table table-sm table-bordered align-middle mb-0">
-            <thead>
+        <div class="table-responsive kpi-modal-table-wrap mt-1">
+          <table class="table table-sm table-hover align-middle mb-0 kpi-modal-table">
+            <thead class="table-light">
               <tr>
-                <th>STO</th>
+                <th class="text-center">#</th>
                 <th>WONUM</th>
                 <th>STATUS</th>
-                <th>DATECREATED</th>
-                <th>STATUSDATE</th>
-                <th>ERRORCODE</th>
-                <th>SUBERRORCODE</th>
+                <th>DATE CREATED</th>
+                <th>STATUS DATE</th>
+                <th>ERROR</th>
+                <th>SUB ERROR</th>
               </tr>
             </thead>
             <tbody>
-              ${rows.map(r => `
+              ${rows.map((r, idx) => `
                 <tr>
-                  <td>${r.STO || ''}</td>
-                  <td>${r.WONUM || ''}</td>
-                  <td>${r.STATUS || ''}</td>
-                  <td>${r.DATECREATED || ''}</td>
-                  <td>${r.STATUSDATE || ''}</td>
-                  <td>${r.ERRORCODE || ''}</td>
-                  <td>${r.SUBERRORCODE || ''}</td>
+                  <td class="text-center text-muted small">${idx + 1}</td>
+                  <td class="fw-semibold">${r.WONUM || ''}</td>
+                  <td>
+                    <span class="badge bg-${(r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'} bg-opacity-10 text-${
+                      (r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'
+                    } border border-${(r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'} border-opacity-25">
+                      ${r.STATUS || ''}
+                    </span>
+                  </td>
+                  <td class="text-nowrap small">${r.DATECREATED || ''}</td>
+                  <td class="text-nowrap small">${r.STATUSDATE || ''}</td>
+                  <td class="small">${r.ERRORCODE || ''}</td>
+                  <td class="small text-muted">${r.SUBERRORCODE || ''}</td>
                 </tr>
               `).join('')}
             </tbody>
           </table>
+        </div>`;
+    } else {
+      html = `
+        <div class="text-center py-4 text-muted small">
+          Tidak ada data untuk kombinasi ini.
         </div>`;
     }
 
@@ -497,7 +532,7 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
   } catch (err) {
     console.error(err);
     if (contentEl) {
-      contentEl.innerHTML = `<p class="text-danger">Gagal memuat detail.</p>`;
+      contentEl.innerHTML = `<p class="text-danger small mb-0">Gagal memuat detail. Silakan coba lagi.</p>`;
     }
   }
 
