@@ -50,11 +50,11 @@ function renderKpiCards(containerId, rows) {
     const statusClass = onTarget ? 'kpi-status-on' : 'kpi-status-off';
     const statusText = onTarget ? 'ON TARGET' : 'UNDER TARGET';
 
-    // progress vs target (max 130% biar bar ga overflow)
+// progress vs target
     const ratio = target ? Math.min((hi / target) * 100, 130) : 0;
 
     const card = document.createElement('div');
-    card.className = 'kpi-indikator-card';
+    card.className = 'kpi-indikator-card ' + (onTarget ? 'good' : 'bad');
 
     card.innerHTML = `
       <div class="kpi-indikator-header">
