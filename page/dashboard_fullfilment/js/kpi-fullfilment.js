@@ -6,11 +6,15 @@ async function initKpiFullfilment(apiUrl) {
     const msa = data.msa || [];
     const wsa = data.wsa || [];
     const periode = data.periode || "-";
+    const stoHeader = data.stoTableHeader || [];
+    const stoRows = data.stoTable || [];
 
     document.getElementById('kpiPeriodeText').innerText = 'Periode: ' + periode;
 
     renderKpiCards('msaCardList', msa);
     renderKpiCards('wsaCardList', wsa);
+
+    renderStoTable(stoHeader, stoRows);
 
     const msaStats = calcSummary(msa);
     const wsaStats = calcSummary(wsa);
@@ -123,40 +127,63 @@ function formatNumber(val) {
   return val.toFixed(2);
 }
 
-async function initKpiFullfilment(apiUrl) {
-  try {
-    const res = await fetch(apiUrl + '?action=getkpifullfilment');
-    const data = await res.json();
+function renderStoTable(headerRow, rows) {
+  const thead = document.getElementById('kpiStoThead');
+  const tbody = document.getElementById('kpiStoTbody');
+  if (!thead || !tbody) return;
 
-    const msa = data.msa || [];
-    const wsa = data.wsa || [];
-    const periode = data.periode || "-";
-    const stoHeader = data.stoTableHeader || [];
-    const stoRows = data.stoTable || [];
+  // HEADER
+  thead.innerHTML = '';
+  const trHead = document.createElement('tr');
+  headerRow.forEach((h, idx) => {
+    const th = document.createElement('th');
+    th.textContent = h;
+    if (idx === 0) th.style.minWidth = '70px';
+    if (idx > 0) th.classList.add('text-center');
+    trHead.appendChild(th);
+  });
+  thead.appendChild(trHead);
 
-    document.getElementById('kpiPeriodeText').innerText = 'Periode: ' + periode;
+  // BODY
+  tbody.innerHTML = '';
 
-    renderKpiCards('msaCardList', msa);
-    renderKpiCards('wsaCardList', wsa);
+  rows.forEach(r => {
+    const sto = r[0];
+    const deviasiRaw = r[9]; // kolom J
+    const devStr = String(deviasiRaw || '');
+    const isBranch = String(sto || '').toUpperCase().includes('BRANCH');
 
-    renderStoTable(stoHeader, stoRows);
+    // ambil angka deviasi (bisa "9 PS", "13 PS", "0 PS", "100 PS")
+    const devNum = parseFloat(devStr.replace(/[^\d.-]/g, '')) || 0;
+    const good = devNum <= 0; // kalau Deviasi <= 0 artinya sudah meet/above target
 
-    const msaStats = calcSummary(msa);
-    const wsaStats = calcSummary(wsa);
+    const tr = document.createElement('tr');
+    if (isBranch) tr.classList.add('kpi-row-branch');
 
-    document.getElementById('msaAvgHminus1').innerText = msaStats.avgH1;
-    document.getElementById('msaAvgHI').innerText = msaStats.avgHI;
-    document.getElementById('msaOnTarget').innerText = msaStats.onTarget;
+    r.forEach((val, idx) => {
+      const td = document.createElement('td');
+      const text = val === undefined || val === null ? '' : val;
 
-    document.getElementById('wsaAvgHminus1').innerText = wsaStats.avgH1;
-    document.getElementById('wsaAvgHI').innerText = wsaStats.avgHI;
-    document.getElementById('wsaOnTarget').innerText = wsaStats.onTarget;
+      if (idx === 0) {
+        td.textContent = text;
+        td.classList.add('kpi-sto-name');
+      } else if (idx === 1 || idx === 2 || idx === 3 || idx === 4 || idx === 5 || idx === 6) {
+        td.classList.add('text-center');
+        td.textContent = text;
+      } else if (idx === 7 || idx === 8) {
+        // % kolom gross/nett
+        td.classList.add('text-center');
+        td.textContent = text;
+      } else if (idx === 9) {
+        td.classList.add('text-center');
+        td.textContent = text;
+        td.classList.add(good ? 'kpi-cell-good' : 'kpi-cell-bad');
+      }
 
-  } catch (err) {
-    console.error(err);
-    document.getElementById('content-area').innerHTML = `
-      <div class="alert alert-danger">
-        Gagal memuat data KPI Fullfilment. Silakan coba lagi.
-      </div>`;
-  }
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
 }
+
