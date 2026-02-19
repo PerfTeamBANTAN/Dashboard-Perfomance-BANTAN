@@ -886,6 +886,52 @@
   padding-bottom: 4px;
 }
 
+.kpi-kendala-wrapper {
+  flex: 1;
+  max-width: 45%;
+  background: rgba(255,255,255,0.9);
+  border-radius: 18px;
+  padding: 14px 16px;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+  backdrop-filter: blur(10px);
+}
+
+.kpi-kendala-table thead th {
+  color: #ffffff;
+  border-bottom-width: 1px;
+  font-weight: 600;
+  font-size: 0.72rem;
+}
+.kpi-kendala-table thead th span {
+  display: block;
+  padding: 4px 6px;
+}
+
+/* header blok: STO/HSA abu, kendala biru */
+.kpi-kendala-table thead th:nth-child(1),
+.kpi-kendala-table thead th:nth-child(2) {
+  background: linear-gradient(135deg, #455a64, #607d8b);
+}
+.kpi-kendala-table thead th:nth-child(3),
+.kpi-kendala-table thead th:nth-child(4) {
+  background: linear-gradient(135deg, #1565c0, #42a5f5);
+}
+
+.kpi-kendala-table tbody td {
+  font-size: 0.72rem;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.kpi-kendala-table tbody tr:hover {
+  background-color: rgba(0,0,0,0.02);
+}
+
+.kpi-kendala-row-branch {
+  background-color: rgba(158,158,158,0.12);
+  font-weight: 600;
+}
+
 /* row untuk STO table + konten samping */
 .kpi-layout-row {
   display: flex;
