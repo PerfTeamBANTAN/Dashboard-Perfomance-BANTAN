@@ -689,3 +689,53 @@
   color: #b71c1c;
   font-weight: 600;
 }
+
+/* reuse .kpi-table-wrapper, .kpi-table-header, dst */
+
+/* beda warna badge untuk HI */
+.kpi-table-wrapper.hi .pill-hi {
+  background: linear-gradient(135deg, #1565c0, #0d47a1);
+}
+
+/* tabel HI */
+.kpi-hi-table thead th {
+  font-size: 0.75rem;
+  background: #f3f6fb;
+  border-bottom-width: 1px;
+  white-space: nowrap;
+}
+.kpi-hi-table tbody td {
+  font-size: 0.75rem;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+/* highlight row total & branch */
+.kpi-hi-row-total {
+  background: rgba(21,101,192,0.06) !important;
+  font-weight: 600;
+}
+.kpi-hi-row-branch {
+  background: rgba(198,40,40,0.08) !important;
+  font-weight: 600;
+}
+
+/* warna untuk KECUKUPAN TEAM */
+.kpi-hi-cell-kecukupan-good {
+  color: #1b5e20;
+  font-weight: 600;
+}
+.kpi-hi-cell-kecukupan-bad {
+  color: #b71c1c;
+  font-weight: 600;
+}
+
+/* PS/RE KPRO highlight */
+.kpi-hi-cell-psre-good {
+  color: #1b5e20;
+  font-weight: 600;
+}
+.kpi-hi-cell-psre-bad {
+  color: #b71c1c;
+  font-weight: 600;
+}
