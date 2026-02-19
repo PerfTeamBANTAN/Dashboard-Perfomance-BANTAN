@@ -543,3 +543,96 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
   }
 }
 
+function renderKendalaTablePage() {
+  const contentEl = document.getElementById('kendalaDetailContent');
+  if (!contentEl) return;
+
+  const total = modalRows.length;
+  const perPage = MODAL_PER_PAGE;
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  if (modalPage > totalPages) modalPage = totalPages;
+
+  const start = (modalPage - 1) * perPage;
+  const end   = start + perPage;
+  const pageItems = modalRows.slice(start, end);
+
+  let html = '';
+
+  if (!pageItems.length) {
+    html = `
+      <div class="text-center py-4 text-muted small">
+        Tidak ada data untuk kombinasi ini.
+      </div>`;
+  } else {
+    html = `
+      <div class="table-responsive kpi-modal-table-wrap mt-1">
+        <table class="table table-sm table-hover align-middle mb-0 kpi-modal-table">
+          <thead class="table-light">
+            <tr>
+              <th class="text-center">#</th>
+              <th>WONUM</th>
+              <th>STATUS</th>
+              <th>DATE CREATED</th>
+              <th>STATUS DATE</th>
+              <th>ERROR</th>
+              <th>SUB ERROR</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${pageItems.map((r, idx) => `
+              <tr>
+                <td class="text-center text-muted small">${start + idx + 1}</td>
+                <td class="fw-semibold">${r.WONUM || ''}</td>
+                <td>
+                  <span class="badge bg-${(r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'} bg-opacity-10 text-${
+                    (r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'
+                  } border border-${(r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'} border-opacity-25">
+                    ${r.STATUS || ''}
+                  </span>
+                </td>
+                <td class="text-nowrap small">${r.DATECREATED || ''}</td>
+                <td class="text-nowrap small">${r.STATUSDATE || ''}</td>
+                <td class="small">${r.ERRORCODE || ''}</td>
+                <td class="small text-muted">${r.SUBERRORCODE || ''}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mt-2 small">
+        <div>
+          Menampilkan ${start + 1}–${Math.min(end, total)} dari ${total} WO
+        </div>
+        <nav>
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item ${modalPage === 1 ? 'disabled' : ''}">
+              <button class="page-link" type="button" data-page="prev">&laquo;</button>
+            </li>
+            ${Array.from({ length: totalPages }).map((_, i) => `
+              <li class="page-item ${modalPage === (i+1) ? 'active' : ''}">
+                <button class="page-link" type="button" data-page="${i+1}">${i+1}</button>
+              </li>
+            `).join('')}
+            <li class="page-item ${modalPage === totalPages ? 'disabled' : ''}">
+              <button class="page-link" type="button" data-page="next">&raquo;</button>
+            </li>
+          </ul>
+        </nav>
+      </div>`;
+  }
+
+  contentEl.innerHTML = html;
+
+  // event pagination
+  const pager = contentEl.querySelectorAll('.pagination .page-link');
+  pager.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = btn.getAttribute('data-page');
+      if (p === 'prev' && modalPage > 1) modalPage--;
+      else if (p === 'next' && modalPage < totalPages) modalPage++;
+      else if (!isNaN(parseInt(p))) modalPage = parseInt(p);
+      renderKendalaTablePage();
+    });
+  });
+}
+
