@@ -231,13 +231,11 @@ function renderHiTable(headerRow, rows) {
         td.classList.add('text-center');
       }
 
-      // highlight KECUKUPAN TEAM
       if (idx === 20) {
         const good = kecukupan === 'CUKUP';
         td.classList.add(good ? 'kpi-hi-cell-kecukupan-good' : 'kpi-hi-cell-kecukupan-bad');
       }
 
-      // highlight %PS/RE KPRO
       if (idx === 26) {
         const num = parseFloat(psreKproRaw);
         const good = !isNaN(num) && num >= 0.75;
@@ -296,7 +294,6 @@ function renderStoTable(headerRow, rows) {
 
   thead.appendChild(trHead);
 
-  // ===== BODY =====
   tbody.innerHTML = '';
 
   rows.forEach(r => {
@@ -348,7 +345,6 @@ function renderKendalaTable(headerRow, rows) {
   const tbody = document.getElementById('kpiKendalaTbody');
   if (!thead || !tbody) return;
 
-  // HEADER: STO, HSA, Kendala Pelanggan, Kendala Teknis
   thead.innerHTML = '';
   const trHead = document.createElement('tr');
   headerRow.forEach((h, idx) => {
@@ -371,7 +367,6 @@ function renderKendalaTable(headerRow, rows) {
   });
   thead.appendChild(trHead);
 
-  // BODY
   tbody.innerHTML = '';
   rows.forEach(r => {
     const sto = r[0];
