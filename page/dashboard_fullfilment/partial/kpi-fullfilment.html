@@ -21,15 +21,15 @@
       </div>
       <div class="summary-body">
         <div class="summary-metric">
-          <span class="label">Rata-rata H-1</span>
+          <span class="label">Avg H-1</span>
           <span class="value" id="msaAvgHminus1">-</span>
         </div>
         <div class="summary-metric">
-          <span class="label">Rata-rata HI</span>
+          <span class="label">Avg HI</span>
           <span class="value" id="msaAvgHI">-</span>
         </div>
         <div class="summary-metric">
-          <span class="label">Jumlah Indikator ON Target</span>
+          <span class="label">On Target</span>
           <span class="value" id="msaOnTarget">-</span>
         </div>
       </div>
@@ -45,76 +45,40 @@
       </div>
       <div class="summary-body">
         <div class="summary-metric">
-          <span class="label">Rata-rata H-1</span>
+          <span class="label">Avg H-1</span>
           <span class="value" id="wsaAvgHminus1">-</span>
         </div>
         <div class="summary-metric">
-          <span class="label">Rata-rata HI</span>
+          <span class="label">Avg HI</span>
           <span class="value" id="wsaAvgHI">-</span>
         </div>
         <div class="summary-metric">
-          <span class="label">Jumlah Indikator ON Target</span>
+          <span class="label">On Target</span>
           <span class="value" id="wsaOnTarget">-</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ITEM 4: CARD INDIKATOR MSA -->
+  <!-- ITEM 4: LIST CARD INDIKATOR MSA -->
   <div class="grid-item item-4">
-    <div class="kpi-card">
-      <div class="kpi-card-header">
-        <div>
-          <h4>Detail Indikator MSA</h4>
-          <p>web!A130:D135</p>
-        </div>
-      </div>
-      <div class="kpi-card-body">
-        <div class="table-responsive">
-          <table class="table table-sm table-hover align-middle kpi-table">
-            <thead>
-              <tr>
-                <th>Indikator</th>
-                <th class="text-center">Target</th>
-                <th class="text-center">H-1</th>
-                <th class="text-center">HI</th>
-              </tr>
-            </thead>
-            <tbody id="tblMsaBody">
-              <!-- diisi via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="section-title">
+      <h4>Detail Indikator MSA</h4>
+      <span class="tag-range">web!A130:D135</span>
+    </div>
+    <div class="kpi-card-list" id="msaCardList">
+      <!-- card-card MSA diinject via JS -->
     </div>
   </div>
 
-  <!-- ITEM 5: CARD INDIKATOR WSA -->
+  <!-- ITEM 5: LIST CARD INDIKATOR WSA -->
   <div class="grid-item item-5">
-    <div class="kpi-card">
-      <div class="kpi-card-header">
-        <div>
-          <h4>Detail Indikator WSA</h4>
-          <p>web!A138:D143</p>
-        </div>
-      </div>
-      <div class="kpi-card-body">
-        <div class="table-responsive">
-          <table class="table table-sm table-hover align-middle kpi-table">
-            <thead>
-              <tr>
-                <th>Indikator</th>
-                <th class="text-center">Target</th>
-                <th class="text-center">H-1</th>
-                <th class="text-center">HI</th>
-              </tr>
-            </thead>
-            <tbody id="tblWsaBody">
-              <!-- diisi via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="section-title">
+      <h4>Detail Indikator WSA</h4>
+      <span class="tag-range">web!A138:D143</span>
+    </div>
+    <div class="kpi-card-list" id="wsaCardList">
+      <!-- card-card WSA diinject via JS -->
     </div>
   </div>
 </div>
