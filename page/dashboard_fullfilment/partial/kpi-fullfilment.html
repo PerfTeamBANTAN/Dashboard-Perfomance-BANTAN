@@ -100,20 +100,27 @@
 </div>
 
 
-<!-- CARD TABEL STO DETAIL -->
-<div class="kpi-table-wrapper">
-  <div class="kpi-table-header">
-    <div>
-      <h4>Performance PS/RE per STO</h4>
-      <p>Source KPRO PS RE</p>
+<div class="kpi-layout-row">
+  <div class="kpi-table-wrapper kpi-table-wrapper-sto">
+    <div class="kpi-table-header">
+      <div>
+        <h4>Performance PS/RE per STO</h4>
+        <p>Source KPRO PS RE</p>
+      </div>
+      <span class="pill-branch">Branch Tangerang</span>
     </div>
-    <span class="pill-branch">Branch Tangerang</span>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover table-striped align-middle kpi-sto-table">
+        <thead id="kpiStoThead"></thead>
+        <tbody id="kpiStoTbody"></tbody>
+      </table>
+    </div>
   </div>
-  <div class="table-responsive">
-    <table class="table table-sm table-hover table-striped align-middle kpi-sto-table">
-      <thead id="kpiStoThead"></thead>
-      <tbody id="kpiStoTbody"></tbody>
-    </table>
+
+  <!-- SLOT KONTEN SEBELAHNYA (nanti bisa diisi card lain) -->
+  <div class="kpi-side-content" id="kpiSideContent">
+    <!-- contoh placeholder -->
+    <!-- nanti bisa diisi chart, summary, dll -->
   </div>
 </div>
 
