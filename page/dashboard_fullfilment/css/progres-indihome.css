@@ -1098,3 +1098,16 @@
   font-size: 0.7rem;
   padding: 0.15rem 0.45rem;
 }
+
+.kpi-modal-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+}
+
+.kpi-modal-loading .spinner-border {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
