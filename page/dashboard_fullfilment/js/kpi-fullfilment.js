@@ -351,10 +351,13 @@ function renderKendalaTable(headerRow, rows) {
   const tbody = document.getElementById('kpiKendalaTbody');
   if (!thead || !tbody) return;
 
+  // ===== HEADER =====
   thead.innerHTML = '';
   const trHead = document.createElement('tr');
+
   headerRow.forEach((h, idx) => {
-    if (idx === 0 || idx === 1 || idx === 3 || idx === 4) {
+    // A: STO, B: HSA, C: RE(CAN+FO), D: KENDALA PELANGGAN, E: KENDALA TEKNIS
+    if (idx === 0 || idx === 1 || idx === 2 || idx === 3 || idx === 4) {
       const th = document.createElement('th');
       const span = document.createElement('span');
       span.textContent = h;
@@ -365,14 +368,19 @@ function renderKendalaTable(headerRow, rows) {
 
       th.style.fontSize = '0.72rem';
       th.style.verticalAlign = 'middle';
-      th.style.minWidth = idx === 0 ? '70px' : '90px';
-      if (idx >= 3) th.classList.add('text-center');
+      if (idx === 0) {
+        th.style.minWidth = '70px';
+      } else {
+        th.style.minWidth = '90px';
+      }
+      if (idx >= 2) th.classList.add('text-center');
 
       trHead.appendChild(th);
     }
   });
   thead.appendChild(trHead);
 
+  // ===== BODY =====
   tbody.innerHTML = '';
   rows.forEach(r => {
     const sto = r[0];
@@ -381,16 +389,22 @@ function renderKendalaTable(headerRow, rows) {
     const tr = document.createElement('tr');
     if (isBranch) tr.classList.add('kpi-kendala-row-branch');
 
-    // STO
+    // STO (A)
     const tdSto = document.createElement('td');
     tdSto.textContent = r[0] || '';
     tdSto.classList.add('kpi-sto-name');
     tr.appendChild(tdSto);
 
-    // HSA
+    // HSA (B)
     const tdHsa = document.createElement('td');
     tdHsa.textContent = r[1] || '';
     tr.appendChild(tdHsa);
+
+    // RE (CAN+FO) (C)
+    const tdRe = document.createElement('td');
+    tdRe.textContent = r[2] || '';
+    tdRe.classList.add('text-center');
+    tr.appendChild(tdRe);
 
     // Kendala Pelanggan (D)
     const tdPel = document.createElement('td');
