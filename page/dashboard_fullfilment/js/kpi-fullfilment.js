@@ -1,5 +1,8 @@
 // 🔹 Global untuk dipakai semua fungsi
 let kpiApiUrl = '';
+let modalRows = [];
+let modalPage = 1;
+const MODAL_PER_PAGE = 10;
 
 async function initKpiFullfilment(apiUrl) {
   kpiApiUrl = apiUrl; // simpan URL web app
@@ -442,8 +445,8 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
   const titleEl    = document.getElementById('kendalaModalLabel');
   const stoEl      = document.getElementById('kendalaSto');
   const hsaEl      = document.getElementById('kendalaHsa');
-  const contentEl  = document.getElementById('kendalaDetailContent');
   const summaryEl  = document.getElementById('kendalaDetailSummary');
+  const contentEl  = document.getElementById('kendalaDetailContent');
 
   if (titleEl) titleEl.textContent = `Detail ${label}`;
   if (stoEl)   stoEl.textContent   = sto || '-';
@@ -477,58 +480,15 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
     const url = kpiApiUrl + `?action=getkpipsredetail&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(typeKey)}`;
     const res = await fetch(url);
     const data = await res.json();
-    const rows = data.data || [];
+
+    modalRows = data.data || [];
+    modalPage = 1;
 
     if (summaryEl) {
-      summaryEl.querySelector('.kpi-chip-value').textContent = rows.length;
+      summaryEl.querySelector('.kpi-chip-value').textContent = modalRows.length;
     }
 
-    let html = '';
-
-    if (rows.length) {
-      html += `
-        <div class="table-responsive kpi-modal-table-wrap mt-1">
-          <table class="table table-sm table-hover align-middle mb-0 kpi-modal-table">
-            <thead class="table-light">
-              <tr>
-                <th class="text-center">#</th>
-                <th>WONUM</th>
-                <th>STATUS</th>
-                <th>DATE CREATED</th>
-                <th>STATUS DATE</th>
-                <th>ERROR</th>
-                <th>SUB ERROR</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rows.map((r, idx) => `
-                <tr>
-                  <td class="text-center text-muted small">${idx + 1}</td>
-                  <td class="fw-semibold">${r.WONUM || ''}</td>
-                  <td>
-                    <span class="badge bg-${(r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'} bg-opacity-10 text-${
-                      (r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'
-                    } border border-${(r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'} border-opacity-25">
-                      ${r.STATUS || ''}
-                    </span>
-                  </td>
-                  <td class="text-nowrap small">${r.DATECREATED || ''}</td>
-                  <td class="text-nowrap small">${r.STATUSDATE || ''}</td>
-                  <td class="small">${r.ERRORCODE || ''}</td>
-                  <td class="small text-muted">${r.SUBERRORCODE || ''}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>`;
-    } else {
-      html = `
-        <div class="text-center py-4 text-muted small">
-          Tidak ada data untuk kombinasi ini.
-        </div>`;
-    }
-
-    if (contentEl) contentEl.innerHTML = html;
+    renderKendalaTablePage();
   } catch (err) {
     console.error(err);
     if (contentEl) {
