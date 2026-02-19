@@ -841,6 +841,22 @@
   background: linear-gradient(135deg, #1565c0, #42a5f5);
 }
 
+/* total (Total KOTANG & Total TANGSEL) */
+.kpi-hi-row-total {
+  background: rgba(21, 101, 192, 0.10) !important;  /* biru lembut */
+  font-weight: 600;
+  border-top: 2px solid rgba(21, 101, 192, 0.5);
+  border-bottom: 2px solid rgba(21, 101, 192, 0.5);
+}
+
+/* branch TANGERANG */
+.kpi-hi-row-branch {
+  background: rgba(158, 158, 158, 0.12) !important;  /* abu-abu lembut */
+  font-weight: 700;
+  border-top: 2px solid rgba(97, 97, 97, 0.5);
+  border-bottom: 2px solid rgba(97, 97, 97, 0.5);
+}
+
 .kpi-hi-table tbody tr:hover {
   background-color: rgba(0, 0, 0, 0.02);
 }
