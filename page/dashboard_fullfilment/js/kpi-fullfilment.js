@@ -405,7 +405,7 @@ function renderKendalaTable(headerRow, rows) {
     tdHsa.textContent = hsa || '';
     tr.appendChild(tdHsa);
 
-    // helper: cell angka yang bisa diklik
+    // helper: cell angka yang bisa diklik (PAKAI SPINNER)
     function makeClickableCell(value, label, typeKey) {
       const td = document.createElement('td');
       const count = Number(value) || 0;
@@ -415,14 +415,33 @@ function renderKendalaTable(headerRow, rows) {
       if (count > 0 && !isBranch) {
         td.classList.add('kpi-kendala-clickable');
         td.style.cursor = 'pointer';
-        td.addEventListener('click', () => {
-          openKendalaModal({
-            sto,
-            hsa,
-            label,
-            typeKey,  // 'RE_CANFO', 'KENDALA_PELANGGAN', dst
-            count
-          });
+        td.addEventListener('click', async () => {
+          // prevent double-click saat loading
+          if (td.classList.contains('loading')) return;
+
+          td.classList.add('loading');
+          const originalText = td.textContent;
+          td.innerHTML = `
+            <div class="kpi-modal-loading">
+              <div class="spinner-border spinner-border-sm text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span>${originalText}</span>
+            </div>
+          `;
+
+          try {
+            await openKendalaModal({
+              sto,
+              hsa,
+              label,
+              typeKey,  // 'RE_CANFO', 'KENDALA_PELANGGAN', dst
+              count
+            });
+          } finally {
+            td.classList.remove('loading');
+            td.textContent = originalText;
+          }
         });
       }
       return td;
@@ -600,46 +619,4 @@ function renderKendalaTablePage() {
       renderKendalaTablePage();
     });
   });
-}
-
-function makeClickableCell(value, label, typeKey) {
-  const td = document.createElement('td');
-  const count = Number(value) || 0;
-  td.textContent = count;
-  td.classList.add('text-center');
-
-  if (count > 0 && !isBranch) {
-    td.classList.add('kpi-kendala-clickable');
-    td.style.cursor = 'pointer';
-    td.addEventListener('click', async () => {
-      // prevent double-click saat loading
-      if (td.classList.contains('loading')) return;
-
-      td.classList.add('loading');
-      const originalText = td.textContent;
-      td.innerHTML = `
-        <div class="kpi-modal-loading">
-          <div class="spinner-border spinner-border-sm text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <span>${originalText}</span>
-        </div>
-      `;
-
-      try {
-        await openKendalaModal({
-          sto,
-          hsa,
-          label,
-          typeKey,
-          count
-        });
-      } finally {
-        // balikin tampilan sel setelah modal selesai dibuka
-        td.classList.remove('loading');
-        td.textContent = originalText;
-      }
-    });
-  }
-  return td;
 }
