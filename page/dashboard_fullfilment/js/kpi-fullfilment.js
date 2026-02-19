@@ -1,4 +1,9 @@
+// 🔹 Global untuk dipakai semua fungsi
+let kpiApiUrl = '';
+
 async function initKpiFullfilment(apiUrl) {
+  kpiApiUrl = apiUrl; // simpan URL web app
+
   try {
     const res = await fetch(apiUrl + '?action=getkpifullfilment');
     const data = await res.json();
@@ -33,7 +38,7 @@ async function initKpiFullfilment(apiUrl) {
     // ====== TABEL FULLFILMENT HI ('fullfilment HI'!B2:AC18) ======
     renderHiTable(hiHeader, hiRows);
 
-    // ====== TABEL KENDALA (WEB!A145:E159) DI SIDE CONTENT ======
+    // ====== TABEL KENDALA (WEB!A145:F159) DI SIDE CONTENT ======
     renderKendalaTable(kendalaHeader, kendalaRows);
 
     // ====== SUMMARY KPI MSA & WSA ======
@@ -356,8 +361,8 @@ function renderKendalaTable(headerRow, rows) {
   const trHead = document.createElement('tr');
 
   headerRow.forEach((h, idx) => {
-    // A: STO, B: HSA, C: RE(CAN+FO), D: KENDALA PELANGGAN, E: KENDALA TEKNIS
-    if (idx === 0 || idx === 1 || idx === 2 || idx === 3 || idx === 4) {
+    // 0: STO, 1: HSA, 2: RE(CAN+FO), 3: KP, 4: KT, 5: KENDALA LAINNYA
+    if (idx >= 0 && idx <= 5) {
       const th = document.createElement('th');
       const span = document.createElement('span');
       span.textContent = h;
@@ -368,11 +373,7 @@ function renderKendalaTable(headerRow, rows) {
 
       th.style.fontSize = '0.72rem';
       th.style.verticalAlign = 'middle';
-      if (idx === 0) {
-        th.style.minWidth = '70px';
-      } else {
-        th.style.minWidth = '90px';
-      }
+      th.style.minWidth = (idx === 0) ? '70px' : '90px';
       if (idx >= 2) th.classList.add('text-center');
 
       trHead.appendChild(th);
@@ -384,40 +385,126 @@ function renderKendalaTable(headerRow, rows) {
   tbody.innerHTML = '';
   rows.forEach(r => {
     const sto = r[0];
+    const hsa = r[1];
     const isBranch = String(sto || '').toUpperCase().includes('BRANCH');
 
     const tr = document.createElement('tr');
     if (isBranch) tr.classList.add('kpi-kendala-row-branch');
 
-    // STO (A)
+    // STO
     const tdSto = document.createElement('td');
-    tdSto.textContent = r[0] || '';
+    tdSto.textContent = sto || '';
     tdSto.classList.add('kpi-sto-name');
     tr.appendChild(tdSto);
 
-    // HSA (B)
+    // HSA
     const tdHsa = document.createElement('td');
-    tdHsa.textContent = r[1] || '';
+    tdHsa.textContent = hsa || '';
     tr.appendChild(tdHsa);
 
-    // RE (CAN+FO) (C)
-    const tdRe = document.createElement('td');
-    tdRe.textContent = r[2] || '';
-    tdRe.classList.add('text-center');
-    tr.appendChild(tdRe);
+    // helper: cell angka yang bisa diklik
+    function makeClickableCell(value, label, typeKey) {
+      const td = document.createElement('td');
+      const count = Number(value) || 0;
+      td.textContent = count;
+      td.classList.add('text-center');
 
-    // Kendala Pelanggan (D)
-    const tdPel = document.createElement('td');
-    tdPel.textContent = r[3] || '';
-    tdPel.classList.add('text-center');
-    tr.appendChild(tdPel);
+      if (count > 0 && !isBranch) {
+        td.classList.add('kpi-kendala-clickable');
+        td.style.cursor = 'pointer';
+        td.addEventListener('click', () => {
+          openKendalaModal({
+            sto,
+            hsa,
+            label,
+            typeKey,  // 'RE_CANFO', 'KENDALA_PELANGGAN', dst
+            count
+          });
+        });
+      }
+      return td;
+    }
 
-    // Kendala Teknis (E)
-    const tdTek = document.createElement('td');
-    tdTek.textContent = r[4] || '';
-    tdTek.classList.add('text-center');
-    tr.appendChild(tdTek);
+    // RE(CAN+FO)
+    tr.appendChild(makeClickableCell(r[2], 'RE(CAN+FO)', 'RE_CANFO'));
+    // KENDALA PELANGGAN
+    tr.appendChild(makeClickableCell(r[3], 'KENDALA PELANGGAN', 'KENDALA_PELANGGAN'));
+    // KENDALA TEKNIS
+    tr.appendChild(makeClickableCell(r[4], 'KENDALA TEKNIS', 'KENDALA_TEKNIS'));
+    // KENDALA LAINNYA
+    tr.appendChild(makeClickableCell(r[5], 'KENDALA LAINNYA', 'KENDALA_LAINNYA'));
 
     tbody.appendChild(tr);
   });
 }
+
+async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
+  const titleEl   = document.getElementById('kendalaModalLabel');
+  const stoEl     = document.getElementById('kendalaSto');
+  const hsaEl     = document.getElementById('kendalaHsa');
+  const contentEl = document.getElementById('kendalaDetailContent');
+
+  if (titleEl) titleEl.textContent = `Detail ${label}`;
+  if (stoEl)   stoEl.textContent   = sto || '-';
+  if (hsaEl)   hsaEl.textContent   = hsa || '-';
+
+  // kosongkan dulu
+  if (contentEl) {
+    contentEl.innerHTML = `<p>Memuat data (${count} data)...</p>`;
+  }
+
+  try {
+    const url = kpiApiUrl + `?action=getkpipsredetail&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(typeKey)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const rows = data.data || [];
+
+    let html = `<p><strong>${label}</strong> di STO <strong>${sto}</strong> (${hsa}) : <strong>${rows.length}</strong> data.</p>`;
+
+    if (rows.length) {
+      html += `
+        <div class="table-responsive mt-2">
+          <table class="table table-sm table-bordered align-middle mb-0">
+            <thead>
+              <tr>
+                <th>STO</th>
+                <th>WONUM</th>
+                <th>STATUS</th>
+                <th>DATECREATED</th>
+                <th>STATUSDATE</th>
+                <th>ERRORCODE</th>
+                <th>SUBERRORCODE</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.map(r => `
+                <tr>
+                  <td>${r.STO || ''}</td>
+                  <td>${r.WONUM || ''}</td>
+                  <td>${r.STATUS || ''}</td>
+                  <td>${r.DATECREATED || ''}</td>
+                  <td>${r.STATUSDATE || ''}</td>
+                  <td>${r.ERRORCODE || ''}</td>
+                  <td>${r.SUBERRORCODE || ''}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>`;
+    }
+
+    if (contentEl) contentEl.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    if (contentEl) {
+      contentEl.innerHTML = `<p class="text-danger">Gagal memuat detail.</p>`;
+    }
+  }
+
+  const modalEl = document.getElementById('kendalaModal');
+  if (modalEl) {
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+  }
+}
+
