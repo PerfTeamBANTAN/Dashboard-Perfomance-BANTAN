@@ -3,29 +3,52 @@ async function initKpiFullfilment(apiUrl) {
     const res = await fetch(apiUrl + '?action=getkpifullfilment');
     const data = await res.json();
 
-    const msa = data.msa || [];
-    const wsa = data.wsa || [];
-    const periode = data.periode || "-";
+    // ====== DATA DARI API ======
+    const msa       = data.msa || [];
+    const wsa       = data.wsa || [];
+    const periode   = data.periode || "-";
+
     const stoHeader = data.stoTableHeader || [];
-    const stoRows = data.stoTable || [];
+    const stoRows   = data.stoTable || [];
 
-    document.getElementById('kpiPeriodeText').innerText = 'Periode: ' + periode;
+    const hiHeader  = data.hiTableHeader || [];
+    const hiRows    = data.hiTable || [];
 
+    // ====== SET PERIODE ======
+    const periodeEl = document.getElementById('kpiPeriodeText');
+    if (periodeEl) {
+      periodeEl.innerText = 'Periode: ' + periode;
+    }
+
+    // ====== CARD KPI PER INDIKATOR (MSA & WSA) ======
     renderKpiCards('msaCardList', msa);
     renderKpiCards('wsaCardList', wsa);
 
+    // ====== TABEL STO (WEB!A110:J124) ======
     renderStoTable(stoHeader, stoRows);
 
+    // ====== TABEL FULLFILMENT HI ('fullfilment HI'!B2:AC18) ======
+    renderHiTable(hiHeader, hiRows);
+
+    // ====== SUMMARY KPI MSA & WSA ======
     const msaStats = calcSummary(msa);
     const wsaStats = calcSummary(wsa);
 
-    document.getElementById('msaAvgHminus1').innerText = msaStats.avgH1;
-    document.getElementById('msaAvgHI').innerText = msaStats.avgHI;
-    document.getElementById('msaOnTarget').innerText = msaStats.onTarget;
+    const msaAvgH1El  = document.getElementById('msaAvgHminus1');
+    const msaAvgHIEl  = document.getElementById('msaAvgHI');
+    const msaOnTargetEl = document.getElementById('msaOnTarget');
 
-    document.getElementById('wsaAvgHminus1').innerText = wsaStats.avgH1;
-    document.getElementById('wsaAvgHI').innerText = wsaStats.avgHI;
-    document.getElementById('wsaOnTarget').innerText = wsaStats.onTarget;
+    const wsaAvgH1El  = document.getElementById('wsaAvgHminus1');
+    const wsaAvgHIEl  = document.getElementById('wsaAvgHI');
+    const wsaOnTargetEl = document.getElementById('wsaOnTarget');
+
+    if (msaAvgH1El)  msaAvgH1El.innerText  = msaStats.avgH1;
+    if (msaAvgHIEl)  msaAvgHIEl.innerText  = msaStats.avgHI;
+    if (msaOnTargetEl) msaOnTargetEl.innerText = msaStats.onTarget;
+
+    if (wsaAvgH1El)  wsaAvgH1El.innerText  = wsaStats.avgH1;
+    if (wsaAvgHIEl)  wsaAvgHIEl.innerText  = wsaStats.avgHI;
+    if (wsaOnTargetEl) wsaOnTargetEl.innerText = wsaStats.onTarget;
 
   } catch (err) {
     console.error(err);
@@ -127,6 +150,77 @@ function formatNumber(val) {
   return val.toFixed(2);
 }
 
+function renderHiTable(headerRow, rows) {
+  const thead = document.getElementById('kpiHiThead');
+  const tbody = document.getElementById('kpiHiTbody');
+  if (!thead || !tbody) return;
+
+  // HEADER
+  thead.innerHTML = '';
+  const trHead = document.createElement('tr');
+  headerRow.forEach((h, idx) => {
+    const th = document.createElement('th');
+    th.textContent = h;
+    if (idx === 0 || idx === 1) {
+      th.style.position = 'sticky';
+      th.style.left = idx === 0 ? '0' : '90px'; // kalau mau bikin fixed first column di future
+    }
+    if (idx > 1) th.classList.add('text-center');
+    trHead.appendChild(th);
+  });
+  thead.appendChild(trHead);
+
+  // BODY
+  tbody.innerHTML = '';
+
+  rows.forEach(r => {
+    const sto = String(r[0] || '');
+    const cluster = String(r[1] || '');
+    const kecukupan = String(r[20] || '').toUpperCase(); // KECUKUPAN TEAM
+    const psreKpro = String(r[26] || ''); // % PS/RE KPRO
+
+    const isTotal = sto.toUpperCase().includes('TOTAL');
+    const isBranch = sto.toUpperCase().includes('BRANCH');
+
+    const tr = document.createElement('tr');
+    if (isTotal) tr.classList.add('kpi-hi-row-total');
+    if (isBranch) tr.classList.add('kpi-hi-row-branch');
+
+    r.forEach((val, idx) => {
+      const td = document.createElement('td');
+      const text = val === undefined || val === null ? '' : val;
+
+      if (idx === 0) {
+        td.textContent = text;
+        td.classList.add('kpi-sto-name');
+      } else if (idx === 1) {
+        td.textContent = text;
+      } else {
+        td.classList.add('text-center');
+        td.textContent = text;
+      }
+
+      // KECUKUPAN TEAM coloring (kolom 20)
+      if (idx === 20) {
+        const good = kecukupan === 'CUKUP';
+        td.classList.add(good ? 'kpi-hi-cell-kecukupan-good' : 'kpi-hi-cell-kecukupan-bad');
+      }
+
+      // %PS/RE KPRO coloring (kolom 26)
+      if (idx === 26) {
+        // ambil angka persen
+        const num = parseFloat(String(psreKpro).replace('%','').replace(',','.')) || 0;
+        const good = num >= 75; // example threshold, bisa sesuaikan
+        td.classList.add(good ? 'kpi-hi-cell-psre-good' : 'kpi-hi-cell-psre-bad');
+      }
+
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+}
+
 function renderStoTable(headerRow, rows) {
   const thead = document.getElementById('kpiStoThead');
   const tbody = document.getElementById('kpiStoTbody');
@@ -186,4 +280,3 @@ function renderStoTable(headerRow, rows) {
     tbody.appendChild(tr);
   });
 }
-
