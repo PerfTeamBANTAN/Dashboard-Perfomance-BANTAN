@@ -912,9 +912,13 @@
 .kpi-kendala-table thead th:nth-child(2) {
   background: linear-gradient(135deg, #455a64, #607d8b);
 }
-.kpi-kendala-table thead th:nth-child(3),
-.kpi-kendala-table thead th:nth-child(4) {
+.kpi-kendala-table thead th:nth-child(3) {
   background: linear-gradient(135deg, #1565c0, #42a5f5);
+}
+.kpi-kendala-table thead th:nth-child(4),
+.kpi-kendala-table thead th:nth-child(5),
+.kpi-kendala-table thead th:nth-child(6) {
+  background: linear-gradient(135deg, #ef6c00, #ffb74d);
 }
 
 .kpi-kendala-table tbody td {
