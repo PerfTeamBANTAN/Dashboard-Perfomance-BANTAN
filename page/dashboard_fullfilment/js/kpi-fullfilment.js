@@ -176,7 +176,7 @@ function renderHiTable(headerRow, rows) {
     if (idx === 0) {             // STO
       th.style.minWidth = '70px';
       th.style.maxWidth = '80px';
-    } else if (idx === 1) {      // Cluster
+    } else if (idx === 1) {      // Telkomsel Cluster
       th.style.minWidth = '90px';
       th.style.maxWidth = '100px';
     } else if (idx >= 2 && idx <= 6) {   // HSA, RE HI, TOTAL WO, KOMIT, dst
@@ -196,15 +196,107 @@ function renderHiTable(headerRow, rows) {
   });
   thead.appendChild(trHead);
 
-  // ===== BODY (tetap pakai versi rapi sebelumnya) =====
+  // ===== BODY =====
   tbody.innerHTML = '';
-  rows.forEach(r => {
-    const sto       = String(r[0] || '');
-    const kecukupan = String(r[20] || '').toUpperCase();
+
+  rows.forEach((r, rowIndex) => {
+    const rawSto      = String(r[0] || '');
+    const kecukupan   = String(r[20] || '').toUpperCase();
     const psreKproRaw = r[26];
 
-    const isTotal  = sto.toUpperCase().includes('TOTAL');
-    const isBranch = sto.toUpperCase().includes('BRANCH');
+    const isTotal  = rawSto.toUpperCase().includes('TOTAL');
+    const isBranch = rawSto.toUpperCase().includes('BRANCH');
+
+    // ===== REKONSTRUKSI KOLOM B:D (STO, Cluster, PIC) =====
+    let stoLabel     = rawSto;
+    let clusterLabel = '';
+    let picLabel     = '';
+
+    // rowIndex: 0..15 untuk B3..B18 (karena B2 header, rows = slice(1))
+    switch (rowIndex) {
+      case 0: // GDS, KOTANG, DADY
+        stoLabel = 'GDS';
+        clusterLabel = 'KOTANG';
+        picLabel = 'DADY';
+        break;
+      case 1: // TAN, (cluster kosong), DADY
+        stoLabel = 'TAN';
+        clusterLabel = '';
+        picLabel = 'DADY';
+        break;
+      case 2: // JIA, (cluster kosong), DADY
+        stoLabel = 'JIA';
+        clusterLabel = '';
+        picLabel = 'DADY';
+        break;
+      case 3: // CLD, (cluster kosong), EKA
+        stoLabel = 'CLD';
+        clusterLabel = '';
+        picLabel = 'EKA';
+        break;
+      case 4: // CPD, (cluster kosong), RISMAN
+        stoLabel = 'CPD';
+        clusterLabel = '';
+        picLabel = 'RISMAN';
+        break;
+      case 5: // CKL, (cluster kosong), RISMAN
+        stoLabel = 'CKL';
+        clusterLabel = '';
+        picLabel = 'RISMAN';
+        break;
+      case 6: // DTG, (cluster kosong), RISMAN
+        stoLabel = 'DTG';
+        clusterLabel = '';
+        picLabel = 'RISMAN';
+        break;
+      case 7: // Total KOTANG (gabungan B10:D10)
+        stoLabel = 'Total KOTANG';
+        clusterLabel = 'KOTANG';
+        picLabel = '';
+        break;
+      case 8: // PDR, TANGSEL, EKA
+        stoLabel = 'PDR';
+        clusterLabel = 'TANGSEL';
+        picLabel = 'EKA';
+        break;
+      case 9: // PKU, (cluster kosong), EKA
+        stoLabel = 'PKU';
+        clusterLabel = '';
+        picLabel = 'EKA';
+        break;
+      case 10: // LKG, (cluster kosong), HERLANDO
+        stoLabel = 'LKG';
+        clusterLabel = '';
+        picLabel = 'HERLANDO';
+        break;
+      case 11: // SRP, (cluster kosong), HERLANDO
+        stoLabel = 'SRP';
+        clusterLabel = '';
+        picLabel = 'HERLANDO';
+        break;
+      case 12: // SRH, (cluster kosong), ZULFA
+        stoLabel = 'SRH';
+        clusterLabel = '';
+        picLabel = 'ZULFA';
+        break;
+      case 13: // CPA, (cluster kosong), ZULFA
+        stoLabel = 'CPA';
+        clusterLabel = '';
+        picLabel = 'ZULFA';
+        break;
+      case 14: // Total TANGSEL (gabungan B17:D17)
+        stoLabel = 'Total TANGSEL';
+        clusterLabel = 'TANGSEL';
+        picLabel = '';
+        break;
+      case 15: // Branch TANGERANG (gabungan B18:D18)
+        stoLabel = 'Branch TANGERANG';
+        clusterLabel = 'Branch TANGERANG';
+        picLabel = '';
+        break;
+      default:
+        break;
+    }
 
     const tr = document.createElement('tr');
     if (isTotal)  tr.classList.add('kpi-hi-row-total');
@@ -214,25 +306,29 @@ function renderHiTable(headerRow, rows) {
       const td = document.createElement('td');
       let text = val;
 
-      const decimalCols = [7, 8, 13, 14, 21, 22, 25, 26];
-      if (decimalCols.includes(idx)) {
-        const num = parseFloat(val);
-        text = (!isNaN(num)) ? num.toFixed(2) : val;
-      }
-      if (idx === 26) {
-        const num = parseFloat(val);
-        text = (!isNaN(num)) ? num.toFixed(2) + '%' : val;
+      // ===== KOLOM 0–2 PAKAI LABEL REKONSTRUKSI =====
+      if (idx === 0) {
+        text = stoLabel;
+        td.classList.add('kpi-sto-name');
+      } else if (idx === 1) {
+        text = clusterLabel;
+      } else if (idx === 2) {
+        text = picLabel;
+      } else {
+        // ===== KOLOM LAIN: FORMAT ANGKA =====
+        const decimalCols = [7, 8, 13, 14, 21, 22, 25, 26];
+        if (decimalCols.includes(idx)) {
+          const num = parseFloat(val);
+          text = (!isNaN(num)) ? num.toFixed(2) : val;
+        }
+        if (idx === 26) {
+          const num = parseFloat(val);
+          text = (!isNaN(num)) ? num.toFixed(2) + '%' : val;
+        }
+        td.classList.add('text-center');
       }
 
       td.textContent = (text === undefined || text === null) ? '' : text;
-
-      if (idx === 0) {
-        td.classList.add('kpi-sto-name');
-      } else if (idx === 1) {
-        // cluster kiri
-      } else {
-        td.classList.add('text-center');
-      }
 
       if (idx === 20) {
         const good = kecukupan === 'CUKUP';
@@ -241,7 +337,7 @@ function renderHiTable(headerRow, rows) {
 
       if (idx === 26) {
         const num = parseFloat(psreKproRaw);
-        const good = !isNaN(num) && num >= 0.75;
+        const good = !isNaN(num) && num >= 0.75; // 75% threshold, sesuaikan kalau beda
         td.classList.add(good ? 'kpi-hi-cell-psre-good' : 'kpi-hi-cell-psre-bad');
       }
 
