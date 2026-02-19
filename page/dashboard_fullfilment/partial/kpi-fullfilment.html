@@ -1,0 +1,120 @@
+<div class="grid-container-kpi">
+  <!-- ITEM 1: JUDUL -->
+  <div class="grid-item item-1">
+    <div class="kpi-header">
+      <div>
+        <h2>KPI Fullfilment Branch TANGERANG</h2>
+        <p class="subtitle">Monitoring KPI MSA & WSA – H-1 dan HI</p>
+      </div>
+      <div class="kpi-period">
+        <span id="kpiPeriodeText">Periode: -</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ITEM 2: RESUME KPI MSA -->
+  <div class="grid-item item-2">
+    <div class="kpi-summary msa">
+      <div class="summary-header">
+        <span class="badge-kpi msa-badge">MSA</span>
+        <h4>Summary KPI MSA</h4>
+      </div>
+      <div class="summary-body">
+        <div class="summary-metric">
+          <span class="label">Rata-rata H-1</span>
+          <span class="value" id="msaAvgHminus1">-</span>
+        </div>
+        <div class="summary-metric">
+          <span class="label">Rata-rata HI</span>
+          <span class="value" id="msaAvgHI">-</span>
+        </div>
+        <div class="summary-metric">
+          <span class="label">Jumlah Indikator ON Target</span>
+          <span class="value" id="msaOnTarget">-</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ITEM 3: RESUME KPI WSA -->
+  <div class="grid-item item-3">
+    <div class="kpi-summary wsa">
+      <div class="summary-header">
+        <span class="badge-kpi wsa-badge">WSA</span>
+        <h4>Summary KPI WSA</h4>
+      </div>
+      <div class="summary-body">
+        <div class="summary-metric">
+          <span class="label">Rata-rata H-1</span>
+          <span class="value" id="wsaAvgHminus1">-</span>
+        </div>
+        <div class="summary-metric">
+          <span class="label">Rata-rata HI</span>
+          <span class="value" id="wsaAvgHI">-</span>
+        </div>
+        <div class="summary-metric">
+          <span class="label">Jumlah Indikator ON Target</span>
+          <span class="value" id="wsaOnTarget">-</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ITEM 4: CARD INDIKATOR MSA -->
+  <div class="grid-item item-4">
+    <div class="kpi-card">
+      <div class="kpi-card-header">
+        <div>
+          <h4>Detail Indikator MSA</h4>
+          <p>web!A130:D135</p>
+        </div>
+      </div>
+      <div class="kpi-card-body">
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle kpi-table">
+            <thead>
+              <tr>
+                <th>Indikator</th>
+                <th class="text-center">Target</th>
+                <th class="text-center">H-1</th>
+                <th class="text-center">HI</th>
+              </tr>
+            </thead>
+            <tbody id="tblMsaBody">
+              <!-- diisi via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ITEM 5: CARD INDIKATOR WSA -->
+  <div class="grid-item item-5">
+    <div class="kpi-card">
+      <div class="kpi-card-header">
+        <div>
+          <h4>Detail Indikator WSA</h4>
+          <p>web!A138:D143</p>
+        </div>
+      </div>
+      <div class="kpi-card-body">
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle kpi-table">
+            <thead>
+              <tr>
+                <th>Indikator</th>
+                <th class="text-center">Target</th>
+                <th class="text-center">H-1</th>
+                <th class="text-center">HI</th>
+              </tr>
+            </thead>
+            <tbody id="tblWsaBody">
+              <!-- diisi via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
