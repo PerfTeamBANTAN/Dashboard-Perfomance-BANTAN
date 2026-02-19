@@ -1086,3 +1086,10 @@
   padding: 0.20rem 0.45rem;
 }
 
+.kpi-kendala-clickable {
+  color: #1565c0;
+  font-weight: 600;
+}
+.kpi-kendala-clickable:hover {
+  text-decoration: underline;
+}
