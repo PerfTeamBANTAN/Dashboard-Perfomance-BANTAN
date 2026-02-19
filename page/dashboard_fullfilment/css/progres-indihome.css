@@ -739,3 +739,13 @@
   color: #b71c1c;
   font-weight: 600;
 }
+
+.kpi-hi-table thead th {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  text-align: center;
+}
+
+.kpi-hi-table thead th span {
+  display: block;
+}
