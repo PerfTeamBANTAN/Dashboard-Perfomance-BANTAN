@@ -256,19 +256,47 @@ function renderStoTable(headerRow, rows) {
   const tbody = document.getElementById('kpiStoTbody');
   if (!thead || !tbody) return;
 
-  // HEADER
+  // ===== HEADER =====
   thead.innerHTML = '';
   const trHead = document.createElement('tr');
+
   headerRow.forEach((h, idx) => {
     const th = document.createElement('th');
-    th.textContent = h;
-    if (idx === 0) th.style.minWidth = '70px';
+
+    // bungkus agar bisa multi-line & rata
+    const span = document.createElement('span');
+    span.textContent = h;
+    span.style.display = 'block';
+    span.style.whiteSpace = 'normal';
+    span.style.lineHeight = '1.1';
+    th.appendChild(span);
+
+    th.style.fontSize = '0.75rem';
+    th.style.verticalAlign = 'middle';
+
+    // lebar konsisten
+    if (idx === 0) {                // STO
+      th.style.minWidth = '80px';
+      th.style.maxWidth = '90px';
+    } else if (idx === 1) {         // HSA
+      th.style.minWidth = '80px';
+      th.style.maxWidth = '90px';
+    } else if (idx >= 2 && idx <= 6) { // TOTAL RE, RE CANCEL, RE NETT, PI, PS
+      th.style.minWidth = '90px';
+      th.style.maxWidth = '100px';
+    } else {                        // %PS/RE GROSS, %PS/RE NETT, Deviasi
+      th.style.minWidth = '110px';
+      th.style.maxWidth = '120px';
+    }
+
     if (idx > 0) th.classList.add('text-center');
+
     trHead.appendChild(th);
   });
+
   thead.appendChild(trHead);
 
-  // BODY
+  // ===== BODY =====
   tbody.innerHTML = '';
 
   rows.forEach(r => {
@@ -279,29 +307,33 @@ function renderStoTable(headerRow, rows) {
 
     // ambil angka deviasi (bisa "9 PS", "13 PS", "0 PS", "100 PS")
     const devNum = parseFloat(devStr.replace(/[^\d.-]/g, '')) || 0;
-    const good = devNum <= 0; // kalau Deviasi <= 0 artinya sudah meet/above target
+    const goodDev = devNum <= 0; // Deviasi <= 0 = good
 
     const tr = document.createElement('tr');
     if (isBranch) tr.classList.add('kpi-row-branch');
 
     r.forEach((val, idx) => {
       const td = document.createElement('td');
-      const text = val === undefined || val === null ? '' : val;
+      let text = (val === undefined || val === null) ? '' : val;
+
+      if (idx === 7 || idx === 8) {
+        const num = parseFloat(String(val).replace('%','').replace(',','.'));
+        text = (!isNaN(num)) ? num.toFixed(2) + '%' : val;
+      }
 
       if (idx === 0) {
         td.textContent = text;
         td.classList.add('kpi-sto-name');
-      } else if (idx === 1 || idx === 2 || idx === 3 || idx === 4 || idx === 5 || idx === 6) {
+      } else if (idx >= 1 && idx <= 6) {
         td.classList.add('text-center');
         td.textContent = text;
       } else if (idx === 7 || idx === 8) {
-        // % kolom gross/nett
         td.classList.add('text-center');
         td.textContent = text;
       } else if (idx === 9) {
         td.classList.add('text-center');
         td.textContent = text;
-        td.classList.add(good ? 'kpi-cell-good' : 'kpi-cell-bad');
+        td.classList.add(goodDev ? 'kpi-cell-good' : 'kpi-cell-bad');
       }
 
       tr.appendChild(td);
@@ -310,3 +342,4 @@ function renderStoTable(headerRow, rows) {
     tbody.appendChild(tr);
   });
 }
+
