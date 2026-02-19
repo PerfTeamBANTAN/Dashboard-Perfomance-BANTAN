@@ -627,3 +627,65 @@
   background: linear-gradient(90deg, #e53935, #ff7043);
 }
 
+.kpi-table-wrapper {
+  margin-top: 18px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 18px;
+  padding: 16px 18px;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+  backdrop-filter: blur(10px);
+}
+
+.kpi-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.kpi-table-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.kpi-table-header p {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  color: #888;
+}
+.pill-branch {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #c62828, #8e0000);
+  color: #fff;
+}
+
+.kpi-sto-table thead th {
+  font-size: 0.78rem;
+  background: #f7f7f7;
+  border-bottom-width: 1px;
+}
+.kpi-sto-table tbody td {
+  font-size: 0.78rem;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.kpi-row-branch {
+  background: rgba(198,40,40,0.08) !important;
+  font-weight: 600;
+}
+.kpi-sto-name {
+  font-weight: 600;
+}
+.kpi-sto-table tbody tr:hover {
+  background-color: rgba(0,0,0,0.02);
+}
+.kpi-cell-good {
+  color: #1b5e20;
+  font-weight: 600;
+}
+.kpi-cell-bad {
+  color: #b71c1c;
+  font-weight: 600;
+}
