@@ -134,3 +134,26 @@
   </div>
 </div>
 
+<!-- 🔹 Modal Detail Kendala PS/RE -->
+<div class="modal fade" id="kendalaModal" tabindex="-1" aria-labelledby="kendalaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="kendalaModalLabel">Detail Kendala</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2">
+          <strong>STO:</strong> <span id="kendalaSto"></span><br>
+          <strong>HSA:</strong> <span id="kendalaHsa"></span>
+        </div>
+        <div id="kendalaDetailContent">
+          <!-- isi tabel detail akan diinject JS -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
