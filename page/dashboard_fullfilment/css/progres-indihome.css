@@ -668,48 +668,34 @@
   font-size: 0.75rem;
 }
 
-/* per kolom: urutan sesuai index th (0..9) */
-.kpi-sto-table thead th:nth-child(1) {
-  background: linear-gradient(135deg, #212121, #424242);   /* STO: dark grey */
-}
-
-.kpi-sto-table thead th:nth-child(2) {
-  background: linear-gradient(135deg, #5d4037, #8d6e63);   /* HSA: brown-ish */
-}
-
+/* Blok 1: STO, HSA, TOTAL RE (kolom 1–3) = dark grey menyatu */
+.kpi-sto-table thead th:nth-child(1),
+.kpi-sto-table thead th:nth-child(2),
 .kpi-sto-table thead th:nth-child(3) {
-  background: linear-gradient(135deg, #c62828, #ef5350);   /* TOTAL RE: red */
+  background: linear-gradient(135deg, #212121, #424242);
 }
 
-.kpi-sto-table thead th:nth-child(4) {
-  background: linear-gradient(135deg, #ad1457, #ec407a);   /* RE (CANCEL+FALLOUT): magenta */
-}
-
+/* Blok 2: RE (CANCEL+FALLOUT) & RE NETT (kolom 4–5) = red */
+.kpi-sto-table thead th:nth-child(4),
 .kpi-sto-table thead th:nth-child(5) {
-  background: linear-gradient(135deg, #6a1b9a, #ab47bc);   /* RE NETT: purple */
+  background: linear-gradient(135deg, #c62828, #ef5350);
 }
 
-.kpi-sto-table thead th:nth-child(6) {
-  background: linear-gradient(135deg, #283593, #5c6bc0);   /* PI: blue */
-}
-
+/* Blok 3: PI & PS (kolom 6–7) = green */
+.kpi-sto-table thead th:nth-child(6),
 .kpi-sto-table thead th:nth-child(7) {
-  background: linear-gradient(135deg, #0277bd, #29b6f6);   /* PS: light blue */
+  background: linear-gradient(135deg, #2e7d32, #66bb6a);
 }
 
-/* %PS/RE GROSS */
-.kpi-sto-table thead th:nth-child(8) {
-  background: linear-gradient(135deg, #2e7d32, #66bb6a);   /* hijau */
-}
-
-/* %PS/RE NETT */
+/* Blok 4: %PS/RE GROSS & NETT (kolom 8–9) = blue */
+.kpi-sto-table thead th:nth-child(8),
 .kpi-sto-table thead th:nth-child(9) {
-  background: linear-gradient(135deg, #558b2f, #9ccc65);   /* hijau muda */
+  background: linear-gradient(135deg, #1565c0, #42a5f5);
 }
 
-/* Deviasi PS/RE Target */
+/* Blok 5: Deviasi PS/RE Target (kolom 10) = orange */
 .kpi-sto-table thead th:nth-child(10) {
-  background: linear-gradient(135deg, #bf360c, #ff7043);   /* orange merah */
+  background: linear-gradient(135deg, #ef6c00, #ffb74d);
 }
 
 .kpi-sto-table thead th span {
