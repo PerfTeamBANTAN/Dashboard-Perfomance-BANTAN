@@ -1,12 +1,7 @@
 async function initKpiFullfilment(apiUrl) {
   try {
-    const res = await fetch(apiUrl + '?action=getKpiFullfilment');
+    const res = await fetch(apiUrl + '?action=getkpifullfilment');
     const data = await res.json();
-
-    // asumsi struktur:
-    // data.msa = array dari web!A130:D135
-    // data.wsa = array dari web!A138:D143
-    // setiap baris: [indikator, target, h_minus1, hi]
 
     const msa = data.msa || [];
     const wsa = data.wsa || [];
@@ -14,8 +9,8 @@ async function initKpiFullfilment(apiUrl) {
 
     document.getElementById('kpiPeriodeText').innerText = 'Periode: ' + periode;
 
-    renderTable('tblMsaBody', msa);
-    renderTable('tblWsaBody', wsa);
+    renderKpiCards('msaCardList', msa);
+    renderKpiCards('wsaCardList', wsa);
 
     const msaStats = calcSummary(msa);
     const wsaStats = calcSummary(wsa);
@@ -37,9 +32,9 @@ async function initKpiFullfilment(apiUrl) {
   }
 }
 
-function renderTable(tbodyId, rows) {
-  const tbody = document.getElementById(tbodyId);
-  tbody.innerHTML = '';
+function renderKpiCards(containerId, rows) {
+  const wrap = document.getElementById(containerId);
+  wrap.innerHTML = '';
 
   rows.forEach(r => {
     const indikator = r[0];
@@ -51,20 +46,47 @@ function renderTable(tbodyId, rows) {
     const h1 = parseFloat(String(h1Raw).toString().replace('%','').replace(',','.')) || 0;
     const hi = parseFloat(String(hiRaw).toString().replace('%','').replace(',','.')) || 0;
 
-    const isGood = hi >= target;
-    const rowClass = isGood ? 'good' : 'bad';
-    const valClass = isGood ? 'kpi-good' : 'kpi-bad';
+    const onTarget = hi >= target;
+    const statusClass = onTarget ? 'kpi-status-on' : 'kpi-status-off';
+    const statusText = onTarget ? 'ON TARGET' : 'UNDER TARGET';
 
-    const tr = document.createElement('tr');
-    tr.className = 'kpi-row ' + rowClass;
+    // progress vs target (max 130% biar bar ga overflow)
+    const ratio = target ? Math.min((hi / target) * 100, 130) : 0;
 
-    tr.innerHTML = `
-      <td>${indikator}</td>
-      <td class="text-center">${formatNumber(target)}</td>
-      <td class="text-center ${valClass}">${formatPercent(h1)}</td>
-      <td class="text-center ${valClass}">${formatPercent(hi)}</td>
+    const card = document.createElement('div');
+    card.className = 'kpi-indikator-card';
+
+    card.innerHTML = `
+      <div class="kpi-indikator-header">
+        <div class="kpi-indikator-name">${indikator}</div>
+        <span class="kpi-status-chip ${statusClass}">${statusText}</span>
+      </div>
+      <div class="kpi-indikator-body">
+        <div class="kpi-mini-metric">
+          <span class="kpi-mini-label">Target</span>
+          <span class="kpi-mini-value">${formatNumber(target)}</span>
+        </div>
+        <div class="kpi-mini-metric">
+          <span class="kpi-mini-label">H-1</span>
+          <span class="kpi-mini-value">${formatPercent(h1)}</span>
+        </div>
+        <div class="kpi-mini-metric">
+          <span class="kpi-mini-label">HI</span>
+          <span class="kpi-mini-value">${formatPercent(hi)}</span>
+        </div>
+      </div>
+      <div class="kpi-progress-wrap">
+        <div class="kpi-progress-label">
+          <span>Progress vs Target</span>
+          <span>${formatPercent(hi)} / ${formatNumber(target)}%</span>
+        </div>
+        <div class="kpi-progress-bar">
+          <div class="kpi-progress-fill ${onTarget ? '' : 'bad'}" style="width:${ratio}%;"></div>
+        </div>
+      </div>
     `;
-    tbody.appendChild(tr);
+
+    wrap.appendChild(card);
   });
 }
 
@@ -82,7 +104,6 @@ function calcSummary(rows) {
     if (!isNaN(h1)) sumH1 += h1;
     if (!isNaN(hi)) sumHI += hi;
     count++;
-
     if (hi >= target) onTarget++;
   });
 
