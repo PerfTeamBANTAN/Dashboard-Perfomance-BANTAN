@@ -1093,3 +1093,8 @@
 .kpi-kendala-clickable:hover {
   text-decoration: underline;
 }
+
+.kpi-modal .pagination .page-link {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.45rem;
+}
