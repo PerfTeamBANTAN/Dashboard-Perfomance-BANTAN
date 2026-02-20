@@ -1111,3 +1111,19 @@
   height: 1rem;
   border-width: 0.15em;
 }
+
+.kpi-hsa-produk-table thead th {
+  color: #ffffff;
+  border-bottom-width: 1px;
+  font-weight: 600;
+  font-size: 0.72rem;
+  background: linear-gradient(135deg, #455a64, #607d8b);
+}
+.kpi-hsa-produk-table tbody td {
+  font-size: 0.72rem;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.kpi-hsa-produk-table tbody tr:hover {
+  background-color: rgba(0,0,0,0.02);
+}
