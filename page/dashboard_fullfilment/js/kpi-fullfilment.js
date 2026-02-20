@@ -635,3 +635,55 @@ function setKendalaMonthBadge() {
   const monthName = months[now.getMonth()];
   el.textContent = `Kendala bulan ${monthName}`;
 }
+
+function renderHsaProdukTable(headerRow, rows) {
+  const thead = document.getElementById('kpiHsaProdukThead');
+  const tbody = document.getElementById('kpiHsaProdukTbody');
+  if (!thead || !tbody) return;
+
+  // HEADER
+  thead.innerHTML = '';
+  const trHead = document.createElement('tr');
+  headerRow.forEach((h, idx) => {
+    const th = document.createElement('th');
+    const span = document.createElement('span');
+    span.textContent = h;
+    span.style.display = 'block';
+    span.style.whiteSpace = 'normal';
+    span.style.lineHeight = '1.1';
+    th.appendChild(span);
+
+    th.style.fontSize = '0.72rem';
+    th.style.verticalAlign = 'middle';
+    if (idx === 0) th.classList.add('text-start');
+    else {
+      th.classList.add('text-center');
+      th.style.minWidth = '70px';
+    }
+    trHead.appendChild(th);
+  });
+  thead.appendChild(trHead);
+
+  // BODY
+  tbody.innerHTML = '';
+  rows.forEach(r => {
+    const sto = String(r[0] || '');
+    const isBranch = sto.toUpperCase().includes('BRANCH');
+
+    const tr = document.createElement('tr');
+    if (isBranch) tr.classList.add('kpi-kendala-row-branch'); // reuse style abu
+
+    r.forEach((val, idx) => {
+      const td = document.createElement('td');
+      td.textContent = val || '';
+      if (idx === 0 || idx === 1) {
+        if (idx === 0) td.classList.add('kpi-sto-name');
+      } else {
+        td.classList.add('text-center');
+      }
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+}
