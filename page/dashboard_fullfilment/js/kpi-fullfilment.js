@@ -497,20 +497,27 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
   }
 
   if (contentEl) {
-  contentEl.innerHTML = `
-    <div class="py-4 text-center text-muted small">
-      <div class="kpi-modal-loading">
-        <div class="spinner-border spinner-border-sm text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
+    contentEl.innerHTML = `
+      <div class="py-4 text-center text-muted small">
+        <div class="kpi-modal-loading">
+          <div class="spinner-border spinner-border-sm text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <span>Memuat data (${count} data)...</span>
         </div>
-        <span>Memuat data (${count} data)...</span>
-      </div>
-    </div>`;
-}
-
+      </div>`;
+  }
 
   try {
-    const url = kpiApiUrl + `?action=getkpipsredetail&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(typeKey)}`;
+    let url;
+    if (typeKey === 'INDIBIZ') {
+      // INDIBIZ → API khusus dari sheet INDIBIZ
+      url = kpiApiUrl + `?action=getkpiindibizdetail&sto=${encodeURIComponent(sto)}`;
+    } else {
+      // default: PS/RE (RE_CANFO, KP, KT, INDIHOME_PS, dst)
+      url = kpiApiUrl + `?action=getkpipsredetail&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(typeKey)}`;
+    }
+
     const res = await fetch(url);
     const data = await res.json();
 
@@ -521,7 +528,7 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
       summaryEl.querySelector('.kpi-chip-value').textContent = modalRows.length;
     }
 
-    renderKendalaTablePage();
+    renderKendalaTablePage(typeKey);
   } catch (err) {
     console.error(err);
     if (contentEl) {
@@ -536,7 +543,7 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
   }
 }
 
-function renderKendalaTablePage() {
+function renderKendalaTablePage(typeKey = 'RE_CANFO') {
   const contentEl = document.getElementById('kendalaDetailContent');
   if (!contentEl) return;
 
@@ -557,36 +564,27 @@ function renderKendalaTablePage() {
         Tidak ada data untuk kombinasi ini.
       </div>`;
   } else {
-    // ===== BUILD PAGINATION BUTTONS (COMPACT) =====
-    const maxButtons = 7; // maksimal tombol nomor yang tampil
+    // build pagination (biarkan sama seperti punyamu)
+    const maxButtons = 7;
     let pageButtonsHtml = '';
-
     if (totalPages <= maxButtons) {
-      // tampilkan semua halaman
       pageButtonsHtml = Array.from({ length: totalPages }).map((_, i) => `
         <li class="page-item ${modalPage === (i+1) ? 'active' : ''}">
           <button class="page-link" type="button" data-page="${i+1}">${i+1}</button>
         </li>
       `).join('');
     } else {
-      // selalu tampilkan 1, current-1, current, current+1, last, dan "..."
       const pages = [];
       pages.push(1);
-
       const startPage = Math.max(2, modalPage - 1);
       const endPage   = Math.min(totalPages - 1, modalPage + 1);
-
       if (startPage > 2) pages.push('...');
       for (let p = startPage; p <= endPage; p++) pages.push(p);
       if (endPage < totalPages - 1) pages.push('...');
       pages.push(totalPages);
-
       pageButtonsHtml = pages.map(p => {
         if (p === '...') {
-          return `
-            <li class="page-item disabled">
-              <span class="page-link">…</span>
-            </li>`;
+          return `<li class="page-item disabled"><span class="page-link">…</span></li>`;
         }
         return `
           <li class="page-item ${modalPage === p ? 'active' : ''}">
@@ -595,44 +593,78 @@ function renderKendalaTablePage() {
       }).join('');
     }
 
+    // ===== table head & body tergantung typeKey =====
+    let theadHtml = '';
+    let tbodyHtml = '';
+
+    if (typeKey === 'INDIBIZ') {
+      // layout khusus INDIBIZ
+      theadHtml = `
+        <tr>
+          <th class="text-center">#</th>
+          <th>ORDER ID</th>
+          <th>STO</th>
+          <th>STATUS RESUME</th>
+          <th>ORDER DATE</th>
+          <th>CUSTOMER NAME</th>
+          <th>MITRA</th>
+        </tr>`;
+      tbodyHtml = pageItems.map((r, idx) => `
+        <tr>
+          <td class="text-center text-muted small">${start + idx + 1}</td>
+          <td class="fw-semibold">${r.ORDERID || ''}</td>
+          <td class="small">${r.STO || ''}</td>
+          <td class="small">${r.STATUS || ''}</td>
+          <td class="text-nowrap small">${r.ORDERDATE || ''}</td>
+          <td class="small">${r.CUSTNAME || ''}</td>
+          <td class="small text-muted">${r.MITRA || ''}</td>
+        </tr>
+      `).join('');
+    } else {
+      // layout default PS/RE (seperti semula)
+      theadHtml = `
+        <tr>
+          <th class="text-center">#</th>
+          <th>WONUM</th>
+          <th>STATUS</th>
+          <th>DATE CREATED</th>
+          <th>STATUS DATE</th>
+          <th>ERROR</th>
+          <th>SUB ERROR</th>
+        </tr>`;
+      tbodyHtml = pageItems.map((r, idx) => `
+        <tr>
+          <td class="text-center text-muted small">${start + idx + 1}</td>
+          <td class="fw-semibold">${r.WONUM || ''}</td>
+          <td>
+            <span class="badge bg-${(r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'} bg-opacity-10 text-${
+              (r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'
+            } border border-${(r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'} border-opacity-25">
+              ${r.STATUS || ''}
+            </span>
+          </td>
+          <td class="text-nowrap small">${r.DATECREATED || ''}</td>
+          <td class="text-nowrap small">${r.STATUSDATE || ''}</td>
+          <td class="small">${r.ERRORCODE || ''}</td>
+          <td class="small text-muted">${r.SUBERRORCODE || ''}</td>
+        </tr>
+      `).join('');
+    }
+
     html = `
       <div class="table-responsive kpi-modal-table-wrap mt-1">
         <table class="table table-sm table-hover align-middle mb-0 kpi-modal-table">
           <thead class="table-light">
-            <tr>
-              <th class="text-center">#</th>
-              <th>WONUM</th>
-              <th>STATUS</th>
-              <th>DATE CREATED</th>
-              <th>STATUS DATE</th>
-              <th>ERROR</th>
-              <th>SUB ERROR</th>
-            </tr>
+            ${theadHtml}
           </thead>
           <tbody>
-            ${pageItems.map((r, idx) => `
-              <tr>
-                <td class="text-center text-muted small">${start + idx + 1}</td>
-                <td class="fw-semibold">${r.WONUM || ''}</td>
-                <td>
-                  <span class="badge bg-${(r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'} bg-opacity-10 text-${
-                    (r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'
-                  } border border-${(r.STATUS || '').includes('CANCEL') ? 'danger' : 'success'} border-opacity-25">
-                    ${r.STATUS || ''}
-                  </span>
-                </td>
-                <td class="text-nowrap small">${r.DATECREATED || ''}</td>
-                <td class="text-nowrap small">${r.STATUSDATE || ''}</td>
-                <td class="small">${r.ERRORCODE || ''}</td>
-                <td class="small text-muted">${r.SUBERRORCODE || ''}</td>
-              </tr>
-            `).join('')}
+            ${tbodyHtml}
           </tbody>
         </table>
       </div>
       <div class="d-flex justify-content-between align-items-center mt-2 small">
         <div>
-          Menampilkan ${start + 1}–${Math.min(end, total)} dari ${total} WO
+          Menampilkan ${start + 1}–${Math.min(end, total)} dari ${total} data
         </div>
         <nav>
           <ul class="pagination pagination-sm mb-0">
@@ -658,7 +690,7 @@ function renderKendalaTablePage() {
       if (p === 'prev' && modalPage > 1) modalPage--;
       else if (p === 'next' && modalPage < totalPages) modalPage++;
       else if (!isNaN(parseInt(p))) modalPage = parseInt(p);
-      renderKendalaTablePage();
+      renderKendalaTablePage(typeKey);
     });
   });
 }
