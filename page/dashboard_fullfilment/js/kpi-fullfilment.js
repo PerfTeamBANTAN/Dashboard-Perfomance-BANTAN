@@ -675,6 +675,7 @@ function renderHsaProdukTable(headerRow, rows) {
   tbody.innerHTML = '';
   rows.forEach(r => {
     const sto = String(r[0] || '');
+    const hsa = r[1] || '';
     const isBranch = sto.toUpperCase().includes('BRANCH');
 
     const tr = document.createElement('tr');
@@ -682,12 +683,58 @@ function renderHsaProdukTable(headerRow, rows) {
 
     r.forEach((val, idx) => {
       const td = document.createElement('td');
-      td.textContent = val || '';
-      if (idx === 0 || idx === 1) {
-        if (idx === 0) td.classList.add('kpi-sto-name');
+      const value = val || '';
+
+      if (idx === 0) {
+        td.textContent = value;
+        td.classList.add('kpi-sto-name');
+      } else if (idx === 1) {
+        td.textContent = value;
       } else {
         td.classList.add('text-center');
+
+        if (idx === 2) {
+          // kolom INDIHOME → clickable
+          const count = Number(value) || 0;
+          td.textContent = count;
+
+          if (count > 0 && !isBranch) {
+            td.classList.add('kpi-kendala-clickable');
+            td.style.cursor = 'pointer';
+            td.addEventListener('click', async () => {
+              if (td.classList.contains('loading')) return;
+
+              td.classList.add('loading');
+              const originalText = td.textContent;
+              td.innerHTML = `
+                <div class="kpi-modal-loading">
+                  <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <span>${originalText}</span>
+                </div>
+              `;
+
+              try {
+                await openKendalaModal({
+                  sto,
+                  hsa,
+                  label: 'INDIHOME PS',
+                  typeKey: 'INDIHOME_PS',
+                  count
+                });
+              } finally {
+                td.classList.remove('loading');
+                td.textContent = originalText;
+              }
+            });
+          }
+        } else {
+          // produk lain: render biasa dulu
+          td.textContent = value;
+        }
       }
+
       tr.appendChild(td);
     });
 
