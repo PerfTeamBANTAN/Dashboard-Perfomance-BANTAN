@@ -43,7 +43,7 @@ async function initKpiFullfilment(apiUrl) {
 
     // ====== TABEL KENDALA (WEB!A145:F159) DI SIDE CONTENT ======
     renderKendalaTable(kendalaHeader, kendalaRows);
-
+    
     // ====== SUMMARY KPI MSA & WSA ======
     const msaStats = calcSummary(msa);
     const wsaStats = calcSummary(wsa);
@@ -64,6 +64,7 @@ async function initKpiFullfilment(apiUrl) {
     if (wsaAvgHIEl)    wsaAvgHIEl.innerText    = wsaStats.avgHI;
     if (wsaOnTargetEl) wsaOnTargetEl.innerText = wsaStats.onTarget;
 
+    setKendalaMonthBadge(); 
   } catch (err) {
     console.error(err);
     document.getElementById('content-area').innerHTML = `
@@ -619,4 +620,18 @@ function renderKendalaTablePage() {
       renderKendalaTablePage();
     });
   });
+}
+
+function setKendalaMonthBadge() {
+  const el = document.querySelector('.kpi-kendala-wrapper .pill-branch');
+  if (!el) return;
+
+  const now = new Date();
+  const months = [
+    'Januari','Februari','Maret','April','Mei','Juni',
+    'Juli','Agustus','September','Oktober','November','Desember'
+  ]; // [web:192][web:198]
+
+  const monthName = months[now.getMonth()];
+  el.textContent = `Kendala bulan ${monthName}`;
 }
