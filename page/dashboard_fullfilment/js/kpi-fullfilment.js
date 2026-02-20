@@ -80,7 +80,6 @@ async function initKpiFullfilment(apiUrl) {
   }
 }
 
-
 function renderKpiCards(containerId, rows) {
   const wrap = document.getElementById(containerId);
   wrap.innerHTML = '';
@@ -99,7 +98,7 @@ function renderKpiCards(containerId, rows) {
     const statusClass = onTarget ? 'kpi-status-on' : 'kpi-status-off';
     const statusText = onTarget ? 'ON TARGET' : 'UNDER TARGET';
 
-// progress vs target
+    // progress vs target
     const ratio = target ? Math.min((hi / target) * 100, 130) : 0;
 
     const card = document.createElement('div');
@@ -513,6 +512,9 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
     if (typeKey === 'INDIBIZ') {
       // INDIBIZ → API khusus dari sheet INDIBIZ
       url = kpiApiUrl + `?action=getkpiindibizdetail&sto=${encodeURIComponent(sto)}`;
+    } else if (typeKey === 'DATIN') {
+      // DATIN → API khusus dari sheet DATIN
+      url = kpiApiUrl + `?action=getkpidatindetail&sto=${encodeURIComponent(sto)}`;
     } else {
       // default: PS/RE (RE_CANFO, KP, KT, INDIHOME_PS, dst)
       url = kpiApiUrl + `?action=getkpipsredetail&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(typeKey)}`;
@@ -564,7 +566,7 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
         Tidak ada data untuk kombinasi ini.
       </div>`;
   } else {
-    // build pagination (biarkan sama seperti punyamu)
+    // build pagination
     const maxButtons = 7;
     let pageButtonsHtml = '';
     if (totalPages <= maxButtons) {
@@ -620,8 +622,31 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
           <td class="small text-muted">${r.MITRA || ''}</td>
         </tr>
       `).join('');
+    } else if (typeKey === 'DATIN') {
+      // layout khusus DATIN (order_id, order_created_date, workzone, productname, customer_name, MITRA)
+      theadHtml = `
+        <tr>
+          <th class="text-center">#</th>
+          <th>ORDER ID</th>
+          <th>ORDER DATE</th>
+          <th>WORKZONE</th>
+          <th>PRODUCT</th>
+          <th>CUSTOMER NAME</th>
+          <th>MITRA</th>
+        </tr>`;
+      tbodyHtml = pageItems.map((r, idx) => `
+        <tr>
+          <td class="text-center text-muted small">${start + idx + 1}</td>
+          <td class="fw-semibold">${r.ORDERID || ''}</td>
+          <td class="text-nowrap small">${r.ORDERDATE || ''}</td>
+          <td class="small">${r.WORKZONE || ''}</td>
+          <td class="small">${r.PRODUCT || ''}</td>
+          <td class="small">${r.CUSTNAME || ''}</td>
+          <td class="small text-muted">${r.MITRA || ''}</td>
+        </tr>
+      `).join('');
     } else {
-      // layout default PS/RE (seperti semula)
+      // layout default PS/RE
       theadHtml = `
         <tr>
           <th class="text-center">#</th>
@@ -703,7 +728,7 @@ function setKendalaMonthBadge() {
   const months = [
     'Januari','Februari','Maret','April','Mei','Juni',
     'Juli','Agustus','September','Oktober','November','Desember'
-  ]; // [web:192][web:198]
+  ];
 
   const monthName = months[now.getMonth()];
   el.textContent = `Kendala bulan ${monthName}`;
@@ -760,7 +785,7 @@ function renderHsaProdukTable(headerRow, rows) {
         td.classList.add('text-center');
 
         if (idx === 2) {
-          // kolom INDIHOME → clickable (sudah ada)
+          // kolom INDIHOME → clickable
           const count = Number(value) || 0;
           td.textContent = count;
 
@@ -822,7 +847,43 @@ function renderHsaProdukTable(headerRow, rows) {
                   sto,
                   hsa,
                   label: 'INDIBIZ',
-                  typeKey: 'INDIBIZ',   // nanti kita mapping ke API detail INDIBIZ
+                  typeKey: 'INDIBIZ',
+                  count
+                });
+              } finally {
+                td.classList.remove('loading');
+                td.textContent = originalText;
+              }
+            });
+          }
+        } else if (idx === 4) {
+          // kolom DATIN → clickable
+          const count = Number(value) || 0;
+          td.textContent = count;
+
+          if (count > 0 && !isBranch) {
+            td.classList.add('kpi-kendala-clickable');
+            td.style.cursor = 'pointer';
+            td.addEventListener('click', async () => {
+              if (td.classList.contains('loading')) return;
+
+              td.classList.add('loading');
+              const originalText = td.textContent;
+              td.innerHTML = `
+                <div class="kpi-modal-loading">
+                  <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <span>${originalText}</span>
+                </div>
+              `;
+
+              try {
+                await openKendalaModal({
+                  sto,
+                  hsa,
+                  label: 'DATIN',
+                  typeKey: 'DATIN',
                   count
                 });
               } finally {
@@ -843,4 +904,3 @@ function renderHsaProdukTable(headerRow, rows) {
     tbody.appendChild(tr);
   });
 }
-
