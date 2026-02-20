@@ -4,12 +4,6 @@ let modalRows = [];
 let modalPage = 1;
 const MODAL_PER_PAGE = 10;
 
-// 🔹 Global untuk dipakai semua fungsi
-let kpiApiUrl = '';
-let modalRows = [];
-let modalPage = 1;
-const MODAL_PER_PAGE = 10;
-
 async function initKpiFullfilment(apiUrl) {
   kpiApiUrl = apiUrl; // simpan URL web app
 
