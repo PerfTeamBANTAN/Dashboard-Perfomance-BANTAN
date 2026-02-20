@@ -4,6 +4,12 @@ let modalRows = [];
 let modalPage = 1;
 const MODAL_PER_PAGE = 10;
 
+// 🔹 Global untuk dipakai semua fungsi
+let kpiApiUrl = '';
+let modalRows = [];
+let modalPage = 1;
+const MODAL_PER_PAGE = 10;
+
 async function initKpiFullfilment(apiUrl) {
   kpiApiUrl = apiUrl; // simpan URL web app
 
@@ -25,6 +31,9 @@ async function initKpiFullfilment(apiUrl) {
     const kendalaHeader = data.kendalaHeader || [];
     const kendalaRows   = data.kendalaTable || [];
 
+    const hsaProdukHeader = data.hsaProdukHeader || [];
+    const hsaProdukRows   = data.hsaProdukTable || [];
+
     // ====== SET PERIODE ======
     const periodeEl = document.getElementById('kpiPeriodeText');
     if (periodeEl) {
@@ -43,7 +52,10 @@ async function initKpiFullfilment(apiUrl) {
 
     // ====== TABEL KENDALA (WEB!A145:F159) DI SIDE CONTENT ======
     renderKendalaTable(kendalaHeader, kendalaRows);
-    
+
+    // ====== TABEL HSA PER PRODUK (WEB!A165:K179) ======
+    renderHsaProdukTable(hsaProdukHeader, hsaProdukRows);
+
     // ====== SUMMARY KPI MSA & WSA ======
     const msaStats = calcSummary(msa);
     const wsaStats = calcSummary(wsa);
@@ -64,7 +76,7 @@ async function initKpiFullfilment(apiUrl) {
     if (wsaAvgHIEl)    wsaAvgHIEl.innerText    = wsaStats.avgHI;
     if (wsaOnTargetEl) wsaOnTargetEl.innerText = wsaStats.onTarget;
 
-    setKendalaMonthBadge(); 
+    setKendalaMonthBadge();
   } catch (err) {
     console.error(err);
     document.getElementById('content-area').innerHTML = `
@@ -73,6 +85,7 @@ async function initKpiFullfilment(apiUrl) {
       </div>`;
   }
 }
+
 
 function renderKpiCards(containerId, rows) {
   const wrap = document.getElementById(containerId);
