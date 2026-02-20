@@ -1112,6 +1112,16 @@
   border-width: 0.15em;
 }
 
+.kpi-hsa-produk-container {
+  display: flex;
+  justify-content: flex-start;   /* atau center kalau mau di tengah */
+}
+
+.kpi-hsa-produk-wrapper {
+  max-width: 720px;              /* atur sesuai lebar tabel yang kamu mau */
+  width: 100%;
+}
+
 .kpi-hsa-produk-table thead th {
   color: #ffffff;
   border-bottom-width: 1px;
