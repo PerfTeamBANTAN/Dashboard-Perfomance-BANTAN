@@ -56,7 +56,7 @@ function createSummaryCards(summaryRow, rows) {
     <!-- OK -->
     <div class="col-md-4 mb-2">
       <div class="kpi-summary-card kpi-summary-green">
-        <div class="kpi-summary-title">✅ Not Comply (OK)</div>
+        <div class="kpi-summary-title">✅ Comply (OK)</div>
         <div class="kpi-summary-value">${okHI}</div>
         <div class="kpi-summary-sub">H-1: ${okH1} | HI: ${okHI}</div>
         <div class="kpi-summary-icon">✔</div>
