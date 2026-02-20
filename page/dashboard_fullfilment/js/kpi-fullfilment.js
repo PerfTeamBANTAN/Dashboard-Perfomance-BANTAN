@@ -728,7 +728,7 @@ function renderHsaProdukTable(headerRow, rows) {
         td.classList.add('text-center');
 
         if (idx === 2) {
-          // kolom INDIHOME → clickable
+          // kolom INDIHOME → clickable (sudah ada)
           const count = Number(value) || 0;
           td.textContent = count;
 
@@ -763,8 +763,44 @@ function renderHsaProdukTable(headerRow, rows) {
               }
             });
           }
+        } else if (idx === 3) {
+          // kolom INDIBIZ → clickable
+          const count = Number(value) || 0;
+          td.textContent = count;
+
+          if (count > 0 && !isBranch) {
+            td.classList.add('kpi-kendala-clickable');
+            td.style.cursor = 'pointer';
+            td.addEventListener('click', async () => {
+              if (td.classList.contains('loading')) return;
+
+              td.classList.add('loading');
+              const originalText = td.textContent;
+              td.innerHTML = `
+                <div class="kpi-modal-loading">
+                  <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <span>${originalText}</span>
+                </div>
+              `;
+
+              try {
+                await openKendalaModal({
+                  sto,
+                  hsa,
+                  label: 'INDIBIZ',
+                  typeKey: 'INDIBIZ',   // nanti kita mapping ke API detail INDIBIZ
+                  count
+                });
+              } finally {
+                td.classList.remove('loading');
+                td.textContent = originalText;
+              }
+            });
+          }
         } else {
-          // produk lain: render biasa dulu
+          // produk lain: render biasa
           td.textContent = value;
         }
       }
@@ -775,3 +811,4 @@ function renderHsaProdukTable(headerRow, rows) {
     tbody.appendChild(tr);
   });
 }
+
