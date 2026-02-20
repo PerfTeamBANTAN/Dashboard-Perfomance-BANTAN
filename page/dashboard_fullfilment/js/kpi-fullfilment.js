@@ -557,6 +557,44 @@ function renderKendalaTablePage() {
         Tidak ada data untuk kombinasi ini.
       </div>`;
   } else {
+    // ===== BUILD PAGINATION BUTTONS (COMPACT) =====
+    const maxButtons = 7; // maksimal tombol nomor yang tampil
+    let pageButtonsHtml = '';
+
+    if (totalPages <= maxButtons) {
+      // tampilkan semua halaman
+      pageButtonsHtml = Array.from({ length: totalPages }).map((_, i) => `
+        <li class="page-item ${modalPage === (i+1) ? 'active' : ''}">
+          <button class="page-link" type="button" data-page="${i+1}">${i+1}</button>
+        </li>
+      `).join('');
+    } else {
+      // selalu tampilkan 1, current-1, current, current+1, last, dan "..."
+      const pages = [];
+      pages.push(1);
+
+      const startPage = Math.max(2, modalPage - 1);
+      const endPage   = Math.min(totalPages - 1, modalPage + 1);
+
+      if (startPage > 2) pages.push('...');
+      for (let p = startPage; p <= endPage; p++) pages.push(p);
+      if (endPage < totalPages - 1) pages.push('...');
+      pages.push(totalPages);
+
+      pageButtonsHtml = pages.map(p => {
+        if (p === '...') {
+          return `
+            <li class="page-item disabled">
+              <span class="page-link">…</span>
+            </li>`;
+        }
+        return `
+          <li class="page-item ${modalPage === p ? 'active' : ''}">
+            <button class="page-link" type="button" data-page="${p}">${p}</button>
+          </li>`;
+      }).join('');
+    }
+
     html = `
       <div class="table-responsive kpi-modal-table-wrap mt-1">
         <table class="table table-sm table-hover align-middle mb-0 kpi-modal-table">
@@ -601,11 +639,7 @@ function renderKendalaTablePage() {
             <li class="page-item ${modalPage === 1 ? 'disabled' : ''}">
               <button class="page-link" type="button" data-page="prev">&laquo;</button>
             </li>
-            ${Array.from({ length: totalPages }).map((_, i) => `
-              <li class="page-item ${modalPage === (i+1) ? 'active' : ''}">
-                <button class="page-link" type="button" data-page="${i+1}">${i+1}</button>
-              </li>
-            `).join('')}
+            ${pageButtonsHtml}
             <li class="page-item ${modalPage === totalPages ? 'disabled' : ''}">
               <button class="page-link" type="button" data-page="next">&raquo;</button>
             </li>
