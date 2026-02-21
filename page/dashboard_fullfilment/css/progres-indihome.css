@@ -888,7 +888,7 @@
 
 .kpi-kendala-wrapper {
   flex: 1;
-  max-width: 45%;
+  max-width: 100%;
   background: rgba(255,255,255,0.9);
   border-radius: 18px;
   padding: 14px 16px;
@@ -950,8 +950,8 @@
 }
 
 .kpi-side-content {
-  flex: 1;
-  max-width: 45%;
+  flex: 1 1 0;
+  max-width: none;
 }
 
 /* responsive: di mobile tetap full */
