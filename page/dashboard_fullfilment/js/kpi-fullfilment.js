@@ -517,8 +517,10 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
       url = kpiApiUrl + `?action=getkpidatindetail&sto=${encodeURIComponent(sto)}`;
     } else if (typeKey === 'WIFI') {
       // WIFI → API khusus dari sheet WIFI
-      // Saat ini getWifiDetail filter by order_id; di sini dikirim kosong (ambil semua sesuai logika backend).
       url = kpiApiUrl + `?action=getwifidetail&order_id=`;
+    } else if (typeKey === 'MO_PDA') {
+      // MO-PDA → API khusus dari sheet MO-PDA per STO
+      url = kpiApiUrl + `?action=getmopdadetail&sto=${encodeURIComponent(sto)}`;
     } else {
       // default: PS/RE (RE_CANFO, KP, KT, INDIHOME_PS, dst)
       url = kpiApiUrl + `?action=getkpipsredetail&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(typeKey)}`;
@@ -604,7 +606,6 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
     let tbodyHtml = '';
 
     if (typeKey === 'INDIBIZ') {
-      // layout khusus INDIBIZ
       theadHtml = `
         <tr>
           <th class="text-center">#</th>
@@ -627,7 +628,6 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
         </tr>
       `).join('');
     } else if (typeKey === 'DATIN') {
-      // layout khusus DATIN
       theadHtml = `
         <tr>
           <th class="text-center">#</th>
@@ -650,7 +650,6 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
         </tr>
       `).join('');
     } else if (typeKey === 'WIFI') {
-      // layout khusus WIFI (ORDERID, ORDERDATE, WORKZONE, PRODUCTGROUP, CUSTNAME, MITRA)
       theadHtml = `
         <tr>
           <th class="text-center">#</th>
@@ -670,6 +669,29 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
           <td class="small">${r.PRODUCTGROUP || ''}</td>
           <td class="small">${r.CUSTNAME || ''}</td>
           <td class="small text-muted">${r.MITRA || ''}</td>
+        </tr>
+      `).join('');
+    } else if (typeKey === 'MO_PDA') {
+      // layout MO-PDA: Ticket, Order-ID, STO, PIC Eskalasi, WONUM, STATUS BIMA
+      theadHtml = `
+        <tr>
+          <th class="text-center">#</th>
+          <th>Ticket</th>
+          <th>Order-ID</th>
+          <th>STO</th>
+          <th>PIC Eskalasi</th>
+          <th>WONUM</th>
+          <th>STATUS BIMA</th>
+        </tr>`;
+      tbodyHtml = pageItems.map((r, idx) => `
+        <tr>
+          <td class="text-center text-muted small">${start + idx + 1}</td>
+          <td class="small">${r.TICKET || ''}</td>
+          <td class="small">${r.ORDERID || ''}</td>
+          <td class="small">${r.STO || ''}</td>
+          <td class="small">${r.PICESKALASI || ''}</td>
+          <td class="small">${r.WONUM || ''}</td>
+          <td class="small text-muted">${r.STATUSBIMA || ''}</td>
         </tr>
       `).join('');
     } else {
@@ -811,7 +833,6 @@ function renderHsaProdukTable(headerRow, rows) {
       } else {
         td.classList.add('text-center');
 
-        // helper untuk tiga produk + WIFI, supaya tidak copas berulang
         const makeClickableProdukCell = (label, typeKey) => {
           const count = Number(value) || 0;
           td.textContent = count;
@@ -846,6 +867,8 @@ function renderHsaProdukTable(headerRow, rows) {
                 td.textContent = originalText;
               }
             });
+          } else {
+            td.textContent = count; // tetap tampil angka 0 untuk branch/0
           }
         };
 
@@ -861,6 +884,9 @@ function renderHsaProdukTable(headerRow, rows) {
         } else if (idx === 5) {
           // WIFI
           makeClickableProdukCell('WIFI', 'WIFI');
+        } else if (idx === 6) {
+          // MO-PDA
+          makeClickableProdukCell('MO-PDA', 'MO_PDA');
         } else {
           // produk lain: render biasa
           td.textContent = value;
@@ -873,3 +899,4 @@ function renderHsaProdukTable(headerRow, rows) {
     tbody.appendChild(tr);
   });
 }
+
