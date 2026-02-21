@@ -944,16 +944,14 @@
   margin-top: 18px;
 }
 
-/* wrapper STO table: tidak full width */
 .kpi-table-wrapper-sto {
-  flex: 0 0 55%;           /* sekitar 55% lebar */
+  flex: 0 0 55%;
   max-width: 55%;
 }
 
-/* area konten samping */
 .kpi-side-content {
-  flex: 1 1 0;
-  max-width: none;
+  flex: 1;
+  max-width: 45%;
 }
 
 /* responsive: di mobile tetap full */
@@ -1114,11 +1112,11 @@
 
 .kpi-hsa-produk-container {
   display: flex;
-  justify-content: flex-start;   /* atau center kalau mau di tengah */
+  justify-content: flex-start;
 }
 
 .kpi-hsa-produk-wrapper {
-  max-width: 860px;              /* atur sesuai lebar tabel yang kamu mau */
+  max-width: 860px;
   width: 100%;
 }
 
