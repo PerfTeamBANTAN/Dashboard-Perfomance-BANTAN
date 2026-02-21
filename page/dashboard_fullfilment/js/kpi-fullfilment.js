@@ -510,17 +510,16 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
   try {
     let url;
     if (typeKey === 'INDIBIZ') {
-      // INDIBIZ → API khusus dari sheet INDIBIZ
       url = kpiApiUrl + `?action=getkpiindibizdetail&sto=${encodeURIComponent(sto)}`;
     } else if (typeKey === 'DATIN') {
-      // DATIN → API khusus dari sheet DATIN
       url = kpiApiUrl + `?action=getkpidatindetail&sto=${encodeURIComponent(sto)}`;
     } else if (typeKey === 'WIFI') {
-      // WIFI → API khusus dari sheet WIFI
       url = kpiApiUrl + `?action=getwifidetail&order_id=`;
     } else if (typeKey === 'MO_PDA') {
-      // MO-PDA → API khusus dari sheet MO-PDA per STO
       url = kpiApiUrl + `?action=getmopdadetail&sto=${encodeURIComponent(sto)}`;
+    } else if (typeKey === 'VULA') {
+      // VULA → API khusus dari sheet VULA per STO
+      url = kpiApiUrl + `?action=getkpivuladetail&sto=${encodeURIComponent(sto)}`;
     } else {
       // default: PS/RE (RE_CANFO, KP, KT, INDIHOME_PS, dst)
       url = kpiApiUrl + `?action=getkpipsredetail&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(typeKey)}`;
@@ -572,7 +571,6 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
         Tidak ada data untuk kombinasi ini.
       </div>`;
   } else {
-    // build pagination
     const maxButtons = 7;
     let pageButtonsHtml = '';
     if (totalPages <= maxButtons) {
@@ -601,7 +599,6 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
       }).join('');
     }
 
-    // ===== table head & body tergantung typeKey =====
     let theadHtml = '';
     let tbodyHtml = '';
 
@@ -672,7 +669,6 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
         </tr>
       `).join('');
     } else if (typeKey === 'MO_PDA') {
-      // layout MO-PDA: Ticket, Order-ID, STO, PIC Eskalasi, WONUM, STATUS BIMA
       theadHtml = `
         <tr>
           <th class="text-center">#</th>
@@ -694,8 +690,36 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
           <td class="small text-muted">${r.STATUSBIMA || ''}</td>
         </tr>
       `).join('');
+    } else if (typeKey === 'VULA') {
+      // layout VULA: WONUM, STATUS, Hasil Survey, ISP, STO, DETAIL PROGRES
+      theadHtml = `
+        <tr>
+          <th class="text-center">#</th>
+          <th>WONUM</th>
+          <th>STATUS</th>
+          <th>Hasil Survey</th>
+          <th>ISP</th>
+          <th>STO</th>
+          <th>DETAIL PROGRES</th>
+        </tr>`;
+      tbodyHtml = pageItems.map((r, idx) => `
+        <tr>
+          <td class="text-center text-muted small">${start + idx + 1}</td>
+          <td class="fw-semibold small">${r.WONUM || ''}</td>
+          <td class="small">
+            <span class="badge bg-${(r.STATUS || '').includes('CANCL') ? 'danger' : 'success'} bg-opacity-10 text-${
+              (r.STATUS || '').includes('CANCL') ? 'danger' : 'success'
+            } border border-${(r.STATUS || '').includes('CANCL') ? 'danger' : 'success'} border-opacity-25">
+              ${r.STATUS || ''}
+            </span>
+          </td>
+          <td class="small">${r.HASILSURVEY || ''}</td>
+          <td class="small">${r.ISP || ''}</td>
+          <td class="small">${r.STO || ''}</td>
+          <td class="small text-muted">${r.DETAILPROG || ''}</td>
+        </tr>
+      `).join('');
     } else {
-      // layout default PS/RE
       theadHtml = `
         <tr>
           <th class="text-center">#</th>
@@ -756,7 +780,6 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
 
   contentEl.innerHTML = html;
 
-  // event pagination
   const pager = contentEl.querySelectorAll('.pagination .page-link');
   pager.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -819,7 +842,7 @@ function renderHsaProdukTable(headerRow, rows) {
     const isBranch = sto.toUpperCase().includes('BRANCH');
 
     const tr = document.createElement('tr');
-    if (isBranch) tr.classList.add('kpi-kendala-row-branch'); // reuse style abu
+    if (isBranch) tr.classList.add('kpi-kendala-row-branch');
 
     r.forEach((val, idx) => {
       const td = document.createElement('td');
@@ -868,27 +891,23 @@ function renderHsaProdukTable(headerRow, rows) {
               }
             });
           } else {
-            td.textContent = count; // tetap tampil angka 0 untuk branch/0
+            td.textContent = count;
           }
         };
 
         if (idx === 2) {
-          // INDIHOME
           makeClickableProdukCell('INDIHOME PS', 'INDIHOME_PS');
         } else if (idx === 3) {
-          // INDIBIZ
           makeClickableProdukCell('INDIBIZ', 'INDIBIZ');
         } else if (idx === 4) {
-          // DATIN
           makeClickableProdukCell('DATIN', 'DATIN');
         } else if (idx === 5) {
-          // WIFI
           makeClickableProdukCell('WIFI', 'WIFI');
         } else if (idx === 6) {
-          // MO-PDA
           makeClickableProdukCell('MO-PDA', 'MO_PDA');
+        } else if (idx === 7) {
+          makeClickableProdukCell('VULA', 'VULA');
         } else {
-          // produk lain: render biasa
           td.textContent = value;
         }
       }
@@ -899,4 +918,5 @@ function renderHsaProdukTable(headerRow, rows) {
     tbody.appendChild(tr);
   });
 }
+
 
