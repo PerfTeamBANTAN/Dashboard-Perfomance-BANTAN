@@ -515,6 +515,10 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
     } else if (typeKey === 'DATIN') {
       // DATIN → API khusus dari sheet DATIN
       url = kpiApiUrl + `?action=getkpidatindetail&sto=${encodeURIComponent(sto)}`;
+    } else if (typeKey === 'WIFI') {
+      // WIFI → API khusus dari sheet WIFI
+      // Saat ini getWifiDetail filter by order_id; di sini dikirim kosong (ambil semua sesuai logika backend).
+      url = kpiApiUrl + `?action=getwifidetail&order_id=`;
     } else {
       // default: PS/RE (RE_CANFO, KP, KT, INDIHOME_PS, dst)
       url = kpiApiUrl + `?action=getkpipsredetail&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(typeKey)}`;
@@ -529,6 +533,22 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
     if (summaryEl) {
       summaryEl.querySelector('.kpi-chip-value').textContent = modalRows.length;
     }
+
+    renderKendalaTablePage(typeKey);
+  } catch (err) {
+    console.error(err);
+    if (contentEl) {
+      contentEl.innerHTML = `<p class="text-danger small mb-0">Gagal memuat detail. Silakan coba lagi.</p>`;
+    }
+  }
+
+  const modalEl = document.getElementById('kendalaModal');
+  if (modalEl) {
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+  }
+}
+
 
     renderKendalaTablePage(typeKey);
   } catch (err) {
