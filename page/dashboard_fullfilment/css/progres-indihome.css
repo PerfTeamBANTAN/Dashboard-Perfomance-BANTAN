@@ -952,8 +952,8 @@
 
 /* area konten samping */
 .kpi-side-content {
-  flex: 1;
-  max-width: 45%;
+  flex: 1 1 0;
+  max-width: none;
 }
 
 /* responsive: di mobile tetap full */
