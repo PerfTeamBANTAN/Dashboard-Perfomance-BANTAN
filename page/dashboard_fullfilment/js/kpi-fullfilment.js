@@ -549,22 +549,6 @@ async function openKendalaModal({ sto, hsa, label, typeKey, count }) {
   }
 }
 
-
-    renderKendalaTablePage(typeKey);
-  } catch (err) {
-    console.error(err);
-    if (contentEl) {
-      contentEl.innerHTML = `<p class="text-danger small mb-0">Gagal memuat detail. Silakan coba lagi.</p>`;
-    }
-  }
-
-  const modalEl = document.getElementById('kendalaModal');
-  if (modalEl) {
-    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-    modal.show();
-  }
-}
-
 function renderKendalaTablePage(typeKey = 'RE_CANFO') {
   const contentEl = document.getElementById('kendalaDetailContent');
   if (!contentEl) return;
