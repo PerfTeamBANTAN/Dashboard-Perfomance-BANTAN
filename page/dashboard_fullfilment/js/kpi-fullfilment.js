@@ -643,7 +643,7 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
         </tr>
       `).join('');
     } else if (typeKey === 'DATIN') {
-      // layout khusus DATIN (order_id, order_created_date, workzone, productname, customer_name, MITRA)
+      // layout khusus DATIN
       theadHtml = `
         <tr>
           <th class="text-center">#</th>
@@ -661,6 +661,29 @@ function renderKendalaTablePage(typeKey = 'RE_CANFO') {
           <td class="text-nowrap small">${r.ORDERDATE || ''}</td>
           <td class="small">${r.WORKZONE || ''}</td>
           <td class="small">${r.PRODUCT || ''}</td>
+          <td class="small">${r.CUSTNAME || ''}</td>
+          <td class="small text-muted">${r.MITRA || ''}</td>
+        </tr>
+      `).join('');
+    } else if (typeKey === 'WIFI') {
+      // layout khusus WIFI (ORDERID, ORDERDATE, WORKZONE, PRODUCTGROUP, CUSTNAME, MITRA)
+      theadHtml = `
+        <tr>
+          <th class="text-center">#</th>
+          <th>ORDER ID</th>
+          <th>ORDER DATE</th>
+          <th>WORKZONE</th>
+          <th>PRODUCT GROUP</th>
+          <th>CUSTOMER NAME</th>
+          <th>MITRA</th>
+        </tr>`;
+      tbodyHtml = pageItems.map((r, idx) => `
+        <tr>
+          <td class="text-center text-muted small">${start + idx + 1}</td>
+          <td class="fw-semibold">${r.ORDERID || ''}</td>
+          <td class="text-nowrap small">${r.ORDERDATE || ''}</td>
+          <td class="small">${r.WORKZONE || ''}</td>
+          <td class="small">${r.PRODUCTGROUP || ''}</td>
           <td class="small">${r.CUSTNAME || ''}</td>
           <td class="small text-muted">${r.MITRA || ''}</td>
         </tr>
@@ -804,114 +827,56 @@ function renderHsaProdukTable(headerRow, rows) {
       } else {
         td.classList.add('text-center');
 
+        // helper untuk tiga produk + WIFI, supaya tidak copas berulang
+        const makeClickableProdukCell = (label, typeKey) => {
+          const count = Number(value) || 0;
+          td.textContent = count;
+
+          if (count > 0 && !isBranch) {
+            td.classList.add('kpi-kendala-clickable');
+            td.style.cursor = 'pointer';
+            td.addEventListener('click', async () => {
+              if (td.classList.contains('loading')) return;
+
+              td.classList.add('loading');
+              const originalText = td.textContent;
+              td.innerHTML = `
+                <div class="kpi-modal-loading">
+                  <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <span>${originalText}</span>
+                </div>
+              `;
+
+              try {
+                await openKendalaModal({
+                  sto,
+                  hsa,
+                  label,
+                  typeKey,
+                  count
+                });
+              } finally {
+                td.classList.remove('loading');
+                td.textContent = originalText;
+              }
+            });
+          }
+        };
+
         if (idx === 2) {
-          // kolom INDIHOME → clickable
-          const count = Number(value) || 0;
-          td.textContent = count;
-
-          if (count > 0 && !isBranch) {
-            td.classList.add('kpi-kendala-clickable');
-            td.style.cursor = 'pointer';
-            td.addEventListener('click', async () => {
-              if (td.classList.contains('loading')) return;
-
-              td.classList.add('loading');
-              const originalText = td.textContent;
-              td.innerHTML = `
-                <div class="kpi-modal-loading">
-                  <div class="spinner-border spinner-border-sm text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                  <span>${originalText}</span>
-                </div>
-              `;
-
-              try {
-                await openKendalaModal({
-                  sto,
-                  hsa,
-                  label: 'INDIHOME PS',
-                  typeKey: 'INDIHOME_PS',
-                  count
-                });
-              } finally {
-                td.classList.remove('loading');
-                td.textContent = originalText;
-              }
-            });
-          }
+          // INDIHOME
+          makeClickableProdukCell('INDIHOME PS', 'INDIHOME_PS');
         } else if (idx === 3) {
-          // kolom INDIBIZ → clickable
-          const count = Number(value) || 0;
-          td.textContent = count;
-
-          if (count > 0 && !isBranch) {
-            td.classList.add('kpi-kendala-clickable');
-            td.style.cursor = 'pointer';
-            td.addEventListener('click', async () => {
-              if (td.classList.contains('loading')) return;
-
-              td.classList.add('loading');
-              const originalText = td.textContent;
-              td.innerHTML = `
-                <div class="kpi-modal-loading">
-                  <div class="spinner-border spinner-border-sm text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                  <span>${originalText}</span>
-                </div>
-              `;
-
-              try {
-                await openKendalaModal({
-                  sto,
-                  hsa,
-                  label: 'INDIBIZ',
-                  typeKey: 'INDIBIZ',
-                  count
-                });
-              } finally {
-                td.classList.remove('loading');
-                td.textContent = originalText;
-              }
-            });
-          }
+          // INDIBIZ
+          makeClickableProdukCell('INDIBIZ', 'INDIBIZ');
         } else if (idx === 4) {
-          // kolom DATIN → clickable
-          const count = Number(value) || 0;
-          td.textContent = count;
-
-          if (count > 0 && !isBranch) {
-            td.classList.add('kpi-kendala-clickable');
-            td.style.cursor = 'pointer';
-            td.addEventListener('click', async () => {
-              if (td.classList.contains('loading')) return;
-
-              td.classList.add('loading');
-              const originalText = td.textContent;
-              td.innerHTML = `
-                <div class="kpi-modal-loading">
-                  <div class="spinner-border spinner-border-sm text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                  <span>${originalText}</span>
-                </div>
-              `;
-
-              try {
-                await openKendalaModal({
-                  sto,
-                  hsa,
-                  label: 'DATIN',
-                  typeKey: 'DATIN',
-                  count
-                });
-              } finally {
-                td.classList.remove('loading');
-                td.textContent = originalText;
-              }
-            });
-          }
+          // DATIN
+          makeClickableProdukCell('DATIN', 'DATIN');
+        } else if (idx === 5) {
+          // WIFI
+          makeClickableProdukCell('WIFI', 'WIFI');
         } else {
           // produk lain: render biasa
           td.textContent = value;
