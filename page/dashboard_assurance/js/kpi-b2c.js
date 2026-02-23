@@ -885,12 +885,12 @@ function wireTicketDetailPagination() {
   const btnPrev = document.getElementById("ticketDetailPrev");
   const btnNext = document.getElementById("ticketDetailNext");
 
+  if (!btnPrev || !btnNext) return;
   if (btnPrev.dataset.wired === "1") return;
 
   btnPrev.addEventListener("click", () => {
     const current = Number(modalEl.dataset.currentPage || 1);
     const mode = modalEl.dataset.detailMode || "DTTR";
-    console.log("[Q-MODAL] Prev click", { mode, current });
     if (mode === "SQM") {
       renderSqmDetailPage(current - 1);
     } else if (mode === "Q") {
@@ -903,7 +903,6 @@ function wireTicketDetailPagination() {
   btnNext.addEventListener("click", () => {
     const current = Number(modalEl.dataset.currentPage || 1);
     const mode = modalEl.dataset.detailMode || "DTTR";
-    console.log("[Q-MODAL] Next click", { mode, current });
     if (mode === "SQM") {
       renderSqmDetailPage(current + 1);
     } else if (mode === "Q") {
@@ -916,6 +915,7 @@ function wireTicketDetailPagination() {
   btnPrev.dataset.wired = "1";
   btnNext.dataset.wired = "1";
 }
+
 
 function showTicketDetailModal(title, tickets) {
   initTicketDetailModal();
@@ -1289,39 +1289,6 @@ function renderSqmDetailPage(page) {
 
   btnPrev.disabled = currentPage === 1;
   btnNext.disabled = currentPage === totalPages;
-}
-// pagination wiring yang sudah ada, tinggal tambah cabang jenis detail
-function wireTicketDetailPagination() {
-  const modalEl = document.getElementById("ticketDetailModal");
-  if (!modalEl) return;
-
-  const btnPrev = document.getElementById("ticketDetailPrev");
-  const btnNext = document.getElementById("ticketDetailNext");
-
-  if (btnPrev.dataset.wired === "1") return;
-
-  btnPrev.addEventListener("click", () => {
-    const current = Number(modalEl.dataset.currentPage || 1);
-    const mode = modalEl.dataset.detailMode || "PRIMARY";
-    if (mode === "SQM") {
-      renderSqmDetailPage(current - 1);
-    } else {
-      renderTicketDetailPage(current - 1); // fungsi lama untuk DTTR Primary
-    }
-  });
-
-  btnNext.addEventListener("click", () => {
-    const current = Number(modalEl.dataset.currentPage || 1);
-    const mode = modalEl.dataset.detailMode || "PRIMARY";
-    if (mode === "SQM") {
-      renderSqmDetailPage(current + 1);
-    } else {
-      renderTicketDetailPage(current + 1);
-    }
-  });
-
-  btnPrev.dataset.wired = "1";
-  btnNext.dataset.wired = "1";
 }
 
 function showSqmDetailModal(title, tickets) {
