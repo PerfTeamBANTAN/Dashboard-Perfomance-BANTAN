@@ -1922,6 +1922,179 @@ function loadKpiB2CRankingMitra(config) {
     });
 }
 
+function loadKpiQAllAcceptanceTable(config) {
+  const table = document.getElementById("kpi-table-qall-acceptance");
+  if (!table) return;
+
+  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+    "WEB"
+  )}&range=${encodeURIComponent("WEB!A150:D152")}`;
+
+  fetch(url)
+    .then((resp) => resp.json())
+    .then((data) => {
+      if (!Array.isArray(data) || data.length < 2) return;
+
+      // Header tetap: Witel | AT | Real Tiket | Excess
+      const thead = `
+        <thead>
+          <tr>
+            <th class="th-gold text-center">Witel</th>
+            <th class="th-gold text-center">Acceptance Ggn (AT)</th>
+            <th class="th-gold text-center">Real Tiket</th>
+            <th class="th-gold text-center">Excess</th>
+          </tr>
+        </thead>
+      `;
+
+      const bodyRows = [];
+      for (let i = 1; i < data.length; i++) {
+        const r = data[i];
+        if (!r || r.join("").toString().trim() === "") continue;
+        bodyRows.push(r);
+      }
+
+      const tbody = `
+        <tbody>
+          ${bodyRows
+            .map(
+              (r) => `
+            <tr>
+              <td>${r[0] ?? ""}</td>
+              <td>${r[1] ?? ""}</td>
+              <td>${r[2] ?? ""}</td>
+              <td>${r[3] ?? ""}</td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      `;
+
+      table.innerHTML = thead + tbody;
+    })
+    .catch((err) => {
+      console.error("Error load tabel Q ALL Acceptance:", err);
+      table.innerHTML =
+        "<tbody><tr><td>Gagal memuat data Q ALL Acceptance.</td></tr></tbody>";
+    });
+}
+
+function loadKpiQHvcAcceptanceTable(config) {
+  const table = document.getElementById("kpi-table-qhvc-acceptance");
+  if (!table) return;
+
+  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+    "WEB"
+  )}&range=${encodeURIComponent("WEB!A155:D157")}`;
+
+  fetch(url)
+    .then((resp) => resp.json())
+    .then((data) => {
+      if (!Array.isArray(data) || data.length < 2) return;
+
+      const thead = `
+        <thead>
+          <tr>
+            <th class="th-gold text-center">Witel</th>
+            <th class="th-gold text-center">Acceptance Ggn (AT)</th>
+            <th class="th-gold text-center">Real Tiket</th>
+            <th class="th-gold text-center">Excess</th>
+          </tr>
+        </thead>
+      `;
+
+      const bodyRows = [];
+      for (let i = 1; i < data.length; i++) {
+        const r = data[i];
+        if (!r || r.join("").toString().trim() === "") continue;
+        bodyRows.push(r);
+      }
+
+      const tbody = `
+        <tbody>
+          ${bodyRows
+            .map(
+              (r) => `
+            <tr>
+              <td>${r[0] ?? ""}</td>
+              <td>${r[1] ?? ""}</td>
+              <td>${r[2] ?? ""}</td>
+              <td>${r[3] ?? ""}</td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      `;
+
+      table.innerHTML = thead + tbody;
+    })
+    .catch((err) => {
+      console.error("Error load tabel Q HVC Acceptance:", err);
+      table.innerHTML =
+        "<tbody><tr><td>Gagal memuat data Q HVC Acceptance.</td></tr></tbody>";
+    });
+}
+
+function loadKpiQHsiAcceptanceTable(config) {
+  const table = document.getElementById("kpi-table-qhsi-acceptance");
+  if (!table) return;
+
+  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+    "WEB"
+  )}&range=${encodeURIComponent("WEB!A160:D162")}`;
+
+  fetch(url)
+    .then((resp) => resp.json())
+    .then((data) => {
+      if (!Array.isArray(data) || data.length < 2) return;
+
+      const thead = `
+        <thead>
+          <tr>
+            <th class="th-gold text-center">Witel</th>
+            <th class="th-gold text-center">Acceptance Ggn (AT)</th>
+            <th class="th-gold text-center">Real Tiket</th>
+            <th class="th-gold text-center">Excess</th>
+          </tr>
+        </thead>
+      `;
+
+      const bodyRows = [];
+      for (let i = 1; i < data.length; i++) {
+        const r = data[i];
+        if (!r || r.join("").toString().trim() === "") continue;
+        bodyRows.push(r);
+      }
+
+      const tbody = `
+        <tbody>
+          ${bodyRows
+            .map(
+              (r) => `
+            <tr>
+              <td>${r[0] ?? ""}</td>
+              <td>${r[1] ?? ""}</td>
+              <td>${r[2] ?? ""}</td>
+              <td>${r[3] ?? ""}</td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      `;
+
+      table.innerHTML = thead + tbody;
+    })
+    .catch((err) => {
+      console.error("Error load tabel Q HSI Acceptance:", err);
+      table.innerHTML =
+        "<tbody><tr><td>Gagal memuat data Q HSI Acceptance.</td></tr></tbody>";
+    });
+}
+
+
 // =========================
 // INIT & FILTER
 // =========================
@@ -1978,6 +2151,9 @@ function initKPIB2C(config) {
       loadKpiB2CMajorTable(config);
       loadKpiB2CCoreTable(config); 
       loadKpiB2CSupportTable(config);
+      loadKpiQAllAcceptanceTable(config);
+      loadKpiQHvcAcceptanceTable(config);
+      loadKpiQHsiAcceptanceTable(config);
     })
     .catch((err) => {
       console.error("Error load KPI B2C:", err);
