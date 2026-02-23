@@ -892,8 +892,10 @@ function wireTicketDetailPagination() {
     const mode = modalEl.dataset.detailMode || "DTTR";
     if (mode === "SQM") {
       renderSqmDetailPage(current - 1);
+    } else if (mode === "Q") {
+      renderQDetailPage(current - 1);
     } else {
-      renderTicketDetailPage(current - 1);
+      renderTicketDetailPage(current - 1); // DTTR
     }
   });
 
@@ -902,8 +904,10 @@ function wireTicketDetailPagination() {
     const mode = modalEl.dataset.detailMode || "DTTR";
     if (mode === "SQM") {
       renderSqmDetailPage(current + 1);
+    } else if (mode === "Q") {
+      renderQDetailPage(current + 1);
     } else {
-      renderTicketDetailPage(current + 1); // DTTR
+      renderTicketDetailPage(current + 1);
     }
   });
 
@@ -1926,16 +1930,46 @@ function loadKpiQAllAcceptanceTable(config) {
   const table = document.getElementById("kpi-table-qall-acceptance");
   if (!table) return;
 
-  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+  const urlLayout = `${config.baseUrl}?sheet=${encodeURIComponent(
     "WEB"
   )}&range=${encodeURIComponent("WEB!A150:D152")}`;
 
-  fetch(url)
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (!Array.isArray(data) || data.length < 2) return;
+  const urlQ = `${config.baseUrl}?sheet=${encodeURIComponent(
+    "Q B2C"
+  )}&range=${encodeURIComponent("Q B2C!A:CC")}`;
 
-      // Header tetap: Witel | AT | Real Tiket | Excess
+  Promise.all([fetch(urlLayout), fetch(urlQ)])
+    .then(([respLayout, respQ]) =>
+      Promise.all([respLayout.json(), respQ.json()])
+    )
+    .then(([layoutData, qData]) => {
+      if (!Array.isArray(layoutData) || layoutData.length < 2) return;
+
+      // --- mapping tiket Q B2C (hanya today) ---
+      const tickets = (qData || []).slice(1) // skip header
+        .filter(r => {
+          const witel = (r[COL_QB2C.WITEL] || "").toString().trim().toUpperCase();
+          const reported = r[COL_QB2C.REPORTED_DATE];
+          return witel && isTodayByString(reported);
+        })
+        .map(r => ({
+          incident: r[COL_QB2C.INCIDENT],
+          reportedDate: r[COL_QB2C.REPORTED_DATE],
+          witel: (r[COL_QB2C.WITEL] || "").toString().trim().toUpperCase(),
+          workzone: r[COL_QB2C.WORKZONE],
+          serviceType: r[COL_QB2C.SERVICE_TYPE],
+          customerType: r[COL_QB2C.CUSTOMER_TYPE],
+          contactName: r[COL_QB2C.SERVICE_NO],
+          contactPhone: r[COL_QB2C.TECHNICIAN],
+          summary: r[COL_QB2C.SUMMARY]
+        }));
+
+      const byWitel = {};
+      tickets.forEach(t => {
+        if (!byWitel[t.witel]) byWitel[t.witel] = [];
+        byWitel[t.witel].push(t);
+      });
+
       const thead = `
         <thead>
           <tr>
@@ -1948,30 +1982,56 @@ function loadKpiQAllAcceptanceTable(config) {
       `;
 
       const bodyRows = [];
-      for (let i = 1; i < data.length; i++) {
-        const r = data[i];
+      for (let i = 1; i < layoutData.length; i++) {
+        const r = layoutData[i];
         if (!r || r.join("").toString().trim() === "") continue;
-        bodyRows.push(r);
+
+        const witelName = (r[0] || "").toString().trim().toUpperCase();
+        const at = Number(r[1] || 0);              // Acceptance Ggn (AT)
+        const list = byWitel[witelName] || [];
+        const realTiket = list.length;            // countifs
+        const excess = realTiket - at;           // rumus Excess
+
+        bodyRows.push({ row: r, witelName, at, realTiket, excess, list });
       }
 
       const tbody = `
         <tbody>
           ${bodyRows
-            .map(
-              (r) => `
-            <tr>
-              <td>${r[0] ?? ""}</td>
-              <td>${r[1] ?? ""}</td>
-              <td>${r[2] ?? ""}</td>
-              <td>${r[3] ?? ""}</td>
-            </tr>
-          `
-            )
+            .map(({ row, witelName, at, realTiket, excess, list }) => {
+              const hasDetail = list.length > 0;
+              const realHtml = hasDetail
+                ? `<button type="button"
+                     class="btn btn-link p-0 q-detail-link"
+                     data-mode="QALL"
+                     data-witel="${witelName}">
+                     ${realTiket}
+                   </button>`
+                : `<span>${realTiket}</span>`;
+
+              return `
+                <tr>
+                  <td>${row[0] ?? ""}</td>
+                  <td>${at}</td>
+                  <td>${realHtml}</td>
+                  <td>${excess}</td>
+                </tr>
+              `;
+            })
             .join("")}
         </tbody>
       `;
 
       table.innerHTML = thead + tbody;
+
+      // klik Real Tiket -> modal detail
+      table.addEventListener("click", (e) => {
+        const btn = e.target.closest(".q-detail-link");
+        if (!btn) return;
+        const witel = btn.dataset.witel;
+        const list = byWitel[witel] || [];
+        showQDetailModal(`Detail Q ALL – ${witel}`, list);
+      });
     })
     .catch((err) => {
       console.error("Error load tabel Q ALL Acceptance:", err);
@@ -2094,6 +2154,135 @@ function loadKpiQHsiAcceptanceTable(config) {
     });
 }
 
+function isTodayByString(dateStr) {
+  if (!dateStr) return false;
+
+  // contoh data: "2026-02-23 09:11:13"
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return false;
+
+  const today = new Date();
+  return (
+    d.getFullYear() === today.getFullYear() &&
+    d.getMonth() === today.getMonth() &&
+    d.getDate() === today.getDate()
+  );
+}
+
+const COL_QB2C = {
+  INCIDENT: 0,
+  TTR_CUSTOMER: 1,
+  SUMMARY: 2,
+  REPORTED_DATE: 3,
+  OWNER_GROUP: 4,
+  OWNER: 5,
+  CUSTOMER_SEGMENT: 6,
+  SERVICE_TYPE: 7,
+  WITEL: 8,
+  WORKZONE: 9,
+  STATUS: 10,
+  STATUS_DATE: 11,
+  // ...
+  CUSTOMER_TYPE: 24,
+  SERVICE_NO: 30,
+  TECHNICIAN: 46     
+};
+
+function setQHeader() {
+  const modalEl = document.getElementById("ticketDetailModal");
+  if (!modalEl) return;
+  const thead = modalEl.querySelector("thead");
+  if (!thead) return;
+
+  thead.innerHTML = `
+    <tr>
+      <th>INCIDENT</th>
+      <th>REPORTED DATE</th>
+      <th>WITEL</th>
+      <th>WORKZONE</th>
+      <th>SERVICE TYPE</th>
+      <th>CUSTOMER TYPE</th>
+      <th>SERVICE NO</th>
+      <th>TECHNICIAN</th>
+      <th>SUMMARY</th>
+    </tr>
+  `;
+}
+
+function renderQDetailPage(page) {
+  const modalEl = document.getElementById("ticketDetailModal");
+  if (!modalEl) return;
+
+  const tbody = document.getElementById("ticketDetailBody");
+  const pageInfo = document.getElementById("ticketDetailPageInfo");
+  const totalInfo = document.getElementById("ticketDetailTotal");
+  const btnPrev = document.getElementById("ticketDetailPrev");
+  const btnNext = document.getElementById("ticketDetailNext");
+
+  const ticketsJson = modalEl.dataset.tickets || "[]";
+  const tickets = JSON.parse(ticketsJson);
+
+  const pageSize = Number(modalEl.dataset.pageSize || 10);
+  const total = tickets.length;
+  const totalPages = total === 0 ? 1 : Math.ceil(total / pageSize);
+  const currentPage = Math.min(Math.max(page, 1), totalPages);
+
+  modalEl.dataset.currentPage = String(currentPage);
+
+  if (total === 0) {
+    tbody.innerHTML =
+      `<tr><td colspan="9" class="text-center">Tidak ada data tiket.</td></tr>`;
+    pageInfo.textContent = "";
+    totalInfo.textContent = "0 tiket";
+    btnPrev.disabled = true;
+    btnNext.disabled = true;
+    return;
+  }
+
+  const start = (currentPage - 1) * pageSize;
+  const end = Math.min(start + pageSize, total);
+  const slice = tickets.slice(start, end);
+
+  tbody.innerHTML = slice.map(t => `
+    <tr>
+      <td>${t.incident || ""}</td>
+      <td>${t.reportedDate || ""}</td>
+      <td>${t.witel || ""}</td>
+      <td>${t.workzone || ""}</td>
+      <td>${t.serviceType || ""}</td>
+      <td>${t.customerType || ""}</td>
+      <td>${t.serviceno || ""}</td>
+      <td>${t.technician || ""}</td>
+      <td>${t.summary || ""}</td>
+    </tr>
+  `).join("");
+
+  totalInfo.textContent = `${total} tiket (showing ${start + 1}–${end})`;
+  pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
+
+  btnPrev.disabled = currentPage === 1;
+  btnNext.disabled = currentPage === totalPages;
+}
+
+function showQDetailModal(title, tickets) {
+  initTicketDetailModal();
+
+  const modalEl = document.getElementById("ticketDetailModal");
+  const titleEl = document.getElementById("ticketDetailTitle");
+
+  modalEl.dataset.tickets = JSON.stringify(tickets);
+  modalEl.dataset.currentPage = "1";
+  modalEl.dataset.detailMode = "Q";
+
+  titleEl.textContent = title;
+
+  setQHeader();
+  wireTicketDetailPagination();
+  renderQDetailPage(1);
+
+  const modal = new bootstrap.Modal(modalEl);
+  modal.show();
+}
 
 // =========================
 // INIT & FILTER
