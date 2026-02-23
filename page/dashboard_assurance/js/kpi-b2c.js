@@ -890,18 +890,20 @@ function wireTicketDetailPagination() {
   btnPrev.addEventListener("click", () => {
     const current = Number(modalEl.dataset.currentPage || 1);
     const mode = modalEl.dataset.detailMode || "DTTR";
+    console.log("[Q-MODAL] Prev click, mode:", mode, "current:", current);
     if (mode === "SQM") {
       renderSqmDetailPage(current - 1);
     } else if (mode === "Q") {
       renderQDetailPage(current - 1);
     } else {
-      renderTicketDetailPage(current - 1); // DTTR
+      renderTicketDetailPage(current - 1);
     }
   });
 
   btnNext.addEventListener("click", () => {
     const current = Number(modalEl.dataset.currentPage || 1);
     const mode = modalEl.dataset.detailMode || "DTTR";
+    console.log("[Q-MODAL] Next click, mode:", mode, "current:", current);
     if (mode === "SQM") {
       renderSqmDetailPage(current + 1);
     } else if (mode === "Q") {
@@ -2220,12 +2222,27 @@ function renderQDetailPage(page) {
   const btnNext = document.getElementById("ticketDetailNext");
 
   const ticketsJson = modalEl.dataset.tickets || "[]";
-  const tickets = JSON.parse(ticketsJson);
+  let tickets = [];
+  try {
+    tickets = JSON.parse(ticketsJson);
+  } catch (e) {
+    console.error("[Q-MODAL] gagal parse tickets:", e, ticketsJson);
+    tickets = [];
+  }
 
   const pageSize = Number(modalEl.dataset.pageSize || 10);
   const total = tickets.length;
   const totalPages = total === 0 ? 1 : Math.ceil(total / pageSize);
   const currentPage = Math.min(Math.max(page, 1), totalPages);
+
+  console.log("[Q-MODAL] render", {
+    mode: modalEl.dataset.detailMode,
+    page: currentPage,
+    total,
+    start: (currentPage - 1) * pageSize,
+    end: Math.min((currentPage - 1) * pageSize + pageSize, total),
+    sample: tickets[0]
+  });
 
   modalEl.dataset.currentPage = String(currentPage);
 
@@ -2243,7 +2260,7 @@ function renderQDetailPage(page) {
   const end = Math.min(start + pageSize, total);
   const slice = tickets.slice(start, end);
 
-    tbody.innerHTML = slice.map(t => `
+  tbody.innerHTML = slice.map(t => `
     <tr>
       <td>${t.incident || ""}</td>
       <td>${t.reportedDate || ""}</td>
@@ -2274,6 +2291,8 @@ function showQDetailModal(title, tickets) {
   modalEl.dataset.currentPage = "1";
   modalEl.dataset.detailMode = "Q";
 
+  console.log("[Q-MODAL] open", { title, mode: modalEl.dataset.detailMode, total: tickets.length });
+
   titleEl.textContent = title;
 
   setQHeader();
@@ -2283,6 +2302,7 @@ function showQDetailModal(title, tickets) {
   const modal = new bootstrap.Modal(modalEl);
   modal.show();
 }
+
 
 // =========================
 // INIT & FILTER
