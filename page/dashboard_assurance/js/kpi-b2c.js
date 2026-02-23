@@ -2013,14 +2013,50 @@ function loadKpiQHvcAcceptanceTable(config) {
   const table = document.getElementById("kpi-table-qhvc-acceptance");
   if (!table) return;
 
-  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+  const urlLayout = `${config.baseUrl}?sheet=${encodeURIComponent(
     "WEB"
   )}&range=${encodeURIComponent("WEB!A155:D157")}`;
 
-  fetch(url)
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (!Array.isArray(data) || data.length < 2) return;
+  const urlQ = `${config.baseUrl}?sheet=${encodeURIComponent(
+    "Q B2C"
+  )}&range=${encodeURIComponent("Q B2C!A:CC")}`;
+
+  Promise.all([fetch(urlLayout), fetch(urlQ)])
+    .then(([respLayout, respQ]) =>
+      Promise.all([respLayout.json(), respQ.json()])
+    )
+    .then(([layoutData, qData]) => {
+      if (!Array.isArray(layoutData) || layoutData.length < 2) return;
+
+      // tiket HVC: WITEL = witel, REPORTED DATE = today, CUSTOMER TYPE HVC*
+      const tickets = (qData || []).slice(1)
+        .filter(r => {
+          const witel = (r[COL_QB2C.WITEL] || "").toString().trim().toUpperCase();
+          const reported = r[COL_QB2C.REPORTED_DATE];
+          const custType = (r[COL_QB2C.CUSTOMER_TYPE] || "").toString().trim().toUpperCase();
+          return (
+            witel &&
+            isTodayByString(reported) &&
+            HVC_TYPES.has(custType)
+          );
+        })
+        .map(r => ({
+          incident:    r[COL_QB2C.INCIDENT],
+          reportedDate:r[COL_QB2C.REPORTED_DATE],
+          witel:       (r[COL_QB2C.WITEL] || "").toString().trim().toUpperCase(),
+          workzone:    r[COL_QB2C.WORKZONE],
+          serviceType: r[COL_QB2C.SERVICE_TYPE],
+          customerType:r[COL_QB2C.CUSTOMER_TYPE],
+          serviceno:   r[COL_QB2C.SERVICE_NO],
+          technician:  r[COL_QB2C.TECHNICIAN],
+          summary:     r[COL_QB2C.SUMMARY]
+        }));
+
+      const byWitel = {};
+      tickets.forEach(t => {
+        if (!byWitel[t.witel]) byWitel[t.witel] = [];
+        byWitel[t.witel].push(t);
+      });
 
       const thead = `
         <thead>
@@ -2034,30 +2070,55 @@ function loadKpiQHvcAcceptanceTable(config) {
       `;
 
       const bodyRows = [];
-      for (let i = 1; i < data.length; i++) {
-        const r = data[i];
+      for (let i = 1; i < layoutData.length; i++) {
+        const r = layoutData[i];
         if (!r || r.join("").toString().trim() === "") continue;
-        bodyRows.push(r);
+
+        const witelName = (r[0] || "").toString().trim().toUpperCase();
+        const at = Number(r[1] || 0);
+        const list = byWitel[witelName] || [];
+        const realTiket = list.length;      // countifs HVC
+        const excess = realTiket - at;     // Excess = Real - AT
+
+        bodyRows.push({ row: r, witelName, at, realTiket, excess, list });
       }
 
       const tbody = `
         <tbody>
           ${bodyRows
-            .map(
-              (r) => `
-            <tr>
-              <td>${r[0] ?? ""}</td>
-              <td>${r[1] ?? ""}</td>
-              <td>${r[2] ?? ""}</td>
-              <td>${r[3] ?? ""}</td>
-            </tr>
-          `
-            )
+            .map(({ row, witelName, at, realTiket, excess, list }) => {
+              const hasDetail = list.length > 0;
+              const realHtml = hasDetail
+                ? `<button type="button"
+                     class="btn btn-link p-0 q-detail-link"
+                     data-mode="QHVC"
+                     data-witel="${witelName}">
+                     ${realTiket}
+                   </button>`
+                : `<span>${realTiket}</span>`;
+
+              return `
+                <tr>
+                  <td>${row[0] ?? ""}</td>
+                  <td>${at}</td>
+                  <td>${realHtml}</td>
+                  <td>${excess}</td>
+                </tr>
+              `;
+            })
             .join("")}
         </tbody>
       `;
 
       table.innerHTML = thead + tbody;
+
+      table.addEventListener("click", (e) => {
+        const btn = e.target.closest(".q-detail-link");
+        if (!btn) return;
+        const witel = btn.dataset.witel;
+        const list = byWitel[witel] || [];
+        showQDetailModal(`Detail Q HVC – ${witel}`, list);
+      });
     })
     .catch((err) => {
       console.error("Error load tabel Q HVC Acceptance:", err);
