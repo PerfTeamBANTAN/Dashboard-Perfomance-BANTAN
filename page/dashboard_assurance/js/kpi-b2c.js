@@ -2133,14 +2133,51 @@ function loadKpiQHsiAcceptanceTable(config) {
   const table = document.getElementById("kpi-table-qhsi-acceptance");
   if (!table) return;
 
-  const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+  const urlLayout = `${config.baseUrl}?sheet=${encodeURIComponent(
     "WEB"
   )}&range=${encodeURIComponent("WEB!A160:D162")}`;
 
-  fetch(url)
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (!Array.isArray(data) || data.length < 2) return;
+  const urlQ = `${config.baseUrl}?sheet=${encodeURIComponent(
+    "Q HSI"
+  )}&range=${encodeURIComponent("Q HSI!A:CX")}`;
+
+  Promise.all([fetch(urlLayout), fetch(urlQ)])
+    .then(([respLayout, respQ]) =>
+      Promise.all([respLayout.json(), respQ.json()])
+    )
+    .then(([layoutData, qData]) => {
+      if (!Array.isArray(layoutData) || layoutData.length < 2) return;
+
+      // Real Tiket HSI:
+      // COUNTIFS(WITEL = witel, REPORTED DATE = today, FLAG HSI = "Y")
+      const tickets = (qData || []).slice(1)
+        .filter(r => {
+          const witel = (r[COL_QHSI.WITEL] || "").toString().trim().toUpperCase();
+          const reported = r[COL_QHSI.REPORTED_DATE];
+          const flagHsi = (r[COL_QHSI.FLAG_HSI] || "").toString().trim().toUpperCase();
+          return (
+            witel &&
+            isTodayByString(reported) &&
+            flagHsi === "Y"
+          );
+        })
+        .map(r => ({
+          incident:    r[COL_QHSI.INCIDENT],
+          reportedDate:r[COL_QHSI.REPORTED_DATE],
+          witel:       (r[COL_QHSI.WITEL] || "").toString().trim().toUpperCase(),
+          workzone:    r[COL_QHSI.WORKZONE],
+          serviceType: r[COL_QHSI.SERVICE_TYPE],
+          customerType:r[COL_QHSI.CUSTOMER_TYPE],
+          serviceno:   r[COL_QHSI.SERVICE_NO],
+          technician:  r[COL_QHSI.TECHNICIAN],
+          summary:     r[COL_QHSI.SUMMARY]
+        }));
+
+      const byWitel = {};
+      tickets.forEach(t => {
+        if (!byWitel[t.witel]) byWitel[t.witel] = [];
+        byWitel[t.witel].push(t);
+      });
 
       const thead = `
         <thead>
@@ -2154,30 +2191,56 @@ function loadKpiQHsiAcceptanceTable(config) {
       `;
 
       const bodyRows = [];
-      for (let i = 1; i < data.length; i++) {
-        const r = data[i];
+      for (let i = 1; i < layoutData.length; i++) {
+        const r = layoutData[i];
         if (!r || r.join("").toString().trim() === "") continue;
-        bodyRows.push(r);
+
+        const witelName = (r[0] || "").toString().trim().toUpperCase();
+        const at = Number(r[1] || 0);        // Acceptance Ggn (AT)
+        const list = byWitel[witelName] || [];
+        const realTiket = list.length;      // Real Tiket
+        const excess = realTiket - at;     // Excess = Real - AT
+
+        bodyRows.push({ row: r, witelName, at, realTiket, excess, list });
       }
 
       const tbody = `
         <tbody>
           ${bodyRows
-            .map(
-              (r) => `
-            <tr>
-              <td>${r[0] ?? ""}</td>
-              <td>${r[1] ?? ""}</td>
-              <td>${r[2] ?? ""}</td>
-              <td>${r[3] ?? ""}</td>
-            </tr>
-          `
-            )
+            .map(({ row, witelName, at, realTiket, excess, list }) => {
+              const hasDetail = list.length > 0;
+              const realHtml = hasDetail
+                ? `<button type="button"
+                     class="btn btn-link p-0 q-detail-link"
+                     data-mode="QHSI"
+                     data-witel="${witelName}">
+                     ${realTiket}
+                   </button>`
+                : `<span>${realTiket}</span>`;
+
+              return `
+                <tr>
+                  <td>${row[0] ?? ""}</td>
+                  <td>${at}</td>
+                  <td>${realHtml}</td>
+                  <td>${excess}</td>
+                </tr>
+              `;
+            })
             .join("")}
         </tbody>
       `;
 
       table.innerHTML = thead + tbody;
+
+      // klik Real Tiket -> modal detail Q (layout sama Q ALL/HVC)
+      table.addEventListener("click", (e) => {
+        const btn = e.target.closest(".q-detail-link");
+        if (!btn) return;
+        const witel = btn.dataset.witel;
+        const list = byWitel[witel] || [];
+        showQDetailModal(`Detail Q HSI – ${witel}`, list);
+      });
     })
     .catch((err) => {
       console.error("Error load tabel Q HSI Acceptance:", err);
@@ -2218,6 +2281,25 @@ const COL_QB2C = {
   CUSTOMER_TYPE: 24,
   SERVICE_NO: 30,
   TECHNICIAN: 46     
+};
+
+const COL_QHSI = {
+  INCIDENT: 0,
+  TTR_CUSTOMER: 1,
+  SUMMARY: 2,
+  REPORTED_DATE: 3,
+  OWNER_GROUP: 4,
+  OWNER: 5,
+  CUSTOMER_SEGMENT: 6,
+  SERVICE_TYPE: 7,
+  WITEL: 8,
+  WORKZONE: 9,
+  STATUS: 10,
+  STATUS_DATE: 11,
+  CUSTOMER_TYPE: 24,
+  SERVICE_NO: 30,     // sesuaikan kalau beda
+  TECHNICIAN: 46,     // sesuaikan kalau beda
+  FLAG_HSI: 82        // index kolom "FLAG HSI" di Q HSI (cek di sheet)
 };
 
 function setQHeader() {
