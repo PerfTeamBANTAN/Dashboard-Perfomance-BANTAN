@@ -890,7 +890,7 @@ function wireTicketDetailPagination() {
   btnPrev.addEventListener("click", () => {
     const current = Number(modalEl.dataset.currentPage || 1);
     const mode = modalEl.dataset.detailMode || "DTTR";
-    console.log("[Q-MODAL] Prev click, mode:", mode, "current:", current);
+    console.log("[Q-MODAL] Prev click", { mode, current });
     if (mode === "SQM") {
       renderSqmDetailPage(current - 1);
     } else if (mode === "Q") {
@@ -903,7 +903,7 @@ function wireTicketDetailPagination() {
   btnNext.addEventListener("click", () => {
     const current = Number(modalEl.dataset.currentPage || 1);
     const mode = modalEl.dataset.detailMode || "DTTR";
-    console.log("[Q-MODAL] Next click, mode:", mode, "current:", current);
+    console.log("[Q-MODAL] Next click", { mode, current });
     if (mode === "SQM") {
       renderSqmDetailPage(current + 1);
     } else if (mode === "Q") {
