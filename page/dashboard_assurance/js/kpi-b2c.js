@@ -1959,8 +1959,8 @@ function loadKpiQAllAcceptanceTable(config) {
           workzone: r[COL_QB2C.WORKZONE],
           serviceType: r[COL_QB2C.SERVICE_TYPE],
           customerType: r[COL_QB2C.CUSTOMER_TYPE],
-          contactName: r[COL_QB2C.SERVICE_NO],
-          contactPhone: r[COL_QB2C.TECHNICIAN],
+          serviceno: r[COL_QB2C.SERVICE_NO],   // <<< pakai 'serviceno'
+          technician: r[COL_QB2C.TECHNICIAN], // <<< pakai 'technician'
           summary: r[COL_QB2C.SUMMARY]
         }));
 
@@ -2194,7 +2194,7 @@ function setQHeader() {
   const thead = modalEl.querySelector("thead");
   if (!thead) return;
 
-  thead.innerHTML = `
+    thead.innerHTML = `
     <tr>
       <th>INCIDENT</th>
       <th>REPORTED DATE</th>
@@ -2243,7 +2243,7 @@ function renderQDetailPage(page) {
   const end = Math.min(start + pageSize, total);
   const slice = tickets.slice(start, end);
 
-  tbody.innerHTML = slice.map(t => `
+    tbody.innerHTML = slice.map(t => `
     <tr>
       <td>${t.incident || ""}</td>
       <td>${t.reportedDate || ""}</td>
