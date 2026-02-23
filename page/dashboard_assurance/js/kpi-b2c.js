@@ -2009,6 +2009,8 @@ function loadKpiQAllAcceptanceTable(config) {
     });
 }
 
+const HVC_TYPES = new Set(["HVC_PLATINUM", "HVC_DIAMOND", "HVC_VVIP"]);
+
 function loadKpiQHvcAcceptanceTable(config) {
   const table = document.getElementById("kpi-table-qhvc-acceptance");
   if (!table) return;
