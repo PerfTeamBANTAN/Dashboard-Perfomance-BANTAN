@@ -2163,7 +2163,7 @@ function setQHeader() {
   const thead = modalEl.querySelector("thead");
   if (!thead) return;
 
-    thead.innerHTML = `
+  thead.innerHTML = `
     <tr>
       <th>INCIDENT</th>
       <th>REPORTED DATE</th>
@@ -2173,7 +2173,6 @@ function setQHeader() {
       <th>CUSTOMER TYPE</th>
       <th>SERVICE NO</th>
       <th>TECHNICIAN</th>
-      <th>SUMMARY</th>
     </tr>
   `;
 }
@@ -2228,18 +2227,17 @@ function renderQDetailPage(page) {
   const slice = tickets.slice(start, end);
 
   tbody.innerHTML = slice.map(t => `
-    <tr>
-      <td>${t.incident || ""}</td>
-      <td>${t.reportedDate || ""}</td>
-      <td>${t.witel || ""}</td>
-      <td>${t.workzone || ""}</td>
-      <td>${t.serviceType || ""}</td>
-      <td>${t.customerType || ""}</td>
-      <td>${t.serviceno || ""}</td>
-      <td>${t.technician || ""}</td>
-      <td>${t.summary || ""}</td>
-    </tr>
-  `).join("");
+  <tr>
+    <td>${t.incident || ""}</td>
+    <td>${t.reportedDate || ""}</td>
+    <td>${t.witel || ""}</td>
+    <td>${t.workzone || ""}</td>
+    <td>${t.serviceType || ""}</td>
+    <td>${t.customerType || ""}</td>
+    <td>${t.serviceno || ""}</td>
+    <td>${t.technician || ""}</td>
+  </tr>
+`).join("");
 
   totalInfo.textContent = `${total} tiket (showing ${start + 1}–${end})`;
   pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
