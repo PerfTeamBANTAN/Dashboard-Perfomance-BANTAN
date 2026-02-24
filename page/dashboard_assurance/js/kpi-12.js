@@ -27,9 +27,7 @@ function initKPI12(config) {
       const res = await fetch(url);
       if (!res.ok) throw new Error("Network error");
 
-      // Apps Script return: 2D array
       const rows = await res.json();
-
       if (!Array.isArray(rows) || !rows.length) {
         state.raw = [];
         els.lastUpdate.textContent = "Last update: -";
@@ -38,11 +36,9 @@ function initKPI12(config) {
         return;
       }
 
-      // rows[0] = header: ["Indikator","Target","H-1","HI"]
       const header = rows[0].map((h) => (h || "").toString().trim());
       const dataRows = rows.slice(1);
 
-      // Index kolom by name
       const idxIndikator = header.indexOf("Indikator");
       const idxTarget = header.indexOf("Target");
       const idxH1 = header.indexOf("H-1");
@@ -136,14 +132,14 @@ function initKPI12(config) {
 
   function renderSummary() {
     els.summaryRow.innerHTML = "";
+    const medalEl = document.getElementById("kpi12-medal-icon");
+
     if (!state.filtered.length) {
-      const medalEl = document.getElementById("kpi12-medal-icon");
       if (medalEl) medalEl.innerHTML = "";
       return;
     }
 
     const total = state.filtered.length;
-
     const avgTarget =
       state.filtered.reduce((a, b) => a + (b.target || 0), 0) / total;
     const avgH1 =
@@ -153,51 +149,50 @@ function initKPI12(config) {
 
     const meetTargetCount = state.filtered.filter((r) => isMeetTarget(r)).length;
 
+    // Medal
     const medal = getMedalByTotalMeet(meetTargetCount);
-    const medalEl = document.getElementById("kpi12-medal-icon");
     if (medalEl) {
-    medalEl.innerHTML = `
-    <div class="kpi12-medal ${medal.cssClass}">
-      <div class="kpi12-medal-img-wrap">
-        <img src="${medal.img}" alt="${medal.level} Medal" class="kpi12-medal-img">
-      </div>
-      <div class="kpi12-medal-text">
-        <div class="kpi12-medal-label">${medal.level}</div>
-        <div class="kpi12-medal-caption">
-          Total Meet: ${meetTargetCount} indikator
+      medalEl.innerHTML = `
+        <div class="kpi12-medal ${medal.cssClass}">
+          <div class="kpi12-medal-img-wrap">
+            <img src="${medal.img}" alt="${medal.level} Medal" class="kpi12-medal-img">
+          </div>
+          <div class="kpi12-medal-text">
+            <div class="kpi12-medal-label">${medal.level}</div>
+            <div class="kpi12-medal-caption">
+              Meet: ${meetTargetCount} dari ${total} indikator
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  `;
-  }
-
+      `;
+    }
 
     const cards = [
       {
         title: "Jumlah Indikator",
         value: total,
-        subtitle: "Total KPI 12PI Laten",
+        subtitle: "Total indikator laten dipantau",
         type: "primary",
         icon: "fa-list-check",
       },
       {
         title: "Rata-rata Target",
         value: isFinite(avgTarget) ? avgTarget.toFixed(2) + " %" : "-",
-        subtitle: "Target rata-rata",
+        subtitle: "Target rata-rata keseluruhan",
         type: "accent",
         icon: "fa-bullseye",
       },
       {
         title: "Rata-rata HI",
         value: isFinite(avgHI) ? avgHI.toFixed(2) + " %" : "-",
-        subtitle: "Capaian hari ini",
+        subtitle: "Capaian hari ini (HI)",
         type: "success",
         icon: "fa-chart-line",
       },
       {
         title: "Meet / Not Meet",
         value: `${meetTargetCount} / ${total - meetTargetCount}`,
-        subtitle: "HI ≥ Target",
+        subtitle: "Indikator yang mencapai target",
         type: "danger",
         icon: "fa-scale-balanced",
       },
@@ -233,7 +228,6 @@ function initKPI12(config) {
 
     state.filtered.forEach((row) => {
       const moodClass = getMoodClass(row);
-
       const card = document.createElement("div");
       card.className = `kpi12-card ${moodClass}`;
 
@@ -280,13 +274,13 @@ function initKPI12(config) {
         </div>
 
         <div class="kpi12-card-footer">
-          <span class="kpi12-chip kpi12-chip-good">
+          <span class="kpi12-chip">
             HI ≥ Target
           </span>
-          <span class="kpi12-chip kpi12-chip-warning">
-            Mendekati Target
+          <span class="kpi12-chip">
+            Mendekati Target (±5 pt)
           </span>
-          <span class="kpi12-chip kpi12-chip-bad">
+          <span class="kpi12-chip">
             Jauh di bawah Target
           </span>
         </div>
@@ -337,26 +331,27 @@ function initKPI12(config) {
     return "kpi12-card-bad";
   }
 
+  // Medal PNG mapping
   function getMedalByTotalMeet(totalMeet) {
-  if (totalMeet >= 12) {
+    if (totalMeet >= 12) {
+      return {
+        level: "Platinum",
+        img: "assets/home/img/platinum.png",
+        cssClass: "kpi12-medal-platinum",
+      };
+    }
+    if (totalMeet >= 10) {
+      return {
+        level: "Gold",
+        img: "assets/home/img/gold.png",
+        cssClass: "kpi12-medal-gold",
+      };
+    }
     return {
-      level: "Platinum",
-      img: "../../assets/home/img/platinum.png",
-      cssClass: "kpi12-medal-platinum",
+      level: "Silver",
+      img: "assets/home/img/silver.png",
+      cssClass: "kpi12-medal-silver",
     };
-  }
-  if (totalMeet >= 10) {
-    return {
-      level: "Gold",
-      img: "../../assets/home/img/gold.png",
-      cssClass: "kpi12-medal-gold",
-    };
-  }
-  return {
-    level: "Silver",
-    img: "../../assets/home/img/silver.png",
-    cssClass: "kpi12-medal-silver",
-  };
   }
 
   function showLoading(flag) {
@@ -372,6 +367,7 @@ function initKPI12(config) {
     els.error.classList.add("d-none");
   }
 
+  // Events
   els.filterSegmen.addEventListener("change", applyFilter);
   els.refreshBtn.addEventListener("click", fetchData);
 
