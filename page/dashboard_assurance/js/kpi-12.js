@@ -315,6 +315,21 @@ function initKPI12(config) {
     return "kpi12-card-bad";
   }
 
+  function getMedalByTotalMeet(totalMeet) {
+  if (totalMeet === 12) {
+    return { level: "Platinum", iconClass: "kpi12-medal-platinum" };
+  }
+  if (totalMeet > 10) {
+    return { level: "Gold", iconClass: "kpi12-medal-gold" };
+  }
+  if (totalMeet > 8) {
+    return { level: "Gold", iconClass: "kpi12-medal-gold" };
+    // kalau mau beda:
+    // return { level: "Silver", iconClass: "kpi12-medal-silver" };
+  }
+  return { level: "Bronze", iconClass: "kpi12-medal-bronze" };
+}
+  
   function showLoading(flag) {
     els.loading.style.display = flag ? "block" : "none";
   }
