@@ -320,3 +320,73 @@
     text-align: left !important;
   }
 }
+
+/* Row berisi Target, H-1, HI */
+.kpi12-metric-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* Blok per angka (Target / H-1 / HI) */
+.kpi12-metric-block {
+  flex: 1 1 0;
+  min-width: 90px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #ffffff, #f3f3f3);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.03);
+}
+
+/* Label di atas angka (kalau belum ada di CSS) */
+.kpi12-metric-label {
+  font-size: 0.7rem;
+  color: #777;
+  margin-bottom: 2px;
+}
+
+/* Nilai utama (kalau mau override yang lama khusus di blok kecil) */
+.kpi12-metric-block .kpi12-metric-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111;
+}
+
+/* Delta (HI - Target / H-1 - Target) */
+.kpi12-metric-delta {
+  font-size: 0.7rem;
+  margin-top: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Warna delta */
+.kpi12-delta-up {
+  color: #0f5132;      /* hijau */
+}
+
+.kpi12-delta-down {
+  color: #842029;      /* merah */
+}
+
+.kpi12-delta-neutral {
+  color: #6c757d;      /* abu */
+}
+
+/* Ikon panah kecil (opsional) */
+.kpi12-delta-up::before {
+  content: "▲";
+  font-size: 0.55rem;
+}
+
+.kpi12-delta-down::before {
+  content: "▼";
+  font-size: 0.55rem;
+}
+
+.kpi12-delta-neutral::before {
+  content: "◆";
+  font-size: 0.5rem;
+}
