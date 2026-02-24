@@ -136,70 +136,87 @@ function initKPI12(config) {
   }
 
   function renderSummary() {
-    els.summaryRow.innerHTML = "";
-    if (!state.filtered.length) return;
-
-    const total = state.filtered.length;
-
-    const avgTarget =
-      state.filtered.reduce((a, b) => a + (b.target || 0), 0) / total;
-    const avgH1 =
-      state.filtered.reduce((a, b) => a + (b.h1 || 0), 0) / total;
-    const avgHI =
-      state.filtered.reduce((a, b) => a + (b.hi || 0), 0) / total;
-
-    const meetTargetCount = state.filtered.filter((r) => isMeetTarget(r)).length;
-
-    const cards = [
-      {
-        title: "Jumlah Indikator",
-        value: total,
-        subtitle: "Total KPI 12PI Laten",
-        type: "primary",
-        icon: "fa-list-check",
-      },
-      {
-        title: "Rata-rata Target",
-        value: isFinite(avgTarget) ? avgTarget.toFixed(2) + " %" : "-",
-        subtitle: "Target rata-rata",
-        type: "accent",
-        icon: "fa-bullseye",
-      },
-      {
-        title: "Rata-rata HI",
-        value: isFinite(avgHI) ? avgHI.toFixed(2) + " %" : "-",
-        subtitle: "Capaian hari ini",
-        type: "success",
-        icon: "fa-chart-line",
-      },
-      {
-        title: "Meet / Not Meet",
-        value: `${meetTargetCount} / ${total - meetTargetCount}`,
-        subtitle: "HI ≥ Target",
-        type: "danger",
-        icon: "fa-scale-balanced",
-      },
-    ];
-
-    cards.forEach((c) => {
-      const col = document.createElement("div");
-      col.className = "col-12 col-md-6 col-xl-3";
-
-      col.innerHTML = `
-        <div class="kpi12-summary-card kpi12-summary-${c.type}">
-          <div class="kpi12-summary-icon">
-            <i class="fa ${c.icon}"></i>
-          </div>
-          <div class="kpi12-summary-body">
-            <div class="kpi12-summary-title">${c.title}</div>
-            <div class="kpi12-summary-value">${c.value}</div>
-            <div class="kpi12-summary-subtitle">${c.subtitle}</div>
-          </div>
-        </div>
-      `;
-      els.summaryRow.appendChild(col);
-    });
+  els.summaryRow.innerHTML = "";
+  if (!state.filtered.length) {
+    // kalau tidak ada data, kosongkan medal juga
+    const medalEl = document.getElementById("kpi12-medal-icon");
+    if (medalEl) medalEl.innerHTML = "";
+    return;
   }
+
+  const total = state.filtered.length;
+
+  const avgTarget =
+    state.filtered.reduce((a, b) => a + (b.target || 0), 0) / total;
+  const avgH1 =
+    state.filtered.reduce((a, b) => a + (b.h1 || 0), 0) / total;
+  const avgHI =
+    state.filtered.reduce((a, b) => a + (b.hi || 0), 0) / total;
+
+  const meetTargetCount = state.filtered.filter((r) => isMeetTarget(r)).length;
+
+  // Tentukan medal berdasarkan total meet
+  const medal = getMedalByTotalMeet(meetTargetCount);
+  const medalEl = document.getElementById("kpi12-medal-icon");
+  if (medalEl) {
+    medalEl.innerHTML = `
+      <div class="kpi12-medal ${medal.iconClass}">
+        <i class="fa fa-medal"></i>
+        <span class="kpi12-medal-label">${medal.level}</span>
+      </div>
+    `;
+  }
+
+  const cards = [
+    {
+      title: "Jumlah Indikator",
+      value: total,
+      subtitle: "Total KPI 12PI Laten",
+      type: "primary",
+      icon: "fa-list-check",
+    },
+    {
+      title: "Rata-rata Target",
+      value: isFinite(avgTarget) ? avgTarget.toFixed(2) + " %" : "-",
+      subtitle: "Target rata-rata",
+      type: "accent",
+      icon: "fa-bullseye",
+    },
+    {
+      title: "Rata-rata HI",
+      value: isFinite(avgHI) ? avgHI.toFixed(2) + " %" : "-",
+      subtitle: "Capaian hari ini",
+      type: "success",
+      icon: "fa-chart-line",
+    },
+    {
+      title: "Meet / Not Meet",
+      value: `${meetTargetCount} / ${total - meetTargetCount}`,
+      subtitle: "HI ≥ Target",
+      type: "danger",
+      icon: "fa-scale-balanced",
+    },
+  ];
+
+  cards.forEach((c) => {
+    const col = document.createElement("div");
+    col.className = "col-12 col-md-6 col-xl-3";
+
+    col.innerHTML = `
+      <div class="kpi12-summary-card kpi12-summary-${c.type}">
+        <div class="kpi12-summary-icon">
+          <i class="fa ${c.icon}"></i>
+        </div>
+        <div class="kpi12-summary-body">
+          <div class="kpi12-summary-title">${c.title}</div>
+          <div class="kpi12-summary-value">${c.value}</div>
+          <div class="kpi12-summary-subtitle">${c.subtitle}</div>
+        </div>
+      </div>
+    `;
+    els.summaryRow.appendChild(col);
+  });
+}
 
   function renderCards() {
     els.cardGrid.innerHTML = "";
