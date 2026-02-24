@@ -1,0 +1,322 @@
+/* Wrapper */
+.kpi12-wrapper {
+  animation: kpi12-fade-in 0.4s ease-out;
+}
+
+@keyframes kpi12-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+.kpi12-header {
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(229,228,226,0.9), rgba(192,192,192,0.95));
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+  border: 1px solid rgba(255,255,255,0.7);
+  backdrop-filter: blur(6px);
+}
+
+.kpi12-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.kpi12-subtitle {
+  font-size: 0.8rem;
+  color: #444;
+}
+
+.kpi12-meta {
+  min-width: 160px;
+}
+
+.kpi12-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #d4af37, #cd7f32);
+  color: #111;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.kpi12-update {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: #333;
+}
+
+/* Toolbar */
+.kpi12-toolbar {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffffff, #f7f7f7);
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.kpi12-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.kpi12-select {
+  min-width: 150px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: linear-gradient(145deg, #ffffff, #f2f2f2);
+  font-size: 0.8rem;
+}
+
+/* Summary Cards */
+.kpi12-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.6);
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.95), rgba(230,230,230,0.95));
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi12-summary-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.kpi12-summary-card:hover::after {
+  opacity: 1;
+}
+
+.kpi12-summary-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 30% 10%, #fff, #f2f2f2);
+  box-shadow: inset 0 0 12px rgba(255,255,255,0.7);
+  color: #b8860b;
+}
+
+.kpi12-summary-body {
+  flex: 1;
+}
+
+.kpi12-summary-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.kpi12-summary-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.kpi12-summary-subtitle {
+  font-size: 0.75rem;
+  color: #555;
+}
+
+.kpi12-summary-primary {
+  border-image: linear-gradient(90deg, #e5e4e2, #c0c0c0) 1;
+}
+
+.kpi12-summary-accent {
+  border-image: linear-gradient(90deg, #d4af37, #cd7f32) 1;
+}
+
+.kpi12-summary-success {
+  border-image: linear-gradient(90deg, #6dd5ed, #2193b0) 1;
+}
+
+.kpi12-summary-danger {
+  border-image: linear-gradient(90deg, #f85032, #e73827) 1;
+}
+
+/* Card Grid */
+.kpi12-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+/* Detail Card */
+.kpi12-card {
+  border-radius: 18px;
+  padding: 12px 14px;
+  background: linear-gradient(145deg, #ffffff, #f5f5f5);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+  border: 1px solid rgba(255,255,255,0.8);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi12-card::before {
+  content: "";
+  position: absolute;
+  width: 140%;
+  height: 140%;
+  top: -60%;
+  right: -60%;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.5), transparent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.kpi12-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.26);
+}
+
+.kpi12-card:hover::before {
+  opacity: 1;
+}
+
+.kpi12-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.kpi12-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.kpi12-card-subtitle {
+  font-size: 0.75rem;
+  color: #555;
+}
+
+.kpi12-card-badge {
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #e5e4e2, #c0c0c0);
+  color: #111;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+}
+
+/* Card body */
+.kpi12-card-body {
+  margin-top: 4px;
+}
+
+.kpi12-card-metric {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.kpi12-card-metric-label {
+  font-size: 0.75rem;
+  color: #555;
+}
+
+.kpi12-card-metric-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #111;
+}
+
+/* Bar */
+.kpi12-card-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f0f0f0, #e0e0e0);
+  overflow: hidden;
+}
+
+.kpi12-card-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #d4af37, #cd7f32);
+  box-shadow: 0 0 8px rgba(212,175,55,0.8);
+  transition: width 0.4s ease-out;
+}
+
+/* Footer chips */
+.kpi12-card-footer {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.kpi12-chip {
+  font-size: 0.68rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: rgba(255,255,255,0.8);
+}
+
+.kpi12-chip-good {
+  color: #155724;
+  border-color: rgba(40,167,69,0.4);
+}
+
+.kpi12-chip-warning {
+  color: #856404;
+  border-color: rgba(255,193,7,0.6);
+}
+
+.kpi12-chip-bad {
+  color: #721c24;
+  border-color: rgba(220,53,69,0.5);
+}
+
+/* Mood border dan glow */
+.kpi12-card-good {
+  border-image: linear-gradient(135deg, #6dd5ed, #2193b0) 1;
+  box-shadow: 0 10px 24px rgba(33,147,176,0.35);
+}
+
+.kpi12-card-warning {
+  border-image: linear-gradient(135deg, #f9d976, #f39f86) 1;
+  box-shadow: 0 10px 24px rgba(243,159,134,0.35);
+}
+
+.kpi12-card-bad {
+  border-image: linear-gradient(135deg, #f85032, #e73827) 1;
+  box-shadow: 0 10px 24px rgba(232,56,39,0.4);
+}
+
+/* Loading */
+.kpi12-loading .spinner-border {
+  color: #d4af37;
+}
+
+/* Responsive tweak */
+@media (max-width: 576px) {
+  .kpi12-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 6px;
+  }
+  .kpi12-meta {
+    text-align: left !important;
+  }
+}
