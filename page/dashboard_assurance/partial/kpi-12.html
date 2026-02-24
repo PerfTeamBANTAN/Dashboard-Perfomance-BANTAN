@@ -2,46 +2,48 @@
 
   <!-- Header KPI -->
   <div class="kpi12-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-    <div class="d-flex align-items-center gap-2">
+    <div class="d-flex align-items-center gap-3">
       <div class="kpi12-medal-icon" id="kpi12-medal-icon">
-        <!-- medal akan di-inject via JS -->
+        <!-- medal by JS -->
       </div>
       <div>
         <h3 class="kpi12-title mb-1">
-          KPI 12PI Laten TANGERANG Branch Telkomsel
+          KPI 12PI Laten – TANGERANG Branch
         </h3>
         <p class="kpi12-subtitle mb-0">
-          Performance Indikator Laten – Monitoring harian per Indikator (Target, H-1, HI)
+          Monitoring harian indikator laten: Target, H‑1, HI, dan pencapaian konten.
         </p>
       </div>
     </div>
     <div class="kpi12-meta text-end">
-      <div class="kpi12-badge">Live Update</div>
-      <div class="kpi12-update" id="kpi12-last-update">Loading...</div>
+      <div class="kpi12-badge">
+        Live Update
+      </div>
+      <div class="kpi12-update" id="kpi12-last-update">Last update: -</div>
     </div>
   </div>
 
   <!-- Toolbar filter -->
   <div class="kpi12-toolbar d-flex flex-wrap align-items-center justify-content-between mb-3">
     <div class="d-flex flex-wrap align-items-center gap-2">
-      <span class="kpi12-label">Filter Indikator:</span>
+      <span class="kpi12-label">Filter Indikator</span>
       <select id="kpi12-filter-segmen" class="form-select form-select-sm kpi12-select">
         <option value="ALL" selected>All Indikator</option>
       </select>
     </div>
-    <button id="kpi12-refresh" class="btn btn-sm btn-primary">
-      <i class="fa fa-rotate-right me-1"></i> Refresh Data
+    <button id="kpi12-refresh" class="btn btn-sm btn-outline-light kpi12-refresh-btn">
+      <i class="fa fa-rotate-right me-1"></i> Refresh
     </button>
   </div>
 
   <!-- Summary Cards -->
   <div class="row g-3 mb-3" id="kpi12-summary-row">
-    <!-- summary cards via JS -->
+    <!-- via JS -->
   </div>
 
   <!-- Detail Cards -->
   <div class="kpi12-card-grid" id="kpi12-card-grid">
-    <!-- cards per indikator via JS -->
+    <!-- via JS -->
   </div>
 
   <!-- Loading & Error -->
