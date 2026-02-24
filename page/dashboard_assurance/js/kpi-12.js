@@ -156,13 +156,21 @@ function initKPI12(config) {
     const medal = getMedalByTotalMeet(meetTargetCount);
     const medalEl = document.getElementById("kpi12-medal-icon");
     if (medalEl) {
-      medalEl.innerHTML = `
-        <div class="kpi12-medal ${medal.iconClass}">
-          <i class="fa fa-medal"></i>
-          <span class="kpi12-medal-label">${medal.level}</span>
+    medalEl.innerHTML = `
+    <div class="kpi12-medal ${medal.cssClass}">
+      <div class="kpi12-medal-img-wrap">
+        <img src="${medal.img}" alt="${medal.level} Medal" class="kpi12-medal-img">
+      </div>
+      <div class="kpi12-medal-text">
+        <div class="kpi12-medal-label">${medal.level}</div>
+        <div class="kpi12-medal-caption">
+          Total Meet: ${meetTargetCount} indikator
         </div>
-      `;
-    }
+      </div>
+    </div>
+  `;
+  }
+
 
     const cards = [
       {
@@ -330,19 +338,28 @@ function initKPI12(config) {
   }
 
   function getMedalByTotalMeet(totalMeet) {
-    if (totalMeet === 12) {
-      return { level: "Platinum", iconClass: "kpi12-medal-platinum" };
-    }
-    if (totalMeet > 10) {
-      return { level: "Gold", iconClass: "kpi12-medal-gold" };
-    }
-    if (totalMeet > 8) {
-      return { level: "Gold", iconClass: "kpi12-medal-gold" };
-      // kalau mau beda:
-      // return { level: "Silver", iconClass: "kpi12-medal-silver" };
-    }
-    return { level: "Bronze", iconClass: "kpi12-medal-bronze" };
+  if (totalMeet >= 12) {
+    return {
+      level: "Platinum",
+      img: "assets/home/img/platinum.png",
+      cssClass: "kpi12-medal-platinum",
+    };
   }
+  if (totalMeet >= 10) {
+    return {
+      level: "Gold",
+      img: "assets/home/img/gold.png",
+      cssClass: "kpi12-medal-gold",
+    };
+  }
+  return {
+    level: "Silver",
+    img: "assets/home/img/silver.png",
+    cssClass: "kpi12-medal-silver",
+  };
+  }
+
+
 
   function showLoading(flag) {
     els.loading.style.display = flag ? "block" : "none";
