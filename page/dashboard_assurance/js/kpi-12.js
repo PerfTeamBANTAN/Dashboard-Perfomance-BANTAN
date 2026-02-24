@@ -239,8 +239,8 @@ function initKPI12(config) {
           <div>
             <div class="kpi12-card-title">${row.indikator || "-"}</div>
           </div>
-          <div class="kpi12-card-badge">
-            ${isMeetTarget(row) ? "Meet Target" : "Not Meet"}
+          <div class="kpi12-card-badge ${isMeetTarget(row) ? "kpi12-badge-comply" : "kpi12-badge-not-comply"}">
+            ${isMeetTarget(row) ? "Comply" : "Not Comply"}
           </div>
         </div>
 
