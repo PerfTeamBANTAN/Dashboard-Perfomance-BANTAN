@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 <title>Assurance Maintenance Telkomsel Branch | Enterprise Assurance Maintenance Monitoring</title>
 
@@ -13,8 +14,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style"
-href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
-onload="this.onload=null;this.rel='stylesheet'">
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'">
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -131,74 +132,77 @@ body {
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark">
-<div class="container-fluid">
+  <div class="container-fluid">
 
-<a class="navbar-brand" href="#" onclick="location.reload()">
-  <img src="../../assets/home/performance-team.png" height="40" class="me-2">
-  Assurance & Maintenance 
-</a>
-
-<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-<span class="navbar-toggler-icon"></span>
-</button>
-
-<div class="collapse navbar-collapse" id="navbarNav">
-<ul class="navbar-nav">
-
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-      PERFORMANCE KPI
+    <a class="navbar-brand" href="#" onclick="location.reload()">
+      <img src="../../assets/home/performance-team.png" height="40" class="me-2">
+      Assurance & Maintenance 
     </a>
 
-    <ul class="dropdown-menu">
-      <li>
-        <a class="dropdown-item menu-link" data-menu="kpi-12">
-          KPI 12PI Laten TANGERANG Branch Telkomsel
-        </a>
-      </li>
-      <li>
-        <a class="dropdown-item menu-link" data-menu="kpi-b2c">
-          KPI B2C TANGERANG Branch Telkomsel
-        </a>
-      </li>
-      <li>
-        <a class="dropdown-item menu-link" data-menu="kpi-b2b">
-          KPI B2C TANGERANG Branch Telkomsel
-        </a>
-      </li>
-      <li><hr class="dropdown-divider"></li>
-    </ul>
-  </li>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-</ul>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
 
-<ul class="navbar-nav ms-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../../index.html"><i class="fa fa-home"></i> Dashboard</a>
-  </li>
-  <li class="nav-item">
-    <span class="nav-link disabled" id="userLabel"></span>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link text-danger" href="#" onclick="logout()">
-      <i class="fa fa-sign-out-alt"></i> Logout
-    </a>
-  </li>
-</ul>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            PERFORMANCE KPI
+          </a>
 
-</div>
-</div>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item menu-link" data-menu="kpi-12">
+                KPI 12PI Laten TANGERANG Branch Telkomsel
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item menu-link" data-menu="kpi-b2c">
+                KPI B2C TANGERANG Branch Telkomsel
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item menu-link" data-menu="kpi-b2b">
+                KPI B2B TANGERANG Branch Telkomsel
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+          </ul>
+        </li>
+
+      </ul>
+
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="../../index.html"><i class="fa fa-home"></i> Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <span class="nav-link disabled" id="userLabel"></span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-danger" href="#" onclick="logout()">
+            <i class="fa fa-sign-out-alt"></i> Logout
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
 </nav>
 
 <div class="home-fullscreen home-bg" id="home-fullscreen">
-<div id="content-area"></div>
+  <div id="content-area"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-const KPI_API_URL = 'https://script.google.com/macros/s/AKfycbxL_isP6OTrlirRz5ySpKWxE-GTumtsJocf2TJa57MlT-yYcdSx4JJ7RtoxvO3y3SqysA/exec';
+// Web app B2C/B2B (lama)
+const KPI_API_URL_MAIN = 'https://script.google.com/macros/s/AKfycbxL_isP6OTrlirRz5ySpKWxE-GTumtsJocf2TJa57MlT-yYcdSx4JJ7RtoxvO3y3SqysA/exec';
+// Web app KPI 12PI (baru)
+const KPI_API_URL_12PI = 'https://script.google.com/macros/s/AKfycbxPGJ4Rt7_yQFh-Gnmtp44ZxkuBvwWWvraWEzt8MNs81PlDs_rHONb4VAXs9iJdMwNE/exec';
 
 const menuMap = {
   "kpi-12": {
@@ -206,14 +210,16 @@ const menuMap = {
     js: "js/kpi-12.js",
     css: "css/kpi-12.css",
     init: "initKPI12",
-    sheet: "WEB",
+    baseUrl: KPI_API_URL_12PI,
+    sheet: "web",
     range: "A1:D13"
-  },  
+  },
   "kpi-b2c": {
     html: "partial/kpi-b2c.html",
     js: "js/kpi-b2c.js",
     css: "css/kpi-b2c.css",
     init: "initKPIB2C",
+    baseUrl: KPI_API_URL_MAIN,
     sheet: "WEB",
     range: "A1:F28"
   },
@@ -222,6 +228,7 @@ const menuMap = {
     js: "js/kpi-b2b.js",
     css: "css/kpi-b2b.css",
     init: "initKPIB2B",
+    baseUrl: KPI_API_URL_MAIN,
     sheet: "WEB_B2B",
     range: "A1:F28"
   }
@@ -232,7 +239,11 @@ async function loadPage(menu) {
   const home = document.getElementById("home-fullscreen");
 
   home.classList.remove("home-bg");
-  content.innerHTML = `<div class="text-center"><div class="spinner-border"></div><div>Loading...</div></div>`;
+  content.innerHTML = `
+    <div class="text-center">
+      <div class="spinner-border"></div>
+      <div>Loading...</div>
+    </div>`;
 
   if (!menuMap[menu]) return showUnderConstruction();
 
@@ -248,11 +259,10 @@ async function loadPage(menu) {
   const s = document.createElement("script");
   s.src = cfg.js + "?v=" + Date.now();
   s.onload = () => {
-    // kirim 1 objek config ke init
     const initFn = window[cfg.init];
     if (typeof initFn === "function") {
       initFn({
-        baseUrl: KPI_API_URL,
+        baseUrl: cfg.baseUrl,
         sheet: cfg.sheet,
         range: cfg.range
       });
@@ -277,27 +287,27 @@ function showUnderConstruction() {
   </div>`;
 }
 
-document.querySelectorAll(".menu-link").forEach(el=>{
-  el.addEventListener("click", e=>{
+document.querySelectorAll(".menu-link").forEach(el => {
+  el.addEventListener("click", e => {
     e.preventDefault();
     loadPage(el.dataset.menu);
   });
 });
 
 const user = localStorage.getItem("user");
-if(user){
+if (user) {
   document.getElementById("userLabel").innerText = "Hi, " + user;
 }
 if (!localStorage.getItem("user")) {
   window.location.href = "login.html";
 }
+
 function logout() {
-  if(confirm("Yakin mau logout?")) {
+  if (confirm("Yakin mau logout?")) {
     localStorage.removeItem("user");
     window.location.href = "../../login.html";
   }
 }
-  
 </script>
 
 </body>
