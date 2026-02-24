@@ -341,20 +341,20 @@ function initKPI12(config) {
   if (totalMeet >= 12) {
     return {
       level: "Platinum",
-      img: "assets/home/img/platinum.png",
+      img: "../../assets/home/img/platinum.png",
       cssClass: "kpi12-medal-platinum",
     };
   }
   if (totalMeet >= 10) {
     return {
       level: "Gold",
-      img: "assets/home/img/gold.png",
+      img: "../../assets/home/img/gold.png",
       cssClass: "kpi12-medal-gold",
     };
   }
   return {
     level: "Silver",
-    img: "assets/home/img/silver.png",
+    img: "../../assets/home/img/silver.png",
     cssClass: "kpi12-medal-silver",
   };
   }
