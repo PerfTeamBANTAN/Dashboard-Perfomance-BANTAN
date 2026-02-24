@@ -6,6 +6,7 @@ function initKPI12(config) {
   };
 
   const els = {
+    header: document.querySelector(".kpi12-header"),
     loading: document.getElementById("kpi12-loading"),
     error: document.getElementById("kpi12-error"),
     summaryRow: document.getElementById("kpi12-summary-row"),
@@ -131,92 +132,116 @@ function initKPI12(config) {
   }
 
   function renderSummary() {
-    els.summaryRow.innerHTML = "";
-    const medalEl = document.getElementById("kpi12-medal-icon");
+  els.summaryRow.innerHTML = "";
+  const medalEl = document.getElementById("kpi12-medal-icon");
 
-    if (!state.filtered.length) {
-      if (medalEl) medalEl.innerHTML = "";
-      return;
+  if (!state.filtered.length) {
+    if (medalEl) medalEl.innerHTML = "";
+    if (els.header) {
+      els.header.classList.remove(
+        "kpi12-header-gold",
+        "kpi12-header-platinum",
+        "kpi12-header-silver"
+      );
     }
-
-    const total = state.filtered.length;
-    const avgTarget =
-      state.filtered.reduce((a, b) => a + (b.target || 0), 0) / total;
-    const avgH1 =
-      state.filtered.reduce((a, b) => a + (b.h1 || 0), 0) / total;
-    const avgHI =
-      state.filtered.reduce((a, b) => a + (b.hi || 0), 0) / total;
-
-    const meetTargetCount = state.filtered.filter((r) => isMeetTarget(r)).length;
-
-    // Medal
-    const medal = getMedalByTotalMeet(meetTargetCount);
-    if (medalEl) {
-      medalEl.innerHTML = `
-        <div class="kpi12-medal ${medal.cssClass}">
-          <div class="kpi12-medal-img-wrap">
-            <img src="${medal.img}" alt="${medal.level} Medal" class="kpi12-medal-img">
-          </div>
-          <div class="kpi12-medal-text">
-            <div class="kpi12-medal-label">${medal.level}</div>
-            <div class="kpi12-medal-caption">
-              Meet: ${meetTargetCount} dari ${total} indikator
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    const cards = [
-      {
-        title: "Jumlah Indikator",
-        value: total,
-        subtitle: "Total indikator laten dipantau",
-        type: "primary",
-        icon: "fa-list-check",
-      },
-      {
-        title: "Rata-rata Target",
-        value: isFinite(avgTarget) ? avgTarget.toFixed(2) + " %" : "-",
-        subtitle: "Target rata-rata keseluruhan",
-        type: "accent",
-        icon: "fa-bullseye",
-      },
-      {
-        title: "Rata-rata HI",
-        value: isFinite(avgHI) ? avgHI.toFixed(2) + " %" : "-",
-        subtitle: "Capaian hari ini (HI)",
-        type: "success",
-        icon: "fa-chart-line",
-      },
-      {
-        title: "Meet / Not Meet",
-        value: `${meetTargetCount} / ${total - meetTargetCount}`,
-        subtitle: "Indikator yang mencapai target",
-        type: "danger",
-        icon: "fa-scale-balanced",
-      },
-    ];
-
-    cards.forEach((c) => {
-      const col = document.createElement("div");
-      col.className = "col-12 col-md-6 col-xl-3";
-
-      col.innerHTML = `
-        <div class="kpi12-summary-card kpi12-summary-${c.type}">
-          <div class="kpi12-summary-icon">
-            <i class="fa ${c.icon}"></i>
-          </div>
-          <div class="kpi12-summary-body">
-            <div class="kpi12-summary-title">${c.title}</div>
-            <div class="kpi12-summary-value">${c.value}</div>
-            <div class="kpi12-summary-subtitle">${c.subtitle}</div>
-          </div>
-        </div>
-      `;
-      els.summaryRow.appendChild(col);
-    });
+    return;
   }
+
+  const total = state.filtered.length;
+  const avgTarget =
+    state.filtered.reduce((a, b) => a + (b.target || 0), 0) / total;
+  const avgH1 =
+    state.filtered.reduce((a, b) => a + (b.h1 || 0), 0) / total;
+  const avgHI =
+    state.filtered.reduce((a, b) => a + (b.hi || 0), 0) / total;
+
+  const meetTargetCount = state.filtered.filter((r) => isMeetTarget(r)).length;
+
+  // ===== MEDAL + HEADER COLOR =====
+  const medal = getMedalByTotalMeet(meetTargetCount);
+
+  if (medalEl) {
+    medalEl.innerHTML = `
+      <div class="kpi12-medal ${medal.cssClass}">
+        <div class="kpi12-medal-img-wrap">
+          <img src="${medal.img}" alt="${medal.level} Medal" class="kpi12-medal-img">
+        </div>
+        <div class="kpi12-medal-text">
+          <div class="kpi12-medal-label">${medal.level}</div>
+          <div class="kpi12-medal-caption">
+            Meet: ${meetTargetCount} dari ${total} indikator
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (els.header) {
+    els.header.classList.remove(
+      "kpi12-header-gold",
+      "kpi12-header-platinum",
+      "kpi12-header-silver"
+    );
+    if (medal.level === "Gold") {
+      els.header.classList.add("kpi12-header-gold");
+    } else if (medal.level === "Platinum") {
+      els.header.classList.add("kpi12-header-platinum");
+    } else if (medal.level === "Silver") {
+      els.header.classList.add("kpi12-header-silver");
+    }
+  }
+
+  // ===== SUMMARY CARDS =====
+  const cards = [
+    {
+      title: "Jumlah Indikator",
+      value: total,
+      subtitle: "Total indikator laten dipantau",
+      type: "primary",
+      icon: "fa-list-check",
+    },
+    {
+      title: "Rata-rata Target",
+      value: isFinite(avgTarget) ? avgTarget.toFixed(2) + " %" : "-",
+      subtitle: "Target rata-rata keseluruhan",
+      type: "accent",
+      icon: "fa-bullseye",
+    },
+    {
+      title: "Rata-rata HI",
+      value: isFinite(avgHI) ? avgHI.toFixed(2) + " %" : "-",
+      subtitle: "Capaian hari ini (HI)",
+      type: "success",
+      icon: "fa-chart-line",
+    },
+    {
+      title: "Comply / Not Comply",
+      value: `${meetTargetCount} / ${total - meetTargetCount}`,
+      subtitle: "Indikator yang mencapai target",
+      type: "danger",
+      icon: "fa-scale-balanced",
+    },
+  ];
+
+  cards.forEach((c) => {
+    const col = document.createElement("div");
+    col.className = "col-12 col-md-6 col-xl-3";
+
+    col.innerHTML = `
+      <div class="kpi12-summary-card kpi12-summary-${c.type}">
+        <div class="kpi12-summary-icon">
+          <i class="fa ${c.icon}"></i>
+        </div>
+        <div class="kpi12-summary-body">
+          <div class="kpi12-summary-title">${c.title}</div>
+          <div class="kpi12-summary-value">${c.value}</div>
+          <div class="kpi12-summary-subtitle">${c.subtitle}</div>
+        </div>
+      </div>
+    `;
+    els.summaryRow.appendChild(col);
+  });
+}
 
   function renderCards() {
     els.cardGrid.innerHTML = "";
