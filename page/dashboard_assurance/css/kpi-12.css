@@ -1,43 +1,43 @@
-/* Wrapper */
+/* ================== WRAPPER & ANIM ================== */
 .kpi12-wrapper {
   animation: kpi12-fade-in 0.45s ease-out;
 }
 
 @keyframes kpi12-fade-in {
-  from { opacity: 0; transform: translateY(12px) scale(0.99); }
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Header */
+/* ================== HEADER ================== */
 .kpi12-header {
-  padding: 16px 20px;
-  border-radius: 18px;
+  padding: 18px 22px;
+  border-radius: 24px;
   background:
-    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.9), transparent 55%),
-    linear-gradient(135deg, rgba(229,228,226,0.96), rgba(192,192,192,0.98));
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.95), transparent 55%),
+    linear-gradient(135deg, #f0f0f3, #c9ccd5);
   box-shadow:
-    0 18px 35px rgba(0,0,0,0.35),
-    inset 0 0 0 1px rgba(255,255,255,0.4);
-  border: 1px solid rgba(255,255,255,0.7);
-  backdrop-filter: blur(10px);
+    0 22px 40px rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.65);
+  border: 1px solid rgba(255,255,255,0.85);
+  backdrop-filter: blur(14px);
 }
 
 .kpi12-title {
-  font-size: 1.25rem;
+  font-size: 1.26rem;
   font-weight: 800;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   color: #111;
-  text-shadow: 0 1px 2px rgba(255,255,255,0.6);
+  text-shadow: 0 1px 3px rgba(255,255,255,0.7);
 }
 
 .kpi12-subtitle {
   font-size: 0.8rem;
-  color: #333;
-  opacity: 0.9;
+  color: #2f343a;
+  opacity: 0.95;
 }
 
 .kpi12-meta {
-  min-width: 180px;
+  min-width: 190px;
 }
 
 /* Live badge */
@@ -45,14 +45,15 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: 999px;
   font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  background: radial-gradient(circle at 0% 0%, #fff8e1, #f3d27a);
+  background:
+    radial-gradient(circle at 0% 0%, #fffbea, #f7d27c);
   color: #111;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  box-shadow: 0 5px 16px rgba(0,0,0,0.28);
   position: relative;
   overflow: hidden;
 }
@@ -61,7 +62,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, rgba(255,255,255,0.6), transparent 60%);
+  background: linear-gradient(120deg, rgba(255,255,255,0.7), transparent 60%);
   opacity: 0;
   transform: translateX(-40%);
   transition: opacity 0.5s, transform 0.5s;
@@ -69,7 +70,7 @@
 
 .kpi12-badge:hover::before {
   opacity: 1;
-  transform: translateX(20%);
+  transform: translateX(25%);
 }
 
 .kpi12-update {
@@ -79,84 +80,106 @@
   opacity: 0.9;
 }
 
-/* Medal di header */
+/* ================== MEDAL (FLOATING & SPIN) ================== */
 .kpi12-medal-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 10px;
+  margin-right: 12px;
 }
 
 .kpi12-medal {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: 8px;
+  padding: 7px 14px;
   border-radius: 999px;
   background:
-    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.95), transparent 55%),
-    linear-gradient(135deg, #fdfdfd, #f1f1f1);
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.98), transparent 55%),
+    linear-gradient(135deg, #fdfdfd, #f1f1f4);
   box-shadow:
-    0 8px 20px rgba(0,0,0,0.25),
-    inset 0 0 0 1px rgba(255,255,255,0.9);
-  border: 1px solid rgba(0,0,0,0.08);
+    0 10px 24px rgba(0,0,0,0.3),
+    inset 0 0 0 1px rgba(255,255,255,0.95);
+  border: 1px solid rgba(0,0,0,0.06);
   font-size: 0.8rem;
   position: relative;
   overflow: hidden;
+  animation: kpi12-medal-float 3.2s ease-in-out infinite;
 }
 
-.kpi12-medal::after {
+.kpi12-medal::before {
+  /* lingkaran glow di belakang icon */
   content: "";
   position: absolute;
-  inset: -40%;
-  background: conic-gradient(
-    from 220deg,
-    rgba(255,255,255,0.5),
-    transparent 40%,
-    rgba(0,0,0,0.08),
-    transparent 80%
-  );
-  mix-blend-mode: soft-light;
-  opacity: 0.4;
+  width: 160%;
+  height: 160%;
+  left: -30%;
+  top: -40%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), transparent 60%);
+  opacity: 0.7;
+  mix-blend-mode: screen;
 }
 
 .kpi12-medal i.fa-medal {
-  font-size: 1.05rem;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
-}
-
-.kpi12-medal-platinum i.fa-medal {
-  color: #f4f4f6;
-}
-
-.kpi12-medal-gold i.fa-medal {
-  color: #f1c232;
-}
-
-.kpi12-medal-silver i.fa-medal {
-  color: #c0c0c0;
-}
-
-.kpi12-medal-bronze i.fa-medal {
-  color: #cd7f32;
+  position: relative;
+  font-size: 1.15rem;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+  animation: kpi12-medal-spin 6s linear infinite;
 }
 
 .kpi12-medal-label {
-  font-weight: 700;
+  position: relative;
+  font-weight: 800;
   color: #222;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.12em;
   font-size: 0.7rem;
 }
 
-/* Toolbar */
+/* Warna medal */
+.kpi12-medal-platinum i.fa-medal {
+  color: #f7f7fb;
+}
+
+.kpi12-medal-gold i.fa-medal {
+  color: #f5c542;
+}
+
+.kpi12-medal-silver i.fa-medal {
+  color: #cfd4da;
+}
+
+.kpi12-medal-bronze i.fa-medal {
+  color: #d08a3c;
+}
+
+/* Animasi medal pelan naik-turun */
+@keyframes kpi12-medal-float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-4px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Animasi spin lembut (sedikit tilt, bukan muter 360 full) */
+@keyframes kpi12-medal-spin {
+  0%   { transform: rotateY(0deg); }
+  25%  { transform: rotateY(18deg); }
+  50%  { transform: rotateY(0deg); }
+  75%  { transform: rotateY(-18deg); }
+  100% { transform: rotateY(0deg); }
+}
+
+/* ================== TOOLBAR ================== */
 .kpi12-toolbar {
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #ffffff, #f7f7f7);
-  border: 1px solid rgba(0,0,0,0.04);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.96), transparent 55%),
+    linear-gradient(135deg, #ffffff, #f4f4f7);
+  border: 1px solid rgba(0,0,0,0.03);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
 }
 
 .kpi12-label {
@@ -166,27 +189,27 @@
 }
 
 .kpi12-select {
-  min-width: 150px;
+  min-width: 160px;
   border-radius: 999px;
-  border: 1px solid rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.07);
   background: linear-gradient(145deg, #ffffff, #f2f2f2);
   font-size: 0.8rem;
 }
 
-/* Summary Cards */
+/* ================== SUMMARY CARDS (SOFT, ROUNDED) ================== */
 .kpi12-summary-card {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: 16px;
+  gap: 11px;
+  padding: 13px 15px;
+  border-radius: 22px;
   background:
-    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.96), transparent 55%),
-    linear-gradient(135deg, #fbfbfb, #e8e8e8);
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.97), transparent 55%),
+    linear-gradient(140deg, #fdfdfd, #e4e7f0);
   box-shadow:
-    0 14px 26px rgba(0,0,0,0.25),
-    inset 0 0 0 1px rgba(255,255,255,0.9);
-  border: 1px solid rgba(0,0,0,0.06);
+    0 16px 28px rgba(0,0,0,0.22),
+    inset 0 0 0 1px rgba(255,255,255,0.95);
+  border: 1px solid rgba(0,0,0,0.04);
   position: relative;
   overflow: hidden;
 }
@@ -198,7 +221,7 @@
   background: linear-gradient(135deg, rgba(255,255,255,0.32), transparent 55%);
   mix-blend-mode: screen;
   opacity: 0;
-  transition: opacity 0.25s;
+  transition: opacity 0.22s;
 }
 
 .kpi12-summary-card:hover::after {
@@ -206,14 +229,14 @@
 }
 
 .kpi12-summary-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   background:
-    radial-gradient(circle at 30% 10%, #ffffff, #f2f2f2);
+    radial-gradient(circle at 30% 10%, #ffffff, #f2f5ff);
   box-shadow:
     inset 0 0 10px rgba(255,255,255,0.9),
     0 0 0 1px rgba(0,0,0,0.04);
@@ -221,7 +244,7 @@
 }
 
 .kpi12-summary-icon i {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
 }
 
 .kpi12-summary-body {
@@ -229,15 +252,15 @@
 }
 
 .kpi12-summary-title {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
   color: #555;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .kpi12-summary-value {
-  font-size: 1.15rem;
+  font-size: 1.18rem;
   font-weight: 800;
   color: #111;
 }
@@ -247,9 +270,9 @@
   color: #666;
 }
 
-/* Variasi border glow summary */
+/* Border glow summary */
 .kpi12-summary-primary {
-  border-image: linear-gradient(90deg, #e5e4e2, #c0c0c0) 1;
+  border-image: linear-gradient(90deg, #d7d7e3, #b6bac8) 1;
 }
 
 .kpi12-summary-accent {
@@ -264,46 +287,46 @@
   border-image: linear-gradient(90deg, #f85032, #e73827) 1;
 }
 
-/* Card Grid */
+/* ================== CARD GRID ================== */
 .kpi12-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 14px;
+  gap: 16px;
 }
 
-/* Detail Card */
+/* ================== DETAIL CARDS (OVAL & SOFT) ================== */
 .kpi12-card {
-  border-radius: 18px;
-  padding: 13px 15px;
+  border-radius: 26px;
+  padding: 14px 16px;
   background:
-    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.96), transparent 55%),
-    linear-gradient(145deg, #ffffff, #f2f2f2);
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.97), transparent 60%),
+    linear-gradient(145deg, #ffffff, #eef1f7);
   box-shadow:
-    0 14px 30px rgba(0,0,0,0.26),
-    inset 0 0 0 1px rgba(255,255,255,0.9);
-  border: 1px solid rgba(0,0,0,0.06);
+    0 18px 36px rgba(0,0,0,0.26),
+    inset 0 0 0 1px rgba(255,255,255,0.95);
+  border: 1px solid rgba(0,0,0,0.04);
   position: relative;
   overflow: hidden;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .kpi12-card::before {
   content: "";
   position: absolute;
-  width: 130%;
-  height: 130%;
-  top: -65%;
-  right: -65%;
+  width: 150%;
+  height: 150%;
+  top: -70%;
+  right: -60%;
   background: radial-gradient(circle at center, rgba(255,255,255,0.7), transparent);
   opacity: 0;
   transition: opacity 0.25s;
 }
 
 .kpi12-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   box-shadow:
-    0 18px 40px rgba(0,0,0,0.32),
-    inset 0 0 0 1px rgba(255,255,255,0.95);
+    0 22px 46px rgba(0,0,0,0.3),
+    inset 0 0 0 1px rgba(255,255,255,0.98);
 }
 
 .kpi12-card:hover::before {
@@ -349,11 +372,11 @@
 .kpi12-metric-block {
   flex: 1 1 0;
   min-width: 90px;
-  padding: 6px 8px;
-  border-radius: 10px;
-  background: linear-gradient(145deg, #ffffff, #f3f3f3);
+  padding: 7px 9px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #ffffff, #f3f3f7);
   box-shadow:
-    inset 0 0 6px rgba(0,0,0,0.03),
+    inset 0 0 6px rgba(0,0,0,0.02),
     0 0 0 1px rgba(0,0,0,0.03);
 }
 
@@ -411,15 +434,15 @@
 .kpi12-card-bar {
   height: 8px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #f0f0f0, #e0e0e0);
+  background: linear-gradient(90deg, #f0f0f0, #dee0e6);
   overflow: hidden;
 }
 
 .kpi12-card-bar-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #d4af37, #cd7f32);
-  box-shadow: 0 0 8px rgba(212,175,55,0.8);
+  background: linear-gradient(90deg, #40c4ff, #008cff);
+  box-shadow: 0 0 8px rgba(64,196,255,0.9);
   transition: width 0.4s ease-out;
 }
 
@@ -435,8 +458,8 @@
   font-size: 0.68rem;
   padding: 3px 8px;
   border-radius: 999px;
-  border: 1px solid rgba(0,0,0,0.06);
-  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(0,0,0,0.04);
+  background: rgba(255,255,255,0.95);
 }
 
 .kpi12-chip-good {
@@ -457,30 +480,30 @@
 /* Mood border & glow */
 .kpi12-card-good {
   border-image: linear-gradient(135deg, #6dd5ed, #2193b0) 1;
-  box-shadow: 0 12px 26px rgba(33,147,176,0.4);
+  box-shadow: 0 14px 30px rgba(33,147,176,0.4);
 }
 
 .kpi12-card-warning {
   border-image: linear-gradient(135deg, #f9d976, #f39f86) 1;
-  box-shadow: 0 12px 26px rgba(243,159,134,0.4);
+  box-shadow: 0 14px 30px rgba(243,159,134,0.4);
 }
 
 .kpi12-card-bad {
   border-image: linear-gradient(135deg, #f85032, #e73827) 1;
-  box-shadow: 0 12px 26px rgba(232,56,39,0.45);
+  box-shadow: 0 14px 30px rgba(232,56,39,0.45);
 }
 
-/* Loading */
+/* ================== LOADING ================== */
 .kpi12-loading .spinner-border {
-  color: #d4af37;
+  color: #f1c232;
 }
 
-/* Responsive tweak */
+/* ================== RESPONSIVE ================== */
 @media (max-width: 576px) {
   .kpi12-header {
     flex-direction: column;
     align-items: flex-start !important;
-    gap: 8px;
+    gap: 10px;
   }
   .kpi12-meta {
     text-align: left !important;
