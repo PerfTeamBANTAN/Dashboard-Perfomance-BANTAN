@@ -12,7 +12,6 @@ function initKPI12(config) {
     cardGrid: document.getElementById("kpi12-card-grid"),
     lastUpdate: document.getElementById("kpi12-last-update"),
     filterSegmen: document.getElementById("kpi12-filter-segmen"),
-    filterArea: document.getElementById("kpi12-filter-area"),
     refreshBtn: document.getElementById("kpi12-refresh"),
   };
 
@@ -43,14 +42,19 @@ function initKPI12(config) {
       const header = rows[0].map((h) => (h || "").toString().trim());
       const dataRows = rows.slice(1);
 
-      // Index kolom by name (kalau besok urutan header berubah tetap aman)
+      // Index kolom by name
       const idxIndikator = header.indexOf("Indikator");
       const idxTarget = header.indexOf("Target");
       const idxH1 = header.indexOf("H-1");
       const idxHI = header.indexOf("HI");
 
       state.raw = dataRows
-        .filter((r) => r && r.length > 0 && String(r[idxIndikator] || "").trim() !== "")
+        .filter(
+          (r) =>
+            r &&
+            r.length > 0 &&
+            String(r[idxIndikator] || "").trim() !== ""
+        )
         .map((r, idx) => ({
           id: idx + 1,
           indikator: (r[idxIndikator] || "").toString(),
@@ -73,7 +77,6 @@ function initKPI12(config) {
 
   function toNumber(v) {
     if (v === null || v === undefined || v === "") return NaN;
-    // handle angka dengan koma desimal (95,3)
     if (typeof v === "string") {
       const cleaned = v.replace(/\./g, "").replace(",", ".");
       const num = Number(cleaned);
@@ -88,15 +91,11 @@ function initKPI12(config) {
       if (row.indikator) indikatorList.add(row.indikator);
     });
 
-    // pakai dropdown segmen untuk filter indikator (opsional)
     fillSelect(
       els.filterSegmen,
       Array.from(indikatorList).sort(),
       "All Indikator"
     );
-
-    // dropdown area tidak dipakai, isi default
-    fillSelect(els.filterArea, [], "All");
   }
 
   function fillSelect(selectEl, items, allLabel) {
@@ -136,87 +135,85 @@ function initKPI12(config) {
   }
 
   function renderSummary() {
-  els.summaryRow.innerHTML = "";
-  if (!state.filtered.length) {
-    // kalau tidak ada data, kosongkan medal juga
+    els.summaryRow.innerHTML = "";
+    if (!state.filtered.length) {
+      const medalEl = document.getElementById("kpi12-medal-icon");
+      if (medalEl) medalEl.innerHTML = "";
+      return;
+    }
+
+    const total = state.filtered.length;
+
+    const avgTarget =
+      state.filtered.reduce((a, b) => a + (b.target || 0), 0) / total;
+    const avgH1 =
+      state.filtered.reduce((a, b) => a + (b.h1 || 0), 0) / total;
+    const avgHI =
+      state.filtered.reduce((a, b) => a + (b.hi || 0), 0) / total;
+
+    const meetTargetCount = state.filtered.filter((r) => isMeetTarget(r)).length;
+
+    const medal = getMedalByTotalMeet(meetTargetCount);
     const medalEl = document.getElementById("kpi12-medal-icon");
-    if (medalEl) medalEl.innerHTML = "";
-    return;
-  }
-
-  const total = state.filtered.length;
-
-  const avgTarget =
-    state.filtered.reduce((a, b) => a + (b.target || 0), 0) / total;
-  const avgH1 =
-    state.filtered.reduce((a, b) => a + (b.h1 || 0), 0) / total;
-  const avgHI =
-    state.filtered.reduce((a, b) => a + (b.hi || 0), 0) / total;
-
-  const meetTargetCount = state.filtered.filter((r) => isMeetTarget(r)).length;
-
-  // Tentukan medal berdasarkan total meet
-  const medal = getMedalByTotalMeet(meetTargetCount);
-  const medalEl = document.getElementById("kpi12-medal-icon");
-  if (medalEl) {
-    medalEl.innerHTML = `
-      <div class="kpi12-medal ${medal.iconClass}">
-        <i class="fa fa-medal"></i>
-        <span class="kpi12-medal-label">${medal.level}</span>
-      </div>
-    `;
-  }
-
-  const cards = [
-    {
-      title: "Jumlah Indikator",
-      value: total,
-      subtitle: "Total KPI 12PI Laten",
-      type: "primary",
-      icon: "fa-list-check",
-    },
-    {
-      title: "Rata-rata Target",
-      value: isFinite(avgTarget) ? avgTarget.toFixed(2) + " %" : "-",
-      subtitle: "Target rata-rata",
-      type: "accent",
-      icon: "fa-bullseye",
-    },
-    {
-      title: "Rata-rata HI",
-      value: isFinite(avgHI) ? avgHI.toFixed(2) + " %" : "-",
-      subtitle: "Capaian hari ini",
-      type: "success",
-      icon: "fa-chart-line",
-    },
-    {
-      title: "Meet / Not Meet",
-      value: `${meetTargetCount} / ${total - meetTargetCount}`,
-      subtitle: "HI ≥ Target",
-      type: "danger",
-      icon: "fa-scale-balanced",
-    },
-  ];
-
-  cards.forEach((c) => {
-    const col = document.createElement("div");
-    col.className = "col-12 col-md-6 col-xl-3";
-
-    col.innerHTML = `
-      <div class="kpi12-summary-card kpi12-summary-${c.type}">
-        <div class="kpi12-summary-icon">
-          <i class="fa ${c.icon}"></i>
+    if (medalEl) {
+      medalEl.innerHTML = `
+        <div class="kpi12-medal ${medal.iconClass}">
+          <i class="fa fa-medal"></i>
+          <span class="kpi12-medal-label">${medal.level}</span>
         </div>
-        <div class="kpi12-summary-body">
-          <div class="kpi12-summary-title">${c.title}</div>
-          <div class="kpi12-summary-value">${c.value}</div>
-          <div class="kpi12-summary-subtitle">${c.subtitle}</div>
+      `;
+    }
+
+    const cards = [
+      {
+        title: "Jumlah Indikator",
+        value: total,
+        subtitle: "Total KPI 12PI Laten",
+        type: "primary",
+        icon: "fa-list-check",
+      },
+      {
+        title: "Rata-rata Target",
+        value: isFinite(avgTarget) ? avgTarget.toFixed(2) + " %" : "-",
+        subtitle: "Target rata-rata",
+        type: "accent",
+        icon: "fa-bullseye",
+      },
+      {
+        title: "Rata-rata HI",
+        value: isFinite(avgHI) ? avgHI.toFixed(2) + " %" : "-",
+        subtitle: "Capaian hari ini",
+        type: "success",
+        icon: "fa-chart-line",
+      },
+      {
+        title: "Meet / Not Meet",
+        value: `${meetTargetCount} / ${total - meetTargetCount}`,
+        subtitle: "HI ≥ Target",
+        type: "danger",
+        icon: "fa-scale-balanced",
+      },
+    ];
+
+    cards.forEach((c) => {
+      const col = document.createElement("div");
+      col.className = "col-12 col-md-6 col-xl-3";
+
+      col.innerHTML = `
+        <div class="kpi12-summary-card kpi12-summary-${c.type}">
+          <div class="kpi12-summary-icon">
+            <i class="fa ${c.icon}"></i>
+          </div>
+          <div class="kpi12-summary-body">
+            <div class="kpi12-summary-title">${c.title}</div>
+            <div class="kpi12-summary-value">${c.value}</div>
+            <div class="kpi12-summary-subtitle">${c.subtitle}</div>
+          </div>
         </div>
-      </div>
-    `;
-    els.summaryRow.appendChild(col);
-  });
-}
+      `;
+      els.summaryRow.appendChild(col);
+    });
+  }
 
   function renderCards() {
     els.cardGrid.innerHTML = "";
@@ -333,20 +330,20 @@ function initKPI12(config) {
   }
 
   function getMedalByTotalMeet(totalMeet) {
-  if (totalMeet === 12) {
-    return { level: "Platinum", iconClass: "kpi12-medal-platinum" };
+    if (totalMeet === 12) {
+      return { level: "Platinum", iconClass: "kpi12-medal-platinum" };
+    }
+    if (totalMeet > 10) {
+      return { level: "Gold", iconClass: "kpi12-medal-gold" };
+    }
+    if (totalMeet > 8) {
+      return { level: "Gold", iconClass: "kpi12-medal-gold" };
+      // kalau mau beda:
+      // return { level: "Silver", iconClass: "kpi12-medal-silver" };
+    }
+    return { level: "Bronze", iconClass: "kpi12-medal-bronze" };
   }
-  if (totalMeet > 10) {
-    return { level: "Gold", iconClass: "kpi12-medal-gold" };
-  }
-  if (totalMeet > 8) {
-    return { level: "Gold", iconClass: "kpi12-medal-gold" };
-    // kalau mau beda:
-    // return { level: "Silver", iconClass: "kpi12-medal-silver" };
-  }
-  return { level: "Bronze", iconClass: "kpi12-medal-bronze" };
-}
-  
+
   function showLoading(flag) {
     els.loading.style.display = flag ? "block" : "none";
   }
@@ -362,7 +359,6 @@ function initKPI12(config) {
 
   // Events
   els.filterSegmen.addEventListener("change", applyFilter);
-  els.filterArea.addEventListener("change", applyFilter);
   els.refreshBtn.addEventListener("click", fetchData);
 
   // Init
