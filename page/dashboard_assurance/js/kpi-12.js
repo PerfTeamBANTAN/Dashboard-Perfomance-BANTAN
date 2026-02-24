@@ -359,8 +359,6 @@ function initKPI12(config) {
   };
   }
 
-
-
   function showLoading(flag) {
     els.loading.style.display = flag ? "block" : "none";
   }
@@ -374,7 +372,6 @@ function initKPI12(config) {
     els.error.classList.add("d-none");
   }
 
-  // Events
   els.filterSegmen.addEventListener("change", applyFilter);
   els.refreshBtn.addEventListener("click", fetchData);
 
