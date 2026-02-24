@@ -1,12 +1,17 @@
 <div id="kpi12-container" class="kpi12-wrapper">
 
   <!-- Header KPI -->
-  <div class="kpi12-header d-flex flex-wrap align-items-center justify-content-between mb-3">
-    <div class="d-flex align-items-center gap-3">
-      <div class="kpi12-medal-icon" id="kpi12-medal-icon">
-        <!-- medal by JS -->
+  <div class="kpi12-header mb-3">
+
+    <div class="kpi12-header-grid">
+      <div class="kpi12-header-medal-col">
+        <div class="kpi12-medal-icon" id="kpi12-medal-icon">
+          <!-- medal by JS -->
+        </div>
       </div>
-      <div>
+
+      <!-- Kolom 2: Title & subtitle -->
+      <div class="kpi12-header-main-col">
         <h3 class="kpi12-title mb-1">
           KPI 12PI Laten – TANGERANG Branch
         </h3>
@@ -14,13 +19,18 @@
           Monitoring harian indikator laten: Target, H‑1, HI, dan pencapaian konten.
         </p>
       </div>
-    </div>
-    <div class="kpi12-meta text-end">
-      <div class="kpi12-badge">
-        Live Update
+
+      <!-- Kolom 3: Live update -->
+      <div class="kpi12-header-meta-col">
+        <div class="kpi12-meta text-end">
+          <div class="kpi12-badge">
+            Live Update
+          </div>
+          <div class="kpi12-update" id="kpi12-last-update">Last update: -</div>
+        </div>
       </div>
-      <div class="kpi12-update" id="kpi12-last-update">Last update: -</div>
     </div>
+
   </div>
 
   <!-- Toolbar filter -->
