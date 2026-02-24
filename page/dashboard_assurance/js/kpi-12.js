@@ -1,5 +1,3 @@
-// js/kpi-12.js
-
 function initKPI12(config) {
   // config: { baseUrl, sheet, range }
   const state = {
@@ -30,8 +28,8 @@ function initKPI12(config) {
       const res = await fetch(url);
       if (!res.ok) throw new Error("Network error");
 
-      // Apps Script return langsung 2D array: [ [header...], [row1...], ... ]
-      const rows = await res.json(); // 2D array
+      // Apps Script return: 2D array
+      const rows = await res.json();
 
       if (!Array.isArray(rows) || !rows.length) {
         state.raw = [];
@@ -41,20 +39,26 @@ function initKPI12(config) {
         return;
       }
 
-      // Baris pertama dianggap header
+      // rows[0] = header: ["Indikator","Target","H-1","HI"]
+      const header = rows[0].map((h) => (h || "").toString().trim());
       const dataRows = rows.slice(1);
 
-      // Mapping A:D (WEB!A1:D13)
-      // Silakan adjust nama field kalau header-nya beda
-      state.raw = dataRows.map((r, idx) => ({
-        id: idx + 1,
-        kategori: (r[0] || "").toString(), // A
-        area: (r[1] || "").toString(),     // B
-        nilai: Number(r[2] || 0),          // C
-        status: (r[3] || "").toString(),   // D
-      }));
+      // Index kolom by name (kalau besok urutan header berubah tetap aman)
+      const idxIndikator = header.indexOf("Indikator");
+      const idxTarget = header.indexOf("Target");
+      const idxH1 = header.indexOf("H-1");
+      const idxHI = header.indexOf("HI");
 
-      // Karena doGet tidak kirim updatedAt, pakai placeholder
+      state.raw = dataRows
+        .filter((r) => r && r.length > 0 && String(r[idxIndikator] || "").trim() !== "")
+        .map((r, idx) => ({
+          id: idx + 1,
+          indikator: (r[idxIndikator] || "").toString(),
+          target: toNumber(r[idxTarget]),
+          h1: toNumber(r[idxH1]),
+          hi: toNumber(r[idxHI]),
+        }));
+
       els.lastUpdate.textContent = "Last update: -";
 
       buildFilterOptions();
@@ -67,17 +71,32 @@ function initKPI12(config) {
     }
   }
 
-  function buildFilterOptions() {
-    const segmens = new Set();
-    const areas = new Set();
+  function toNumber(v) {
+    if (v === null || v === undefined || v === "") return NaN;
+    // handle angka dengan koma desimal (95,3)
+    if (typeof v === "string") {
+      const cleaned = v.replace(/\./g, "").replace(",", ".");
+      const num = Number(cleaned);
+      return isNaN(num) ? Number(v) : num;
+    }
+    return Number(v);
+  }
 
+  function buildFilterOptions() {
+    const indikatorList = new Set();
     state.raw.forEach((row) => {
-      if (row.kategori) segmens.add(row.kategori);
-      if (row.area) areas.add(row.area);
+      if (row.indikator) indikatorList.add(row.indikator);
     });
 
-    fillSelect(els.filterSegmen, Array.from(segmens).sort(), "All Segmen");
-    fillSelect(els.filterArea, Array.from(areas).sort(), "All Area");
+    // pakai dropdown segmen untuk filter indikator (opsional)
+    fillSelect(
+      els.filterSegmen,
+      Array.from(indikatorList).sort(),
+      "All Indikator"
+    );
+
+    // dropdown area tidak dipakai, isi default
+    fillSelect(els.filterArea, [], "All");
   }
 
   function fillSelect(selectEl, items, allLabel) {
@@ -104,13 +123,12 @@ function initKPI12(config) {
   }
 
   function applyFilter() {
-    const seg = els.filterSegmen.value;
-    const area = els.filterArea.value;
+    const indikatorFilter = els.filterSegmen.value;
 
     state.filtered = state.raw.filter((r) => {
-      const okSeg = seg === "ALL" || r.kategori === seg;
-      const okArea = area === "ALL" || r.area === area;
-      return okSeg && okArea;
+      const okIndikator =
+        indikatorFilter === "ALL" || r.indikator === indikatorFilter;
+      return okIndikator;
     });
 
     renderSummary();
@@ -122,41 +140,44 @@ function initKPI12(config) {
     if (!state.filtered.length) return;
 
     const total = state.filtered.length;
-    const avg =
-      state.filtered.reduce((a, b) => a + (b.nilai || 0), 0) / total;
 
-    const greenCount = state.filtered.filter((r) => isGood(r)).length;
-    const warningCount = state.filtered.filter((r) => isWarning(r)).length;
-    const badCount = state.filtered.filter((r) => isBad(r)).length;
+    const avgTarget =
+      state.filtered.reduce((a, b) => a + (b.target || 0), 0) / total;
+    const avgH1 =
+      state.filtered.reduce((a, b) => a + (b.h1 || 0), 0) / total;
+    const avgHI =
+      state.filtered.reduce((a, b) => a + (b.hi || 0), 0) / total;
+
+    const meetTargetCount = state.filtered.filter((r) => isMeetTarget(r)).length;
 
     const cards = [
       {
-        title: "Total Record",
+        title: "Jumlah Indikator",
         value: total,
-        subtitle: "Jumlah baris KPI",
+        subtitle: "Total KPI 12PI Laten",
         type: "primary",
-        icon: "fa-database",
+        icon: "fa-list-check",
       },
       {
-        title: "Rata-rata Nilai",
-        value: isFinite(avg) ? avg.toFixed(2) : "-",
-        subtitle: "Average KPI",
+        title: "Rata-rata Target",
+        value: isFinite(avgTarget) ? avgTarget.toFixed(2) + " %" : "-",
+        subtitle: "Target rata-rata",
         type: "accent",
-        icon: "fa-gauge-high",
+        icon: "fa-bullseye",
       },
       {
-        title: "Healthy",
-        value: greenCount,
-        subtitle: "Status baik",
+        title: "Rata-rata HI",
+        value: isFinite(avgHI) ? avgHI.toFixed(2) + " %" : "-",
+        subtitle: "Capaian hari ini",
         type: "success",
-        icon: "fa-circle-check",
+        icon: "fa-chart-line",
       },
       {
-        title: "Warning / Bad",
-        value: `${warningCount} / ${badCount}`,
-        subtitle: "Status perlu perhatian",
+        title: "Meet / Not Meet",
+        value: `${meetTargetCount} / ${total - meetTargetCount}`,
+        subtitle: "HI ≥ Target",
         type: "danger",
-        icon: "fa-triangle-exclamation",
+        icon: "fa-scale-balanced",
       },
     ];
 
@@ -194,41 +215,84 @@ function initKPI12(config) {
       const card = document.createElement("div");
       card.className = `kpi12-card ${moodClass}`;
 
+      const deltaH1 = calcDelta(row.h1, row.target);
+      const deltaHI = calcDelta(row.hi, row.target);
+
       card.innerHTML = `
         <div class="kpi12-card-header">
           <div>
-            <div class="kpi12-card-title">${row.kategori || "-"}</div>
-            <div class="kpi12-card-subtitle">${row.area || "-"}</div>
+            <div class="kpi12-card-title">${row.indikator || "-"}</div>
           </div>
-          <div class="kpi12-card-badge">${row.status || "N/A"}</div>
+          <div class="kpi12-card-badge">
+            ${isMeetTarget(row) ? "Meet Target" : "Not Meet"}
+          </div>
         </div>
+
         <div class="kpi12-card-body">
-          <div class="kpi12-card-metric">
-            <span class="kpi12-card-metric-label">Nilai KPI</span>
-            <span class="kpi12-card-metric-value">${formatNumber(
-              row.nilai
-            )}</span>
+          <div class="kpi12-metric-row">
+            <div class="kpi12-metric-block">
+              <div class="kpi12-metric-label">Target</div>
+              <div class="kpi12-metric-value">${formatPercent(row.target)}</div>
+            </div>
+            <div class="kpi12-metric-block">
+              <div class="kpi12-metric-label">H-1</div>
+              <div class="kpi12-metric-value">${formatPercent(row.h1)}</div>
+              <div class="kpi12-metric-delta ${deltaClass(deltaH1)}">
+                ${formatDelta(deltaH1)}
+              </div>
+            </div>
+            <div class="kpi12-metric-block">
+              <div class="kpi12-metric-label">HI</div>
+              <div class="kpi12-metric-value">${formatPercent(row.hi)}</div>
+              <div class="kpi12-metric-delta ${deltaClass(deltaHI)}">
+                ${formatDelta(deltaHI)}
+              </div>
+            </div>
           </div>
+
           <div class="kpi12-card-bar">
             <div class="kpi12-card-bar-fill" style="width:${normalizePercent(
-              row.nilai
+              row.hi
             )}%"></div>
           </div>
         </div>
+
         <div class="kpi12-card-footer">
           <span class="kpi12-chip kpi12-chip-good">
-            Good ≥ 90
+            HI ≥ Target
           </span>
           <span class="kpi12-chip kpi12-chip-warning">
-            Warning 70–89
+            Mendekati Target
           </span>
           <span class="kpi12-chip kpi12-chip-bad">
-            Bad &lt; 70
+            Jauh di bawah Target
           </span>
         </div>
       `;
       els.cardGrid.appendChild(card);
     });
+  }
+
+  function calcDelta(value, target) {
+    if (!isFinite(value) || !isFinite(target)) return NaN;
+    return value - target;
+  }
+
+  function formatPercent(v) {
+    if (!isFinite(v)) return "-";
+    return v.toFixed(2) + " %";
+  }
+
+  function formatDelta(d) {
+    if (!isFinite(d) || d === 0) return "±0.00";
+    const sign = d > 0 ? "+" : "";
+    return `${sign}${d.toFixed(2)} pt`;
+  }
+
+  function deltaClass(d) {
+    if (!isFinite(d) || d === 0) return "kpi12-delta-neutral";
+    if (d > 0) return "kpi12-delta-up";
+    return "kpi12-delta-down";
   }
 
   function normalizePercent(v) {
@@ -238,29 +302,17 @@ function initKPI12(config) {
     return v;
   }
 
-  function formatNumber(v) {
-    if (!isFinite(v)) return "-";
-    return v.toLocaleString("id-ID", { maximumFractionDigits: 2 });
-  }
-
-  function isGood(r) {
-    return (r.nilai || 0) >= 90;
-  }
-
-  function isWarning(r) {
-    const n = r.nilai || 0;
-    return n >= 70 && n < 90;
-  }
-
-  function isBad(r) {
-    return (r.nilai || 0) < 70;
+  function isMeetTarget(r) {
+    if (!isFinite(r.hi) || !isFinite(r.target)) return false;
+    return r.hi >= r.target;
   }
 
   function getMoodClass(r) {
-    if (isGood(r)) return "kpi12-card-good";
-    if (isWarning(r)) return "kpi12-card-warning";
-    if (isBad(r)) return "kpi12-card-bad";
-    return "";
+    if (!isFinite(r.hi) || !isFinite(r.target)) return "";
+    const diff = r.hi - r.target;
+    if (diff >= 0) return "kpi12-card-good";
+    if (diff >= -5) return "kpi12-card-warning";
+    return "kpi12-card-bad";
   }
 
   function showLoading(flag) {
@@ -281,6 +333,6 @@ function initKPI12(config) {
   els.filterArea.addEventListener("change", applyFilter);
   els.refreshBtn.addEventListener("click", fetchData);
 
-  // Init pertama
+  // Init
   fetchData();
 }
