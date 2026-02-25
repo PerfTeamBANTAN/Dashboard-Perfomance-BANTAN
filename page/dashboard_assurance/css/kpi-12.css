@@ -1,5 +1,5 @@
 /* =====================================================
-   KPI-12 LATEN – GLASS / NEUMORPHISM STYLE
+   KPI-12 LATEN – GLASS / NEUMORPHISM STYLE (FULL)
    ===================================================== */
 
 /* ============= WRAPPER & ANIMASI MASUK ============= */
@@ -13,7 +13,6 @@
 }
 
 /* ====================== HEADER ====================== */
-/* BASE: pakai kalau belum ada medal */
 .kpi12-header {
   padding: 18px 22px;
   border-radius: 26px;
@@ -53,7 +52,7 @@
   justify-content: flex-end;
 }
 
-/* GOLD – kalau medal Gold */
+/* GOLD */
 .kpi12-header-gold {
   background:
     radial-gradient(circle at 0% 0%, rgba(255,255,255,0.85), transparent 60%),
@@ -65,7 +64,7 @@
     inset 0 0 0 1px rgba(255,255,255,0.4);
 }
 
-/* PLATINUM – kalau medal Platinum */
+/* PLATINUM */
 .kpi12-header-platinum {
   background:
     radial-gradient(circle at 0% 0%, rgba(255,255,255,0.95), transparent 60%),
@@ -77,7 +76,7 @@
     inset 0 0 0 1px rgba(255,255,255,0.45);
 }
 
-/* SILVER – kalau medal Silver */
+/* SILVER */
 .kpi12-header-silver {
   background:
     radial-gradient(circle at 0% 0%, rgba(255,255,255,0.9), transparent 60%),
@@ -108,6 +107,7 @@
     0 1px 2px rgba(255,255,255,0.7);
 }
 
+/* Title/subtitle untuk header dark */
 .kpi12-header:not(.kpi12-header-gold):not(.kpi12-header-platinum):not(.kpi12-header-silver) .kpi12-title {
   color: #f9fafb;
   text-shadow:
@@ -137,7 +137,7 @@
   text-transform: uppercase;
   background:
     radial-gradient(circle at 0% 0%, #fffbea, #f9d977);
-  color: #111;
+  color: #111827;
   box-shadow:
     0 6px 18px rgba(0,0,0,0.35),
     0 0 12px rgba(249,217,119,0.9);
@@ -204,7 +204,7 @@
   mix-blend-mode: screen;
 }
 
-/* ukuran box PNG – kira-kira 2x tinggi blok title+subtitle */
+/* box PNG medal */
 .kpi12-medal-img-wrap {
   position: relative;
   width: 96px;
@@ -304,8 +304,7 @@
   gap: 11px;
   padding: 13px 15px;
   border-radius: 24px;
-  background:
-    rgba(15,23,42,0.85);
+  background: rgba(15,23,42,0.88);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   box-shadow:
@@ -401,7 +400,7 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-/* Good (Comply) – hijau kebiruan */
+/* Good / Warning / Bad */
 .kpi12-card-good {
   background:
     radial-gradient(circle at 0% 0%, rgba(34,197,94,0.18), transparent 55%),
@@ -412,7 +411,6 @@
     inset 0 0 0 1px rgba(34,197,94,0.45);
 }
 
-/* Warning – kuning / oranye */
 .kpi12-card-warning {
   background:
     radial-gradient(circle at 0% 0%, rgba(250,204,21,0.18), transparent 55%),
@@ -423,7 +421,6 @@
     inset 0 0 0 1px rgba(251,191,36,0.45);
 }
 
-/* Bad (Not Comply) – merah */
 .kpi12-card-bad {
   background:
     radial-gradient(circle at 0% 0%, rgba(248,113,113,0.18), transparent 55%),
@@ -494,7 +491,7 @@
   margin-top: 4px;
 }
 
-/* Row Target / H-1 / HI */
+/* Row Target / H-1 / HI (di dalam card) */
 .kpi12-metric-row {
   display: flex;
   flex-wrap: wrap;
@@ -599,31 +596,14 @@
   color: #facc15;
 }
 
-/* ================== RESPONSIVE ================== */
-@media (max-width: 992px) {
-  .kpi12-sto-table,
-  .kpi12-weight-table {
-    font-size: 0.7rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .kpi12-sto-table,
-  .kpi12-weight-table {
-    font-size: 0.65rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .kpi12-meta {
-    text-align: left !important;
-  }
-}
-
+/* ================== RANKING SECTION ================== */
 .kpi12-ranking-section {
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   background: #f8fafc;
   padding: 0.75rem 0.9rem;
+  box-shadow:
+    0 10px 22px rgba(15,23,42,0.12),
+    inset 0 0 0 1px rgba(255,255,255,0.9);
 }
 
 .kpi12-ranking-title {
@@ -639,10 +619,10 @@
 }
 
 .kpi12-ranking-card {
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   background: #ffffff;
   padding: 0.5rem 0.75rem;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 1px 3px rgba(15,23,42,0.08);
 }
 
 .kpi12-ranking-card-row {
@@ -657,7 +637,7 @@
 }
 
 .kpi12-ranking-medal-vertical {
-  height: 72px;   /* lebih tinggi dari avatar */
+  height: 72px;
   width: auto;
   object-fit: contain;
 }
@@ -691,7 +671,7 @@
 }
 
 .kpi12-ranking-avatar-side {
-  height: 60px;   /* sedikit lebih kecil dari medal */
+  height: 60px;
   width: auto;
   object-fit: contain;
 }
@@ -702,23 +682,50 @@
   object-fit: contain;
 }
 
-/* ================== TABEL BOBOT KPI-12 ================== */
+/* ================== TABEL WRAPPER ================== */
+.kpi12-table-wrapper {
+  border-radius: 18px;
+  padding: 10px 10px 12px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.98), #e5e7eb);
+  box-shadow:
+    0 10px 24px rgba(15,23,42,0.18),
+    inset 0 0 0 1px rgba(255,255,255,0.9);
+  max-width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
 
+/* batasi lebar max tabel bobot kiri */
+.kpi12-weight-table-left {
+  width: auto;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.kpi12-weight-wrapper-left {
+  padding: 8px 6px;
+}
+
+/* ================== TABEL BOBOT KPI-12 ================== */
 .kpi12-weight-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.75rem;
   table-layout: fixed;
+  background: rgba(248,250,252,0.98);
+  border-radius: 14px;
+  overflow: hidden;
 }
 
 /* cell umum bobot */
 .kpi12-weight-table th,
 .kpi12-weight-table td {
-  padding: 0.3rem 0.45rem;
+  padding: 0.35rem 0.5rem;
   border: 1px solid #e5e7eb;
   white-space: normal;
   word-wrap: break-word;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 /* header base bobot */
@@ -726,6 +733,7 @@
   color: #ffffff;
   font-weight: 600;
   font-size: 0.75rem;
+  text-align: center;
 }
 
 /* kolom awal bobot */
@@ -736,11 +744,11 @@
 }
 
 /* warna per cluster bobot */
-.kpi12-weight-table thead th.kpi12-weight-head-biru { background-color: #1d3557; }
+.kpi12-weight-table thead th.kpi12-weight-head-biru   { background-color: #1d3557; }
 .kpi12-weight-table thead th.kpi12-weight-head-orange { background-color: #ea580c; }
-.kpi12-weight-table thead th.kpi12-weight-head-hijau { background-color: #166534; }
-.kpi12-weight-table thead th.kpi12-weight-head-ungu { background-color: #5b21b6; }
-.kpi12-weight-table thead th.kpi12-weight-head-pink { background-color: #be185d; }
+.kpi12-weight-table thead th.kpi12-weight-head-hijau  { background-color: #166534; }
+.kpi12-weight-table thead th.kpi12-weight-head-ungu   { background-color: #5b21b6; }
+.kpi12-weight-table thead th.kpi12-weight-head-pink   { background-color: #be185d; }
 
 .kpi12-weight-table td.kpi12-weight-below-bobot {
   background-color: #fee2e2;
@@ -748,23 +756,40 @@
   font-weight: 600;
 }
 
-/* ================== TABEL STO KPI-12 ================== */
+/* zebra + hover bobot */
+.kpi12-weight-table tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+.kpi12-weight-table tbody tr:hover {
+  background-color: #e5f2ff;
+  transition: background-color 0.15s ease-out;
+}
 
+/* garis bawah halus di header bobot */
+.kpi12-weight-table thead th {
+  box-shadow: inset 0 -1px 0 rgba(15,23,42,0.25);
+}
+
+/* ================== TABEL STO KPI-12 ================== */
 .kpi12-sto-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   table-layout: fixed;
+  background: rgba(15,23,42,0.98);
+  color: #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
 }
 
 /* cell umum STO */
 .kpi12-sto-table th,
 .kpi12-sto-table td {
-  padding: 0.3rem 0.45rem;
-  border: 1px solid #e5e7eb;
+  padding: 0.33rem 0.5rem;
+  border: 1px solid rgba(55,65,81,0.9);
   white-space: normal;
   word-wrap: break-word;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 /* HEADER KPI-12 STO (indikator) */
@@ -777,7 +802,7 @@
   word-wrap: break-word;
 }
 
-/* 4 header pertama: STO, Cluster, OM HAS, MITRA (tidak wrap, sedikit lebih besar) */
+/* 4 header pertama: STO, Cluster, OM HAS, MITRA */
 .kpi12-sto-table thead tr:first-child th:nth-child(1),
 .kpi12-sto-table thead tr:first-child th:nth-child(2),
 .kpi12-sto-table thead tr:first-child th:nth-child(3),
@@ -786,7 +811,7 @@
   font-size: 0.75rem;
 }
 
-/* 4 kolom awal BODY: teks kiri, tanpa batas lebar, tidak wrap supaya nama tidak pecah */
+/* 4 kolom awal BODY: teks kiri */
 .kpi12-sto-table tbody td:nth-child(1),
 .kpi12-sto-table tbody td:nth-child(2),
 .kpi12-sto-table tbody td:nth-child(3),
@@ -795,19 +820,19 @@
   white-space: nowrap;
 }
 
-/* warna header indikator */
-.kpi12-sto-head-abu    { background-color: #374151; } /* STO, Cluster, OM, MITRA, Medal, Ach */
-.kpi12-sto-head-biru   { background-color: #1d3557; } /* Assurance Guarantee, TTR 36H */
-.kpi12-sto-head-hijau  { background-color: #166534; } /* Underspec DATIN */
-.kpi12-sto-head-orange { background-color: #ea580c; } /* TTR K3 DATIN 7,2 Jam */
-.kpi12-sto-head-toska  { background-color: #0f766e; } /* TTDC Wifi */
-.kpi12-sto-head-ungu   { background-color: #5b21b6; } /* MTTRi Premium/Critical, Latency */
-.kpi12-sto-head-kuning { background-color: #ca8a04; } /* TTI, TTR FFG, PS/RE Indihome */
-.kpi12-sto-head-pink   { background-color: #be185d; } /* Stock NTE Ebis */
+/* warna header indikator STO */
+.kpi12-sto-head-abu    { background-color: #374151; }
+.kpi12-sto-head-biru   { background-color: #1d3557; }
+.kpi12-sto-head-hijau  { background-color: #166534; }
+.kpi12-sto-head-orange { background-color: #ea580c; }
+.kpi12-sto-head-toska  { background-color: #0f766e; }
+.kpi12-sto-head-ungu   { background-color: #5b21b6; }
+.kpi12-sto-head-kuning { background-color: #ca8a04; }
+.kpi12-sto-head-pink   { background-color: #be185d; }
 
 /* baris total Branch Tangerang */
 .kpi12-sto-row-total td {
-  background-color: #374151;
+  background-color: #111827;
   color: #f9fafb;
   font-weight: 700;
 }
@@ -827,46 +852,42 @@
   font-weight: 600;
 }
 
-/* zebra row ringan */
-.kpi12-sto-table tbody tr:nth-child(even),
-.kpi12-weight-table tbody tr:nth-child(even) {
-  background-color: #f9fafb;
+/* zebra STO */
+.kpi12-sto-table tbody tr:nth-child(even) {
+  background-color: #020617;
+}
+.kpi12-sto-table tbody tr:nth-child(odd) {
+  background-color: #020617;
 }
 
-/* hover lembut */
-.kpi12-sto-table tbody tr:hover,
-.kpi12-weight-table tbody tr:hover {
-  background-color: #e5f2ff;
+/* hover lembut STO */
+.kpi12-sto-table tbody tr:hover {
+  background-color: #111827;
   transition: background-color 0.15s ease-out;
 }
 
-/* garis bawah halus di header */
-.kpi12-sto-table thead th,
-.kpi12-weight-table thead th {
-  box-shadow: inset 0 -1px 0 rgba(15,23,42,0.25);
+/* garis bawah halus di header STO */
+.kpi12-sto-table thead th {
+  box-shadow: inset 0 -1px 0 rgba(15,23,42,0.6);
 }
 
-/* WRAPPER TABEL – glass + radius */
-.kpi12-table-wrapper {
-  border-radius: 18px;
-  padding: 10px 10px 12px;
-  background: radial-gradient(circle at 0% 0%, #ffffff, #e5e7eb);
-  box-shadow:
-    0 10px 24px rgba(15,23,42,0.18),
-    inset 0 0 0 1px rgba(255,255,255,0.8);
-  max-width: 100%;
-  overflow-x: auto;
-  box-sizing: border-box;
+/* ================== RESPONSIVE ================== */
+@media (max-width: 992px) {
+  .kpi12-sto-table,
+  .kpi12-weight-table {
+    font-size: 0.7rem;
+  }
 }
 
-/* batasi lebar max tabel bobot kiri */
-.kpi12-weight-table-left {
-  width: auto;          /* jangan paksa 100% */
-  max-width: 520px;     /* atur sesuai rasa, misal 480–560px */
-  margin: 0 auto;       /* center di dalam col-lg-6 */
+@media (max-width: 768px) {
+  .kpi12-sto-table,
+  .kpi12-weight-table {
+    font-size: 0.65rem;
+  }
 }
 
-/* optional: wrapper kiri sedikit padding agar terlihat seperti card */
-.kpi12-weight-wrapper-left {
-  padding: 8px 6px;
+@media (max-width: 576px) {
+  .kpi12-meta {
+    text-align: left !important;
+  }
 }
