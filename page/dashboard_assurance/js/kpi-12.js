@@ -980,7 +980,7 @@ function renderTable() {
   // ====== BLOK RANKING HSA ======
   html += `
     <tr>
-      <td colspan="4">
+      <td colspan="4" class="p-0 kpi12-ranking-cell">
         <div class="kpi12-ranking-section">
           <div class="kpi12-ranking-title">Ranking HSA</div>
   `;
@@ -994,21 +994,16 @@ function renderTable() {
       html += `
         <div class="kpi12-ranking-card">
           <div class="kpi12-ranking-card-row">
-            <!-- Kiri: medal -->
             <div class="kpi12-ranking-col-left">
               ${medalIcon ? `
                 <img src="${IMG_BASE + medalIcon}" class="kpi12-ranking-medal-vertical" alt="Medal ${item.rank}">
               ` : ""}
             </div>
-
-            <!-- Tengah: teks rank + nama + point -->
             <div class="kpi12-ranking-col-middle">
               <div class="kpi12-ranking-rank-label">Rank #${item.rank}</div>
               <div class="kpi12-ranking-name">${item.nama}</div>
               <div class="kpi12-ranking-point">Point: ${formatNumberCell(item.point, 1)}</div>
             </div>
-
-            <!-- Kanan: PNG HSA -->
             <div class="kpi12-ranking-col-right">
               <img src="${IMG_BASE + avatar}" class="kpi12-ranking-avatar-side" alt="${item.nama}">
             </div>
@@ -1050,7 +1045,7 @@ function renderTable() {
   // ====== BLOK RANKING MITRA ======
   html += `
     <tr>
-      <td colspan="4">
+      <td colspan="4" class="p-0 kpi12-ranking-cell">
         <div class="kpi12-ranking-section mt-3">
           <div class="kpi12-ranking-title">Ranking MITRA</div>
   `;
@@ -1063,21 +1058,16 @@ function renderTable() {
       html += `
         <div class="kpi12-ranking-card">
           <div class="kpi12-ranking-card-row">
-            <!-- Kiri: medal -->
             <div class="kpi12-ranking-col-left">
               ${medalIcon ? `
                 <img src="${IMG_BASE + medalIcon}" class="kpi12-ranking-medal-vertical" alt="Medal ${item.rank}">
               ` : ""}
             </div>
-
-            <!-- Tengah: teks rank + nama + point -->
             <div class="kpi12-ranking-col-middle">
               <div class="kpi12-ranking-rank-label">Rank #${item.rank}</div>
               <div class="kpi12-ranking-name">${item.nama}</div>
               <div class="kpi12-ranking-point">Point: ${formatNumberCell(item.point, 1)}</div>
             </div>
-
-            <!-- Kanan: default avatar kecil (kalau mau pakai, bisa ganti class/PNG) -->
             <div class="kpi12-ranking-col-right">
               <img src="${IMG_BASE}default.png" class="kpi12-ranking-avatar-side" alt="${item.nama}">
             </div>
