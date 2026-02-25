@@ -943,6 +943,23 @@
   color: #fef3c7;
 }
 
+/* ===== WRAPPER HEADER INDIKATOR KPI-12 STO ===== */
+.kpi12-sto-head-indikator {
+  min-width: 140px;            /* atur sesuai rasa: 120–160px */
+  max-width: 160px;
+  padding: 0.25rem 0.4rem;
+}
+
+/* konten di dalam th indikator */
+.kpi12-sto-head-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: normal;         /* boleh wrap di 2 baris */
+  line-height: 1.25;
+}
+
 /* ================== RESPONSIVE ================== */
 @media (max-width: 992px) {
   .kpi12-sto-table,
