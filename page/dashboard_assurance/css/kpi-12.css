@@ -615,3 +615,71 @@
     text-align: left !important;
   }
 }
+
+.kpi12-ranking-section {
+  border-radius: 0.5rem;
+  background: #f8fafc;
+  padding: 0.75rem 0.9rem;
+}
+
+.kpi12-ranking-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.kpi12-ranking-card {
+  border-radius: 0.5rem;
+  background: #ffffff;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  min-width: 0;
+}
+
+.kpi12-ranking-medal {
+  width: 28px;
+  height: 28px;
+}
+
+.kpi12-ranking-avatar {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.kpi12-ranking-avatar-sm {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.kpi12-ranking-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.kpi12-ranking-point,
+.kpi12-ranking-rank {
+  font-size: 0.75rem;
+}
+
+.kpi12-ranking-desc {
+  font-size: 0.75rem;
+}
+
+.kpi12-ranking-list-title {
+  font-weight: 500;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.kpi12-ranking-list-item + .kpi12-ranking-list-item {
+  margin-top: 0.25rem;
+}
+
+.kpi12-ranking-list-rank {
+  font-weight: 600;
+  font-size: 0.8rem;
+  width: 32px;
+  text-align: center;
+}
