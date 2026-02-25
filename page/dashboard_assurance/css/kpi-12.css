@@ -600,13 +600,17 @@
 }
 
 /* ================== RESPONSIVE ================== */
-@media (max-width: 768px) {
-  .kpi12-header-grid {
-    grid-template-columns: 1fr;
-    row-gap: 10px;
+@media (max-width: 992px) {
+  .kpi12-sto-table,
+  .kpi12-weight-table {
+    font-size: 0.7rem;
   }
-  .kpi12-header-meta-col {
-    justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+  .kpi12-sto-table,
+  .kpi12-weight-table {
+    font-size: 0.65rem;
   }
 }
 
@@ -703,6 +707,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.75rem;
+  table-layout: fixed;              /* TAMBAH */
 }
 
 /* cell umum */
@@ -763,22 +768,28 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.75rem;
+  table-layout: fixed;              /* TAMBAH */
 }
 
 /* cell umum */
 .kpi12-sto-table th,
-.kpi12-sto-table td {
+.kpi12-sto-table td,
+.kpi12-weight-table th,
+.kpi12-weight-table td {
   padding: 0.25rem 0.4rem;
   border: 1px solid #e5e7eb;
+  white-space: normal;        /* TAMBAH */
+  word-wrap: break-word;      /* TAMBAH */
 }
 
 /* header base */
 .kpi12-sto-head-base {
   color: #ffffff;
   font-weight: 600;
-  font-size: 0.75rem;
+  font-size: 0.7rem;     /* boleh sedikit dikecilkan */
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;   /* BIAR BISA WRAP */
+  word-wrap: break-word;
 }
 
 /* abu2 tua: STO, Cluster, OM HAS, MITRA, Medal, Ach */
@@ -821,13 +832,6 @@
   background-color: #be185d;
 }
 
-/* baris Target – merah tua */
-.kpi12-sto-row-target td {
-  background-color: #7f1d1d;
-  color: #fee2e2;
-  font-weight: 600;
-}
-
 /* baris total Branch Tangerang – abu2 tua */
 .kpi12-sto-row-total td {
   background-color: #374151;
@@ -842,6 +846,7 @@
   font-weight: 600;
 }
 
+.kpi12-sto-row-target td,
 .kpi12-sto-table thead tr.kpi12-sto-row-target th {
   background-color: #7f1d1d;
   color: #fee2e2;
@@ -872,6 +877,9 @@
   box-shadow:
     0 10px 24px rgba(15,23,42,0.18),
     inset 0 0 0 1px rgba(255,255,255,0.8);
+  max-width: 100%;       /* TAMBAH */
+  overflow-x: auto;      /* TAMBAH (kalau masih perlu di HP) */
+  box-sizing: border-box;
 }
 
 .kpi12-sto-table tbody td:first-child,
@@ -879,6 +887,7 @@
 .kpi12-sto-table tbody td:nth-child(3),
 .kpi12-sto-table tbody td:nth-child(4) {
   text-align: left;
+  max-width: 180px;   /* bisa dicoba 160–200px sesuai layar */
 }
 
 .kpi12-sto-row-target td,
