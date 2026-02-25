@@ -116,10 +116,10 @@ function initKPI12(config) {
       const offset = 242;
       const getRow = (rowNumber) => rows[rowNumber - offset] || null;
 
-      const totalRow = getRow(242); // TANGERANG
-      const row1 = getRow(246) || []; // indikator
-      const row2 = getRow(247) || []; // Target + angka
-      const row3 = getRow(248) || []; // H-1 / 🔄 / HI
+      const totalRow = getRow(242);        // TANGERANG
+      const row1 = getRow(246) || [];      // indikator
+      const row2 = getRow(247) || [];      // Target + angka
+      const row3 = getRow(248) || [];      // H-1 / 🔄 / HI
       const bodyRows = rows.slice(249 - offset, 261 - offset + 1); // A249:A261
 
       tableState.headRows = [row1, row2, row3];
@@ -443,95 +443,84 @@ function initKPI12(config) {
 
   // ================== GRID HEADER 3 BARIS ==================
   function renderTableHeaders() {
-  const [row1 = [], row2 = [], row3 = []] = tableState.headRows;
+    const [row1 = [], row2 = [], row3 = []] = tableState.headRows;
 
-  if (!els.headRow1 || !els.headRow2 || !els.headRow3) return;
+    if (!els.headRow1 || !els.headRow2 || !els.headRow3) return;
 
-  els.headRow1.innerHTML = "";
-  els.headRow2.innerHTML = "";
-  els.headRow3.innerHTML = "";
+    els.headRow1.innerHTML = "";
+    els.headRow2.innerHTML = "";
+    els.headRow3.innerHTML = "";
 
-  const colCount = Math.max(row1.length, row2.length, row3.length);
+    const colCount = Math.max(row1.length, row2.length, row3.length);
 
-  // ================== BARIS 1 ==================
-  // 4 kolom pertama: STO, Telkomsel Cluster, OM HAS, MITRA (rowspan 3)
-  const fixedFirstCols = 4;
-  for (let i = 0; i < fixedFirstCols; i++) {
-    const th = document.createElement("th");
-    th.textContent = (row1[i] || "").toString();
-    th.className = "text-center align-middle";
-    th.style.fontSize = "0.8rem";
-    th.rowSpan = 3; // merge 3 baris
-    els.headRow1.appendChild(th);
-  }
-
-  // Kolom indikator + Medal + Ach
-  let col = fixedFirstCols;
-  while (col < colCount) {
-    const h1 = (row1[col] || "").toString().trim();
-
-    // Medal & Ach -> satu kolom, rowspan 3
-    if (h1 === "Medal" || h1 === "Ach") {
+    // ===== BARIS 1 =====
+    const fixedFirstCols = 4; // STO, Cluster, OM HAS, MITRA
+    for (let i = 0; i < fixedFirstCols; i++) {
       const th = document.createElement("th");
-      th.textContent = h1;
+      th.textContent = (row1[i] || "").toString();
       th.className = "text-center align-middle";
-      th.style.fontSize = "0.75rem";
+      th.style.fontSize = "0.8rem";
       th.rowSpan = 3;
       els.headRow1.appendChild(th);
-      col += 1;
-      continue;
     }
 
-    // Indikator: kasih colspan 3 (H-1, 🔄, HI)
-    if (h1) {
+    // indikator + Medal + Ach
+    let col = fixedFirstCols;
+    while (col < colCount) {
+      const h1 = (row1[col] || "").toString().trim();
+
+      if (h1 === "Medal" || h1 === "Ach") {
+        const th = document.createElement("th");
+        th.textContent = h1;
+        th.className = "text-center align-middle";
+        th.style.fontSize = "0.75rem";
+        th.rowSpan = 3;
+        els.headRow1.appendChild(th);
+        col += 1;
+        continue;
+      }
+
+      if (h1) {
+        const th = document.createElement("th");
+        th.textContent = h1;
+        th.className = "text-center align-middle";
+        th.style.fontSize = "0.75rem";
+        th.colSpan = 3;
+        els.headRow1.appendChild(th);
+        col += 3;
+      } else {
+        col += 1;
+      }
+    }
+
+    // ===== BARIS 2 (Target + angka) =====
+    for (let i = 0; i < fixedFirstCols; i++) {
       const th = document.createElement("th");
-      th.textContent = h1;
+      th.className = "d-none";
+      els.headRow2.appendChild(th);
+    }
+    for (let i = fixedFirstCols; i < colCount; i++) {
+      const th = document.createElement("th");
+      th.textContent = (row2[i] || "").toString();
       th.className = "text-center align-middle";
-      th.style.fontSize = "0.75rem";
-      th.colSpan = 3;
-      els.headRow1.appendChild(th);
+      th.style.fontSize = "0.7rem";
+      els.headRow2.appendChild(th);
+    }
 
-      col += 3; // skip 3 kolom di bawahnya
-    } else {
-      // safety kalau ada kolom kosong yang tidak termasuk pattern
-      col += 1;
+    // ===== BARIS 3 (H-1 / 🔄 / HI) =====
+    for (let i = 0; i < fixedFirstCols; i++) {
+      const th = document.createElement("th");
+      th.className = "d-none";
+      els.headRow3.appendChild(th);
+    }
+    for (let i = fixedFirstCols; i < colCount; i++) {
+      const th = document.createElement("th");
+      th.textContent = (row3[i] || "").toString();
+      th.className = "text-center align-middle";
+      th.style.fontSize = "0.7rem";
+      els.headRow3.appendChild(th);
     }
   }
-
-  // ================== BARIS 2 (Target + angka) ==================
-  // 4 kolom pertama kosong (karena sudah rowspan)
-  for (let i = 0; i < fixedFirstCols; i++) {
-    const th = document.createElement("th");
-    th.className = "d-none"; // tidak dipakai, biar konsisten
-    els.headRow2.appendChild(th);
-  }
-
-  // Sisanya sesuai row2 (Target, angka2)
-  for (let i = fixedFirstCols; i < colCount; i++) {
-    const th = document.createElement("th");
-    th.textContent = (row2[i] || "").toString();
-    th.className = "text-center align-middle";
-    th.style.fontSize = "0.7rem";
-    els.headRow2.appendChild(th);
-  }
-
-  // ================== BARIS 3 (H-1 / 🔄 / HI) ==================
-  // 4 kolom pertama kosong (karena sudah rowspan)
-  for (let i = 0; i < fixedFirstCols; i++) {
-    const th = document.createElement("th");
-    th.className = "d-none";
-    els.headRow3.appendChild(th);
-  }
-
-  for (let i = fixedFirstCols; i < colCount; i++) {
-    const th = document.createElement("th");
-    th.textContent = (row3[i] || "").toString();
-    th.className = "text-center align-middle";
-    th.style.fontSize = "0.7rem";
-    els.headRow3.appendChild(th);
-  }
-}
-
 
   // ================== GRID BODY & TOTAL ==================
   function renderTable() {
@@ -542,7 +531,6 @@ function initKPI12(config) {
     tableState.bodyRows.forEach((row) => {
       const tr = document.createElement("tr");
 
-      // Medal biasanya kolom kedua dari belakang
       const medal = (row[row.length - 2] || "").toString().toLowerCase();
       if (medal === "platinum") tr.classList.add("table-platinum");
       else if (medal === "gold") tr.classList.add("table-gold");
