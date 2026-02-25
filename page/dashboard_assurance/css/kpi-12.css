@@ -858,3 +858,15 @@
   overflow-x: auto;
   box-sizing: border-box;
 }
+
+/* batasi lebar max tabel bobot kiri */
+.kpi12-weight-table-left {
+  width: auto;          /* jangan paksa 100% */
+  max-width: 520px;     /* atur sesuai rasa, misal 480–560px */
+  margin: 0 auto;       /* center di dalam col-lg-6 */
+}
+
+/* optional: wrapper kiri sedikit padding agar terlihat seperti card */
+.kpi12-weight-wrapper-left {
+  padding: 8px 6px;
+}
