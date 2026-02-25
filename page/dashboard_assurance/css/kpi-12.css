@@ -960,6 +960,34 @@
   line-height: 1.25;
 }
 
+/* baris total default */
+.kpi12-sto-row-total td {
+  background-color: #e5e7eb;
+  color: #111827;
+  font-weight: 700;
+}
+
+/* override khusus kolom Medal di baris total: ambil warna dari badge */
+.kpi12-sto-row-total td .kpi12-medal-badge.kpi12-medal-platinum {
+  background: linear-gradient(135deg, #e5e7eb, #9ca3af);
+  color: #111827;
+}
+
+.kpi12-sto-row-total td .kpi12-medal-badge.kpi12-medal-gold {
+  background: linear-gradient(135deg, #facc15, #f97316);
+  color: #111827;
+}
+
+.kpi12-sto-row-total td .kpi12-medal-badge.kpi12-medal-silver {
+  background: linear-gradient(135deg, #e5e7eb, #9ca3af);
+  color: #111827;
+}
+
+.kpi12-sto-row-total td .kpi12-medal-badge.kpi12-medal-bronze {
+  background: linear-gradient(135deg, #92400e, #f97316);
+  color: #fef3c7;
+}
+
 /* ================== RESPONSIVE ================== */
 @media (max-width: 992px) {
   .kpi12-sto-table,
