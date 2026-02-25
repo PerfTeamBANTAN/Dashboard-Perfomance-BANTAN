@@ -614,66 +614,57 @@ function initKPI12(config) {
   }
 
   // ================== GRID BOBOT KIRI–KANAN ==================
-  function renderWeightTables(header, dataRows) {
-    if (!els.weightLeftTable || !els.weightRightTable) return;
+function renderWeightTables(header, dataRows) {
+  if (!els.weightLeftTable || !els.weightRightTable) return;
 
-    els.weightLeftTable.innerHTML = "";
-    els.weightRightTable.innerHTML = "";
+  // kiri dikosongkan dulu
+  els.weightLeftTable.innerHTML = "";
+  els.weightRightTable.innerHTML = "";
 
-    if (!header.length || !dataRows.length) return;
+  if (!header.length || !dataRows.length) return;
 
-    // header: [Indikator, Bobot, Target, GDS, TAN, JIA, ...]
-    const stoHeaders = header.slice(3); // GDS..CPA
-    const stoCount = stoHeaders.length;
-    const mid = Math.ceil(stoCount / 2);
+  // header: [Indikator, Bobot, Target, GDS, TAN, JIA, CLD, CPD, CKL, DTG, PDR, PKU, LKG, SRP, SRH, CPA]
+  const stoHeaders = header.slice(3); // semua STO GDS..CPA
 
-    const leftStoHeaders = stoHeaders.slice(0, mid);
-    const rightStoHeaders = stoHeaders.slice(mid);
+  const buildTableHtml = (stoList, offsetIndex) => {
+    let theadHtml = "<thead><tr>";
+    theadHtml += "<th>Indikator</th><th>Bobot</th><th>Target</th>";
+    stoList.forEach((sto) => {
+      theadHtml += `<th class="text-center">${sto}</th>`;
+    });
+    theadHtml += "</tr></thead>";
 
-    const buildTableHtml = (stoList, offsetIndex) => {
-      let theadHtml = "<thead><tr>";
-      theadHtml += "<th>Indikator</th><th>Bobot</th><th>Target</th>";
-      stoList.forEach((sto) => {
-        theadHtml += `<th class="text-center">${sto}</th>`;
+    let tbodyHtml = "<tbody>";
+    dataRows.forEach((row) => {
+      if (!row || !row.length) return;
+      const indikator = row[0] ?? "";
+      const bobot = row[1] ?? "";
+      const target = row[2] ?? "";
+
+      tbodyHtml += "<tr>";
+      tbodyHtml += `<td>${indikator}</td>`;
+      tbodyHtml += `<td class="text-center">${bobot}</td>`;
+      tbodyHtml += `<td class="text-center">${target}</td>`;
+
+      stoList.forEach((_, idx) => {
+        const colIndex = offsetIndex + idx;
+        const val = row[colIndex] ?? "";
+        tbodyHtml += `<td class="text-center">${val}</td>`;
       });
-      theadHtml += "</tr></thead>";
 
-      let tbodyHtml = "<tbody>";
-      dataRows.forEach((row) => {
-        if (!row || !row.length) return;
-        const indikator = row[0] ?? "";
-        const bobot = row[1] ?? "";
-        const target = row[2] ?? "";
+      tbodyHtml += "</tr>";
+    });
+    tbodyHtml += "</tbody>";
 
-        tbodyHtml += "<tr>";
-        tbodyHtml += `<td>${indikator}</td>`;
-        tbodyHtml += `<td class="text-center">${bobot}</td>`;
-        tbodyHtml += `<td class="text-center">${target}</td>`;
+    return theadHtml + tbodyHtml;
+  };
 
-        stoList.forEach((_, idx) => {
-          const colIndex = offsetIndex + idx;
-          const val = row[colIndex] ?? "";
-          tbodyHtml += `<td class="text-center">${val}</td>`;
-        });
+  // tabel kiri: tetap kosong (sudah di-clear di atas)
 
-        tbodyHtml += "</tr>";
-      });
-      tbodyHtml += "</tbody>";
+  // tabel kanan: semua STO dari GDS..CPA
+  els.weightRightTable.innerHTML = buildTableHtml(stoHeaders, 3);
+}
 
-      return theadHtml + tbodyHtml;
-    };
-
-    // tabel kiri: STO dari GDS sampai tengah
-    els.weightLeftTable.innerHTML = buildTableHtml(leftStoHeaders, 3);
-
-    // tabel kanan: sisa STO
-    if (rightStoHeaders.length) {
-      els.weightRightTable.innerHTML = buildTableHtml(
-        rightStoHeaders,
-        3 + leftStoHeaders.length
-      );
-    }
-  }
 
   // ================== SHOW/HIDE ==================
   function showLoading(flag) {
