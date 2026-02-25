@@ -802,22 +802,31 @@ function initKPI12(config) {
 
   const topHsa = hsa.filter(x => x.rank >= 1 && x.rank <= 3);
   if (topHsa.length) {
-    html += `<div class="kpi12-ranking-top d-flex flex-wrap">`;
+    html += `<div class="kpi12-ranking-top">`;
     topHsa.forEach(item => {
       const medalIcon = getMedalIcon(item.rank);
       const avatar = getHsaAvatar(item.nama, true);
       html += `
-        <div class="kpi12-ranking-card flex-fill">
-          <div class="kpi12-ranking-card-body d-flex flex-column align-items-center">
-            <div class="d-flex align-items-center mb-2">
+        <div class="kpi12-ranking-card">
+          <div class="kpi12-ranking-card-row">
+            <!-- Kiri: medal -->
+            <div class="kpi12-ranking-col-left">
               ${medalIcon ? `
-                <img src="${IMG_BASE + medalIcon}" class="kpi12-ranking-medal me-2" alt="Medal ${item.rank}">
+                <img src="${IMG_BASE + medalIcon}" class="kpi12-ranking-medal-vertical" alt="Medal ${item.rank}">
               ` : ""}
-              <span class="kpi12-ranking-rank text-nowrap">#${item.rank}</span>
             </div>
-            <img src="${IMG_BASE + avatar}" class="kpi12-ranking-avatar-lg mb-2" alt="${item.nama}">
-            <div class="kpi12-ranking-name text-center">${item.nama}</div>
-            <div class="kpi12-ranking-point text-center">Point: ${formatNumberCell(item.point, 1)}</div>
+
+            <!-- Tengah: teks rank + nama + point -->
+            <div class="kpi12-ranking-col-middle">
+              <div class="kpi12-ranking-rank-label">Rank #${item.rank}</div>
+              <div class="kpi12-ranking-name">${item.nama}</div>
+              <div class="kpi12-ranking-point">Point: ${formatNumberCell(item.point, 1)}</div>
+            </div>
+
+            <!-- Kanan: PNG HSA -->
+            <div class="kpi12-ranking-col-right">
+              <img src="${IMG_BASE + avatar}" class="kpi12-ranking-avatar-side" alt="${item.nama}">
+            </div>
           </div>
         </div>
       `;
@@ -863,20 +872,30 @@ function initKPI12(config) {
 
   const topMitra = mitra.filter(x => x.rank >= 1 && x.rank <= 3);
   if (topMitra.length) {
-    html += `<div class="kpi12-ranking-top d-flex flex-wrap">`;
+    html += `<div class="kpi12-ranking-top">`;
     topMitra.forEach(item => {
       const medalIcon = getMedalIcon(item.rank);
       html += `
-        <div class="kpi12-ranking-card flex-fill">
-          <div class="kpi12-ranking-card-body d-flex flex-column align-items-center">
-            <div class="d-flex align-items-center mb-2">
+        <div class="kpi12-ranking-card">
+          <div class="kpi12-ranking-card-row">
+            <!-- Kiri: medal -->
+            <div class="kpi12-ranking-col-left">
               ${medalIcon ? `
-                <img src="${IMG_BASE + medalIcon}" class="kpi12-ranking-medal me-2" alt="Medal ${item.rank}">
+                <img src="${IMG_BASE + medalIcon}" class="kpi12-ranking-medal-vertical" alt="Medal ${item.rank}">
               ` : ""}
-              <span class="kpi12-ranking-rank text-nowrap">#${item.rank}</span>
             </div>
-            <div class="kpi12-ranking-name text-center">${item.nama}</div>
-            <div class="kpi12-ranking-point text-center">Point: ${formatNumberCell(item.point, 1)}</div>
+
+            <!-- Tengah: teks rank + nama + point -->
+            <div class="kpi12-ranking-col-middle">
+              <div class="kpi12-ranking-rank-label">Rank #${item.rank}</div>
+              <div class="kpi12-ranking-name">${item.nama}</div>
+              <div class="kpi12-ranking-point">Point: ${formatNumberCell(item.point, 1)}</div>
+            </div>
+
+            <!-- Kanan: default avatar kecil (kalau mau pakai, bisa ganti class/PNG) -->
+            <div class="kpi12-ranking-col-right">
+              <img src="${IMG_BASE}default.png" class="kpi12-ranking-avatar-side" alt="${item.nama}">
+            </div>
           </div>
         </div>
       `;
