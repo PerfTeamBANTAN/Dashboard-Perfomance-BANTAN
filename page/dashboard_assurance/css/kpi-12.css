@@ -658,7 +658,7 @@
 }
 
 .kpi12-ranking-medal-vertical {
-  height: 72px;                 /* atur tinggi medal */
+  height: 100%;                 /* atur tinggi medal */
   width: auto;
   object-fit: contain;
 }
@@ -698,4 +698,5 @@
   width: auto;
   object-fit: contain;
 }
+
 
