@@ -579,11 +579,12 @@ function renderTableHeaders() {
   els.headRow2.innerHTML = "";
   els.headRow3.innerHTML = "";
 
-  // KUNCI KE HEADER UTAMA (BARIS 1)
+  const fixedFirstCols = 4; // STO, Cluster, OM HAS, MITRA
+
+  // KUNCI STRUKTUR DARI BARIS 1
   const colCount = row1.length;
 
   // ===== BARIS 1 =====
-  const fixedFirstCols = 4; // STO, Cluster, OM HAS, MITRA
   for (let i = 0; i < fixedFirstCols; i++) {
     const th = document.createElement("th");
     const title = (row1[i] || "").toString();
@@ -619,7 +620,7 @@ function renderTableHeaders() {
       th.textContent = title;
       th.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
       th.style.fontSize = "0.75rem";
-      th.colSpan = 3;
+      th.colSpan = 3;       // 3 kolom: Target, angka, (kosong/H-1/HI)
       els.headRow1.appendChild(th);
       col += 3;
     } else {
@@ -635,16 +636,56 @@ function renderTableHeaders() {
     els.headRow2.appendChild(th);
   }
 
-  // sisanya: isi dari row2, tapi jangan bikin th kalau kosong
-  for (let i = fixedFirstCols; i < row2.length; i++) {
-    const text = (row2[i] || "").toString().trim();
-    if (!text) continue; // HINDARI TH KOSONG DI UJUNG
+  // Mulai dari kolom ke-4, kita mirror pola baris 1
+  let c2 = fixedFirstCols;
+  let idx2 = fixedFirstCols; // index di row2: "Target, 90, Target, 90, ..."
 
-    const th = document.createElement("th");
-    th.textContent = text;
-    th.className = "text-center align-middle";
-    th.style.fontSize = "0.7rem";
-    els.headRow2.appendChild(th);
+  while (c2 < colCount) {
+    const h1 = (row1[c2] || "").toString().trim();
+
+    // Medal / Ach (1 kolom, tidak ada target numerik)
+    if (h1 === "Medal" || h1 === "Ach") {
+      const th = document.createElement("th");
+      th.className = "d-none"; // tidak ada header target
+      els.headRow2.appendChild(th);
+      c2 += 1;
+      continue;
+    }
+
+    if (h1) {
+      // Grup 3 kolom: Target | angka | (kosong)
+      const label = (row2[idx2] || "").toString().trim();        // "Target"
+      const value = (row2[idx2 + 1] || "").toString().trim();    // "90" dll
+
+      // kolom 1: "Target"
+      const thTarget = document.createElement("th");
+      thTarget.textContent = label;
+      thTarget.className = "text-center align-middle";
+      thTarget.style.fontSize = "0.7rem";
+      els.headRow2.appendChild(thTarget);
+
+      // kolom 2: angka target
+      const thValue = document.createElement("th");
+      thValue.textContent = value;
+      thValue.className = "text-center align-middle";
+      thValue.style.fontSize = "0.7rem";
+      els.headRow2.appendChild(thValue);
+
+      // kolom 3: dibiarkan kosong (baris 3 dipakai H-1/HI)
+      const thEmpty = document.createElement("th");
+      thEmpty.className = "d-none";
+      els.headRow2.appendChild(thEmpty);
+
+      c2 += 3;
+      idx2 += 2; // maju 2 item di row2 ("Target" + angka)
+    } else {
+      // kalau header baris 1 kosong, tetap maju 1 kolom
+      const th = document.createElement("th");
+      th.className = "d-none";
+      els.headRow2.appendChild(th);
+      c2 += 1;
+      idx2 += 1;
+    }
   }
 
   // baris Target -> warna merah tua
@@ -657,15 +698,39 @@ function renderTableHeaders() {
     els.headRow3.appendChild(th);
   }
 
-  for (let i = fixedFirstCols; i < row3.length; i++) {
-    const text = (row3[i] || "").toString().trim();
-    if (!text) continue; // optional: skip kosong
+  let c3 = fixedFirstCols;
+  let idx3 = fixedFirstCols; // index di row3: H-1, 🔄, HI, dst
 
-    const th = document.createElement("th");
-    th.textContent = text;
-    th.className = "text-center align-middle";
-    th.style.fontSize = "0.7rem";
-    els.headRow3.appendChild(th);
+  while (c3 < colCount) {
+    const h1 = (row1[c3] || "").toString().trim();
+
+    if (h1 === "Medal" || h1 === "Ach") {
+      const th = document.createElement("th");
+      th.className = "d-none";
+      els.headRow3.appendChild(th);
+      c3 += 1;
+      continue;
+    }
+
+    if (h1) {
+      // 3 sel: H-1 | 🔄 | HI (atau apapun di row3)
+      for (let step = 0; step < 3; step++) {
+        const text = (row3[idx3] || "").toString().trim();
+        const th = document.createElement("th");
+        th.textContent = text;
+        th.className = "text-center align-middle";
+        th.style.fontSize = "0.7rem";
+        els.headRow3.appendChild(th);
+        idx3 += 1;
+      }
+      c3 += 3;
+    } else {
+      const th = document.createElement("th");
+      th.className = "d-none";
+      els.headRow3.appendChild(th);
+      c3 += 1;
+      idx3 += 1;
+    }
   }
 }
 
