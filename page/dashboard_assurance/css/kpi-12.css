@@ -698,3 +698,45 @@
   object-fit: contain;
 }
 
+/* header utama */
+.kpi12-weight-head-base {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+/* kolom awal */
+.kpi12-weight-head-indikator {
+  background-color: #4b5563; /* abu gelap */
+}
+.kpi12-weight-head-bobot {
+  background-color: #4b5563;
+}
+.kpi12-weight-head-target {
+  background-color: #4b5563;
+}
+
+/* biru dongker: GDS, TAN, JIA */
+.kpi12-weight-head-biru {
+  background-color: #1d3557;
+}
+
+/* oranye: CPD, CKL, DTG */
+.kpi12-weight-head-orange {
+  background-color: #ea580c;
+}
+
+/* hijau tua: CLD, PDR, PKU */
+.kpi12-weight-head-hijau {
+  background-color: #166534;
+}
+
+/* ungu tua: LKG, SRP */
+.kpi12-weight-head-ungu {
+  background-color: #5b21b6;
+}
+
+/* pink tua: SRH, CPA */
+.kpi12-weight-head-pink {
+  background-color: #be185d;
+}
