@@ -569,10 +569,8 @@ function formatNumberCell(v, decimals = 2) {
     };
   }
 
-  // ================== GRID HEADER 3 BARIS ==================
-function renderTableHeaders() {
+  function renderTableHeaders() {
   const [row1 = [], row2 = [], row3 = []] = tableState.headRows;
-
   if (!els.headRow1 || !els.headRow2 || !els.headRow3) return;
 
   els.headRow1.innerHTML = "";
@@ -580,8 +578,6 @@ function renderTableHeaders() {
   els.headRow3.innerHTML = "";
 
   const fixedFirstCols = 4; // STO, Cluster, OM HAS, MITRA
-
-  // KUNCI STRUKTUR DARI BARIS 1
   const colCount = row1.length;
 
   // ===== BARIS 1 =====
@@ -596,11 +592,11 @@ function renderTableHeaders() {
     els.headRow1.appendChild(th);
   }
 
-  // indikator + Medal + Ach
-  let col = fixedFirstCols;
-  while (col < colCount) {
-    const h1 = (row1[col] || "").toString().trim();
+  let c1 = fixedFirstCols;
+  while (c1 < colCount) {
+    const h1 = (row1[c1] || "").toString().trim();
 
+    // Medal / Ach = 1 kolom, rowSpan 3
     if (h1 === "Medal" || h1 === "Ach") {
       const th = document.createElement("th");
       const colorClass = getStoKpiHeaderClass(h1);
@@ -609,55 +605,58 @@ function renderTableHeaders() {
       th.style.fontSize = "0.75rem";
       th.rowSpan = 3;
       els.headRow1.appendChild(th);
-      col += 1;
+      c1 += 1;
       continue;
     }
 
     if (h1) {
       const th = document.createElement("th");
-      const title = h1;
-      const colorClass = getStoKpiHeaderClass(title);
-      th.textContent = title;
+      const colorClass = getStoKpiHeaderClass(h1);
+      th.textContent = h1;
       th.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
       th.style.fontSize = "0.75rem";
-      th.colSpan = 3;       // 3 kolom: Target, angka, (kosong/H-1/HI)
+      th.colSpan = 3; // indikator = 3 kolom di baris 2 & 3
       els.headRow1.appendChild(th);
-      col += 3;
+      c1 += 3;
     } else {
-      col += 1;
+      c1 += 1;
     }
   }
 
-  // ===== BARIS 2 (Target + angka) =====
-  // 4 kolom pertama: dummy (karena baris 1 rowSpan=3)
+  // ===== BARIS 2 (Target) =====
+  // 4 kolom awal: dummy
   for (let i = 0; i < fixedFirstCols; i++) {
     const th = document.createElement("th");
     th.className = "d-none";
     els.headRow2.appendChild(th);
   }
 
-  // Mulai dari kolom ke-4, kita mirror pola baris 1
   let c2 = fixedFirstCols;
-  let idx2 = fixedFirstCols; // index di row2: "Target, 90, Target, 90, ..."
+  let idx2 = 0; // index di pasangan Target/angka
+
+  // Ambil hanya pasangan Target/angka dari row2
+  const flatTargets = [];
+  for (let i = 0; i < row2.length; i++) {
+    const v = (row2[i] || "").toString().trim();
+    if (v) flatTargets.push(v);
+  }
 
   while (c2 < colCount) {
     const h1 = (row1[c2] || "").toString().trim();
 
-    // Medal / Ach (1 kolom, tidak ada target numerik)
     if (h1 === "Medal" || h1 === "Ach") {
       const th = document.createElement("th");
-      th.className = "d-none"; // tidak ada header target
+      th.className = "d-none";
       els.headRow2.appendChild(th);
       c2 += 1;
       continue;
     }
 
     if (h1) {
-      // Grup 3 kolom: Target | angka | (kosong)
-      const label = (row2[idx2] || "").toString().trim();        // "Target"
-      const value = (row2[idx2 + 1] || "").toString().trim();    // "90" dll
+      const label = flatTargets[idx2] || "Target";
+      const value = flatTargets[idx2 + 1] || "";
 
-      // kolom 1: "Target"
+      // kolom 1: Target
       const thTarget = document.createElement("th");
       thTarget.textContent = label;
       thTarget.className = "text-center align-middle";
@@ -671,24 +670,21 @@ function renderTableHeaders() {
       thValue.style.fontSize = "0.7rem";
       els.headRow2.appendChild(thValue);
 
-      // kolom 3: dibiarkan kosong (baris 3 dipakai H-1/HI)
+      // kolom 3: dummy (dipakai H-1/HI di baris 3)
       const thEmpty = document.createElement("th");
       thEmpty.className = "d-none";
       els.headRow2.appendChild(thEmpty);
 
+      idx2 += 2;
       c2 += 3;
-      idx2 += 2; // maju 2 item di row2 ("Target" + angka)
     } else {
-      // kalau header baris 1 kosong, tetap maju 1 kolom
       const th = document.createElement("th");
       th.className = "d-none";
       els.headRow2.appendChild(th);
       c2 += 1;
-      idx2 += 1;
     }
   }
 
-  // baris Target -> warna merah tua
   els.headRow2.classList.add("kpi12-sto-row-target");
 
   // ===== BARIS 3 (H-1 / 🔄 / HI) =====
@@ -699,7 +695,12 @@ function renderTableHeaders() {
   }
 
   let c3 = fixedFirstCols;
-  let idx3 = fixedFirstCols; // index di row3: H-1, 🔄, HI, dst
+  let idx3 = 0;
+  const flatRow3 = [];
+  for (let i = 0; i < row3.length; i++) {
+    const v = (row3[i] || "").toString().trim();
+    if (v) flatRow3.push(v);
+  }
 
   while (c3 < colCount) {
     const h1 = (row1[c3] || "").toString().trim();
@@ -713,9 +714,9 @@ function renderTableHeaders() {
     }
 
     if (h1) {
-      // 3 sel: H-1 | 🔄 | HI (atau apapun di row3)
-      for (let step = 0; step < 3; step++) {
-        const text = (row3[idx3] || "").toString().trim();
+      // 3 sel: H-1 | 🔄 | HI
+      for (let j = 0; j < 3; j++) {
+        const text = flatRow3[idx3] || "";
         const th = document.createElement("th");
         th.textContent = text;
         th.className = "text-center align-middle";
@@ -729,7 +730,6 @@ function renderTableHeaders() {
       th.className = "d-none";
       els.headRow3.appendChild(th);
       c3 += 1;
-      idx3 += 1;
     }
   }
 }
