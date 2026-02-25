@@ -785,151 +785,135 @@ function initKPI12(config) {
     renderRankingTable();
   }
   function renderRankingTable() {
-    if (!els.weightLeftTable) return;
+  if (!els.weightLeftTable) return;
 
-    const hsa = rankingState.hsa || [];
-    const mitra = rankingState.mitra || [];
+  const hsa = rankingState.hsa || [];
+  const mitra = rankingState.mitra || [];
 
-    let html = "<tbody>";
+  let html = "<tbody>";
 
-    // ====== BLOK RANKING HSA ======
-    html += `
-      <tr>
-        <td colspan="4">
-          <div class="kpi12-ranking-section">
-            <div class="kpi12-ranking-title">Ranking HSA</div>
-    `;
+  // ====== BLOK RANKING HSA ======
+  html += `
+    <tr>
+      <td colspan="4">
+        <div class="kpi12-ranking-section">
+          <div class="kpi12-ranking-title">Ranking HSA</div>
+  `;
 
-    const topHsa = hsa.filter(x => x.rank >= 1 && x.rank <= 3);
-    if (topHsa.length) {
-      html += `<div class="kpi12-ranking-top d-flex flex-wrap gap-2">`;
-      topHsa.forEach(item => {
-        const medalIcon = getMedalIcon(item.rank);
-        const avatar = getHsaAvatar(item.nama, true);
-        html += `
-          <div class="kpi12-ranking-card flex-fill">
-            <div class="kpi12-ranking-card-header d-flex align-items-center">
+  const topHsa = hsa.filter(x => x.rank >= 1 && x.rank <= 3);
+  if (topHsa.length) {
+    html += `<div class="kpi12-ranking-top d-flex flex-wrap">`;
+    topHsa.forEach(item => {
+      const medalIcon = getMedalIcon(item.rank);
+      const avatar = getHsaAvatar(item.nama, true);
+      html += `
+        <div class="kpi12-ranking-card flex-fill">
+          <div class="kpi12-ranking-card-body d-flex flex-column align-items-center">
+            <div class="d-flex align-items-center mb-2">
               ${medalIcon ? `
                 <img src="${IMG_BASE + medalIcon}" class="kpi12-ranking-medal me-2" alt="Medal ${item.rank}">
               ` : ""}
-              <div>
-                <div class="kpi12-ranking-name">${item.nama}</div>
-                <div class="kpi12-ranking-point">Point: ${formatNumberCell(item.point, 1)}</div>
-                <div class="kpi12-ranking-rank">Rank #${item.rank}</div>
-              </div>
+              <span class="kpi12-ranking-rank text-nowrap">#${item.rank}</span>
             </div>
-            <div class="kpi12-ranking-card-body d-flex align-items-center mt-2">
-              <img src="${IMG_BASE + avatar}" class="kpi12-ranking-avatar me-2" alt="${item.nama}">
-              <div class="kpi12-ranking-desc">
-                ${buildHsaDescription(item)}
-              </div>
-            </div>
+            <img src="${IMG_BASE + avatar}" class="kpi12-ranking-avatar-lg mb-2" alt="${item.nama}">
+            <div class="kpi12-ranking-name text-center">${item.nama}</div>
+            <div class="kpi12-ranking-point text-center">Point: ${formatNumberCell(item.point, 1)}</div>
           </div>
-        `;
-      });
-      html += `</div>`;
-    }
-
-    const otherHsa = hsa.filter(x => x.rank >= 4);
-    if (otherHsa.length) {
-      html += `
-        <div class="kpi12-ranking-list mt-2">
-          <div class="kpi12-ranking-list-title">Peringkat lainnya</div>
+        </div>
       `;
-      otherHsa.forEach(item => {
-        const avatar = getHsaAvatar(item.nama, false);
-        html += `
-          <div class="kpi12-ranking-list-item d-flex align-items-center">
-            <div class="kpi12-ranking-list-rank">#${item.rank}</div>
-            <img src="${IMG_BASE + avatar}" class="kpi12-ranking-avatar-sm mx-2" alt="${item.nama}">
-            <div class="flex-grow-1">
-              <div class="kpi12-ranking-name">${item.nama}</div>
-              <div class="kpi12-ranking-point small text-muted">Point: ${formatNumberCell(item.point, 1)}</div>
-            </div>
-            <div class="kpi12-ranking-desc small text-muted">
-              ${buildHsaDescription(item)}
-            </div>
-          </div>
-        `;
-      });
-      html += `</div>`;
-    }
-
-    html += `
-          </div>
-        </td>
-      </tr>
-    `;
-
-    // ====== BLOK RANKING MITRA ======
-    html += `
-      <tr>
-        <td colspan="4">
-          <div class="kpi12-ranking-section mt-3">
-            <div class="kpi12-ranking-title">Ranking MITRA</div>
-    `;
-
-    const topMitra = mitra.filter(x => x.rank >= 1 && x.rank <= 3);
-    if (topMitra.length) {
-      html += `<div class="kpi12-ranking-top d-flex flex-wrap gap-2">`;
-      topMitra.forEach(item => {
-        const medalIcon = getMedalIcon(item.rank);
-        html += `
-          <div class="kpi12-ranking-card flex-fill">
-            <div class="kpi12-ranking-card-header d-flex align-items-center">
-              ${medalIcon ? `
-                <img src="${IMG_BASE + medalIcon}" class="kpi12-ranking-medal me-2" alt="Medal ${item.rank}">
-              ` : ""}
-              <div>
-                <div class="kpi12-ranking-name">${item.nama}</div>
-                <div class="kpi12-ranking-point">Point: ${formatNumberCell(item.point, 1)}</div>
-                <div class="kpi12-ranking-rank">Rank #${item.rank}</div>
-              </div>
-            </div>
-            <div class="kpi12-ranking-card-body mt-2">
-              <div class="kpi12-ranking-desc">
-                ${buildMitraDescription(item)}
-              </div>
-            </div>
-          </div>
-        `;
-      });
-      html += `</div>`;
-    }
-
-    const otherMitra = mitra.filter(x => x.rank >= 4);
-    if (otherMitra.length) {
-      html += `
-        <div class="kpi12-ranking-list mt-2">
-          <div class="kpi12-ranking-list-title">Peringkat lainnya</div>
-      `;
-      otherMitra.forEach(item => {
-        html += `
-          <div class="kpi12-ranking-list-item d-flex align-items-center">
-            <div class="kpi12-ranking-list-rank">#${item.rank}</div>
-            <div class="flex-grow-1 ms-2">
-              <div class="kpi12-ranking-name">${item.nama}</div>
-              <div class="kpi12-ranking-point small text-muted">Point: ${formatNumberCell(item.point, 1)}</div>
-            </div>
-            <div class="kpi12-ranking-desc small text-muted">
-              ${buildMitraDescription(item)}
-            </div>
-          </div>
-        `;
-      });
-      html += `</div>`;
-    }
-
-    html += `
-          </div>
-        </td>
-      </tr>
-    `;
-
-    html += "</tbody>";
-
-    els.weightLeftTable.innerHTML = html;
+    });
+    html += `</div>`;
   }
+
+  const otherHsa = hsa.filter(x => x.rank >= 4);
+  if (otherHsa.length) {
+    html += `
+      <div class="kpi12-ranking-list mt-2">
+        <div class="kpi12-ranking-list-title">Peringkat lainnya</div>
+    `;
+    otherHsa.forEach(item => {
+      const avatar = getHsaAvatar(item.nama, false);
+      html += `
+        <div class="kpi12-ranking-list-item d-flex align-items-center">
+          <div class="kpi12-ranking-list-rank">#${item.rank}</div>
+          <img src="${IMG_BASE + avatar}" class="kpi12-ranking-avatar-sm mx-2" alt="${item.nama}">
+          <div>
+            <div class="kpi12-ranking-name">${item.nama}</div>
+            <div class="kpi12-ranking-point small text-muted">Point: ${formatNumberCell(item.point, 1)}</div>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  html += `
+        </div>
+      </td>
+    </tr>
+  `;
+
+  // ====== BLOK RANKING MITRA ======
+  html += `
+    <tr>
+      <td colspan="4">
+        <div class="kpi12-ranking-section mt-3">
+          <div class="kpi12-ranking-title">Ranking MITRA</div>
+  `;
+
+  const topMitra = mitra.filter(x => x.rank >= 1 && x.rank <= 3);
+  if (topMitra.length) {
+    html += `<div class="kpi12-ranking-top d-flex flex-wrap">`;
+    topMitra.forEach(item => {
+      const medalIcon = getMedalIcon(item.rank);
+      html += `
+        <div class="kpi12-ranking-card flex-fill">
+          <div class="kpi12-ranking-card-body d-flex flex-column align-items-center">
+            <div class="d-flex align-items-center mb-2">
+              ${medalIcon ? `
+                <img src="${IMG_BASE + medalIcon}" class="kpi12-ranking-medal me-2" alt="Medal ${item.rank}">
+              ` : ""}
+              <span class="kpi12-ranking-rank text-nowrap">#${item.rank}</span>
+            </div>
+            <div class="kpi12-ranking-name text-center">${item.nama}</div>
+            <div class="kpi12-ranking-point text-center">Point: ${formatNumberCell(item.point, 1)}</div>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  const otherMitra = mitra.filter(x => x.rank >= 4);
+  if (otherMitra.length) {
+    html += `
+      <div class="kpi12-ranking-list mt-2">
+        <div class="kpi12-ranking-list-title">Peringkat lainnya</div>
+    `;
+    otherMitra.forEach(item => {
+      html += `
+        <div class="kpi12-ranking-list-item d-flex align-items-center">
+          <div class="kpi12-ranking-list-rank">#${item.rank}</div>
+          <div class="ms-2">
+            <div class="kpi12-ranking-name">${item.nama}</div>
+            <div class="kpi12-ranking-point small text-muted">Point: ${formatNumberCell(item.point, 1)}</div>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  html += `
+        </div>
+      </td>
+    </tr>
+  `;
+
+  html += "</tbody>";
+
+  els.weightLeftTable.innerHTML = html;
+}
 
   // ================== SHOW/HIDE ==================
   function showLoading(flag) {
