@@ -1,18 +1,20 @@
 function initKPI12(config) {
-  // config: { baseUrl, sheet, range }  -> untuk KPI 12PI (kartu)
+  // ================== STATE KPI CARD ==================
   const state = {
     raw: [],
     filtered: [],
   };
 
-  // State khusus tabel STO (web!A242:AP262)
+  // ================== STATE GRID STO (web!A242:AP262) ==================
   const tableState = {
-    all: [],        // semua row body STO
-    headers: [],    // flat header dari 3 baris
-    totalRow: null, // row TANGERANG
+    all: [],        // body STO (A249:AP261)
+    headers: [],    // header flatten
+    totalRow: null, // TANGERANG (A242)
   };
 
+  // ================== ELEMENTS ==================
   const els = {
+    // card
     header: document.querySelector(".kpi12-header"),
     loading: document.getElementById("kpi12-loading"),
     error: document.getElementById("kpi12-error"),
@@ -22,13 +24,13 @@ function initKPI12(config) {
     filterSegmen: document.getElementById("kpi12-filter-segmen"),
     refreshBtn: document.getElementById("kpi12-refresh"),
 
-    // elemen tabel
+    // grid STO
     tableHeadRow: document.getElementById("kpi12-table-head-row"),
     tableBody: document.getElementById("kpi12-table-body"),
     tableFoot: document.getElementById("kpi12-table-foot"),
   };
 
-  // ================== FETCH KPI CARD (EXISTING) ==================
+  // ================== FETCH KPI CARD ==================
   async function fetchData() {
     showLoading(true);
     hideError();
@@ -44,6 +46,7 @@ function initKPI12(config) {
       const rows = await res.json();
       if (!Array.isArray(rows) || !rows.length) {
         state.raw = [];
+        state.filtered = [];
         els.lastUpdate.textContent = "Last update: -";
         renderSummary();
         renderCards();
@@ -73,10 +76,13 @@ function initKPI12(config) {
           hi: toNumber(r[idxHI]),
         }));
 
+      state.filtered = [...state.raw];
+
       els.lastUpdate.textContent = "Last update: -";
 
       buildFilterOptions();
-      applyFilter();
+      renderSummary();
+      renderCards();
     } catch (err) {
       console.error(err);
       showError("Gagal memuat data dari server.");
@@ -85,7 +91,7 @@ function initKPI12(config) {
     }
   }
 
-  // ================== FETCH TABEL STO (SIMPLE, NO PAGINATION) ==================
+  // ================== FETCH GRID STO (NO PAGINATION) ==================
   async function fetchTableData() {
     try {
       const url = `${config.baseUrl}?sheet=${encodeURIComponent(
@@ -115,18 +121,9 @@ function initKPI12(config) {
 
       const flatHeaders = buildFlatHeaders(headerRows);
 
-      // parse body
-      const all = bodyRows
-        .filter((r) => r && r.length)
-        .map((r, idx) => {
-          const obj = { id: idx + 1 };
-          flatHeaders.forEach((h, i) => {
-            obj[h.key] = r[i] ?? "";
-          });
-          return obj;
-        });
-
-      const totalObj = parseTotalRow(totalRow, flatHeaders);
+      // parse body STO pakai pattern 3 kolom (H-1, Δ, HI) per indikator
+      const all = parseBodyRows(bodyRows, headerRows, flatHeaders);
+      const totalObj = parseTotalRow(totalRow, headerRows);
 
       tableState.all = all;
       tableState.headers = flatHeaders;
@@ -136,7 +133,7 @@ function initKPI12(config) {
       renderTable();
     } catch (err) {
       console.error(err);
-      // kalau perlu tampilkan error khusus tabel
+      // optional: show error khusus tabel
     }
   }
 
@@ -151,7 +148,7 @@ function initKPI12(config) {
     return Number(v);
   }
 
-  // ================== FILTER & SELECT (KARTU) ==================
+  // ================== FILTER & SELECT (CARD) ==================
   function buildFilterOptions() {
     const indikatorList = new Set();
     state.raw.forEach((row) => {
@@ -199,10 +196,10 @@ function initKPI12(config) {
 
     renderSummary();
     renderCards();
-    // tabel STO tidak ikut filter indikator (bisa di-link kalau mau)
+    // grid STO terpisah, tidak ikut filter indikator
   }
 
-  // ================== SUMMARY & CARDS (EXISTING) ==================
+  // ================== SUMMARY & CARDS ==================
   function renderSummary() {
     els.summaryRow.innerHTML = "";
     const medalEl = document.getElementById("kpi12-medal-icon");
@@ -454,47 +451,169 @@ function initKPI12(config) {
     const [row1 = [], row2 = [], row3 = []] = headerRows;
 
     const headers = [];
+
+    // 4 kolom pertama fix
+    headers.push({ label: "STO", key: "STO" });
+    headers.push({ label: "Telkomsel Cluster", key: "Telkomsel Cluster" });
+    headers.push({ label: "OM HAS", key: "OM HAS" });
+    headers.push({ label: "MITRA", key: "MITRA" });
+
     const colCount = Math.max(row1.length, row2.length, row3.length);
 
-    for (let i = 0; i < colCount; i++) {
-      const h1 = (row1[i] || "").toString().trim();
-      const h2 = (row2[i] || "").toString().trim();
-      const h3 = (row3[i] || "").toString().trim();
+    let col = 4;
+    while (col < colCount) {
+      const h1 = (row1[col] || "").toString().trim();
+      const h2 = (row2[col] || "").toString().trim();
+      const h3 = (row3[col] || "").toString().trim();
 
-      let label = "";
-      let key = "";
-
-      if (i <= 3) {
-        // STO, Telkomsel Cluster, OM HAS, MITRA
-        label = h1 || h2 || h3 || `Col${i + 1}`;
-        key = label;
-      } else if (h1 && !h2 && !h3) {
-        // Medal, Ach, dll
-        label = h1;
-        key = h1;
-      } else {
-        const parent = h1 || h2;
-        const sub = h3 || h2 || "";
-        label = `${parent} ${sub}`.replace(/\s+/g, " ").trim();
-        key = label;
+      // Medal & Ach sebagai kolom sendiri
+      if (h1 === "Medal") {
+        headers.push({ label: "Medal", key: "Medal" });
+        col += 1;
+        continue;
+      }
+      if (h1 === "Ach") {
+        headers.push({ label: "Ach", key: "Ach" });
+        col += 1;
+        continue;
       }
 
-      headers.push({ label, key });
+      // blok metrik: pattern [H-1, 🔄, HI] per indikator
+      const indikatorName = h1 || h2; // baris atas biasanya nama indikator
+      if (!indikatorName) {
+        col += 1;
+        continue;
+      }
+
+      // pastikan masih cukup 3 kolom (H-1, emoji, HI)
+      if (col + 2 >= colCount) break;
+
+      // H-1
+      headers.push({
+        label: `${indikatorName} H-1`,
+        key: `${indikatorName} H-1`,
+      });
+      // Δ (emoji 🔄)
+      headers.push({
+        label: `${indikatorName} Δ`,
+        key: `${indikatorName} Delta`,
+      });
+      // HI
+      headers.push({
+        label: `${indikatorName} HI`,
+        key: `${indikatorName} HI`,
+      });
+
+      col += 3;
     }
 
     return headers;
   }
 
-  function parseTotalRow(totalRow, flatHeaders) {
+  function parseBodyRows(bodyRows, headerRows) {
+    const [row1 = [], row2 = [], row3 = []] = headerRows;
+
+    return bodyRows
+      .filter((r) => r && r.length)
+      .map((r, idx) => {
+        const obj = { id: idx + 1 };
+
+        // 4 kolom awal
+        obj["STO"] = r[0] ?? "";
+        obj["Telkomsel Cluster"] = r[1] ?? "";
+        obj["OM HAS"] = r[2] ?? "";
+        obj["MITRA"] = r[3] ?? "";
+
+        let col = 4;
+        while (col < r.length) {
+          const nameTop = (row1[col] || "").toString().trim();
+          const nameMid = (row2[col] || "").toString().trim();
+          const name = nameTop || nameMid;
+
+          if (name === "Medal") {
+            obj["Medal"] = r[col] ?? "";
+            col += 1;
+            continue;
+          }
+          if (name === "Ach") {
+            obj["Ach"] = r[col] ?? "";
+            col += 1;
+            continue;
+          }
+
+          if (!name) {
+            col += 1;
+            continue;
+          }
+
+          // pastikan cukup 3 kolom (H-1, 🔄, HI)
+          if (col + 2 >= r.length) break;
+
+          const h1Val = r[col];       // H-1
+          const deltaVal = r[col + 1]; // 🔄
+          const hiVal = r[col + 2];   // HI
+
+          obj[`${name} H-1`] = h1Val ?? "";
+          obj[`${name} Delta`] = deltaVal ?? "";
+          obj[`${name} HI`] = hiVal ?? "";
+
+          col += 3;
+        }
+
+        return obj;
+      });
+  }
+
+  function parseTotalRow(totalRow, headerRows) {
     if (!totalRow) return null;
+    const [row1 = [], row2 = [], row3 = []] = headerRows;
     const obj = {};
-    flatHeaders.forEach((h, i) => {
-      obj[h.key] = totalRow[i] ?? "";
-    });
+
+    // 4 kolom pertama
+    obj["STO"] = totalRow[0] ?? "";
+    obj["Telkomsel Cluster"] = totalRow[1] ?? "";
+    obj["OM HAS"] = totalRow[2] ?? "";
+    obj["MITRA"] = totalRow[3] ?? "";
+
+    let col = 4;
+    while (col < totalRow.length) {
+      const nameTop = (row1[col] || "").toString().trim();
+      const nameMid = (row2[col] || "").toString().trim();
+      const name = nameTop || nameMid;
+
+      if (name === "Medal") {
+        obj["Medal"] = totalRow[col] ?? "";
+        col += 1;
+        continue;
+      }
+      if (name === "Ach") {
+        obj["Ach"] = totalRow[col] ?? "";
+        col += 1;
+        continue;
+      }
+
+      if (!name) {
+        col += 1;
+        continue;
+      }
+
+      if (col + 2 >= totalRow.length) break;
+
+      const h1Val = totalRow[col];
+      const deltaVal = totalRow[col + 1];
+      const hiVal = totalRow[col + 2];
+
+      obj[`${name} H-1`] = h1Val ?? "";
+      obj[`${name} Delta`] = deltaVal ?? "";
+      obj[`${name} HI`] = hiVal ?? "";
+
+      col += 3;
+    }
+
     return obj;
   }
 
-  // ================== TABLE RENDER (NO PAGINATION) ==================
+  // ================== TABLE RENDER ==================
   function renderTableHeaders(flatHeaders) {
     if (!els.tableHeadRow) return;
     els.tableHeadRow.innerHTML = "";
@@ -581,5 +700,5 @@ function initKPI12(config) {
 
   // ================== INIT ==================
   fetchData();      // KPI cards
-  fetchTableData(); // Tabel STO
+  fetchTableData(); // Grid STO
 }
