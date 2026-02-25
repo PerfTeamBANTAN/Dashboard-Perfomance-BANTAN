@@ -784,8 +784,6 @@ function initKPI12(config) {
     // kiri akan di-render oleh renderRankingTable()
     renderRankingTable();
   }
-
-  // ================== RANKING PANEL (TABEL KIRI) ==================
   function renderRankingTable() {
     if (!els.weightLeftTable) return;
 
