@@ -783,6 +783,7 @@
 }
 
 /* header base */
+/* header base (boleh wrap untuk indikator panjang) */
 .kpi12-sto-head-base {
   color: #ffffff;
   font-weight: 600;
@@ -792,8 +793,20 @@
   word-wrap: break-word;
 }
 
-/* 5 kolom awal: STO, Cluster, OM HAS, MITRA, Medal TIDAK WRAP */
-.kpi12-sto-table thead tr:first-child th:nth-child(-n+6) {
+/* 4 kolom awal: STO, Cluster, OM HAS, MITRA TIDAK WRAP */
+/* baris header pertama */
+.kpi12-sto-table thead tr:first-child th:nth-child(1),
+.kpi12-sto-table thead tr:first-child th:nth-child(2),
+.kpi12-sto-table thead tr:first-child th:nth-child(3),
+.kpi12-sto-table thead tr:first-child th:nth-child(4) {
+  white-space: nowrap;
+}
+
+/* isi body 4 kolom awal juga jangan wrap */
+.kpi12-sto-table tbody td:nth-child(1),
+.kpi12-sto-table tbody td:nth-child(2),
+.kpi12-sto-table tbody td:nth-child(3),
+.kpi12-sto-table tbody td:nth-child(4) {
   white-space: nowrap;
 }
 
