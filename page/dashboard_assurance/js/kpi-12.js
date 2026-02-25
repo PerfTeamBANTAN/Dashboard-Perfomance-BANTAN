@@ -626,14 +626,12 @@ function initKPI12(config) {
 function renderWeightTables(header, dataRows) {
   if (!els.weightLeftTable || !els.weightRightTable) return;
 
-  // kiri dikosongkan dulu
   els.weightLeftTable.innerHTML = "";
   els.weightRightTable.innerHTML = "";
 
   if (!header.length || !dataRows.length) return;
 
-  // header: [Indikator, Bobot, Target, GDS, TAN, JIA, CLD, CPD, CKL, DTG, PDR, PKU, LKG, SRP, SRH, CPA]
-  const stoHeaders = header.slice(3); // semua STO GDS..CPA
+  const stoHeaders = header.slice(3); // GDS..CPA
 
   const buildTableHtml = (stoList, offsetIndex) => {
     let theadHtml = "<thead><tr>";
@@ -647,8 +645,8 @@ function renderWeightTables(header, dataRows) {
     dataRows.forEach((row) => {
       if (!row || !row.length) return;
       const indikator = row[0] ?? "";
-      const bobot = row[1] ?? "";
-      const target = row[2] ?? "";
+      const bobot = formatNumberCell(row[1], 0);      // bobot biasanya bulat
+      const target = formatNumberCell(row[2], 2);     // 80.81 dll
 
       tbodyHtml += "<tr>";
       tbodyHtml += `<td>${indikator}</td>`;
@@ -657,7 +655,7 @@ function renderWeightTables(header, dataRows) {
 
       stoList.forEach((_, idx) => {
         const colIndex = offsetIndex + idx;
-        const val = row[colIndex] ?? "";
+        const val = formatNumberCell(row[colIndex], 2); // skor STO 2 desimal
         tbodyHtml += `<td class="text-center">${val}</td>`;
       });
 
@@ -668,12 +666,12 @@ function renderWeightTables(header, dataRows) {
     return theadHtml + tbodyHtml;
   };
 
-  // tabel kiri: tetap kosong (sudah di-clear di atas)
+  // kiri tetap kosong
+  els.weightLeftTable.innerHTML = "";
 
-  // tabel kanan: semua STO dari GDS..CPA
+  // kanan: semua STO
   els.weightRightTable.innerHTML = buildTableHtml(stoHeaders, 3);
 }
-
 
   // ================== SHOW/HIDE ==================
   function showLoading(flag) {
