@@ -910,6 +910,39 @@
   box-shadow: inset 0 -1px 0 rgba(15,23,42,0.25);
 }
 
+/* ===== BADGE MEDAL DI TABEL STO ===== */
+.kpi12-medal-badge {
+  display: inline-block;
+  min-width: 70px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* warna per level */
+.kpi12-medal-platinum {
+  background: linear-gradient(135deg, #e5e7eb, #9ca3af);
+  color: #111827;
+}
+
+.kpi12-medal-gold {
+  background: linear-gradient(135deg, #facc15, #f97316);
+  color: #111827;
+}
+
+.kpi12-medal-silver {
+  background: linear-gradient(135deg, #e5e7eb, #9ca3af);
+  color: #111827;
+}
+
+.kpi12-medal-bronze {
+  background: linear-gradient(135deg, #92400e, #f97316);
+  color: #fef3c7;
+}
+
 /* ================== RESPONSIVE ================== */
 @media (max-width: 992px) {
   .kpi12-sto-table,
@@ -930,3 +963,4 @@
     text-align: left !important;
   }
 }
+
