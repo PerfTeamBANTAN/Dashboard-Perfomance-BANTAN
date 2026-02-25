@@ -713,18 +713,17 @@
   border-collapse: collapse;
   font-size: 0.75rem;
   table-layout: fixed;
-  background: rgba(248,250,252,0.98);
-  border-radius: 14px;
-  overflow: hidden;
+  background: #ffffff;
 }
 
-/* cell umum bobot */
+/* cell umum bobot – TIDAK WRAP */
 .kpi12-weight-table th,
 .kpi12-weight-table td {
   padding: 0.35rem 0.5rem;
   border: 1px solid #e5e7eb;
-  white-space: normal;
-  word-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.25;
 }
 
@@ -776,19 +775,18 @@
   border-collapse: collapse;
   font-size: 0.74rem;
   table-layout: fixed;
-  background: rgba(15,23,42,0.98);
-  color: #e5e7eb;
-  border-radius: 14px;
-  overflow: hidden;
+  background: #f9fafb;    /* terang, bukan hitam */
+  color: #111827;
 }
 
-/* cell umum STO */
+/* cell umum STO – TIDAK WRAP */
 .kpi12-sto-table th,
 .kpi12-sto-table td {
   padding: 0.33rem 0.5rem;
-  border: 1px solid rgba(55,65,81,0.9);
-  white-space: normal;
-  word-wrap: break-word;
+  border: 1px solid #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.25;
 }
 
@@ -798,8 +796,6 @@
   font-weight: 600;
   font-size: 0.7rem;
   text-align: center;
-  white-space: normal;
-  word-wrap: break-word;
 }
 
 /* 4 header pertama: STO, Cluster, OM HAS, MITRA */
@@ -817,7 +813,6 @@
 .kpi12-sto-table tbody td:nth-child(3),
 .kpi12-sto-table tbody td:nth-child(4) {
   text-align: left;
-  white-space: nowrap;
 }
 
 /* warna header indikator STO */
@@ -832,8 +827,8 @@
 
 /* baris total Branch Tangerang */
 .kpi12-sto-row-total td {
-  background-color: #111827;
-  color: #f9fafb;
+  background-color: #e5e7eb;
+  color: #111827;
   font-weight: 700;
 }
 
@@ -852,23 +847,21 @@
   font-weight: 600;
 }
 
-/* zebra STO */
+/* zebra STO + hover */
 .kpi12-sto-table tbody tr:nth-child(even) {
-  background-color: #020617;
+  background-color: #f3f4f6;
 }
 .kpi12-sto-table tbody tr:nth-child(odd) {
-  background-color: #020617;
+  background-color: #ffffff;
 }
-
-/* hover lembut STO */
 .kpi12-sto-table tbody tr:hover {
-  background-color: #111827;
+  background-color: #dbeafe;
   transition: background-color 0.15s ease-out;
 }
 
 /* garis bawah halus di header STO */
 .kpi12-sto-table thead th {
-  box-shadow: inset 0 -1px 0 rgba(15,23,42,0.6);
+  box-shadow: inset 0 -1px 0 rgba(15,23,42,0.25);
 }
 
 /* ================== RESPONSIVE ================== */
