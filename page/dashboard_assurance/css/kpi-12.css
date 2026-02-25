@@ -880,9 +880,9 @@
 
 /* cell H-1 / HI di bawah Target – merah muda */
 .kpi12-sto-cell-below-target {
-  background-color: #fee2e2;
-  color: #b91c1c;
-  font-weight: 600;
+  background-color: #fee2e2 !important;
+  color: #b91c1c !important;
+  font-weight: 600 !important;
 }
 
 /* baris Target (header baris 2) – merah tua */
