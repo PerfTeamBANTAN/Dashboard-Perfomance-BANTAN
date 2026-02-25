@@ -712,18 +712,18 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.75rem;
-  table-layout: fixed;
+  /* biar fleksibel sesuai konten */
+  table-layout: auto;
   background: #ffffff;
 }
 
-/* cell umum bobot – TIDAK WRAP */
+/* cell umum bobot – TIDAK WRAP tapi tidak dipotong */
 .kpi12-weight-table th,
 .kpi12-weight-table td {
   padding: 0.35rem 0.5rem;
   border: 1px solid #e5e7eb;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap;   /* satu baris */
+  /* HAPUS: overflow + ellipsis, biar lebar kolom yang ikut melebar */
   line-height: 1.25;
 }
 
@@ -774,9 +774,20 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.74rem;
-  table-layout: fixed;
-  background: #f9fafb;    /* terang, bukan hitam */
+  /* fleksibel sesuai isi kolom */
+  table-layout: auto;
+  background: #f9fafb;
   color: #111827;
+}
+
+/* cell umum STO – TIDAK WRAP & fleksibel */
+.kpi12-sto-table th,
+.kpi12-sto-table td {
+  padding: 0.33rem 0.5rem;
+  border: 1px solid #e5e7eb;
+  white-space: nowrap;
+  /* HAPUS: overflow + ellipsis */
+  line-height: 1.25;
 }
 
 /* cell umum STO – TIDAK WRAP */
