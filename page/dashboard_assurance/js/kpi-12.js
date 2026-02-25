@@ -1,4 +1,6 @@
 function initKPI12(config) {
+  const root = document.getElementById("kpi12-container");
+
   // ================== STATE KPI CARD ==================
   const state = {
     raw: [],
@@ -14,8 +16,8 @@ function initKPI12(config) {
 
   // ================== ELEMENTS ==================
   const els = {
-    // card
-    header: document.querySelector(".kpi12-header"),
+    // card (dibatasi di dalam root)
+    header: root ? root.querySelector(".kpi12-header") : null,
     loading: document.getElementById("kpi12-loading"),
     error: document.getElementById("kpi12-error"),
     summaryRow: document.getElementById("kpi12-summary-row"),
@@ -594,6 +596,6 @@ function initKPI12(config) {
   }
 
   // ================== INIT ==================
-  fetchData();      // KPI cards
-  fetchTableData(); // Grid STO
+  fetchData();
+  fetchTableData();
 }
