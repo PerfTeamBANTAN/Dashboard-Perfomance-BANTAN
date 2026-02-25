@@ -609,62 +609,66 @@
 .kpi12-ranking-title {
   font-weight: 600;
   font-size: 0.9rem;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.6rem;
 }
 
-.kpi12-ranking-top {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
+/* Kartu utama ranking (HSA / MITRA) */
 .kpi12-ranking-card {
   border-radius: 0.75rem;
   background: #ffffff;
-  padding: 0.5rem 0.75rem;
+  padding: 0.55rem 0.75rem;
   box-shadow: 0 1px 3px rgba(15,23,42,0.08);
 }
 
 .kpi12-ranking-card-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
+/* Kolom kiri: medal (lebar fix) */
 .kpi12-ranking-col-left {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .kpi12-ranking-medal-vertical {
-  height: 72px;
+  height: 68px;
   width: auto;
   object-fit: contain;
 }
 
+/* Kolom tengah: teks (flex) */
 .kpi12-ranking-col-middle {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 0;
 }
 
 .kpi12-ranking-rank-label {
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  color: #111827;
 }
 
 .kpi12-ranking-name {
   font-weight: 600;
   font-size: 0.9rem;
+  color: #111827;
 }
 
 .kpi12-ranking-point {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #6b7280;
 }
 
+/* Kolom kanan: avatar (fix) */
 .kpi12-ranking-col-right {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -676,10 +680,41 @@
   object-fit: contain;
 }
 
+/* List peringkat lainnya */
+.kpi12-ranking-list {
+  margin-top: 0.75rem;
+}
+
+.kpi12-ranking-list-title {
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: #4b5563;
+  margin-bottom: 0.3rem;
+}
+
+.kpi12-ranking-list-item {
+  padding: 0.25rem 0;
+}
+
+.kpi12-ranking-list-rank {
+  font-weight: 600;
+  font-size: 0.8rem;
+  width: 2.1rem;
+}
+
+/* Avatar kecil di list */
 .kpi12-ranking-avatar-sm {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
+}
+
+/* Biar teks dalam list rapi */
+.kpi12-ranking-list-item .kpi12-ranking-name {
+  font-size: 0.85rem;
+}
+.kpi12-ranking-list-item .kpi12-ranking-point {
+  font-size: 0.75rem;
 }
 
 /* ================== TABEL WRAPPER ================== */
