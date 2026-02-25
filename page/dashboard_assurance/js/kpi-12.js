@@ -571,141 +571,220 @@ function formatNumberCell(v, decimals = 2) {
 
   // ================== GRID HEADER 3 BARIS ==================
   function renderTableHeaders() {
-    const [row1 = [], row2 = [], row3 = []] = tableState.headRows;
+  const [row1 = [], row2 = [], row3 = []] = tableState.headRows;
 
-    if (!els.headRow1 || !els.headRow2 || !els.headRow3) return;
+  if (!els.headRow1 || !els.headRow2 || !els.headRow3) return;
 
-    els.headRow1.innerHTML = "";
-    els.headRow2.innerHTML = "";
-    els.headRow3.innerHTML = "";
+  els.headRow1.innerHTML = "";
+  els.headRow2.innerHTML = "";
+  els.headRow3.innerHTML = "";
 
-    const colCount = Math.max(row1.length, row2.length, row3.length);
+  const colCount = Math.max(row1.length, row2.length, row3.length);
 
-    // ===== BARIS 1 =====
-    const fixedFirstCols = 4; // STO, Cluster, OM HAS, MITRA
-    for (let i = 0; i < fixedFirstCols; i++) {
+  // ===== BARIS 1 =====
+  const fixedFirstCols = 4; // STO, Cluster, OM HAS, MITRA
+  for (let i = 0; i < fixedFirstCols; i++) {
+    const th = document.createElement("th");
+    const title = (row1[i] || "").toString();
+    const colorClass = getStoKpiHeaderClass(title);             // << tambah
+    th.textContent = title;
+    th.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
+    th.style.fontSize = "0.8rem";
+    th.rowSpan = 3;
+    els.headRow1.appendChild(th);
+  }
+
+  // indikator + Medal + Ach
+  let col = fixedFirstCols;
+  while (col < colCount) {
+    const h1 = (row1[col] || "").toString().trim();
+
+    if (h1 === "Medal" || h1 === "Ach") {
       const th = document.createElement("th");
-      th.textContent = (row1[i] || "").toString();
-      th.className = "text-center align-middle";
-      th.style.fontSize = "0.8rem";
+      const colorClass = getStoKpiHeaderClass(h1);              // << tambah
+      th.textContent = h1;
+      th.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
+      th.style.fontSize = "0.75rem";
       th.rowSpan = 3;
       els.headRow1.appendChild(th);
+      col += 1;
+      continue;
     }
 
-    // indikator + Medal + Ach
-    let col = fixedFirstCols;
-    while (col < colCount) {
-      const h1 = (row1[col] || "").toString().trim();
-
-      if (h1 === "Medal" || h1 === "Ach") {
-        const th = document.createElement("th");
-        th.textContent = h1;
-        th.className = "text-center align-middle";
-        th.style.fontSize = "0.75rem";
-        th.rowSpan = 3;
-        els.headRow1.appendChild(th);
-        col += 1;
-        continue;
-      }
-
-      if (h1) {
-        const th = document.createElement("th");
-        th.textContent = h1;
-        th.className = "text-center align-middle";
-        th.style.fontSize = "0.75rem";
-        th.colSpan = 3;
-        els.headRow1.appendChild(th);
-        col += 3;
-      } else {
-        col += 1;
-      }
-    }
-
-    // ===== BARIS 2 (Target + angka) =====
-    for (let i = 0; i < fixedFirstCols; i++) {
+    if (h1) {
       const th = document.createElement("th");
-      th.className = "d-none";
-      els.headRow2.appendChild(th);
-    }
-    for (let i = fixedFirstCols; i < colCount; i++) {
-      const th = document.createElement("th");
-      th.textContent = (row2[i] || "").toString();
-      th.className = "text-center align-middle";
-      th.style.fontSize = "0.7rem";
-      els.headRow2.appendChild(th);
-    }
-
-    // ===== BARIS 3 (H-1 / 🔄 / HI) =====
-    for (let i = 0; i < fixedFirstCols; i++) {
-      const th = document.createElement("th");
-      th.className = "d-none";
-      els.headRow3.appendChild(th);
-    }
-    for (let i = fixedFirstCols; i < colCount; i++) {
-      const th = document.createElement("th");
-      th.textContent = (row3[i] || "").toString();
-      th.className = "text-center align-middle";
-      th.style.fontSize = "0.7rem";
-      els.headRow3.appendChild(th);
+      const title = h1;
+      const colorClass = getStoKpiHeaderClass(title);           // << tambah
+      th.textContent = title;
+      th.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
+      th.style.fontSize = "0.75rem";
+      th.colSpan = 3;
+      els.headRow1.appendChild(th);
+      col += 3;
+    } else {
+      col += 1;
     }
   }
+
+  // ===== BARIS 2 (Target + angka) =====
+  for (let i = 0; i < fixedFirstCols; i++) {
+    const th = document.createElement("th");
+    th.className = "d-none";
+    els.headRow2.appendChild(th);
+  }
+  for (let i = fixedFirstCols; i < colCount; i++) {
+    const th = document.createElement("th");
+    th.textContent = (row2[i] || "").toString();
+    th.className = "text-center align-middle";
+    th.style.fontSize = "0.7rem";
+    els.headRow2.appendChild(th);
+  }
+  // kasih class baris target (merah tua via CSS)
+  els.headRow2.parentElement.classList.add("kpi12-sto-row-target");
+
+  // ===== BARIS 3 (H-1 / 🔄 / HI) =====
+  for (let i = 0; i < fixedFirstCols; i++) {
+    const th = document.createElement("th");
+    th.className = "d-none";
+    els.headRow3.appendChild(th);
+  }
+  for (let i = fixedFirstCols; i < colCount; i++) {
+    const th = document.createElement("th");
+    th.textContent = (row3[i] || "").toString();
+    th.className = "text-center align-middle";
+    th.style.fontSize = "0.7rem";
+    els.headRow3.appendChild(th);
+  }
+}
+
 
   // ================== GRID BODY & TOTAL ==================
   function renderTable() {
-    if (!els.tableBody) return;
+  if (!els.tableBody) return;
 
-    els.tableBody.innerHTML = "";
+  els.tableBody.innerHTML = "";
 
-    tableState.bodyRows.forEach((row) => {
-      const tr = document.createElement("tr");
+  const [row1, row2, row3] = tableState.headRows;
 
-      const medal = (row[row.length - 2] || "").toString().toLowerCase();
-      if (medal === "platinum") tr.classList.add("table-platinum");
-      else if (medal === "gold") tr.classList.add("table-gold");
-
-      const colCount = tableState.headRows[0]?.length || row.length;
-      for (let i = 0; i < colCount; i++) {
-        const td = document.createElement("td");
-        td.className = "text-center";
-        td.textContent = row[i] ?? "";
-        tr.appendChild(td);
-      }
-
-      els.tableBody.appendChild(tr);
-    });
-
-    if (els.tableFoot) {
-      els.tableFoot.innerHTML = "";
-      if (tableState.totalRow) {
-        const trTotal = document.createElement("tr");
-        trTotal.className = "kpi12-table-total-row fw-semibold";
-
-        const colCount = tableState.headRows[0]?.length || tableState.totalRow.length;
-
-        for (let i = 0; i < colCount; i++) {
-          const td = document.createElement("td");
-          td.className = "text-center";
-
-          if (i === 0) {
-            // merge A262:D262 (4 kolom pertama)
-            td.colSpan = 4;
-            td.textContent = tableState.totalRow[0] ?? "";
-            td.style.textAlign = "left";
-            trTotal.appendChild(td);
-            i = 3; // sudah cover kolom 0..3
-            continue;
-          }
-
-          // kolom setelah D langsung ambil nilai murni dari totalRow
-          td.textContent = tableState.totalRow[i] ?? "";
-          trTotal.appendChild(td);
-        }
-
-        els.tableFoot.appendChild(trTotal);
-      }
+  // map target per kolom dari baris 2
+  const targetByCol = {};
+  if (Array.isArray(row2)) {
+    for (let i = 0; i < row2.length; i++) {
+      const val = toNumber(row2[i]);
+      if (isFinite(val)) targetByCol[i] = val;
     }
   }
 
+  tableState.bodyRows.forEach((row) => {
+    if (!row || !row.length) return;
+
+    const tr = document.createElement("tr");
+
+    // styling medal (kalau masih mau pakai)
+    const medal = (row[row.length - 2] || "").toString().toLowerCase();
+    if (medal === "platinum") tr.classList.add("table-platinum");
+    else if (medal === "gold") tr.classList.add("table-gold");
+
+    // baris total Branch Tangerang di body? (kalau ada di body, tandai)
+    const firstCell = (row[0] || "").toString().trim();
+    if (firstCell === "Branch Tangerang") {
+      tr.classList.add("kpi12-sto-row-total");
+    }
+
+    const colCount = tableState.headRows[0]?.length || row.length;
+    for (let i = 0; i < colCount; i++) {
+      const td = document.createElement("td");
+      td.className = "text-center";
+
+      const raw = row[i];
+      td.textContent = raw ?? "";
+
+      // label baris ketiga: H-1 / 🔄 / HI
+      const label3 = (row3?.[i] || "").toString().trim();
+      const target = targetByCol[i];
+
+      // hanya untuk kolom H-1 / HI dan kalau ada target
+      if (isFinite(target) && (label3 === "H-1" || label3 === "HI")) {
+        const valNum = toNumber(raw);
+        if (isFinite(valNum) && valNum < target) {
+          td.classList.add("kpi12-sto-cell-below-target");  // merah
+        }
+      }
+
+      tr.appendChild(td);
+    }
+
+    els.tableBody.appendChild(tr);
+  });
+
+  // FOOT: total Branch Tangerang (sudah ada di tableState.totalRow)
+  if (els.tableFoot) {
+    els.tableFoot.innerHTML = "";
+    if (tableState.totalRow) {
+      const trTotal = document.createElement("tr");
+      trTotal.className = "kpi12-table-total-row fw-semibold kpi12-sto-row-total";
+
+      const colCount = tableState.headRows[0]?.length || tableState.totalRow.length;
+
+      for (let i = 0; i < colCount; i++) {
+        const td = document.createElement("td");
+        td.className = "text-center";
+
+        if (i === 0) {
+          // merge A262:D262
+          td.colSpan = 4;
+          td.textContent = tableState.totalRow[0] ?? "";
+          td.style.textAlign = "left";
+          trTotal.appendChild(td);
+          i = 3;
+          continue;
+        }
+
+        td.textContent = tableState.totalRow[i] ?? "";
+        trTotal.appendChild(td);
+      }
+
+      els.tableFoot.appendChild(trTotal);
+    }
+  }
+}
+
+
+  function getStoKpiHeaderClass(title) {
+  const t = (title || "").toString().trim();
+
+  // abu-abu tua
+  if (["STO","Telkomsel Cluster","OM HAS","MITRA","Medal","Ach"].includes(t))
+    return "kpi12-sto-head-abu";
+
+  // biru dongker
+  if (["Assurance Guarantee","TTR Compliance 36H (non HVC)"].includes(t))
+    return "kpi12-sto-head-biru";
+
+  // hijau tua
+  if (t === "Underspec DATIN") return "kpi12-sto-head-hijau";
+
+  // oranye
+  if (t === "TTR Compliance K3 DATIN 7,2 Jam") return "kpi12-sto-head-orange";
+
+  // hijau toska
+  if (t === "TTDC Wifi") return "kpi12-sto-head-toska";
+
+  // ungu tua
+  if (["MTTRi Compliance Premium","MTTRi Compliance Critical","Latency RAN to Core"].includes(t))
+    return "kpi12-sto-head-ungu";
+
+  // kuning tua
+  if (["TTI Compliance","TTR Compliance FFG","PS/RE Indihome"].includes(t))
+    return "kpi12-sto-head-kuning";
+
+  // pink tua
+  if (t === "Stock NTE Ebis") return "kpi12-sto-head-pink";
+
+  return "";
+}
+
+  
   function getStoHeaderClass(stoName) {
   const key = (stoName || "").toString().trim().toUpperCase();
 
