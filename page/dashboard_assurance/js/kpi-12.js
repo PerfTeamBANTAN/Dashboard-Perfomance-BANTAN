@@ -7,13 +7,9 @@ function initKPI12(config) {
 
   // State khusus tabel STO (web!A242:AP262)
   const tableState = {
-    all: [],          // semua row body STO
-    filtered: [],     // setelah search / filter
-    totalRow: null,   // row TANGERANG
-    headers: [],      // flat header dari 3 baris
-    currentPage: 1,
-    rowsPerPage: 10,
-    search: "",
+    all: [],        // semua row body STO
+    headers: [],    // flat header dari 3 baris
+    totalRow: null, // row TANGERANG
   };
 
   const els = {
@@ -30,10 +26,6 @@ function initKPI12(config) {
     tableHeadRow: document.getElementById("kpi12-table-head-row"),
     tableBody: document.getElementById("kpi12-table-body"),
     tableFoot: document.getElementById("kpi12-table-foot"),
-    tableRowsSelect: document.getElementById("kpi12-table-rows"),
-    tableSearch: document.getElementById("kpi12-table-search"),
-    pagination: document.getElementById("kpi12-pagination"),
-    paginationInfo: document.getElementById("kpi12-pagination-info"),
   };
 
   // ================== FETCH KPI CARD (EXISTING) ==================
@@ -93,7 +85,7 @@ function initKPI12(config) {
     }
   }
 
-  // ================== FETCH TABEL STO (NEW) ==================
+  // ================== FETCH TABEL STO (SIMPLE, NO PAGINATION) ==================
   async function fetchTableData() {
     try {
       const url = `${config.baseUrl}?sheet=${encodeURIComponent(
@@ -106,7 +98,8 @@ function initKPI12(config) {
       const rows = await res.json();
       if (!Array.isArray(rows) || !rows.length) {
         tableState.all = [];
-        tableState.filtered = [];
+        tableState.headers = [];
+        tableState.totalRow = null;
         renderTableHeaders([]);
         renderTable();
         return;
@@ -136,15 +129,14 @@ function initKPI12(config) {
       const totalObj = parseTotalRow(totalRow, flatHeaders);
 
       tableState.all = all;
+      tableState.headers = flatHeaders;
       tableState.totalRow = totalObj;
-      tableState.filtered = [...all]; // default: semua
-      tableState.currentPage = 1;
 
       renderTableHeaders(flatHeaders);
       renderTable();
     } catch (err) {
       console.error(err);
-      // boleh tampilkan pesan khusus tabel kalau mau
+      // kalau perlu tampilkan error khusus tabel
     }
   }
 
@@ -205,13 +197,9 @@ function initKPI12(config) {
       return okIndikator;
     });
 
-    // contoh: tabel tidak ikut filter indikator (atau sesuaikan mapping kalau mau)
-    tableState.filtered = applyTableSearch(tableState.all, tableState.search);
-    tableState.currentPage = 1;
-
     renderSummary();
     renderCards();
-    renderTable();
+    // tabel STO tidak ikut filter indikator (bisa di-link kalau mau)
   }
 
   // ================== SUMMARY & CARDS (EXISTING) ==================
@@ -506,11 +494,11 @@ function initKPI12(config) {
     return obj;
   }
 
-  // ================== TABLE RENDER ==================
+  // ================== TABLE RENDER (NO PAGINATION) ==================
   function renderTableHeaders(flatHeaders) {
-    tableState.headers = flatHeaders || [];
     if (!els.tableHeadRow) return;
     els.tableHeadRow.innerHTML = "";
+    tableState.headers = flatHeaders || [];
 
     tableState.headers.forEach((h) => {
       const th = document.createElement("th");
@@ -521,37 +509,12 @@ function initKPI12(config) {
     });
   }
 
-  function applyTableSearch(data, q) {
-    const query = (q || "").toString().toLowerCase().trim();
-    if (!query) return [...data];
-
-    return data.filter((row) => {
-      const sto = (row.STO || "").toString().toLowerCase();
-      const cluster = (row["Telkomsel Cluster"] || "").toString().toLowerCase();
-      const mitra = (row.MITRA || "").toString().toLowerCase();
-      const medal = (row.Medal || "").toString().toLowerCase();
-      return (
-        sto.includes(query) ||
-        cluster.includes(query) ||
-        mitra.includes(query) ||
-        medal.includes(query)
-      );
-    });
-  }
-
   function renderTable() {
     if (!els.tableBody) return;
 
-    const data = tableState.filtered || [];
-    const totalItems = data.length;
-
-    const startIdx = (tableState.currentPage - 1) * tableState.rowsPerPage;
-    const endIdx = startIdx + tableState.rowsPerPage;
-    const pageData = data.slice(startIdx, endIdx);
-
     els.tableBody.innerHTML = "";
 
-    pageData.forEach((row) => {
+    tableState.all.forEach((row) => {
       const tr = document.createElement("tr");
       tr.className = getTableRowClass(row);
 
@@ -564,7 +527,6 @@ function initKPI12(config) {
       els.tableBody.appendChild(tr);
     });
 
-    // Tampilkan total (TANGERANG) di tfoot kalau ada
     if (els.tableFoot) {
       els.tableFoot.innerHTML = "";
       if (tableState.totalRow) {
@@ -578,8 +540,6 @@ function initKPI12(config) {
         els.tableFoot.appendChild(trTotal);
       }
     }
-
-    renderPagination(totalItems);
   }
 
   function getTableRowClass(row) {
@@ -589,75 +549,6 @@ function initKPI12(config) {
     if (medal === "platinum") return "table-platinum";
     if (medal === "gold") return "table-gold";
     return "";
-  }
-
-  function renderPagination(totalItems) {
-    if (!els.pagination || !els.paginationInfo) return;
-
-    const totalPages = Math.max(
-      1,
-      Math.ceil(totalItems / tableState.rowsPerPage || 1)
-    );
-    if (tableState.currentPage > totalPages) {
-      tableState.currentPage = totalPages;
-    }
-
-    const start = totalItems === 0 ? 0 : (tableState.currentPage - 1) * tableState.rowsPerPage + 1;
-    const end = Math.min(
-      tableState.currentPage * tableState.rowsPerPage,
-      totalItems
-    );
-
-    els.paginationInfo.textContent = `Showing ${start}-${end} of ${totalItems} STO`;
-
-    els.pagination.innerHTML = "";
-
-    const createPageItem = (label, page, disabled = false, active = false, iconClass = "") => {
-      const li = document.createElement("li");
-      li.className = `page-item${disabled ? " disabled" : ""}${active ? " active" : ""}`;
-      const a = document.createElement("a");
-      a.href = "#";
-      a.className = "page-link";
-      a.dataset.page = page;
-      a.innerHTML = iconClass ? `<i class="fa ${iconClass}"></i>` : label;
-      li.appendChild(a);
-      return li;
-    };
-
-    // Prev
-    els.pagination.appendChild(
-      createPageItem("", tableState.currentPage - 1, tableState.currentPage === 1, false, "fa-chevron-left")
-    );
-
-    const maxPagesToShow = 5;
-    let startPage = Math.max(1, tableState.currentPage - 2);
-    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-    if (endPage - startPage + 1 < maxPagesToShow) {
-      startPage = Math.max(1, endPage - maxPagesToShow + 1);
-    }
-
-    for (let p = startPage; p <= endPage; p++) {
-      els.pagination.appendChild(
-        createPageItem(String(p), p, false, p === tableState.currentPage)
-      );
-    }
-
-    // Next
-    els.pagination.appendChild(
-      createPageItem("", tableState.currentPage + 1, tableState.currentPage === totalPages, false, "fa-chevron-right")
-    );
-
-    // binding click
-    els.pagination.querySelectorAll(".page-link").forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const page = parseInt(link.dataset.page, 10);
-        if (!page || page === tableState.currentPage) return;
-        if (page < 1 || page > totalPages) return;
-        tableState.currentPage = page;
-        renderTable();
-      });
-    });
   }
 
   // ================== SHOW/HIDE ==================
@@ -685,22 +576,6 @@ function initKPI12(config) {
     els.refreshBtn.addEventListener("click", () => {
       fetchData();
       fetchTableData();
-    });
-  }
-  if (els.tableRowsSelect) {
-    els.tableRowsSelect.addEventListener("change", (e) => {
-      const val = parseInt(e.target.value, 10);
-      tableState.rowsPerPage = isNaN(val) ? 10 : val;
-      tableState.currentPage = 1;
-      renderTable();
-    });
-  }
-  if (els.tableSearch) {
-    els.tableSearch.addEventListener("input", (e) => {
-      tableState.search = e.target.value || "";
-      tableState.filtered = applyTableSearch(tableState.all, tableState.search);
-      tableState.currentPage = 1;
-      renderTable();
     });
   }
 
