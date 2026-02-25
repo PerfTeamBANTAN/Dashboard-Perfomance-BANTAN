@@ -733,9 +733,9 @@
 
 /* batasi lebar max tabel bobot kiri */
 .kpi12-weight-table-left {
-  width: auto;
-  max-width: 520px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
 }
 
 .kpi12-weight-wrapper-left {
