@@ -628,42 +628,36 @@
   margin-bottom: 0.4rem;
 }
 
-/* container card juara 1–3 */
 .kpi12-ranking-top {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-/* card */
 .kpi12-ranking-card {
   border-radius: 0.5rem;
   background: #ffffff;
   padding: 0.5rem 0.75rem;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
-  min-width: 0;
 }
 
-/* baris utama: kiri-medal, tengah-teks, kanan-avatar */
 .kpi12-ranking-card-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-/* kiri: medal panjang se-card */
 .kpi12-ranking-col-left {
   display: flex;
-  align-items: stretch;         /* ikuti tinggi card */
+  align-items: center;
 }
 
 .kpi12-ranking-medal-vertical {
-  height: 100%;                 /* atur tinggi medal */
+  height: 72px;   /* lebih tinggi dari avatar */
   width: auto;
   object-fit: contain;
 }
 
-/* tengah: teks rank + nama + point */
 .kpi12-ranking-col-middle {
   flex: 1 1 auto;
   display: flex;
@@ -686,7 +680,6 @@
   color: #6b7280;
 }
 
-/* kanan: PNG HSA sedikit lebih kecil dari medal */
 .kpi12-ranking-col-right {
   display: flex;
   align-items: center;
@@ -694,7 +687,7 @@
 }
 
 .kpi12-ranking-avatar-side {
-  height: 60px;                 /* sedikit lebih kecil dari medal */
+  height: 60px;   /* sedikit lebih kecil dari medal */
   width: auto;
   object-fit: contain;
 }
