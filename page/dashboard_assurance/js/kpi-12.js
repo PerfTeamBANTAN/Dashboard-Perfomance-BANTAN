@@ -443,40 +443,95 @@ function initKPI12(config) {
 
   // ================== GRID HEADER 3 BARIS ==================
   function renderTableHeaders() {
-    const [row1 = [], row2 = [], row3 = []] = tableState.headRows;
+  const [row1 = [], row2 = [], row3 = []] = tableState.headRows;
 
-    if (!els.headRow1 || !els.headRow2 || !els.headRow3) return;
+  if (!els.headRow1 || !els.headRow2 || !els.headRow3) return;
 
-    els.headRow1.innerHTML = "";
-    els.headRow2.innerHTML = "";
-    els.headRow3.innerHTML = "";
+  els.headRow1.innerHTML = "";
+  els.headRow2.innerHTML = "";
+  els.headRow3.innerHTML = "";
 
-    const colCount = Math.max(row1.length, row2.length, row3.length);
+  const colCount = Math.max(row1.length, row2.length, row3.length);
 
-    for (let i = 0; i < colCount; i++) {
-      const v1 = (row1[i] || "").toString();
-      const v2 = (row2[i] || "").toString();
-      const v3 = (row3[i] || "").toString();
+  // ================== BARIS 1 ==================
+  // 4 kolom pertama: STO, Telkomsel Cluster, OM HAS, MITRA (rowspan 3)
+  const fixedFirstCols = 4;
+  for (let i = 0; i < fixedFirstCols; i++) {
+    const th = document.createElement("th");
+    th.textContent = (row1[i] || "").toString();
+    th.className = "text-center align-middle";
+    th.style.fontSize = "0.8rem";
+    th.rowSpan = 3; // merge 3 baris
+    els.headRow1.appendChild(th);
+  }
 
-      const th1 = document.createElement("th");
-      th1.textContent = v1;
-      th1.className = "text-center align-middle";
-      th1.style.fontSize = i < 4 ? "0.8rem" : "0.75rem";
-      els.headRow1.appendChild(th1);
+  // Kolom indikator + Medal + Ach
+  let col = fixedFirstCols;
+  while (col < colCount) {
+    const h1 = (row1[col] || "").toString().trim();
 
-      const th2 = document.createElement("th");
-      th2.textContent = v2;
-      th2.className = "text-center align-middle";
-      th2.style.fontSize = "0.7rem";
-      els.headRow2.appendChild(th2);
+    // Medal & Ach -> satu kolom, rowspan 3
+    if (h1 === "Medal" || h1 === "Ach") {
+      const th = document.createElement("th");
+      th.textContent = h1;
+      th.className = "text-center align-middle";
+      th.style.fontSize = "0.75rem";
+      th.rowSpan = 3;
+      els.headRow1.appendChild(th);
+      col += 1;
+      continue;
+    }
 
-      const th3 = document.createElement("th");
-      th3.textContent = v3;
-      th3.className = "text-center align-middle";
-      th3.style.fontSize = "0.7rem";
-      els.headRow3.appendChild(th3);
+    // Indikator: kasih colspan 3 (H-1, 🔄, HI)
+    if (h1) {
+      const th = document.createElement("th");
+      th.textContent = h1;
+      th.className = "text-center align-middle";
+      th.style.fontSize = "0.75rem";
+      th.colSpan = 3;
+      els.headRow1.appendChild(th);
+
+      col += 3; // skip 3 kolom di bawahnya
+    } else {
+      // safety kalau ada kolom kosong yang tidak termasuk pattern
+      col += 1;
     }
   }
+
+  // ================== BARIS 2 (Target + angka) ==================
+  // 4 kolom pertama kosong (karena sudah rowspan)
+  for (let i = 0; i < fixedFirstCols; i++) {
+    const th = document.createElement("th");
+    th.className = "d-none"; // tidak dipakai, biar konsisten
+    els.headRow2.appendChild(th);
+  }
+
+  // Sisanya sesuai row2 (Target, angka2)
+  for (let i = fixedFirstCols; i < colCount; i++) {
+    const th = document.createElement("th");
+    th.textContent = (row2[i] || "").toString();
+    th.className = "text-center align-middle";
+    th.style.fontSize = "0.7rem";
+    els.headRow2.appendChild(th);
+  }
+
+  // ================== BARIS 3 (H-1 / 🔄 / HI) ==================
+  // 4 kolom pertama kosong (karena sudah rowspan)
+  for (let i = 0; i < fixedFirstCols; i++) {
+    const th = document.createElement("th");
+    th.className = "d-none";
+    els.headRow3.appendChild(th);
+  }
+
+  for (let i = fixedFirstCols; i < colCount; i++) {
+    const th = document.createElement("th");
+    th.textContent = (row3[i] || "").toString();
+    th.className = "text-center align-middle";
+    th.style.fontSize = "0.7rem";
+    els.headRow3.appendChild(th);
+  }
+}
+
 
   // ================== GRID BODY & TOTAL ==================
   function renderTable() {
