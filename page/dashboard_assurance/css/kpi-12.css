@@ -698,45 +698,61 @@
   object-fit: contain;
 }
 
-/* header utama */
-.kpi12-weight-head-base {
+/* tabel bobot khusus KPI-12 */
+.kpi12-weight-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+/* cell umum */
+.kpi12-weight-table th,
+.kpi12-weight-table td {
+  padding: 0.25rem 0.4rem;
+  border: 1px solid #e5e7eb;
+}
+
+/* header base */
+.kpi12-weight-table thead th.kpi12-weight-head-base {
   color: #ffffff;
   font-weight: 600;
   font-size: 0.75rem;
 }
 
 /* kolom awal */
-.kpi12-weight-head-indikator {
-  background-color: #4b5563; /* abu gelap */
-}
-.kpi12-weight-head-bobot {
-  background-color: #4b5563;
-}
-.kpi12-weight-head-target {
+.kpi12-weight-table thead th.kpi12-weight-head-indikator,
+.kpi12-weight-table thead th.kpi12-weight-head-bobot,
+.kpi12-weight-table thead th.kpi12-weight-head-target {
   background-color: #4b5563;
 }
 
 /* biru dongker: GDS, TAN, JIA */
-.kpi12-weight-head-biru {
+.kpi12-weight-table thead th.kpi12-weight-head-biru {
   background-color: #1d3557;
 }
 
 /* oranye: CPD, CKL, DTG */
-.kpi12-weight-head-orange {
+.kpi12-weight-table thead th.kpi12-weight-head-orange {
   background-color: #ea580c;
 }
 
 /* hijau tua: CLD, PDR, PKU */
-.kpi12-weight-head-hijau {
+.kpi12-weight-table thead th.kpi12-weight-head-hijau {
   background-color: #166534;
 }
 
 /* ungu tua: LKG, SRP */
-.kpi12-weight-head-ungu {
+.kpi12-weight-table thead th.kpi12-weight-head-ungu {
   background-color: #5b21b6;
 }
 
 /* pink tua: SRH, CPA */
-.kpi12-weight-head-pink {
+.kpi12-weight-table thead th.kpi12-weight-head-pink {
   background-color: #be185d;
+}
+
+.kpi12-weight-table td.kpi12-weight-below-bobot {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  font-weight: 600;
 }
