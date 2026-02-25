@@ -234,23 +234,24 @@ function initKPI12(config) {
 
   // ================== UTIL ==================
   function toNumber(v) {
-    if (v === null || v === undefined || v === "") return NaN;
-    if (typeof v === "string") {
-      const cleaned = v.replace(/\./g, "").replace(",", ".");
-      const num = Number(cleaned);
-      return isNaN(num) ? Number(v) : num;
-    }
-    return Number(v);
+  if (v === null || v === undefined || v === "") return NaN;
+  if (typeof v === "string") {
+    const cleaned = v.replace(/\./g, "").replace(",", ".");
+    const num = Number(cleaned);
+    return isNaN(num) ? Number(v) : num;
   }
+  return Number(v);
+}
 
-  function formatNumberCell(v, decimals = 2) {
-    if (v === null || v === undefined || v === "") return "";
-    const num = typeof v === "number" ? v : Number(
-      v.toString().replace(/\./g, "").replace(",", ".")
-    );
-    if (!isFinite(num)) return v;
-    return num.toFixed(decimals);
-  }
+function formatNumberCell(v, decimals = 2) {
+  if (v === null || v === undefined || v === "") return "";
+  const num = typeof v === "number" ? v : Number(
+    v.toString().replace(/\./g, "").replace(",", ".")
+  );
+  if (!isFinite(num)) return v;
+  return num.toFixed(decimals);
+}
+
 
   // avatar HSA juara/kalah
   function getHsaAvatar(nama, isWinner) {
@@ -269,34 +270,6 @@ function initKPI12(config) {
     if (rank === 2) return "gold.png";
     if (rank === 3) return "silver.png";
     return null;
-  }
-
-  function buildHsaDescription(item) {
-    if (!item) return "";
-    if (item.rank === 1) {
-      return `Selamat ${item.nama}, HSA terbaik dengan skor ${formatNumberCell(item.point, 1)}!`;
-    }
-    if (item.rank === 2) {
-      return `Mantap ${item.nama}, posisi kedua HSA dengan skor ${formatNumberCell(item.point, 1)}.`;
-    }
-    if (item.rank === 3) {
-      return `${item.nama} tetap konsisten di papan atas HSA, skor ${formatNumberCell(item.point, 1)}.`;
-    }
-    return `${item.nama} perlu sedikit gas lagi, skor ${formatNumberCell(item.point, 1)}.`;
-  }
-
-  function buildMitraDescription(item) {
-    if (!item) return "";
-    if (item.rank === 1) {
-      return `MITRA ${item.nama} menjadi juara dengan skor ${formatNumberCell(item.point, 1)}.`;
-    }
-    if (item.rank === 2) {
-      return `MITRA ${item.nama} berhasil duduk di peringkat dua, skor ${formatNumberCell(item.point, 1)}.`;
-    }
-    if (item.rank === 3) {
-      return `MITRA ${item.nama} masih di jajaran tiga besar dengan skor ${formatNumberCell(item.point, 1)}.`;
-    }
-    return `MITRA ${item.nama} masih bisa digenjot lagi, skor ${formatNumberCell(item.point, 1)}.`;
   }
 
   // ================== FILTER & SELECT (CARD) ==================
@@ -733,57 +706,94 @@ function initKPI12(config) {
     }
   }
 
+  function getStoHeaderClass(stoName) {
+  const key = (stoName || "").toString().trim().toUpperCase();
+
+  // biru dongker
+  if (["GDS", "TAN", "JIA"].includes(key)) return "kpi12-weight-head-biru";
+
+  // oranye
+  if (["CPD", "CKL", "DTG"].includes(key)) return "kpi12-weight-head-orange";
+
+  // hijau tua
+  if (["CLD", "PDR", "PKU"].includes(key)) return "kpi12-weight-head-hijau";
+
+  // ungu tua
+  if (["LKG", "SRP"].includes(key)) return "kpi12-weight-head-ungu";
+
+  // pink tua
+  if (["SRH", "CPA"].includes(key)) return "kpi12-weight-head-pink";
+
+  return "";
+}
+
+  
   // ================== GRID BOBOT KANAN ==================
   function renderWeightTables(header, dataRows) {
-    if (!els.weightLeftTable || !els.weightRightTable) return;
+  if (!els.weightLeftTable || !els.weightRightTable) return;
 
-    // kiri akan diisi ranking, jadi di sini jangan isi apa-apa dulu
-    els.weightRightTable.innerHTML = "";
-    // weightLeftTable akan diisi oleh renderRankingTable()
+  els.weightRightTable.innerHTML = "";
+  if (!header.length || !dataRows.length) return;
 
-    if (!header.length || !dataRows.length) return;
+  const stoHeaders = header.slice(3); // GDS..CPA
 
-    const stoHeaders = header.slice(3); // GDS..CPA
+  const buildTableHtml = (stoList, offsetIndex) => {
+    let theadHtml = "<thead><tr>";
 
-    const buildTableHtml = (stoList, offsetIndex) => {
-      let theadHtml = "<thead><tr>";
-      theadHtml += "<th>Indikator</th><th>Bobot</th><th>Target</th>";
-      stoList.forEach((sto) => {
-        theadHtml += `<th class="text-center">${sto}</th>`;
+    // 3 kolom awal: abu-abu gelap
+    theadHtml += `<th class="text-center kpi12-weight-head-base kpi12-weight-head-indikator">Indikator</th>`;
+    theadHtml += `<th class="text-center kpi12-weight-head-base kpi12-weight-head-bobot">Bobot</th>`;
+    theadHtml += `<th class="text-center kpi12-weight-head-base kpi12-weight-head-target">Target</th>`;
+
+    // STO: warna sesuai mapping
+    stoList.forEach((sto) => {
+      const stoText = (sto || "").toString();
+      const stoClass = getStoHeaderClass(stoText);
+      theadHtml += `
+        <th class="text-center kpi12-weight-head-base ${stoClass}">
+          ${stoText}
+        </th>`;
+    });
+
+    theadHtml += "</tr></thead>";
+
+    // ... (tbody seperti jawaban sebelumnya, tidak diubah)
+    let tbodyHtml = "<tbody>";
+    dataRows.forEach((row) => {
+      if (!row || !row.length) return;
+      const indikator = row[0] ?? "";
+      const bobotNum = toNumber(row[1]);
+      const bobot = formatNumberCell(row[1], 0);
+      const target = formatNumberCell(row[2], 2);
+
+      tbodyHtml += "<tr>";
+      tbodyHtml += `<td>${indikator}</td>`;
+      tbodyHtml += `<td class="text-center">${bobot}</td>`;
+      tbodyHtml += `<td class="text-center">${target}</td>`;
+
+      stoList.forEach((_, idx) => {
+        const colIndex = offsetIndex + idx;
+        const valRaw = row[colIndex];
+        const valNum = toNumber(valRaw);
+        const val = formatNumberCell(valRaw, 2);
+
+        const isBelow = isFinite(valNum) && isFinite(bobotNum) && valNum < bobotNum;
+        const cls = isBelow ? "kpi12-weight-below-bobot" : "";
+
+        tbodyHtml += `<td class="text-center ${cls}">${val}</td>`;
       });
-      theadHtml += "</tr></thead>";
 
-      let tbodyHtml = "<tbody>";
-      dataRows.forEach((row) => {
-        if (!row || !row.length) return;
-        const indikator = row[0] ?? "";
-        const bobot = formatNumberCell(row[1], 0);      // bobot bulat
-        const target = formatNumberCell(row[2], 2);     // 80.81 dll
+      tbodyHtml += "</tr>";
+    });
+    tbodyHtml += "</tbody>";
 
-        tbodyHtml += "<tr>";
-        tbodyHtml += `<td>${indikator}</td>`;
-        tbodyHtml += `<td class="text-center">${bobot}</td>`;
-        tbodyHtml += `<td class="text-center">${target}</td>`;
+    return theadHtml + tbodyHtml;
+  };
 
-        stoList.forEach((_, idx) => {
-          const colIndex = offsetIndex + idx;
-          const val = formatNumberCell(row[colIndex], 2);
-          tbodyHtml += `<td class="text-center">${val}</td>`;
-        });
+  els.weightRightTable.innerHTML = buildTableHtml(stoHeaders, 3);
+  renderRankingTable();
+}
 
-        tbodyHtml += "</tr>";
-      });
-      tbodyHtml += "</tbody>";
-
-      return theadHtml + tbodyHtml;
-    };
-
-    // kanan: semua STO
-    els.weightRightTable.innerHTML = buildTableHtml(stoHeaders, 3);
-
-    // kiri akan di-render oleh renderRankingTable()
-    renderRankingTable();
-  }
   function renderRankingTable() {
   if (!els.weightLeftTable) return;
 
