@@ -14,6 +14,12 @@ function initKPI12(config) {
     totalRow: null // A262 (TOTAL)
   };
 
+  // ================== STATE RANKING ==================
+  const rankingState = {
+    hsa: [],   // { nama, point, rank }
+    mitra: [], // { nama, point, rank }
+  };
+
   // ================== ELEMENTS ==================
   const els = {
     // card (dibatasi di dalam root)
@@ -37,6 +43,8 @@ function initKPI12(config) {
     weightLeftTable: document.getElementById("kpi12-weight-left"),
     weightRightTable: document.getElementById("kpi12-weight-right"),
   };
+
+  const IMG_BASE = "../../assets/home/img/";
 
   // ================== FETCH KPI CARD ==================
   async function fetchData() {
@@ -168,6 +176,62 @@ function initKPI12(config) {
     }
   }
 
+  // ================== FETCH RANKING HSA & MITRA ==================
+  async function fetchRanking() {
+    try {
+      // HSA: web!A230:C235
+      const urlHsa = `${config.baseUrl}?sheet=${encodeURIComponent(
+        "web"
+      )}&range=${encodeURIComponent("A230:C235")}`;
+
+      const resHsa = await fetch(urlHsa);
+      if (!resHsa.ok) throw new Error("Network error ranking HSA");
+      const rowsHsa = await resHsa.json();
+
+      rankingState.hsa = [];
+      if (Array.isArray(rowsHsa) && rowsHsa.length > 1) {
+        const dataRows = rowsHsa.slice(1);
+        rankingState.hsa = dataRows
+          .filter(r => r && r[0])
+          .map(r => ({
+            nama: r[0],
+            point: toNumber(r[1]),
+            rank: Number(r[2]),
+          }))
+          .sort((a, b) => a.rank - b.rank);
+      }
+
+      // MITRA: web!A238:C243
+      const urlMitra = `${config.baseUrl}?sheet=${encodeURIComponent(
+        "web"
+      )}&range=${encodeURIComponent("A238:C243")}`;
+
+      const resMitra = await fetch(urlMitra);
+      if (!resMitra.ok) throw new Error("Network error ranking MITRA");
+      const rowsMitra = await resMitra.json();
+
+      rankingState.mitra = [];
+      if (Array.isArray(rowsMitra) && rowsMitra.length > 1) {
+        const dataRows = rowsMitra.slice(1);
+        rankingState.mitra = dataRows
+          .filter(r => r && r[0])
+          .map(r => ({
+            nama: r[0],
+            point: toNumber(r[1]),
+            rank: Number(r[2]),
+          }))
+          .sort((a, b) => a.rank - b.rank);
+      }
+
+      renderRankingTable();
+    } catch (err) {
+      console.error(err);
+      rankingState.hsa = [];
+      rankingState.mitra = [];
+      renderRankingTable();
+    }
+  }
+
   // ================== UTIL ==================
   function toNumber(v) {
     if (v === null || v === undefined || v === "") return NaN;
@@ -180,13 +244,60 @@ function initKPI12(config) {
   }
 
   function formatNumberCell(v, decimals = 2) {
-  if (v === null || v === undefined || v === "") return "";
-  const num = typeof v === "number" ? v : Number(
-    v.toString().replace(/\./g, "").replace(",", ".")
-  );
-  if (!isFinite(num)) return v;
-  return num.toFixed(decimals);
-}
+    if (v === null || v === undefined || v === "") return "";
+    const num = typeof v === "number" ? v : Number(
+      v.toString().replace(/\./g, "").replace(",", ".")
+    );
+    if (!isFinite(num)) return v;
+    return num.toFixed(decimals);
+  }
+
+  // avatar HSA juara/kalah
+  function getHsaAvatar(nama, isWinner) {
+    const key = (nama || "").toLowerCase();
+    if (key === "zulfa") return isWinner ? "zulfa_juara.png" : "zulfa_kalah.png";
+    if (key === "dady") return isWinner ? "dadi_juara.png" : "dadi_kalah.png";
+    if (key === "eka") return isWinner ? "eka_juara.png" : "eka_kalah.png";
+    if (key === "risman") return isWinner ? "risman_juara.png" : "risman_kalah.png";
+    if (key === "herlando") return isWinner ? "herlando_juara.png" : "herlando_kalah.png";
+    // default
+    return "default.png";
+  }
+
+  function getMedalIcon(rank) {
+    if (rank === 1) return "platinum.png";
+    if (rank === 2) return "gold.png";
+    if (rank === 3) return "silver.png";
+    return null;
+  }
+
+  function buildHsaDescription(item) {
+    if (!item) return "";
+    if (item.rank === 1) {
+      return `Selamat ${item.nama}, HSA terbaik dengan skor ${formatNumberCell(item.point, 1)}!`;
+    }
+    if (item.rank === 2) {
+      return `Mantap ${item.nama}, posisi kedua HSA dengan skor ${formatNumberCell(item.point, 1)}.`;
+    }
+    if (item.rank === 3) {
+      return `${item.nama} tetap konsisten di papan atas HSA, skor ${formatNumberCell(item.point, 1)}.`;
+    }
+    return `${item.nama} perlu sedikit gas lagi, skor ${formatNumberCell(item.point, 1)}.`;
+  }
+
+  function buildMitraDescription(item) {
+    if (!item) return "";
+    if (item.rank === 1) {
+      return `MITRA ${item.nama} menjadi juara dengan skor ${formatNumberCell(item.point, 1)}.`;
+    }
+    if (item.rank === 2) {
+      return `MITRA ${item.nama} berhasil duduk di peringkat dua, skor ${formatNumberCell(item.point, 1)}.`;
+    }
+    if (item.rank === 3) {
+      return `MITRA ${item.nama} masih di jajaran tiga besar dengan skor ${formatNumberCell(item.point, 1)}.`;
+    }
+    return `MITRA ${item.nama} masih bisa digenjot lagi, skor ${formatNumberCell(item.point, 1)}.`;
+  }
 
   // ================== FILTER & SELECT (CARD) ==================
   function buildFilterOptions() {
@@ -467,20 +578,20 @@ function initKPI12(config) {
     if (totalMeet >= 12) {
       return {
         level: "Platinum",
-        img: "../../assets/home/img/platinum.png",
+        img: IMG_BASE + "platinum.png",
         cssClass: "kpi12-medal-platinum",
       };
     }
     if (totalMeet >= 10) {
       return {
         level: "Gold",
-        img: "../../assets/home/img/gold.png",
+        img: IMG_BASE + "gold.png",
         cssClass: "kpi12-medal-gold",
       };
     }
     return {
       level: "Silver",
-      img: "../../assets/home/img/silver.png",
+      img: IMG_BASE + "silver.png",
       cssClass: "kpi12-medal-silver",
     };
   }
@@ -622,56 +733,205 @@ function initKPI12(config) {
     }
   }
 
-  // ================== GRID BOBOT KIRI–KANAN ==================
-function renderWeightTables(header, dataRows) {
-  if (!els.weightLeftTable || !els.weightRightTable) return;
+  // ================== GRID BOBOT KANAN ==================
+  function renderWeightTables(header, dataRows) {
+    if (!els.weightLeftTable || !els.weightRightTable) return;
 
-  els.weightLeftTable.innerHTML = "";
-  els.weightRightTable.innerHTML = "";
+    // kiri akan diisi ranking, jadi di sini jangan isi apa-apa dulu
+    els.weightRightTable.innerHTML = "";
+    // weightLeftTable akan diisi oleh renderRankingTable()
 
-  if (!header.length || !dataRows.length) return;
+    if (!header.length || !dataRows.length) return;
 
-  const stoHeaders = header.slice(3); // GDS..CPA
+    const stoHeaders = header.slice(3); // GDS..CPA
 
-  const buildTableHtml = (stoList, offsetIndex) => {
-    let theadHtml = "<thead><tr>";
-    theadHtml += "<th>Indikator</th><th>Bobot</th><th>Target</th>";
-    stoList.forEach((sto) => {
-      theadHtml += `<th class="text-center">${sto}</th>`;
-    });
-    theadHtml += "</tr></thead>";
-
-    let tbodyHtml = "<tbody>";
-    dataRows.forEach((row) => {
-      if (!row || !row.length) return;
-      const indikator = row[0] ?? "";
-      const bobot = formatNumberCell(row[1], 0);      // bobot biasanya bulat
-      const target = formatNumberCell(row[2], 2);     // 80.81 dll
-
-      tbodyHtml += "<tr>";
-      tbodyHtml += `<td>${indikator}</td>`;
-      tbodyHtml += `<td class="text-center">${bobot}</td>`;
-      tbodyHtml += `<td class="text-center">${target}</td>`;
-
-      stoList.forEach((_, idx) => {
-        const colIndex = offsetIndex + idx;
-        const val = formatNumberCell(row[colIndex], 2); // skor STO 2 desimal
-        tbodyHtml += `<td class="text-center">${val}</td>`;
+    const buildTableHtml = (stoList, offsetIndex) => {
+      let theadHtml = "<thead><tr>";
+      theadHtml += "<th>Indikator</th><th>Bobot</th><th>Target</th>";
+      stoList.forEach((sto) => {
+        theadHtml += `<th class="text-center">${sto}</th>`;
       });
+      theadHtml += "</tr></thead>";
 
-      tbodyHtml += "</tr>";
-    });
-    tbodyHtml += "</tbody>";
+      let tbodyHtml = "<tbody>";
+      dataRows.forEach((row) => {
+        if (!row || !row.length) return;
+        const indikator = row[0] ?? "";
+        const bobot = formatNumberCell(row[1], 0);      // bobot bulat
+        const target = formatNumberCell(row[2], 2);     // 80.81 dll
 
-    return theadHtml + tbodyHtml;
-  };
+        tbodyHtml += "<tr>";
+        tbodyHtml += `<td>${indikator}</td>`;
+        tbodyHtml += `<td class="text-center">${bobot}</td>`;
+        tbodyHtml += `<td class="text-center">${target}</td>`;
 
-  // kiri tetap kosong
-  els.weightLeftTable.innerHTML = "";
+        stoList.forEach((_, idx) => {
+          const colIndex = offsetIndex + idx;
+          const val = formatNumberCell(row[colIndex], 2);
+          tbodyHtml += `<td class="text-center">${val}</td>`;
+        });
 
-  // kanan: semua STO
-  els.weightRightTable.innerHTML = buildTableHtml(stoHeaders, 3);
-}
+        tbodyHtml += "</tr>";
+      });
+      tbodyHtml += "</tbody>";
+
+      return theadHtml + tbodyHtml;
+    };
+
+    // kanan: semua STO
+    els.weightRightTable.innerHTML = buildTableHtml(stoHeaders, 3);
+
+    // kiri akan di-render oleh renderRankingTable()
+    renderRankingTable();
+  }
+
+  // ================== RANKING PANEL (TABEL KIRI) ==================
+  function renderRankingTable() {
+    if (!els.weightLeftTable) return;
+
+    const hsa = rankingState.hsa || [];
+    const mitra = rankingState.mitra || [];
+
+    let html = "<tbody>";
+
+    // ====== BLOK RANKING HSA ======
+    html += `
+      <tr>
+        <td colspan="4">
+          <div class="kpi12-ranking-section">
+            <div class="kpi12-ranking-title">Ranking HSA</div>
+    `;
+
+    const topHsa = hsa.filter(x => x.rank >= 1 && x.rank <= 3);
+    if (topHsa.length) {
+      html += `<div class="kpi12-ranking-top d-flex flex-wrap gap-2">`;
+      topHsa.forEach(item => {
+        const medalIcon = getMedalIcon(item.rank);
+        const avatar = getHsaAvatar(item.nama, true);
+        html += `
+          <div class="kpi12-ranking-card flex-fill">
+            <div class="kpi12-ranking-card-header d-flex align-items-center">
+              ${medalIcon ? `
+                <img src="${IMG_BASE + medalIcon}" class="kpi12-ranking-medal me-2" alt="Medal ${item.rank}">
+              ` : ""}
+              <div>
+                <div class="kpi12-ranking-name">${item.nama}</div>
+                <div class="kpi12-ranking-point">Point: ${formatNumberCell(item.point, 1)}</div>
+                <div class="kpi12-ranking-rank">Rank #${item.rank}</div>
+              </div>
+            </div>
+            <div class="kpi12-ranking-card-body d-flex align-items-center mt-2">
+              <img src="${IMG_BASE + avatar}" class="kpi12-ranking-avatar me-2" alt="${item.nama}">
+              <div class="kpi12-ranking-desc">
+                ${buildHsaDescription(item)}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+    }
+
+    const otherHsa = hsa.filter(x => x.rank >= 4);
+    if (otherHsa.length) {
+      html += `
+        <div class="kpi12-ranking-list mt-2">
+          <div class="kpi12-ranking-list-title">Peringkat lainnya</div>
+      `;
+      otherHsa.forEach(item => {
+        const avatar = getHsaAvatar(item.nama, false);
+        html += `
+          <div class="kpi12-ranking-list-item d-flex align-items-center">
+            <div class="kpi12-ranking-list-rank">#${item.rank}</div>
+            <img src="${IMG_BASE + avatar}" class="kpi12-ranking-avatar-sm mx-2" alt="${item.nama}">
+            <div class="flex-grow-1">
+              <div class="kpi12-ranking-name">${item.nama}</div>
+              <div class="kpi12-ranking-point small text-muted">Point: ${formatNumberCell(item.point, 1)}</div>
+            </div>
+            <div class="kpi12-ranking-desc small text-muted">
+              ${buildHsaDescription(item)}
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+    }
+
+    html += `
+          </div>
+        </td>
+      </tr>
+    `;
+
+    // ====== BLOK RANKING MITRA ======
+    html += `
+      <tr>
+        <td colspan="4">
+          <div class="kpi12-ranking-section mt-3">
+            <div class="kpi12-ranking-title">Ranking MITRA</div>
+    `;
+
+    const topMitra = mitra.filter(x => x.rank >= 1 && x.rank <= 3);
+    if (topMitra.length) {
+      html += `<div class="kpi12-ranking-top d-flex flex-wrap gap-2">`;
+      topMitra.forEach(item => {
+        const medalIcon = getMedalIcon(item.rank);
+        html += `
+          <div class="kpi12-ranking-card flex-fill">
+            <div class="kpi12-ranking-card-header d-flex align-items-center">
+              ${medalIcon ? `
+                <img src="${IMG_BASE + medalIcon}" class="kpi12-ranking-medal me-2" alt="Medal ${item.rank}">
+              ` : ""}
+              <div>
+                <div class="kpi12-ranking-name">${item.nama}</div>
+                <div class="kpi12-ranking-point">Point: ${formatNumberCell(item.point, 1)}</div>
+                <div class="kpi12-ranking-rank">Rank #${item.rank}</div>
+              </div>
+            </div>
+            <div class="kpi12-ranking-card-body mt-2">
+              <div class="kpi12-ranking-desc">
+                ${buildMitraDescription(item)}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+    }
+
+    const otherMitra = mitra.filter(x => x.rank >= 4);
+    if (otherMitra.length) {
+      html += `
+        <div class="kpi12-ranking-list mt-2">
+          <div class="kpi12-ranking-list-title">Peringkat lainnya</div>
+      `;
+      otherMitra.forEach(item => {
+        html += `
+          <div class="kpi12-ranking-list-item d-flex align-items-center">
+            <div class="kpi12-ranking-list-rank">#${item.rank}</div>
+            <div class="flex-grow-1 ms-2">
+              <div class="kpi12-ranking-name">${item.nama}</div>
+              <div class="kpi12-ranking-point small text-muted">Point: ${formatNumberCell(item.point, 1)}</div>
+            </div>
+            <div class="kpi12-ranking-desc small text-muted">
+              ${buildMitraDescription(item)}
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+    }
+
+    html += `
+          </div>
+        </td>
+      </tr>
+    `;
+
+    html += "</tbody>";
+
+    els.weightLeftTable.innerHTML = html;
+  }
 
   // ================== SHOW/HIDE ==================
   function showLoading(flag) {
@@ -699,6 +959,7 @@ function renderWeightTables(header, dataRows) {
       fetchData();
       fetchTableData();
       fetchWeightTable();
+      fetchRanking();
     });
   }
 
@@ -706,4 +967,5 @@ function renderWeightTables(header, dataRows) {
   fetchData();
   fetchTableData();
   fetchWeightTable();
+  fetchRanking();
 }
