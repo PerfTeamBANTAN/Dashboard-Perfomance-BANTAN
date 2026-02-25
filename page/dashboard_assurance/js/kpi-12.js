@@ -179,6 +179,15 @@ function initKPI12(config) {
     return Number(v);
   }
 
+  function formatNumberCell(v, decimals = 2) {
+  if (v === null || v === undefined || v === "") return "";
+  const num = typeof v === "number" ? v : Number(
+    v.toString().replace(/\./g, "").replace(",", ".")
+  );
+  if (!isFinite(num)) return v;
+  return num.toFixed(decimals);
+}
+
   // ================== FILTER & SELECT (CARD) ==================
   function buildFilterOptions() {
     const indikatorList = new Set();
