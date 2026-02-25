@@ -815,30 +815,47 @@ function renderTable() {
 
   // FOOT: total Branch Tangerang (sudah ada di tableState.totalRow)
   if (els.tableFoot) {
-    els.tableFoot.innerHTML = "";
-    if (tableState.totalRow) {
-      const trTotal = document.createElement("tr");
-      trTotal.className = "kpi12-table-total-row fw-semibold kpi12-sto-row-total";
+  els.tableFoot.innerHTML = "";
+  if (tableState.totalRow) {
+    const trTotal = document.createElement("tr");
+    trTotal.className = "kpi12-table-total-row fw-semibold kpi12-sto-row-total";
 
-      const colCount = tableState.headRows[0]?.length || tableState.totalRow.length;
+    const colCount =
+      tableState.headRows[0]?.length || tableState.totalRow.length;
 
-      for (let i = 0; i < colCount; i++) {
-        const td = document.createElement("td");
-        td.className = "text-center";
+    const [, , row3] = tableState.headRows || [];
 
-        if (i === 0) {
-          // merge A262:D262
-          td.colSpan = 4;
-          td.textContent = tableState.totalRow[0] ?? "";
-          td.style.textAlign = "left";
-          trTotal.appendChild(td);
-          i = 3;
-          continue;
-        }
+    for (let i = 0; i < colCount; i++) {
+      const td = document.createElement("td");
+      td.className = "text-center";
 
-        td.textContent = tableState.totalRow[i] ?? "";
+      if (i === 0) {
+        // merge A262:D262
+        td.colSpan = 4;
+        td.textContent = tableState.totalRow[0] ?? "";
+        td.style.textAlign = "left";
         trTotal.appendChild(td);
+        i = 3;
+        continue;
       }
+
+      const raw = tableState.totalRow[i];
+      td.textContent = raw ?? "";
+
+      // label baris ketiga: H-1 / 🔄 / HI (pakai header row3 yang sama)
+      const label3 = (row3?.[i] || "").toString().trim();
+      const target = targetByCol[i];
+
+      // hanya untuk kolom H-1 / HI dan kalau ada target
+      if (isFinite(target) && (label3 === "H-1" || label3 === "HI")) {
+        const valNum = toNumber(raw);
+        if (isFinite(valNum) && valNum < target) {
+          td.classList.add("kpi12-sto-cell-below-target"); // merah juga di total
+        }
+      }
+
+      trTotal.appendChild(td);
+    }
 
       els.tableFoot.appendChild(trTotal);
     }
