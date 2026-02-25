@@ -83,16 +83,6 @@
             autocomplete="off"
           >
         </div>
-
-        <div class="d-flex align-items-center gap-1">
-          <label for="kpi12-table-rows" class="kpi12-table-label mb-0">Rows:</label>
-          <select id="kpi12-table-rows" class="form-select form-select-sm kpi12-select-sm">
-            <option value="10" selected>10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
-        </div>
       </div>
     </div>
 
@@ -110,30 +100,19 @@
       <div class="table-responsive kpi12-table-container">
         <table class="table table-sm table-hover align-middle kpi12-data-table" id="kpi12-data-table">
           <thead>
-            <tr id="kpi12-table-head-row">
-              <!-- header flatten dari 3 baris via JS -->
-            </tr>
+            <!-- 3 baris header, diisi langsung dari web!A246:AP248 -->
+            <tr id="kpi12-head-row-1"></tr>
+            <tr id="kpi12-head-row-2"></tr>
+            <tr id="kpi12-head-row-3"></tr>
           </thead>
           <tbody id="kpi12-table-body">
             <!-- body dari web!A249:AP261 via JS -->
           </tbody>
           <tfoot id="kpi12-table-foot">
-            <!-- optional: total TANGERANG dari web!A242:AP242 -->
+            <!-- total TANGERANG dari web!A242:AP242 via JS -->
           </tfoot>
         </table>
       </div>
-    </div>
-
-    <!-- Footer: info & pagination -->
-    <div class="kpi12-table-footer d-flex flex-wrap align-items-center justify-content-between mt-3">
-      <div class="kpi12-pagination-info" id="kpi12-pagination-info">
-        <!-- “Showing 1–10 of 13 STO (filtered from 13 total)” via JS -->
-      </div>
-      <nav aria-label="KPI12 STO pagination">
-        <ul class="pagination pagination-sm mb-0" id="kpi12-pagination">
-          <!-- pagination button via JS -->
-        </ul>
-      </nav>
     </div>
 
   </section>
