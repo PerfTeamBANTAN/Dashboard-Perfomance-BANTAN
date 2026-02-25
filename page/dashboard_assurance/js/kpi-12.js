@@ -569,7 +569,7 @@ function formatNumberCell(v, decimals = 2) {
     };
   }
 
-  // ================== GRID HEADER 3 BARIS ==================
+// ================== GRID HEADER 3 BARIS ==================
 function renderTableHeaders() {
   const [row1 = [], row2 = [], row3 = []] = tableState.headRows;
   if (!els.headRow1 || !els.headRow2 || !els.headRow3) return;
@@ -606,14 +606,21 @@ function renderTableHeaders() {
     indicators.push({ title, colIndex: c });
   }
 
-  // Baris 1: setiap indikator 1 kolom, colSpan = 3
+  // Baris 1: setiap indikator 1 kolom, colSpan = 3, pakai wrapper biar lebar rata
   indicators.forEach(({ title }) => {
     const th = document.createElement("th");
     const colorClass = getStoKpiHeaderClass(title);
-    th.textContent = title;
-    th.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
+    th.className =
+      `text-center align-middle kpi12-sto-head-base ` +
+      `kpi12-sto-head-indikator ${colorClass}`;
     th.style.fontSize = "0.75rem";
-    th.colSpan = 3; // 3 kolom di bawah
+    th.colSpan = 3;
+
+    const span = document.createElement("span");
+    span.className = "kpi12-sto-head-label";
+    span.textContent = title;
+
+    th.appendChild(span);
     els.headRow1.appendChild(th);
   });
 
@@ -637,7 +644,7 @@ function renderTableHeaders() {
     els.headRow1.appendChild(thAch);
   }
 
-  // ===== BARIS 2: Target | Target | angka =====
+  // ===== BARIS 2: Target (colSpan 2) + angka =====
   // 4 kolom awal: dummy
   for (let i = 0; i < fixedFirstCols; i++) {
     const th = document.createElement("th");
@@ -646,7 +653,6 @@ function renderTableHeaders() {
   }
 
   // ambil angka target dari row2 (urutan sesuai indikator)
-  // pola sheet kamu: di row2 ada "Target" dan angka campur; kita ekstrak angka saja.
   const targetValues = [];
   for (let i = indicatorsStartCol; i < row2.length; i++) {
     const val = (row2[i] || "").toString().trim();
@@ -697,7 +703,7 @@ function renderTableHeaders() {
     els.headRow3.appendChild(th);
   }
 
-  // row3 di sheet sudah: H-1, 🔄, HI, H-1, 🔄, HI, ...
+  // row3 di sheet: H-1, 🔄, HI berulang, mulai dari kolom indikatorStartCol
   let r3Index = indicatorsStartCol;
   indicators.forEach(() => {
     for (let step = 0; step < 3; step++) {
@@ -711,7 +717,7 @@ function renderTableHeaders() {
     }
   });
 
-  // Medal & Ach dummy
+  // Medal & Ach dummy di baris 3
   if (medalIndex !== -1) {
     const thMedal = document.createElement("th");
     thMedal.className = "d-none";
@@ -724,8 +730,6 @@ function renderTableHeaders() {
   }
 }
 
-
-  // ================== GRID BODY & TOTAL ==================
   // ================== GRID BODY & TOTAL ==================
 function renderTable() {
   if (!els.tableBody) return;
