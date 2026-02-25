@@ -1,124 +1,129 @@
-<div id="kpi12-container" class="kpi12-wrapper">
+<div class="kpi12-tangerang container-fluid">
 
-  <!-- Header KPI -->
-  <div class="kpi12-header mb-3">
+  <!-- SECTION 12PI: HEADER + SUMMARY + CARD GRID -->
+  <div class="card mb-3 border-0 shadow-sm">
+    <div class="card-body">
 
-    <div class="kpi12-header-grid">
-      <div class="kpi12-header-medal-col">
-        <div class="kpi12-medal-icon" id="kpi12-medal-icon">
-          <!-- medal by JS -->
-        </div>
-      </div>
+      <div id="kpi12-container" class="kpi12-wrapper">
 
-      <!-- Kolom 2: Title & subtitle -->
-      <div class="kpi12-header-main-col">
-        <h3 class="kpi12-title mb-1">
-          KPI 12PI Laten – TANGERANG Branch
-        </h3>
-        <p class="kpi12-subtitle mb-0">
-          Monitoring harian indikator 12PI laten
-        </p>
-      </div>
+        <!-- Header KPI -->
+        <div class="kpi12-header mb-3">
+          <div class="kpi12-header-grid">
+            <div class="kpi12-header-medal-col">
+              <div class="kpi12-medal-icon" id="kpi12-medal-icon">
+                <!-- medal by JS -->
+              </div>
+            </div>
 
-      <!-- Kolom 3: Live update -->
-      <div class="kpi12-header-meta-col">
-        <div class="kpi12-meta text-end">
-          <div class="kpi12-badge">
-            Live Update
+            <div class="kpi12-header-main-col">
+              <h3 class="kpi12-title mb-1">
+                KPI 12PI Laten – TANGERANG Branch
+              </h3>
+              <p class="kpi12-subtitle mb-0">
+                Monitoring harian indikator 12PI laten
+              </p>
+            </div>
+
+            <div class="kpi12-header-meta-col">
+              <div class="kpi12-meta text-end">
+                <div class="kpi12-badge">
+                  Live Update
+                </div>
+                <div class="kpi12-update" id="kpi12-last-update">Last update: -</div>
+              </div>
+            </div>
           </div>
-          <div class="kpi12-update" id="kpi12-last-update">Last update: -</div>
         </div>
-      </div>
-    </div>
 
-  </div>
-
-  <!-- Toolbar filter -->
-  <div class="kpi12-toolbar d-flex flex-wrap align-items-center justify-content-between mb-3">
-    <div class="d-flex flex-wrap align-items-center gap-2">
-      <span class="kpi12-label">Filter Indikator</span>
-      <select id="kpi12-filter-segmen" class="form-select form-select-sm kpi12-select">
-        <option value="ALL" selected>All Indikator</option>
-      </select>
-    </div>
-    <button id="kpi12-refresh" class="btn btn-sm btn-outline-light kpi12-refresh-btn">
-      <i class="fa fa-rotate-right me-1"></i> Refresh
-    </button>
-  </div>
-
-  <!-- Summary Cards -->
-  <div class="row g-3 mb-3" id="kpi12-summary-row">
-    <!-- via JS -->
-  </div>
-
-  <!-- Detail Cards -->
-  <div class="kpi12-card-grid" id="kpi12-card-grid">
-    <!-- via JS -->
-  </div>
-
-  <!-- ====== SECTION TABEL KPI STO ====== -->
-  <section class="kpi12-table-section mt-4">
-
-    <!-- Header section tabel -->
-    <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
-      <div class="d-flex flex-column">
-        <h5 class="kpi12-table-title mb-1">
-          Rekap KPI per STO
-        </h5>
-        <span class="kpi12-table-subtitle">
-          Breakdown 12PI per STO / Cluster lengkap dengan status medal dan Ach.
-        </span>
-      </div>
-
-      <div class="d-flex flex-wrap align-items-center gap-2 mt-2 mt-md-0">
-        <div class="input-group input-group-sm kpi12-table-search-group">
-          <span class="input-group-text bg-transparent border-end-0">
-            <i class="fa fa-search"></i>
-          </span>
-          <input
-            type="text"
-            id="kpi12-table-search"
-            class="form-control border-start-0"
-            placeholder="Cari STO / Cluster / Mitra..."
-            autocomplete="off"
-          >
+        <!-- Toolbar filter -->
+        <div class="kpi12-toolbar d-flex flex-wrap align-items-center justify-content-between mb-3">
+          <div class="d-flex flex-wrap align-items-center gap-2">
+            <span class="kpi12-label">Filter Indikator</span>
+            <select id="kpi12-filter-segmen" class="form-select form-select-sm kpi12-select">
+              <option value="ALL" selected>All Indikator</option>
+            </select>
+          </div>
+          <button id="kpi12-refresh" class="btn btn-sm btn-outline-light kpi12-refresh-btn">
+            <i class="fa fa-rotate-right me-1"></i> Refresh
+          </button>
         </div>
-      </div>
+
+        <!-- Summary Cards -->
+        <div class="row g-3 mb-3" id="kpi12-summary-row"></div>
+
+        <!-- Detail Cards -->
+        <div class="kpi12-card-grid" id="kpi12-card-grid"></div>
+
+      </div> <!-- /#kpi12-container -->
+
     </div>
+  </div>
 
-    <!-- Legend medal & status -->
-    <div class="kpi12-table-legend d-flex flex-wrap align-items-center gap-2 mb-2">
-      <span class="kpi12-legend-label">Legend:</span>
-      <span class="kpi12-pill kpi12-pill-platinum">Platinum</span>
-      <span class="kpi12-pill kpi12-pill-gold">Gold</span>
-      <span class="kpi12-pill kpi12-pill-neutral">Other</span>
-      <span class="kpi12-pill kpi12-pill-emoji">🟡 Progress, 🔄 Trend</span>
+  <!-- SECTION 12PI: TABEL STO DI CARD TERPISAH -->
+  <div class="card mb-3 border-0 shadow-sm">
+    <div class="card-header kpi-section-header kpi-section-header-sto">
+      <h6 class="kpi-section-title mb-0">Rekap KPI 12PI per STO</h6>
     </div>
+    <div class="card-body p-2">
 
-    <!-- Container table -->
-    <div class="kpi12-table-wrapper">
-      <div class="table-responsive kpi12-table-container">
-        <table class="table table-sm table-hover align-middle kpi12-data-table" id="kpi12-data-table">
-          <thead>
-            <!-- 3 baris header, diisi langsung dari web!A246:AP248 -->
-            <tr id="kpi12-head-row-1"></tr>
-            <tr id="kpi12-head-row-2"></tr>
-            <tr id="kpi12-head-row-3"></tr>
-          </thead>
-          <tbody id="kpi12-table-body">
-            <!-- body dari web!A249:AP261 via JS -->
-          </tbody>
-          <tfoot id="kpi12-table-foot">
-            <!-- total TANGERANG dari web!A242:AP242 via JS -->
-          </tfoot>
-        </table>
-      </div>
+      <!-- Search + legend -->
+      <section class="kpi12-table-section">
+
+        <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
+          <div class="d-flex flex-column">
+            <h5 class="kpi12-table-title mb-1">
+              Rekap KPI per STO
+            </h5>
+            <span class="kpi12-table-subtitle">
+              Breakdown 12PI per STO / Cluster lengkap dengan status medal dan Ach.
+            </span>
+          </div>
+
+          <div class="d-flex flex-wrap align-items-center gap-2 mt-2 mt-md-0">
+            <div class="input-group input-group-sm kpi12-table-search-group">
+              <span class="input-group-text bg-transparent border-end-0">
+                <i class="fa fa-search"></i>
+              </span>
+              <input
+                type="text"
+                id="kpi12-table-search"
+                class="form-control border-start-0"
+                placeholder="Cari STO / Cluster / Mitra..."
+                autocomplete="off"
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi12-table-legend d-flex flex-wrap align-items-center gap-2 mb-2">
+          <span class="kpi12-legend-label">Legend:</span>
+          <span class="kpi12-pill kpi12-pill-platinum">Platinum</span>
+          <span class="kpi12-pill kpi12-pill-gold">Gold</span>
+          <span class="kpi12-pill kpi12-pill-neutral">Other</span>
+          <span class="kpi12-pill kpi12-pill-emoji">🟡 Progress, 🔄 Trend</span>
+        </div>
+
+        <!-- Table -->
+        <div class="kpi12-table-wrapper">
+          <div class="table-responsive kpi12-table-container">
+            <table class="table table-sm table-hover align-middle kpi12-data-table" id="kpi12-data-table">
+              <thead>
+                <tr id="kpi12-head-row-1"></tr>
+                <tr id="kpi12-head-row-2"></tr>
+                <tr id="kpi12-head-row-3"></tr>
+              </thead>
+              <tbody id="kpi12-table-body"></tbody>
+              <tfoot id="kpi12-table-foot"></tfoot>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
     </div>
+  </div>
 
-  </section>
-  <!-- ====== END SECTION TABEL KPI STO ====== -->
-
-  <!-- Loading & Error -->
+  <!-- Loading & Error (boleh tetap di bawah) -->
   <div id="kpi12-loading" class="kpi12-loading text-center mt-4">
     <div class="spinner-border"></div>
     <div class="mt-2">Loading KPI 12PI Laten...</div>
@@ -127,4 +132,4 @@
     Gagal memuat data KPI 12PI Laten. Silakan coba lagi.
   </div>
 
-</div>
+</div> <!-- /.kpi12-tangerang -->
