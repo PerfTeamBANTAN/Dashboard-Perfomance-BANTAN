@@ -569,8 +569,10 @@ function formatNumberCell(v, decimals = 2) {
     };
   }
 
-  function renderTableHeaders() {
+  // ================== GRID HEADER 3 BARIS ==================
+function renderTableHeaders() {
   const [row1 = [], row2 = [], row3 = []] = tableState.headRows;
+
   if (!els.headRow1 || !els.headRow2 || !els.headRow3) return;
 
   els.headRow1.innerHTML = "";
@@ -580,6 +582,7 @@ function formatNumberCell(v, decimals = 2) {
   const fixedFirstCols = 4; // STO, Cluster, OM HAS, MITRA
 
   // ===== BARIS 1 =====
+  // 4 kolom awal: rowSpan 3
   for (let i = 0; i < fixedFirstCols; i++) {
     const th = document.createElement("th");
     const title = (row1[i] || "").toString();
@@ -591,66 +594,86 @@ function formatNumberCell(v, decimals = 2) {
     els.headRow1.appendChild(th);
   }
 
-  // indikator + Medal + Ach
-  // Kita hitung dari kolom 4 sampai sebelum Medal
-  const firstIndicatorCol = fixedFirstCols;
+  // cari index Medal & Ach
   const medalIndex = row1.indexOf("Medal");
-  const endIndicators = medalIndex === -1 ? row1.length : medalIndex;
+  const achIndex = row1.indexOf("Ach");
 
-  // indikator: tiap 3 kolom (sesuai data baris 2 & 3)
-  for (let col = firstIndicatorCol; col < endIndicators; col += 3) {
-    const title = (row1[col] || "").toString().trim();
+  // ambil semua indikator di antara kolom 4 dan sebelum Medal
+  const indicators = [];
+  const indicatorsStartCol = fixedFirstCols;
+  const indicatorsEndCol = medalIndex === -1 ? row1.length : medalIndex;
+
+  for (let c = indicatorsStartCol; c < indicatorsEndCol; c++) {
+    const title = (row1[c] || "").toString().trim();
     if (!title) continue;
+    indicators.push({ title });
+  }
 
+  // tiap indikator 1 header dengan colSpan = 3
+  indicators.forEach(({ title }) => {
     const th = document.createElement("th");
     const colorClass = getStoKpiHeaderClass(title);
     th.textContent = title;
     th.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
     th.style.fontSize = "0.75rem";
-    th.colSpan = 3; // 3 kolom: Target/angka + H-1/🔄/HI
+    th.colSpan = 3; // 3 kolom di bawah (Target/angka + H-1/🔄/HI)
     els.headRow1.appendChild(th);
+  });
+
+  // Medal & Ach: rowSpan 3 di ujung
+  if (medalIndex !== -1) {
+    const thMedal = document.createElement("th");
+    const colorClass = getStoKpiHeaderClass("Medal");
+    thMedal.textContent = "Medal";
+    thMedal.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
+    thMedal.style.fontSize = "0.75rem";
+    thMedal.rowSpan = 3;
+    els.headRow1.appendChild(thMedal);
   }
 
-  // Medal & Ach: rowSpan 3
-  if (medalIndex !== -1) {
-    const medalTitles = ["Medal", "Ach"];
-    for (const label of medalTitles) {
-      const idx = row1.indexOf(label);
-      if (idx === -1) continue;
-      const th = document.createElement("th");
-      const colorClass = getStoKpiHeaderClass(label);
-      th.textContent = label;
-      th.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
-      th.style.fontSize = "0.75rem";
-      th.rowSpan = 3;
-      els.headRow1.appendChild(th);
-    }
+  if (achIndex !== -1) {
+    const thAch = document.createElement("th");
+    const colorClass = getStoKpiHeaderClass("Ach");
+    thAch.textContent = "Ach";
+    thAch.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
+    thAch.style.fontSize = "0.75rem";
+    thAch.rowSpan = 3;
+    els.headRow1.appendChild(thAch);
   }
 
   // ===== BARIS 2 (Target + angka) =====
-  // 4 kolom awal: dummy (karena baris 1 rowSpan=3)
+  // 4 kolom awal: dummy
   for (let i = 0; i < fixedFirstCols; i++) {
     const th = document.createElement("th");
     th.className = "d-none";
     els.headRow2.appendChild(th);
   }
 
-  // Data Target: mulai dari kolom 4 di row2
-  // pola: Target, 90, Target, 90, ...
-  for (let col = firstIndicatorCol, i = firstIndicatorCol; col < endIndicators; col += 3, i += 2) {
+  // Ambil semua pasangan Target-angka dari row2 mulai kolom 4
+  const targetPairs = [];
+  for (let i = fixedFirstCols; i < row2.length; i += 2) {
     const label = (row2[i] || "").toString().trim();       // "Target"
-    const value = (row2[i + 1] || "").toString().trim();   // "90", dst
+    const value = (row2[i + 1] || "").toString().trim();   // angka
+    if (!label && !value) continue;
+    targetPairs.push({ label, value });
+  }
+
+  // pastikan jumlah pasangan minimal = jumlah indikator
+  const pairCount = Math.min(targetPairs.length, indicators.length);
+
+  for (let idx = 0; idx < pairCount; idx++) {
+    const { label, value } = targetPairs[idx];
 
     // kolom 1: Target
     const thLabel = document.createElement("th");
-    thLabel.textContent = label;
+    thLabel.textContent = label || "Target";
     thLabel.className = "text-center align-middle";
     thLabel.style.fontSize = "0.7rem";
     els.headRow2.appendChild(thLabel);
 
     // kolom 2: angka target
     const thValue = document.createElement("th");
-    thValue.textContent = value;
+    thValue.textContent = value || "";
     thValue.className = "text-center align-middle";
     thValue.style.fontSize = "0.7rem";
     els.headRow2.appendChild(thValue);
@@ -663,14 +686,14 @@ function formatNumberCell(v, decimals = 2) {
 
   // Medal & Ach di baris 2: dummy
   if (medalIndex !== -1) {
-    const medalTitles = ["Medal", "Ach"];
-    for (const label of medalTitles) {
-      const idx = row1.indexOf(label);
-      if (idx === -1) continue;
-      const th = document.createElement("th");
-      th.className = "d-none";
-      els.headRow2.appendChild(th);
-    }
+    const thMedal = document.createElement("th");
+    thMedal.className = "d-none";
+    els.headRow2.appendChild(thMedal);
+  }
+  if (achIndex !== -1) {
+    const thAch = document.createElement("th");
+    thAch.className = "d-none";
+    els.headRow2.appendChild(thAch);
   }
 
   // baris Target -> warna merah tua
@@ -683,28 +706,30 @@ function formatNumberCell(v, decimals = 2) {
     els.headRow3.appendChild(th);
   }
 
-  // Data row3 dimulai kolom 4, pola: H-1, 🔄, HI, H-1, 🔄, HI, ...
-  for (let col = firstIndicatorCol, i = firstIndicatorCol; col < endIndicators; col += 3, i += 3) {
+  // Data row3: H-1, 🔄, HI per indikator (mulai kolom 4)
+  let r3Index = fixedFirstCols;
+  indicators.forEach(() => {
     for (let step = 0; step < 3; step++) {
-      const text = (row3[i + step] || "").toString().trim();
+      const text = (row3[r3Index] || "").toString().trim();
       const th = document.createElement("th");
       th.textContent = text;
       th.className = "text-center align-middle";
       th.style.fontSize = "0.7rem";
       els.headRow3.appendChild(th);
+      r3Index += 1;
     }
-  }
+  });
 
   // Medal & Ach di baris 3: dummy
   if (medalIndex !== -1) {
-    const medalTitles = ["Medal", "Ach"];
-    for (const label of medalTitles) {
-      const idx = row1.indexOf(label);
-      if (idx === -1) continue;
-      const th = document.createElement("th");
-      th.className = "d-none";
-      els.headRow3.appendChild(th);
-    }
+    const thMedal = document.createElement("th");
+    thMedal.className = "d-none";
+    els.headRow3.appendChild(thMedal);
+  }
+  if (achIndex !== -1) {
+    const thAch = document.createElement("th");
+    thAch.className = "d-none";
+    els.headRow3.appendChild(thAch);
   }
 }
 
