@@ -7,9 +7,9 @@ function initKPI12(config) {
 
   // ================== STATE GRID STO (web!A242:AP262) ==================
   const tableState = {
-    all: [],        // body STO (A249:AP261)
-    headers: [],    // header flatten
-    totalRow: null, // TANGERANG (A242)
+    headRows: [],  // [row1,row2,row3] header
+    bodyRows: [],  // A249:AP261
+    totalRow: null // A242 (TANGERANG)
   };
 
   // ================== ELEMENTS ==================
@@ -24,8 +24,10 @@ function initKPI12(config) {
     filterSegmen: document.getElementById("kpi12-filter-segmen"),
     refreshBtn: document.getElementById("kpi12-refresh"),
 
-    // grid STO
-    tableHeadRow: document.getElementById("kpi12-table-head-row"),
+    // grid STO (thead 3 baris)
+    headRow1: document.getElementById("kpi12-head-row-1"),
+    headRow2: document.getElementById("kpi12-head-row-2"),
+    headRow3: document.getElementById("kpi12-head-row-3"),
     tableBody: document.getElementById("kpi12-table-body"),
     tableFoot: document.getElementById("kpi12-table-foot"),
   };
@@ -91,7 +93,7 @@ function initKPI12(config) {
     }
   }
 
-  // ================== FETCH GRID STO (NO PAGINATION) ==================
+  // ================== FETCH GRID STO (3 HEADER ROWS) ==================
   async function fetchTableData() {
     try {
       const url = `${config.baseUrl}?sheet=${encodeURIComponent(
@@ -103,37 +105,31 @@ function initKPI12(config) {
 
       const rows = await res.json();
       if (!Array.isArray(rows) || !rows.length) {
-        tableState.all = [];
-        tableState.headers = [];
+        tableState.headRows = [];
+        tableState.bodyRows = [];
         tableState.totalRow = null;
-        renderTableHeaders([]);
+        renderTableHeaders();
         renderTable();
         return;
       }
 
-      // offset A242 sebagai index 0
       const offset = 242;
       const getRow = (rowNumber) => rows[rowNumber - offset] || null;
 
-      const totalRow = getRow(242); // TANGERANG total
-      const headerRows = rows.slice(246 - offset, 248 - offset + 1); // A246:A248
-      const bodyRows = rows.slice(249 - offset, 261 - offset + 1);   // A249:A261
+      const totalRow = getRow(242); // TANGERANG
+      const row1 = getRow(246) || []; // indikator
+      const row2 = getRow(247) || []; // Target + angka
+      const row3 = getRow(248) || []; // H-1 / 🔄 / HI
+      const bodyRows = rows.slice(249 - offset, 261 - offset + 1); // A249:A261
 
-      const flatHeaders = buildFlatHeaders(headerRows);
+      tableState.headRows = [row1, row2, row3];
+      tableState.bodyRows = bodyRows;
+      tableState.totalRow = totalRow;
 
-      // parse body STO pakai pattern 3 kolom (H-1, Δ, HI) per indikator
-      const all = parseBodyRows(bodyRows, headerRows, flatHeaders);
-      const totalObj = parseTotalRow(totalRow, headerRows);
-
-      tableState.all = all;
-      tableState.headers = flatHeaders;
-      tableState.totalRow = totalObj;
-
-      renderTableHeaders(flatHeaders);
+      renderTableHeaders();
       renderTable();
     } catch (err) {
       console.error(err);
-      // optional: show error khusus tabel
     }
   }
 
@@ -196,7 +192,6 @@ function initKPI12(config) {
 
     renderSummary();
     renderCards();
-    // grid STO terpisah, tidak ikut filter indikator
   }
 
   // ================== SUMMARY & CARDS ==================
@@ -446,203 +441,65 @@ function initKPI12(config) {
     };
   }
 
-  // ================== TABLE HEADER BUILDER ==================
-  function buildFlatHeaders(headerRows) {
-    const [row1 = [], row2 = [], row3 = []] = headerRows;
+  // ================== GRID HEADER 3 BARIS ==================
+  function renderTableHeaders() {
+    const [row1 = [], row2 = [], row3 = []] = tableState.headRows;
 
-    const headers = [];
+    if (!els.headRow1 || !els.headRow2 || !els.headRow3) return;
 
-    // 4 kolom pertama fix
-    headers.push({ label: "STO", key: "STO" });
-    headers.push({ label: "Telkomsel Cluster", key: "Telkomsel Cluster" });
-    headers.push({ label: "OM HAS", key: "OM HAS" });
-    headers.push({ label: "MITRA", key: "MITRA" });
+    els.headRow1.innerHTML = "";
+    els.headRow2.innerHTML = "";
+    els.headRow3.innerHTML = "";
 
     const colCount = Math.max(row1.length, row2.length, row3.length);
 
-    let col = 4;
-    while (col < colCount) {
-      const h1 = (row1[col] || "").toString().trim();
-      const h2 = (row2[col] || "").toString().trim();
-      const h3 = (row3[col] || "").toString().trim();
+    for (let i = 0; i < colCount; i++) {
+      const v1 = (row1[i] || "").toString();
+      const v2 = (row2[i] || "").toString();
+      const v3 = (row3[i] || "").toString();
 
-      // Medal & Ach sebagai kolom sendiri
-      if (h1 === "Medal") {
-        headers.push({ label: "Medal", key: "Medal" });
-        col += 1;
-        continue;
-      }
-      if (h1 === "Ach") {
-        headers.push({ label: "Ach", key: "Ach" });
-        col += 1;
-        continue;
-      }
+      const th1 = document.createElement("th");
+      th1.textContent = v1;
+      th1.className = "text-center align-middle";
+      th1.style.fontSize = i < 4 ? "0.8rem" : "0.75rem";
+      els.headRow1.appendChild(th1);
 
-      // blok metrik: pattern [H-1, 🔄, HI] per indikator
-      const indikatorName = h1 || h2; // baris atas biasanya nama indikator
-      if (!indikatorName) {
-        col += 1;
-        continue;
-      }
+      const th2 = document.createElement("th");
+      th2.textContent = v2;
+      th2.className = "text-center align-middle";
+      th2.style.fontSize = "0.7rem";
+      els.headRow2.appendChild(th2);
 
-      // pastikan masih cukup 3 kolom (H-1, emoji, HI)
-      if (col + 2 >= colCount) break;
-
-      // H-1
-      headers.push({
-        label: `${indikatorName} H-1`,
-        key: `${indikatorName} H-1`,
-      });
-      // Δ (emoji 🔄)
-      headers.push({
-        label: `${indikatorName} Δ`,
-        key: `${indikatorName} Delta`,
-      });
-      // HI
-      headers.push({
-        label: `${indikatorName} HI`,
-        key: `${indikatorName} HI`,
-      });
-
-      col += 3;
+      const th3 = document.createElement("th");
+      th3.textContent = v3;
+      th3.className = "text-center align-middle";
+      th3.style.fontSize = "0.7rem";
+      els.headRow3.appendChild(th3);
     }
-
-    return headers;
   }
 
-  function parseBodyRows(bodyRows, headerRows) {
-    const [row1 = [], row2 = [], row3 = []] = headerRows;
-
-    return bodyRows
-      .filter((r) => r && r.length)
-      .map((r, idx) => {
-        const obj = { id: idx + 1 };
-
-        // 4 kolom awal
-        obj["STO"] = r[0] ?? "";
-        obj["Telkomsel Cluster"] = r[1] ?? "";
-        obj["OM HAS"] = r[2] ?? "";
-        obj["MITRA"] = r[3] ?? "";
-
-        let col = 4;
-        while (col < r.length) {
-          const nameTop = (row1[col] || "").toString().trim();
-          const nameMid = (row2[col] || "").toString().trim();
-          const name = nameTop || nameMid;
-
-          if (name === "Medal") {
-            obj["Medal"] = r[col] ?? "";
-            col += 1;
-            continue;
-          }
-          if (name === "Ach") {
-            obj["Ach"] = r[col] ?? "";
-            col += 1;
-            continue;
-          }
-
-          if (!name) {
-            col += 1;
-            continue;
-          }
-
-          // pastikan cukup 3 kolom (H-1, 🔄, HI)
-          if (col + 2 >= r.length) break;
-
-          const h1Val = r[col];       // H-1
-          const deltaVal = r[col + 1]; // 🔄
-          const hiVal = r[col + 2];   // HI
-
-          obj[`${name} H-1`] = h1Val ?? "";
-          obj[`${name} Delta`] = deltaVal ?? "";
-          obj[`${name} HI`] = hiVal ?? "";
-
-          col += 3;
-        }
-
-        return obj;
-      });
-  }
-
-  function parseTotalRow(totalRow, headerRows) {
-    if (!totalRow) return null;
-    const [row1 = [], row2 = [], row3 = []] = headerRows;
-    const obj = {};
-
-    // 4 kolom pertama
-    obj["STO"] = totalRow[0] ?? "";
-    obj["Telkomsel Cluster"] = totalRow[1] ?? "";
-    obj["OM HAS"] = totalRow[2] ?? "";
-    obj["MITRA"] = totalRow[3] ?? "";
-
-    let col = 4;
-    while (col < totalRow.length) {
-      const nameTop = (row1[col] || "").toString().trim();
-      const nameMid = (row2[col] || "").toString().trim();
-      const name = nameTop || nameMid;
-
-      if (name === "Medal") {
-        obj["Medal"] = totalRow[col] ?? "";
-        col += 1;
-        continue;
-      }
-      if (name === "Ach") {
-        obj["Ach"] = totalRow[col] ?? "";
-        col += 1;
-        continue;
-      }
-
-      if (!name) {
-        col += 1;
-        continue;
-      }
-
-      if (col + 2 >= totalRow.length) break;
-
-      const h1Val = totalRow[col];
-      const deltaVal = totalRow[col + 1];
-      const hiVal = totalRow[col + 2];
-
-      obj[`${name} H-1`] = h1Val ?? "";
-      obj[`${name} Delta`] = deltaVal ?? "";
-      obj[`${name} HI`] = hiVal ?? "";
-
-      col += 3;
-    }
-
-    return obj;
-  }
-
-  // ================== TABLE RENDER ==================
-  function renderTableHeaders(flatHeaders) {
-    if (!els.tableHeadRow) return;
-    els.tableHeadRow.innerHTML = "";
-    tableState.headers = flatHeaders || [];
-
-    tableState.headers.forEach((h) => {
-      const th = document.createElement("th");
-      th.textContent = h.label;
-      th.style.fontSize = "0.78rem";
-      th.classList.add("text-center");
-      els.tableHeadRow.appendChild(th);
-    });
-  }
-
+  // ================== GRID BODY & TOTAL ==================
   function renderTable() {
     if (!els.tableBody) return;
 
     els.tableBody.innerHTML = "";
 
-    tableState.all.forEach((row) => {
+    tableState.bodyRows.forEach((row) => {
       const tr = document.createElement("tr");
-      tr.className = getTableRowClass(row);
 
-      const tds = tableState.headers.map((h) => {
-        const val = row[h.key] ?? "";
-        return `<td class="text-center">${val}</td>`;
-      });
+      // Medal biasanya kolom kedua dari belakang
+      const medal = (row[row.length - 2] || "").toString().toLowerCase();
+      if (medal === "platinum") tr.classList.add("table-platinum");
+      else if (medal === "gold") tr.classList.add("table-gold");
 
-      tr.innerHTML = tds.join("");
+      const colCount = tableState.headRows[0]?.length || row.length;
+      for (let i = 0; i < colCount; i++) {
+        const td = document.createElement("td");
+        td.className = "text-center";
+        td.textContent = row[i] ?? "";
+        tr.appendChild(td);
+      }
+
       els.tableBody.appendChild(tr);
     });
 
@@ -650,24 +507,19 @@ function initKPI12(config) {
       els.tableFoot.innerHTML = "";
       if (tableState.totalRow) {
         const trTotal = document.createElement("tr");
-        trTotal.className = "kpi12-table-total-row";
-        const tdsTotal = tableState.headers.map((h) => {
-          const val = tableState.totalRow[h.key] ?? "";
-          return `<td class="text-center fw-semibold">${val}</td>`;
-        });
-        trTotal.innerHTML = tdsTotal.join("");
+        trTotal.className = "kpi12-table-total-row fw-semibold";
+
+        const colCount = tableState.headRows[0]?.length || tableState.totalRow.length;
+        for (let i = 0; i < colCount; i++) {
+          const td = document.createElement("td");
+          td.className = "text-center";
+          td.textContent = tableState.totalRow[i] ?? "";
+          trTotal.appendChild(td);
+        }
+
         els.tableFoot.appendChild(trTotal);
       }
     }
-  }
-
-  function getTableRowClass(row) {
-    const medal = (row.Medal || row["Medal"] || "")
-      .toString()
-      .toLowerCase();
-    if (medal === "platinum") return "table-platinum";
-    if (medal === "gold") return "table-gold";
-    return "";
   }
 
   // ================== SHOW/HIDE ==================
