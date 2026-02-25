@@ -640,7 +640,7 @@ function formatNumberCell(v, decimals = 2) {
     els.headRow2.appendChild(th);
   }
   // kasih class baris target (merah tua via CSS)
-  els.headRow2.parentElement.classList.add("kpi12-sto-row-target");
+  els.headRow2.classList.add("kpi12-sto-row-target");
 
   // ===== BARIS 3 (H-1 / 🔄 / HI) =====
   for (let i = 0; i < fixedFirstCols; i++) {
