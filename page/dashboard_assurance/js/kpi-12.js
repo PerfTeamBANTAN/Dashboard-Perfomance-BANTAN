@@ -97,43 +97,46 @@ function initKPI12(config) {
 
   // ================== FETCH GRID STO (3 HEADER ROWS) ==================
   async function fetchTableData() {
-    try {
-      const url = `${config.baseUrl}?sheet=${encodeURIComponent(
-        "web"
-      )}&range=${encodeURIComponent("A242:AP262")}`;
+  try {
+    const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+      "web"
+    )}&range=${encodeURIComponent("A242:AP262")}`;
 
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Network error table");
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Network error table");
 
-      const rows = await res.json();
-      if (!Array.isArray(rows) || !rows.length) {
-        tableState.headRows = [];
-        tableState.bodyRows = [];
-        tableState.totalRow = null;
-        renderTableHeaders();
-        renderTable();
-        return;
-      }
-
-      const offset = 242;
-      const getRow = (rowNumber) => rows[rowNumber - offset] || null;
-
-      const totalRow = getRow(242);        // TANGERANG
-      const row1 = getRow(246) || [];      // indikator
-      const row2 = getRow(247) || [];      // Target + angka
-      const row3 = getRow(248) || [];      // H-1 / 🔄 / HI
-      const bodyRows = rows.slice(249 - offset, 261 - offset + 1); // A249:A261
-
-      tableState.headRows = [row1, row2, row3];
-      tableState.bodyRows = bodyRows;
-      tableState.totalRow = totalRow;
-
+    const rows = await res.json();
+    if (!Array.isArray(rows) || !rows.length) {
+      tableState.headRows = [];
+      tableState.bodyRows = [];
+      tableState.totalRow = null;
       renderTableHeaders();
       renderTable();
-    } catch (err) {
-      console.error(err);
+      return;
     }
+
+    const offset = 242;
+    const getRow = (rowNumber) => rows[rowNumber - offset] || null;
+
+    // header + body
+    const row1 = getRow(246) || [];      // indikator
+    const row2 = getRow(247) || [];      // Target + angka
+    const row3 = getRow(248) || [];      // H-1 / 🔄 / HI
+    const bodyRows = rows.slice(249 - offset, 261 - offset + 1); // A249:A261
+
+    // total murni dari source: web!A262:AP262
+    const totalRow = getRow(262) || [];
+
+    tableState.headRows = [row1, row2, row3];
+    tableState.bodyRows = bodyRows;
+    tableState.totalRow = totalRow;
+
+    renderTableHeaders();
+    renderTable();
+  } catch (err) {
+    console.error(err);
   }
+}
 
   // ================== UTIL ==================
   function toNumber(v) {
@@ -526,47 +529,59 @@ function initKPI12(config) {
 
   // ================== GRID BODY & TOTAL ==================
   function renderTable() {
-    if (!els.tableBody) return;
+  if (!els.tableBody) return;
 
-    els.tableBody.innerHTML = "";
+  els.tableBody.innerHTML = "";
 
-    tableState.bodyRows.forEach((row) => {
-      const tr = document.createElement("tr");
+  tableState.bodyRows.forEach((row) => {
+    const tr = document.createElement("tr");
 
-      const medal = (row[row.length - 2] || "").toString().toLowerCase();
-      if (medal === "platinum") tr.classList.add("table-platinum");
-      else if (medal === "gold") tr.classList.add("table-gold");
+    const medal = (row[row.length - 2] || "").toString().toLowerCase();
+    if (medal === "platinum") tr.classList.add("table-platinum");
+    else if (medal === "gold") tr.classList.add("table-gold");
 
-      const colCount = tableState.headRows[0]?.length || row.length;
+    const colCount = tableState.headRows[0]?.length || row.length;
+    for (let i = 0; i < colCount; i++) {
+      const td = document.createElement("td");
+      td.className = "text-center";
+      td.textContent = row[i] ?? "";
+      tr.appendChild(td);
+    }
+
+    els.tableBody.appendChild(tr);
+  });
+
+  if (els.tableFoot) {
+    els.tableFoot.innerHTML = "";
+    if (tableState.totalRow) {
+      const trTotal = document.createElement("tr");
+      trTotal.className = "kpi12-table-total-row fw-semibold";
+
+      const colCount = tableState.headRows[0]?.length || tableState.totalRow.length;
+
       for (let i = 0; i < colCount; i++) {
         const td = document.createElement("td");
         td.className = "text-center";
-        td.textContent = row[i] ?? "";
-        tr.appendChild(td);
-      }
 
-      els.tableBody.appendChild(tr);
-    });
-
-    if (els.tableFoot) {
-      els.tableFoot.innerHTML = "";
-      if (tableState.totalRow) {
-        const trTotal = document.createElement("tr");
-        trTotal.className = "kpi12-table-total-row fw-semibold";
-
-        const colCount = tableState.headRows[0]?.length || tableState.totalRow.length;
-        for (let i = 0; i < colCount; i++) {
-          const td = document.createElement("td");
-          td.className = "text-center";
-          td.textContent = tableState.totalRow[i] ?? "";
+        if (i === 0) {
+          // merge A262:D262 (4 kolom pertama)
+          td.colSpan = 4;
+          td.textContent = tableState.totalRow[0] ?? "";
+          td.style.textAlign = "left";
           trTotal.appendChild(td);
+          i = 3; // sudah cover kolom 0..3
+          continue;
         }
 
-        els.tableFoot.appendChild(trTotal);
+        // kolom setelah D langsung ambil nilai murni dari totalRow
+        td.textContent = tableState.totalRow[i] ?? "";
+        trTotal.appendChild(td);
       }
+
+      els.tableFoot.appendChild(trTotal);
     }
   }
-
+}
   // ================== SHOW/HIDE ==================
   function showLoading(flag) {
     if (!els.loading) return;
