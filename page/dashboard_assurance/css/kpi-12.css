@@ -692,4 +692,9 @@
   object-fit: contain;
 }
 
+.kpi12-ranking-avatar-sm {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
 
