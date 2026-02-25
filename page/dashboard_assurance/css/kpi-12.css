@@ -786,10 +786,15 @@
 .kpi12-sto-head-base {
   color: #ffffff;
   font-weight: 600;
-  font-size: 0.7rem;     /* boleh sedikit dikecilkan */
+  font-size: 0.7rem;
   text-align: center;
-  white-space: normal;   /* BIAR BISA WRAP */
+  white-space: normal;
   word-wrap: break-word;
+}
+
+/* 5 kolom awal: STO, Cluster, OM HAS, MITRA, Medal TIDAK WRAP */
+.kpi12-sto-table thead tr:first-child th:nth-child(-n+6) {
+  white-space: nowrap;
 }
 
 /* abu2 tua: STO, Cluster, OM HAS, MITRA, Medal, Ach */
