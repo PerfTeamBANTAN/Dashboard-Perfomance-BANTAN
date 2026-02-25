@@ -1,8 +1,19 @@
 function initKPI12(config) {
-  // config: { baseUrl, sheet, range }
+  // config: { baseUrl, sheet, range }  -> untuk KPI 12PI (kartu)
   const state = {
     raw: [],
     filtered: [],
+  };
+
+  // State khusus tabel STO (web!A242:AP262)
+  const tableState = {
+    all: [],          // semua row body STO
+    filtered: [],     // setelah search / filter
+    totalRow: null,   // row TANGERANG
+    headers: [],      // flat header dari 3 baris
+    currentPage: 1,
+    rowsPerPage: 10,
+    search: "",
   };
 
   const els = {
@@ -14,8 +25,18 @@ function initKPI12(config) {
     lastUpdate: document.getElementById("kpi12-last-update"),
     filterSegmen: document.getElementById("kpi12-filter-segmen"),
     refreshBtn: document.getElementById("kpi12-refresh"),
+
+    // elemen tabel
+    tableHeadRow: document.getElementById("kpi12-table-head-row"),
+    tableBody: document.getElementById("kpi12-table-body"),
+    tableFoot: document.getElementById("kpi12-table-foot"),
+    tableRowsSelect: document.getElementById("kpi12-table-rows"),
+    tableSearch: document.getElementById("kpi12-table-search"),
+    pagination: document.getElementById("kpi12-pagination"),
+    paginationInfo: document.getElementById("kpi12-pagination-info"),
   };
 
+  // ================== FETCH KPI CARD (EXISTING) ==================
   async function fetchData() {
     showLoading(true);
     hideError();
@@ -72,6 +93,62 @@ function initKPI12(config) {
     }
   }
 
+  // ================== FETCH TABEL STO (NEW) ==================
+  async function fetchTableData() {
+    try {
+      const url = `${config.baseUrl}?sheet=${encodeURIComponent(
+        "web"
+      )}&range=${encodeURIComponent("A242:AP262")}`;
+
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Network error table");
+
+      const rows = await res.json();
+      if (!Array.isArray(rows) || !rows.length) {
+        tableState.all = [];
+        tableState.filtered = [];
+        renderTableHeaders([]);
+        renderTable();
+        return;
+      }
+
+      // offset A242 sebagai index 0
+      const offset = 242;
+      const getRow = (rowNumber) => rows[rowNumber - offset] || null;
+
+      const totalRow = getRow(242); // TANGERANG total
+      const headerRows = rows.slice(246 - offset, 248 - offset + 1); // A246:A248
+      const bodyRows = rows.slice(249 - offset, 261 - offset + 1);   // A249:A261
+
+      const flatHeaders = buildFlatHeaders(headerRows);
+
+      // parse body
+      const all = bodyRows
+        .filter((r) => r && r.length)
+        .map((r, idx) => {
+          const obj = { id: idx + 1 };
+          flatHeaders.forEach((h, i) => {
+            obj[h.key] = r[i] ?? "";
+          });
+          return obj;
+        });
+
+      const totalObj = parseTotalRow(totalRow, flatHeaders);
+
+      tableState.all = all;
+      tableState.totalRow = totalObj;
+      tableState.filtered = [...all]; // default: semua
+      tableState.currentPage = 1;
+
+      renderTableHeaders(flatHeaders);
+      renderTable();
+    } catch (err) {
+      console.error(err);
+      // boleh tampilkan pesan khusus tabel kalau mau
+    }
+  }
+
+  // ================== UTIL ==================
   function toNumber(v) {
     if (v === null || v === undefined || v === "") return NaN;
     if (typeof v === "string") {
@@ -82,6 +159,7 @@ function initKPI12(config) {
     return Number(v);
   }
 
+  // ================== FILTER & SELECT (KARTU) ==================
   function buildFilterOptions() {
     const indikatorList = new Set();
     state.raw.forEach((row) => {
@@ -127,121 +205,125 @@ function initKPI12(config) {
       return okIndikator;
     });
 
+    // contoh: tabel tidak ikut filter indikator (atau sesuaikan mapping kalau mau)
+    tableState.filtered = applyTableSearch(tableState.all, tableState.search);
+    tableState.currentPage = 1;
+
     renderSummary();
     renderCards();
+    renderTable();
   }
 
+  // ================== SUMMARY & CARDS (EXISTING) ==================
   function renderSummary() {
-  els.summaryRow.innerHTML = "";
-  const medalEl = document.getElementById("kpi12-medal-icon");
+    els.summaryRow.innerHTML = "";
+    const medalEl = document.getElementById("kpi12-medal-icon");
 
-  if (!state.filtered.length) {
-    if (medalEl) medalEl.innerHTML = "";
+    if (!state.filtered.length) {
+      if (medalEl) medalEl.innerHTML = "";
+      if (els.header) {
+        els.header.classList.remove(
+          "kpi12-header-gold",
+          "kpi12-header-platinum",
+          "kpi12-header-silver"
+        );
+      }
+      return;
+    }
+
+    const total = state.filtered.length;
+    const avgTarget =
+      state.filtered.reduce((a, b) => a + (b.target || 0), 0) / total;
+    const avgH1 =
+      state.filtered.reduce((a, b) => a + (b.h1 || 0), 0) / total;
+    const avgHI =
+      state.filtered.reduce((a, b) => a + (b.hi || 0), 0) / total;
+
+    const meetTargetCount = state.filtered.filter((r) => isMeetTarget(r)).length;
+
+    const medal = getMedalByTotalMeet(meetTargetCount);
+
+    if (medalEl) {
+      medalEl.innerHTML = `
+        <div class="kpi12-medal ${medal.cssClass}">
+          <div class="kpi12-medal-img-wrap">
+            <img src="${medal.img}" alt="${medal.level} Medal" class="kpi12-medal-img">
+          </div>
+          <div class="kpi12-medal-text">
+            <div class="kpi12-medal-label">${medal.level}</div>
+            <div class="kpi12-medal-caption">
+              Meet: ${meetTargetCount} dari ${total} indikator
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     if (els.header) {
       els.header.classList.remove(
         "kpi12-header-gold",
         "kpi12-header-platinum",
         "kpi12-header-silver"
       );
+      if (medal.level === "Gold") {
+        els.header.classList.add("kpi12-header-gold");
+      } else if (medal.level === "Platinum") {
+        els.header.classList.add("kpi12-header-platinum");
+      } else if (medal.level === "Silver") {
+        els.header.classList.add("kpi12-header-silver");
+      }
     }
-    return;
-  }
 
-  const total = state.filtered.length;
-  const avgTarget =
-    state.filtered.reduce((a, b) => a + (b.target || 0), 0) / total;
-  const avgH1 =
-    state.filtered.reduce((a, b) => a + (b.h1 || 0), 0) / total;
-  const avgHI =
-    state.filtered.reduce((a, b) => a + (b.hi || 0), 0) / total;
+    const cards = [
+      {
+        title: "Jumlah Indikator",
+        value: total,
+        subtitle: "Total indikator laten dipantau",
+        type: "primary",
+        icon: "fa-list-check",
+      },
+      {
+        title: "Rata-rata Target",
+        value: isFinite(avgTarget) ? avgTarget.toFixed(2) + " %" : "-",
+        subtitle: "Target rata-rata keseluruhan",
+        type: "accent",
+        icon: "fa-bullseye",
+      },
+      {
+        title: "Rata-rata HI",
+        value: isFinite(avgHI) ? avgHI.toFixed(2) + " %" : "-",
+        subtitle: "Capaian hari ini (HI)",
+        type: "success",
+        icon: "fa-chart-line",
+      },
+      {
+        title: "Comply / Not Comply",
+        value: `${meetTargetCount} / ${total - meetTargetCount}`,
+        subtitle: "Indikator yang mencapai target",
+        type: "danger",
+        icon: "fa-scale-balanced",
+      },
+    ];
 
-  const meetTargetCount = state.filtered.filter((r) => isMeetTarget(r)).length;
+    cards.forEach((c) => {
+      const col = document.createElement("div");
+      col.className = "col-12 col-md-6 col-xl-3";
 
-  // ===== MEDAL + HEADER COLOR =====
-  const medal = getMedalByTotalMeet(meetTargetCount);
-
-  if (medalEl) {
-    medalEl.innerHTML = `
-      <div class="kpi12-medal ${medal.cssClass}">
-        <div class="kpi12-medal-img-wrap">
-          <img src="${medal.img}" alt="${medal.level} Medal" class="kpi12-medal-img">
-        </div>
-        <div class="kpi12-medal-text">
-          <div class="kpi12-medal-label">${medal.level}</div>
-          <div class="kpi12-medal-caption">
-            Meet: ${meetTargetCount} dari ${total} indikator
+      col.innerHTML = `
+        <div class="kpi12-summary-card kpi12-summary-${c.type}">
+          <div class="kpi12-summary-icon">
+            <i class="fa ${c.icon}"></i>
+          </div>
+          <div class="kpi12-summary-body">
+            <div class="kpi12-summary-title">${c.title}</div>
+            <div class="kpi12-summary-value">${c.value}</div>
+            <div class="kpi12-summary-subtitle">${c.subtitle}</div>
           </div>
         </div>
-      </div>
-    `;
+      `;
+      els.summaryRow.appendChild(col);
+    });
   }
-
-  if (els.header) {
-    els.header.classList.remove(
-      "kpi12-header-gold",
-      "kpi12-header-platinum",
-      "kpi12-header-silver"
-    );
-    if (medal.level === "Gold") {
-      els.header.classList.add("kpi12-header-gold");
-    } else if (medal.level === "Platinum") {
-      els.header.classList.add("kpi12-header-platinum");
-    } else if (medal.level === "Silver") {
-      els.header.classList.add("kpi12-header-silver");
-    }
-  }
-
-  // ===== SUMMARY CARDS =====
-  const cards = [
-    {
-      title: "Jumlah Indikator",
-      value: total,
-      subtitle: "Total indikator laten dipantau",
-      type: "primary",
-      icon: "fa-list-check",
-    },
-    {
-      title: "Rata-rata Target",
-      value: isFinite(avgTarget) ? avgTarget.toFixed(2) + " %" : "-",
-      subtitle: "Target rata-rata keseluruhan",
-      type: "accent",
-      icon: "fa-bullseye",
-    },
-    {
-      title: "Rata-rata HI",
-      value: isFinite(avgHI) ? avgHI.toFixed(2) + " %" : "-",
-      subtitle: "Capaian hari ini (HI)",
-      type: "success",
-      icon: "fa-chart-line",
-    },
-    {
-      title: "Comply / Not Comply",
-      value: `${meetTargetCount} / ${total - meetTargetCount}`,
-      subtitle: "Indikator yang mencapai target",
-      type: "danger",
-      icon: "fa-scale-balanced",
-    },
-  ];
-
-  cards.forEach((c) => {
-    const col = document.createElement("div");
-    col.className = "col-12 col-md-6 col-xl-3";
-
-    col.innerHTML = `
-      <div class="kpi12-summary-card kpi12-summary-${c.type}">
-        <div class="kpi12-summary-icon">
-          <i class="fa ${c.icon}"></i>
-        </div>
-        <div class="kpi12-summary-body">
-          <div class="kpi12-summary-title">${c.title}</div>
-          <div class="kpi12-summary-value">${c.value}</div>
-          <div class="kpi12-summary-subtitle">${c.subtitle}</div>
-        </div>
-      </div>
-    `;
-    els.summaryRow.appendChild(col);
-  });
-}
 
   function renderCards() {
     els.cardGrid.innerHTML = "";
@@ -314,6 +396,7 @@ function initKPI12(config) {
     });
   }
 
+  // ================== HELPER KPI CARD ==================
   function calcDelta(value, target) {
     if (!isFinite(value) || !isFinite(target)) return NaN;
     return value - target;
@@ -356,7 +439,6 @@ function initKPI12(config) {
     return "kpi12-card-bad";
   }
 
-  // Medal PNG mapping
   function getMedalByTotalMeet(totalMeet) {
     if (totalMeet >= 12) {
       return {
@@ -379,23 +461,250 @@ function initKPI12(config) {
     };
   }
 
+  // ================== TABLE HEADER BUILDER ==================
+  function buildFlatHeaders(headerRows) {
+    const [row1 = [], row2 = [], row3 = []] = headerRows;
+
+    const headers = [];
+    const colCount = Math.max(row1.length, row2.length, row3.length);
+
+    for (let i = 0; i < colCount; i++) {
+      const h1 = (row1[i] || "").toString().trim();
+      const h2 = (row2[i] || "").toString().trim();
+      const h3 = (row3[i] || "").toString().trim();
+
+      let label = "";
+      let key = "";
+
+      if (i <= 3) {
+        // STO, Telkomsel Cluster, OM HAS, MITRA
+        label = h1 || h2 || h3 || `Col${i + 1}`;
+        key = label;
+      } else if (h1 && !h2 && !h3) {
+        // Medal, Ach, dll
+        label = h1;
+        key = h1;
+      } else {
+        const parent = h1 || h2;
+        const sub = h3 || h2 || "";
+        label = `${parent} ${sub}`.replace(/\s+/g, " ").trim();
+        key = label;
+      }
+
+      headers.push({ label, key });
+    }
+
+    return headers;
+  }
+
+  function parseTotalRow(totalRow, flatHeaders) {
+    if (!totalRow) return null;
+    const obj = {};
+    flatHeaders.forEach((h, i) => {
+      obj[h.key] = totalRow[i] ?? "";
+    });
+    return obj;
+  }
+
+  // ================== TABLE RENDER ==================
+  function renderTableHeaders(flatHeaders) {
+    tableState.headers = flatHeaders || [];
+    if (!els.tableHeadRow) return;
+    els.tableHeadRow.innerHTML = "";
+
+    tableState.headers.forEach((h) => {
+      const th = document.createElement("th");
+      th.textContent = h.label;
+      th.style.fontSize = "0.78rem";
+      th.classList.add("text-center");
+      els.tableHeadRow.appendChild(th);
+    });
+  }
+
+  function applyTableSearch(data, q) {
+    const query = (q || "").toString().toLowerCase().trim();
+    if (!query) return [...data];
+
+    return data.filter((row) => {
+      const sto = (row.STO || "").toString().toLowerCase();
+      const cluster = (row["Telkomsel Cluster"] || "").toString().toLowerCase();
+      const mitra = (row.MITRA || "").toString().toLowerCase();
+      const medal = (row.Medal || "").toString().toLowerCase();
+      return (
+        sto.includes(query) ||
+        cluster.includes(query) ||
+        mitra.includes(query) ||
+        medal.includes(query)
+      );
+    });
+  }
+
+  function renderTable() {
+    if (!els.tableBody) return;
+
+    const data = tableState.filtered || [];
+    const totalItems = data.length;
+
+    const startIdx = (tableState.currentPage - 1) * tableState.rowsPerPage;
+    const endIdx = startIdx + tableState.rowsPerPage;
+    const pageData = data.slice(startIdx, endIdx);
+
+    els.tableBody.innerHTML = "";
+
+    pageData.forEach((row) => {
+      const tr = document.createElement("tr");
+      tr.className = getTableRowClass(row);
+
+      const tds = tableState.headers.map((h) => {
+        const val = row[h.key] ?? "";
+        return `<td class="text-center">${val}</td>`;
+      });
+
+      tr.innerHTML = tds.join("");
+      els.tableBody.appendChild(tr);
+    });
+
+    // Tampilkan total (TANGERANG) di tfoot kalau ada
+    if (els.tableFoot) {
+      els.tableFoot.innerHTML = "";
+      if (tableState.totalRow) {
+        const trTotal = document.createElement("tr");
+        trTotal.className = "kpi12-table-total-row";
+        const tdsTotal = tableState.headers.map((h) => {
+          const val = tableState.totalRow[h.key] ?? "";
+          return `<td class="text-center fw-semibold">${val}</td>`;
+        });
+        trTotal.innerHTML = tdsTotal.join("");
+        els.tableFoot.appendChild(trTotal);
+      }
+    }
+
+    renderPagination(totalItems);
+  }
+
+  function getTableRowClass(row) {
+    const medal = (row.Medal || row["Medal"] || "")
+      .toString()
+      .toLowerCase();
+    if (medal === "platinum") return "table-platinum";
+    if (medal === "gold") return "table-gold";
+    return "";
+  }
+
+  function renderPagination(totalItems) {
+    if (!els.pagination || !els.paginationInfo) return;
+
+    const totalPages = Math.max(
+      1,
+      Math.ceil(totalItems / tableState.rowsPerPage || 1)
+    );
+    if (tableState.currentPage > totalPages) {
+      tableState.currentPage = totalPages;
+    }
+
+    const start = totalItems === 0 ? 0 : (tableState.currentPage - 1) * tableState.rowsPerPage + 1;
+    const end = Math.min(
+      tableState.currentPage * tableState.rowsPerPage,
+      totalItems
+    );
+
+    els.paginationInfo.textContent = `Showing ${start}-${end} of ${totalItems} STO`;
+
+    els.pagination.innerHTML = "";
+
+    const createPageItem = (label, page, disabled = false, active = false, iconClass = "") => {
+      const li = document.createElement("li");
+      li.className = `page-item${disabled ? " disabled" : ""}${active ? " active" : ""}`;
+      const a = document.createElement("a");
+      a.href = "#";
+      a.className = "page-link";
+      a.dataset.page = page;
+      a.innerHTML = iconClass ? `<i class="fa ${iconClass}"></i>` : label;
+      li.appendChild(a);
+      return li;
+    };
+
+    // Prev
+    els.pagination.appendChild(
+      createPageItem("", tableState.currentPage - 1, tableState.currentPage === 1, false, "fa-chevron-left")
+    );
+
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, tableState.currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    if (endPage - startPage + 1 < maxPagesToShow) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let p = startPage; p <= endPage; p++) {
+      els.pagination.appendChild(
+        createPageItem(String(p), p, false, p === tableState.currentPage)
+      );
+    }
+
+    // Next
+    els.pagination.appendChild(
+      createPageItem("", tableState.currentPage + 1, tableState.currentPage === totalPages, false, "fa-chevron-right")
+    );
+
+    // binding click
+    els.pagination.querySelectorAll(".page-link").forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const page = parseInt(link.dataset.page, 10);
+        if (!page || page === tableState.currentPage) return;
+        if (page < 1 || page > totalPages) return;
+        tableState.currentPage = page;
+        renderTable();
+      });
+    });
+  }
+
+  // ================== SHOW/HIDE ==================
   function showLoading(flag) {
+    if (!els.loading) return;
     els.loading.style.display = flag ? "block" : "none";
   }
 
   function showError(msg) {
+    if (!els.error) return;
     els.error.classList.remove("d-none");
     if (msg) els.error.textContent = msg;
   }
 
   function hideError() {
+    if (!els.error) return;
     els.error.classList.add("d-none");
   }
 
-  // Events
-  els.filterSegmen.addEventListener("change", applyFilter);
-  els.refreshBtn.addEventListener("click", fetchData);
+  // ================== EVENTS ==================
+  if (els.filterSegmen) {
+    els.filterSegmen.addEventListener("change", applyFilter);
+  }
+  if (els.refreshBtn) {
+    els.refreshBtn.addEventListener("click", () => {
+      fetchData();
+      fetchTableData();
+    });
+  }
+  if (els.tableRowsSelect) {
+    els.tableRowsSelect.addEventListener("change", (e) => {
+      const val = parseInt(e.target.value, 10);
+      tableState.rowsPerPage = isNaN(val) ? 10 : val;
+      tableState.currentPage = 1;
+      renderTable();
+    });
+  }
+  if (els.tableSearch) {
+    els.tableSearch.addEventListener("input", (e) => {
+      tableState.search = e.target.value || "";
+      tableState.filtered = applyTableSearch(tableState.all, tableState.search);
+      tableState.currentPage = 1;
+      renderTable();
+    });
+  }
 
-  // Init
-  fetchData();
+  // ================== INIT ==================
+  fetchData();      // KPI cards
+  fetchTableData(); // Tabel STO
 }
