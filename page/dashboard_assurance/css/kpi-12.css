@@ -841,3 +841,50 @@
   color: #b91c1c;
   font-weight: 600;
 }
+
+.kpi12-sto-table thead tr.kpi12-sto-row-target th {
+  background-color: #7f1d1d;
+  color: #fee2e2;
+  font-weight: 600;
+}
+
+/* zebra row ringan */
+.kpi12-sto-table tbody tr:nth-child(even),
+.kpi12-weight-table tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.kpi12-sto-table tbody tr:hover,
+.kpi12-weight-table tbody tr:hover {
+  background-color: #e5f2ff;
+  transition: background-color 0.15s ease-out;
+}
+
+.kpi12-sto-table thead th,
+.kpi12-weight-table thead th {
+  box-shadow: inset 0 -1px 0 rgba(15,23,42,0.25);
+}
+
+.kpi12-table-wrapper {
+  border-radius: 18px;
+  padding: 8px;
+  background: radial-gradient(circle at 0% 0%, #ffffff, #e5e7eb);
+  box-shadow:
+    0 10px 24px rgba(15,23,42,0.18),
+    inset 0 0 0 1px rgba(255,255,255,0.8);
+}
+
+.kpi12-sto-table tbody td:first-child,
+.kpi12-sto-table tbody td:nth-child(2),
+.kpi12-sto-table tbody td:nth-child(3),
+.kpi12-sto-table tbody td:nth-child(4) {
+  text-align: left;
+}
+
+.kpi12-sto-row-target td,
+.kpi12-sto-table thead tr.kpi12-sto-row-target th {
+  background-color: #7f1d1d;
+  color: #fee2e2;
+  font-weight: 600;
+}
+
