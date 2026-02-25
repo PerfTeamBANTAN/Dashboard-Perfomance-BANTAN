@@ -570,7 +570,7 @@ function formatNumberCell(v, decimals = 2) {
   }
 
   // ================== GRID HEADER 3 BARIS ==================
-  function renderTableHeaders() {
+function renderTableHeaders() {
   const [row1 = [], row2 = [], row3 = []] = tableState.headRows;
 
   if (!els.headRow1 || !els.headRow2 || !els.headRow3) return;
@@ -579,14 +579,15 @@ function formatNumberCell(v, decimals = 2) {
   els.headRow2.innerHTML = "";
   els.headRow3.innerHTML = "";
 
-  const colCount = Math.max(row1.length, row2.length, row3.length);
+  // KUNCI KE HEADER UTAMA (BARIS 1)
+  const colCount = row1.length;
 
   // ===== BARIS 1 =====
   const fixedFirstCols = 4; // STO, Cluster, OM HAS, MITRA
   for (let i = 0; i < fixedFirstCols; i++) {
     const th = document.createElement("th");
     const title = (row1[i] || "").toString();
-    const colorClass = getStoKpiHeaderClass(title);             // << tambah
+    const colorClass = getStoKpiHeaderClass(title);
     th.textContent = title;
     th.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
     th.style.fontSize = "0.8rem";
@@ -601,7 +602,7 @@ function formatNumberCell(v, decimals = 2) {
 
     if (h1 === "Medal" || h1 === "Ach") {
       const th = document.createElement("th");
-      const colorClass = getStoKpiHeaderClass(h1);              // << tambah
+      const colorClass = getStoKpiHeaderClass(h1);
       th.textContent = h1;
       th.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
       th.style.fontSize = "0.75rem";
@@ -614,7 +615,7 @@ function formatNumberCell(v, decimals = 2) {
     if (h1) {
       const th = document.createElement("th");
       const title = h1;
-      const colorClass = getStoKpiHeaderClass(title);           // << tambah
+      const colorClass = getStoKpiHeaderClass(title);
       th.textContent = title;
       th.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
       th.style.fontSize = "0.75rem";
@@ -627,19 +628,26 @@ function formatNumberCell(v, decimals = 2) {
   }
 
   // ===== BARIS 2 (Target + angka) =====
+  // 4 kolom pertama: dummy (karena baris 1 rowSpan=3)
   for (let i = 0; i < fixedFirstCols; i++) {
     const th = document.createElement("th");
     th.className = "d-none";
     els.headRow2.appendChild(th);
   }
-  for (let i = fixedFirstCols; i < colCount; i++) {
+
+  // sisanya: isi dari row2, tapi jangan bikin th kalau kosong
+  for (let i = fixedFirstCols; i < row2.length; i++) {
+    const text = (row2[i] || "").toString().trim();
+    if (!text) continue; // HINDARI TH KOSONG DI UJUNG
+
     const th = document.createElement("th");
-    th.textContent = (row2[i] || "").toString();
+    th.textContent = text;
     th.className = "text-center align-middle";
     th.style.fontSize = "0.7rem";
     els.headRow2.appendChild(th);
   }
-  // kasih class baris target (merah tua via CSS)
+
+  // baris Target -> warna merah tua
   els.headRow2.classList.add("kpi12-sto-row-target");
 
   // ===== BARIS 3 (H-1 / 🔄 / HI) =====
@@ -648,15 +656,18 @@ function formatNumberCell(v, decimals = 2) {
     th.className = "d-none";
     els.headRow3.appendChild(th);
   }
-  for (let i = fixedFirstCols; i < colCount; i++) {
+
+  for (let i = fixedFirstCols; i < row3.length; i++) {
+    const text = (row3[i] || "").toString().trim();
+    if (!text) continue; // optional: skip kosong
+
     const th = document.createElement("th");
-    th.textContent = (row3[i] || "").toString();
+    th.textContent = text;
     th.className = "text-center align-middle";
     th.style.fontSize = "0.7rem";
     els.headRow3.appendChild(th);
   }
 }
-
 
   // ================== GRID BODY & TOTAL ==================
   function renderTable() {
