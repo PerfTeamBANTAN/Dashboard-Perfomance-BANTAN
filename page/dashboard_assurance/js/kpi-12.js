@@ -572,7 +572,6 @@ function formatNumberCell(v, decimals = 2) {
   // ================== GRID HEADER 3 BARIS ==================
 function renderTableHeaders() {
   const [row1 = [], row2 = [], row3 = []] = tableState.headRows;
-
   if (!els.headRow1 || !els.headRow2 || !els.headRow3) return;
 
   els.headRow1.innerHTML = "";
@@ -594,33 +593,31 @@ function renderTableHeaders() {
     els.headRow1.appendChild(th);
   }
 
-  // cari index Medal & Ach
   const medalIndex = row1.indexOf("Medal");
   const achIndex = row1.indexOf("Ach");
-
-  // ambil semua indikator di antara kolom 4 dan sebelum Medal
-  const indicators = [];
   const indicatorsStartCol = fixedFirstCols;
   const indicatorsEndCol = medalIndex === -1 ? row1.length : medalIndex;
 
+  // list indikator dengan index kolom sheet
+  const indicators = [];
   for (let c = indicatorsStartCol; c < indicatorsEndCol; c++) {
     const title = (row1[c] || "").toString().trim();
     if (!title) continue;
-    indicators.push({ title });
+    indicators.push({ title, colIndex: c });
   }
 
-  // tiap indikator 1 header dengan colSpan = 3
+  // Baris 1: setiap indikator 1 kolom, colSpan = 3
   indicators.forEach(({ title }) => {
     const th = document.createElement("th");
     const colorClass = getStoKpiHeaderClass(title);
     th.textContent = title;
     th.className = `text-center align-middle kpi12-sto-head-base ${colorClass}`;
     th.style.fontSize = "0.75rem";
-    th.colSpan = 3; // 3 kolom di bawah (Target/angka + H-1/🔄/HI)
+    th.colSpan = 3; // 3 kolom di bawah
     els.headRow1.appendChild(th);
   });
 
-  // Medal & Ach: rowSpan 3 di ujung
+  // Medal & Ach rowSpan 3
   if (medalIndex !== -1) {
     const thMedal = document.createElement("th");
     const colorClass = getStoKpiHeaderClass("Medal");
@@ -630,7 +627,6 @@ function renderTableHeaders() {
     thMedal.rowSpan = 3;
     els.headRow1.appendChild(thMedal);
   }
-
   if (achIndex !== -1) {
     const thAch = document.createElement("th");
     const colorClass = getStoKpiHeaderClass("Ach");
@@ -641,7 +637,7 @@ function renderTableHeaders() {
     els.headRow1.appendChild(thAch);
   }
 
-  // ===== BARIS 2 (Target + angka) =====
+  // ===== BARIS 2: Target | Target | angka =====
   // 4 kolom awal: dummy
   for (let i = 0; i < fixedFirstCols; i++) {
     const th = document.createElement("th");
@@ -649,42 +645,37 @@ function renderTableHeaders() {
     els.headRow2.appendChild(th);
   }
 
-  // Ambil semua pasangan Target-angka dari row2 mulai kolom 4
-  const targetPairs = [];
-  for (let i = fixedFirstCols; i < row2.length; i += 2) {
-    const label = (row2[i] || "").toString().trim();       // "Target"
-    const value = (row2[i + 1] || "").toString().trim();   // angka
-    if (!label && !value) continue;
-    targetPairs.push({ label, value });
+  // ambil angka target dari row2 (urutan sesuai indikator)
+  // pola sheet kamu: di row2 ada "Target" dan angka campur; kita ekstrak angka saja.
+  const targetValues = [];
+  for (let i = indicatorsStartCol; i < row2.length; i++) {
+    const val = (row2[i] || "").toString().trim();
+    if (!val) continue;
+    const num = toNumber(val);
+    if (isFinite(num)) targetValues.push(val);
   }
+  while (targetValues.length < indicators.length) targetValues.push("");
 
-  // pastikan jumlah pasangan minimal = jumlah indikator
-  const pairCount = Math.min(targetPairs.length, indicators.length);
+  indicators.forEach((_, idx) => {
+    const value = targetValues[idx] || "";
 
-  for (let idx = 0; idx < pairCount; idx++) {
-    const { label, value } = targetPairs[idx];
+    // kolom 1-2: gabungan "Target"
+    const thTargetSpan = document.createElement("th");
+    thTargetSpan.textContent = "Target";
+    thTargetSpan.className = "text-center align-middle";
+    thTargetSpan.style.fontSize = "0.7rem";
+    thTargetSpan.colSpan = 2;
+    els.headRow2.appendChild(thTargetSpan);
 
-    // kolom 1: Target
-    const thLabel = document.createElement("th");
-    thLabel.textContent = label || "Target";
-    thLabel.className = "text-center align-middle";
-    thLabel.style.fontSize = "0.7rem";
-    els.headRow2.appendChild(thLabel);
-
-    // kolom 2: angka target
+    // kolom ke-3: angka target
     const thValue = document.createElement("th");
-    thValue.textContent = value || "";
+    thValue.textContent = value;
     thValue.className = "text-center align-middle";
     thValue.style.fontSize = "0.7rem";
     els.headRow2.appendChild(thValue);
+  });
 
-    // kolom 3: dummy (diisi H-1/🔄/HI di baris 3)
-    const thEmpty = document.createElement("th");
-    thEmpty.className = "d-none";
-    els.headRow2.appendChild(thEmpty);
-  }
-
-  // Medal & Ach di baris 2: dummy
+  // Medal & Ach dummy di baris 2
   if (medalIndex !== -1) {
     const thMedal = document.createElement("th");
     thMedal.className = "d-none";
@@ -696,18 +687,18 @@ function renderTableHeaders() {
     els.headRow2.appendChild(thAch);
   }
 
-  // baris Target -> warna merah tua
   els.headRow2.classList.add("kpi12-sto-row-target");
 
-  // ===== BARIS 3 (H-1 / 🔄 / HI) =====
+  // ===== BARIS 3: H-1 | 🔄 | HI =====
+  // 4 kolom awal: dummy
   for (let i = 0; i < fixedFirstCols; i++) {
     const th = document.createElement("th");
     th.className = "d-none";
     els.headRow3.appendChild(th);
   }
 
-  // Data row3: H-1, 🔄, HI per indikator (mulai kolom 4)
-  let r3Index = fixedFirstCols;
+  // row3 di sheet sudah: H-1, 🔄, HI, H-1, 🔄, HI, ...
+  let r3Index = indicatorsStartCol;
   indicators.forEach(() => {
     for (let step = 0; step < 3; step++) {
       const text = (row3[r3Index] || "").toString().trim();
@@ -720,7 +711,7 @@ function renderTableHeaders() {
     }
   });
 
-  // Medal & Ach di baris 3: dummy
+  // Medal & Ach dummy
   if (medalIndex !== -1) {
     const thMedal = document.createElement("th");
     thMedal.className = "d-none";
@@ -732,6 +723,7 @@ function renderTableHeaders() {
     els.headRow3.appendChild(thAch);
   }
 }
+
 
   // ================== GRID BODY & TOTAL ==================
   function renderTable() {
