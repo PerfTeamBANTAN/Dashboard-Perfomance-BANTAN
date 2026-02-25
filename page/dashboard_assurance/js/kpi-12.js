@@ -726,14 +726,15 @@ function renderTableHeaders() {
 
 
   // ================== GRID BODY & TOTAL ==================
-  function renderTable() {
+  // ================== GRID BODY & TOTAL ==================
+function renderTable() {
   if (!els.tableBody) return;
 
   els.tableBody.innerHTML = "";
 
   const [row1, row2, row3] = tableState.headRows;
 
-  // map target per kolom dari baris 2
+  // map target per kolom dari baris 2 (angka saja)
   const targetByCol = {};
   if (Array.isArray(row2)) {
     for (let i = 0; i < row2.length; i++) {
@@ -747,34 +748,58 @@ function renderTableHeaders() {
 
     const tr = document.createElement("tr");
 
-    // styling medal (kalau masih mau pakai)
-    const medal = (row[row.length - 2] || "").toString().toLowerCase();
-    if (medal === "platinum") tr.classList.add("table-platinum");
-    else if (medal === "gold") tr.classList.add("table-gold");
+    // styling row berdasarkan medal (opsional, tetap dipakai)
+    const medalText = (row[row.length - 2] || "").toString().trim();
+    const medalLower = medalText.toLowerCase();
+    if (medalLower === "platinum") tr.classList.add("table-platinum");
+    else if (medalLower === "gold") tr.classList.add("table-gold");
 
-    // baris total Branch Tangerang di body? (kalau ada di body, tandai)
+    // baris total Branch Tangerang di body (jika ada)
     const firstCell = (row[0] || "").toString().trim();
     if (firstCell === "Branch Tangerang") {
       tr.classList.add("kpi12-sto-row-total");
     }
 
     const colCount = tableState.headRows[0]?.length || row.length;
+
     for (let i = 0; i < colCount; i++) {
       const td = document.createElement("td");
       td.className = "text-center";
 
       const raw = row[i];
-      td.textContent = raw ?? "";
+
+      // deteksi kolom Medal = kolom sebelum Ach (kolom terakhir)
+      const isMedalCol = (i === colCount - 2);
+
+      if (isMedalCol) {
+        const medal = (raw || "").toString().trim();
+        const medalLowerCase = medal.toLowerCase();
+
+        let medalClass = "";
+        if (medalLowerCase === "platinum") medalClass = "kpi12-medal-platinum";
+        else if (medalLowerCase === "gold") medalClass = "kpi12-medal-gold";
+        else if (medalLowerCase === "silver") medalClass = "kpi12-medal-silver";
+        else if (medalLowerCase === "bronze") medalClass = "kpi12-medal-bronze";
+
+        if (medalClass) {
+          td.innerHTML =
+            `<span class="kpi12-medal-badge ${medalClass}">${medal}</span>`;
+        } else {
+          td.textContent = medal;
+        }
+      } else {
+        td.textContent = raw ?? "";
+      }
 
       // label baris ketiga: H-1 / 🔄 / HI
       const label3 = (row3?.[i] || "").toString().trim();
       const target = targetByCol[i];
 
       // hanya untuk kolom H-1 / HI dan kalau ada target
-      if (isFinite(target) && (label3 === "H-1" || label3 === "HI")) {
+      if (!isMedalCol && isFinite(target) && (label3 === "H-1" || label3 === "HI")) {
         const valNum = toNumber(raw);
         if (isFinite(valNum) && valNum < target) {
-          td.classList.add("kpi12-sto-cell-below-target");  // merah
+          td.classList.add("kpi12-sto-cell-below-target"); // merah
         }
       }
 
