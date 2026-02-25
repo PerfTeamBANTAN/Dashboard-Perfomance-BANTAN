@@ -702,59 +702,45 @@
   object-fit: contain;
 }
 
-/* tabel bobot khusus KPI-12 */
+/* ================== TABEL BOBOT KPI-12 ================== */
+
 .kpi12-weight-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.75rem;
-  table-layout: fixed;              /* TAMBAH */
+  table-layout: fixed;
 }
 
-/* cell umum */
+/* cell umum bobot */
 .kpi12-weight-table th,
 .kpi12-weight-table td {
-  padding: 0.25rem 0.4rem;
+  padding: 0.3rem 0.45rem;
   border: 1px solid #e5e7eb;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.2;
 }
 
-/* header base */
+/* header base bobot */
 .kpi12-weight-table thead th.kpi12-weight-head-base {
   color: #ffffff;
   font-weight: 600;
   font-size: 0.75rem;
 }
 
-/* kolom awal */
+/* kolom awal bobot */
 .kpi12-weight-table thead th.kpi12-weight-head-indikator,
 .kpi12-weight-table thead th.kpi12-weight-head-bobot,
 .kpi12-weight-table thead th.kpi12-weight-head-target {
   background-color: #4b5563;
 }
 
-/* biru dongker: GDS, TAN, JIA */
-.kpi12-weight-table thead th.kpi12-weight-head-biru {
-  background-color: #1d3557;
-}
-
-/* oranye: CPD, CKL, DTG */
-.kpi12-weight-table thead th.kpi12-weight-head-orange {
-  background-color: #ea580c;
-}
-
-/* hijau tua: CLD, PDR, PKU */
-.kpi12-weight-table thead th.kpi12-weight-head-hijau {
-  background-color: #166534;
-}
-
-/* ungu tua: LKG, SRP */
-.kpi12-weight-table thead th.kpi12-weight-head-ungu {
-  background-color: #5b21b6;
-}
-
-/* pink tua: SRH, CPA */
-.kpi12-weight-table thead th.kpi12-weight-head-pink {
-  background-color: #be185d;
-}
+/* warna per cluster bobot */
+.kpi12-weight-table thead th.kpi12-weight-head-biru { background-color: #1d3557; }
+.kpi12-weight-table thead th.kpi12-weight-head-orange { background-color: #ea580c; }
+.kpi12-weight-table thead th.kpi12-weight-head-hijau { background-color: #166534; }
+.kpi12-weight-table thead th.kpi12-weight-head-ungu { background-color: #5b21b6; }
+.kpi12-weight-table thead th.kpi12-weight-head-pink { background-color: #be185d; }
 
 .kpi12-weight-table td.kpi12-weight-below-bobot {
   background-color: #fee2e2;
@@ -768,22 +754,20 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.75rem;
-  table-layout: fixed;              /* TAMBAH */
+  table-layout: fixed;
 }
 
-/* cell umum */
+/* cell umum STO */
 .kpi12-sto-table th,
-.kpi12-sto-table td,
-.kpi12-weight-table th,
-.kpi12-weight-table td {
-  padding: 0.25rem 0.4rem;
+.kpi12-sto-table td {
+  padding: 0.3rem 0.45rem;
   border: 1px solid #e5e7eb;
-  white-space: normal;        /* TAMBAH */
-  word-wrap: break-word;      /* TAMBAH */
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.2;
 }
 
-/* header base */
-/* header base (boleh wrap untuk indikator panjang) */
+/* HEADER KPI-12 STO (indikator) */
 .kpi12-sto-head-base {
   color: #ffffff;
   font-weight: 600;
@@ -793,64 +777,35 @@
   word-wrap: break-word;
 }
 
-/* 4 kolom awal: STO, Cluster, OM HAS, MITRA TIDAK WRAP */
-/* baris header pertama */
+/* 4 header pertama: STO, Cluster, OM HAS, MITRA (tidak wrap, sedikit lebih besar) */
 .kpi12-sto-table thead tr:first-child th:nth-child(1),
 .kpi12-sto-table thead tr:first-child th:nth-child(2),
 .kpi12-sto-table thead tr:first-child th:nth-child(3),
 .kpi12-sto-table thead tr:first-child th:nth-child(4) {
   white-space: nowrap;
+  font-size: 0.75rem;
 }
 
-/* isi body 4 kolom awal juga jangan wrap */
+/* 4 kolom awal BODY: teks kiri, tanpa batas lebar, tidak wrap supaya nama tidak pecah */
 .kpi12-sto-table tbody td:nth-child(1),
 .kpi12-sto-table tbody td:nth-child(2),
 .kpi12-sto-table tbody td:nth-child(3),
 .kpi12-sto-table tbody td:nth-child(4) {
+  text-align: left;
   white-space: nowrap;
 }
 
-/* abu2 tua: STO, Cluster, OM HAS, MITRA, Medal, Ach */
-.kpi12-sto-head-abu {
-  background-color: #374151;
-}
+/* warna header indikator */
+.kpi12-sto-head-abu    { background-color: #374151; } /* STO, Cluster, OM, MITRA, Medal, Ach */
+.kpi12-sto-head-biru   { background-color: #1d3557; } /* Assurance Guarantee, TTR 36H */
+.kpi12-sto-head-hijau  { background-color: #166534; } /* Underspec DATIN */
+.kpi12-sto-head-orange { background-color: #ea580c; } /* TTR K3 DATIN 7,2 Jam */
+.kpi12-sto-head-toska  { background-color: #0f766e; } /* TTDC Wifi */
+.kpi12-sto-head-ungu   { background-color: #5b21b6; } /* MTTRi Premium/Critical, Latency */
+.kpi12-sto-head-kuning { background-color: #ca8a04; } /* TTI, TTR FFG, PS/RE Indihome */
+.kpi12-sto-head-pink   { background-color: #be185d; } /* Stock NTE Ebis */
 
-/* biru dongker: Assurance Guarantee, TTR Compliance 36H (non HVC) */
-.kpi12-sto-head-biru {
-  background-color: #1d3557;
-}
-
-/* hijau tua: Underspec DATIN */
-.kpi12-sto-head-hijau {
-  background-color: #166534;
-}
-
-/* oranye: TTR Compliance K3 DATIN 7,2 Jam */
-.kpi12-sto-head-orange {
-  background-color: #ea580c;
-}
-
-/* hijau toska: TTDC Wifi */
-.kpi12-sto-head-toska {
-  background-color: #0f766e;
-}
-
-/* ungu tua: MTTRi Premium, MTTRi Critical, Latency RAN to Core */
-.kpi12-sto-head-ungu {
-  background-color: #5b21b6;
-}
-
-/* kuning tua: TTI, TTR FFG, PS/RE Indihome */
-.kpi12-sto-head-kuning {
-  background-color: #ca8a04;
-}
-
-/* pink tua: Stock NTE Ebis */
-.kpi12-sto-head-pink {
-  background-color: #be185d;
-}
-
-/* baris total Branch Tangerang – abu2 tua */
+/* baris total Branch Tangerang */
 .kpi12-sto-row-total td {
   background-color: #374151;
   color: #f9fafb;
@@ -864,6 +819,7 @@
   font-weight: 600;
 }
 
+/* baris Target (header baris 2) – merah tua */
 .kpi12-sto-row-target td,
 .kpi12-sto-table thead tr.kpi12-sto-row-target th {
   background-color: #7f1d1d;
@@ -877,41 +833,28 @@
   background-color: #f9fafb;
 }
 
+/* hover lembut */
 .kpi12-sto-table tbody tr:hover,
 .kpi12-weight-table tbody tr:hover {
   background-color: #e5f2ff;
   transition: background-color 0.15s ease-out;
 }
 
+/* garis bawah halus di header */
 .kpi12-sto-table thead th,
 .kpi12-weight-table thead th {
   box-shadow: inset 0 -1px 0 rgba(15,23,42,0.25);
 }
 
+/* WRAPPER TABEL – glass + radius */
 .kpi12-table-wrapper {
   border-radius: 18px;
-  padding: 8px;
+  padding: 10px 10px 12px;
   background: radial-gradient(circle at 0% 0%, #ffffff, #e5e7eb);
   box-shadow:
     0 10px 24px rgba(15,23,42,0.18),
     inset 0 0 0 1px rgba(255,255,255,0.8);
-  max-width: 100%;       /* TAMBAH */
-  overflow-x: auto;      /* TAMBAH (kalau masih perlu di HP) */
+  max-width: 100%;
+  overflow-x: auto;
   box-sizing: border-box;
 }
-
-.kpi12-sto-table tbody td:first-child,
-.kpi12-sto-table tbody td:nth-child(2),
-.kpi12-sto-table tbody td:nth-child(3),
-.kpi12-sto-table tbody td:nth-child(4) {
-  text-align: left;
-  max-width: 180px;   /* bisa dicoba 160–200px sesuai layar */
-}
-
-.kpi12-sto-row-target td,
-.kpi12-sto-table thead tr.kpi12-sto-row-target th {
-  background-color: #7f1d1d;
-  color: #fee2e2;
-  font-weight: 600;
-}
-
