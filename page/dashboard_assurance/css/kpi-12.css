@@ -756,3 +756,88 @@
   color: #b91c1c;
   font-weight: 600;
 }
+
+/* ================== TABEL STO KPI-12 ================== */
+
+.kpi12-sto-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+/* cell umum */
+.kpi12-sto-table th,
+.kpi12-sto-table td {
+  padding: 0.25rem 0.4rem;
+  border: 1px solid #e5e7eb;
+}
+
+/* header base */
+.kpi12-sto-head-base {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* abu2 tua: STO, Cluster, OM HAS, MITRA, Medal, Ach */
+.kpi12-sto-head-abu {
+  background-color: #374151;
+}
+
+/* biru dongker: Assurance Guarantee, TTR Compliance 36H (non HVC) */
+.kpi12-sto-head-biru {
+  background-color: #1d3557;
+}
+
+/* hijau tua: Underspec DATIN */
+.kpi12-sto-head-hijau {
+  background-color: #166534;
+}
+
+/* oranye: TTR Compliance K3 DATIN 7,2 Jam */
+.kpi12-sto-head-orange {
+  background-color: #ea580c;
+}
+
+/* hijau toska: TTDC Wifi */
+.kpi12-sto-head-toska {
+  background-color: #0f766e;
+}
+
+/* ungu tua: MTTRi Premium, MTTRi Critical, Latency RAN to Core */
+.kpi12-sto-head-ungu {
+  background-color: #5b21b6;
+}
+
+/* kuning tua: TTI, TTR FFG, PS/RE Indihome */
+.kpi12-sto-head-kuning {
+  background-color: #ca8a04;
+}
+
+/* pink tua: Stock NTE Ebis */
+.kpi12-sto-head-pink {
+  background-color: #be185d;
+}
+
+/* baris Target – merah tua */
+.kpi12-sto-row-target td {
+  background-color: #7f1d1d;
+  color: #fee2e2;
+  font-weight: 600;
+}
+
+/* baris total Branch Tangerang – abu2 tua */
+.kpi12-sto-row-total td {
+  background-color: #374151;
+  color: #f9fafb;
+  font-weight: 700;
+}
+
+/* cell H-1 / HI di bawah Target – merah muda */
+.kpi12-sto-cell-below-target {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  font-weight: 600;
+}
