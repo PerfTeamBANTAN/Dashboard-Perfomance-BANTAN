@@ -960,13 +960,6 @@
   line-height: 1.25;
 }
 
-/* baris total default */
-.kpi12-sto-row-total td {
-  background-color: #e5e7eb;
-  color: #111827;
-  font-weight: 700;
-}
-
 /* override khusus kolom Medal di baris total: ambil warna dari badge */
 .kpi12-sto-row-total td .kpi12-medal-badge.kpi12-medal-platinum {
   background: linear-gradient(135deg, #e5e7eb, #9ca3af);
