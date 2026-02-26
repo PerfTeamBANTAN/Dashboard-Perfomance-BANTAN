@@ -730,13 +730,17 @@ function renderTableHeaders() {
   }
 }
 
-  // ================== GRID BODY & TOTAL ==================
+// ================== GRID BODY & TOTAL ==================
 function renderTable() {
   if (!els.tableBody) return;
 
   els.tableBody.innerHTML = "";
 
   const [row1, row2, row3] = tableState.headRows;
+
+  // index Medal & Ach berdasarkan header baris 1
+  const medalIndex = row1 ? row1.indexOf("Medal") : -1;
+  const achIndex   = row1 ? row1.indexOf("Ach")   : -1;
 
   // map target per kolom dari baris 2 (angka saja)
   const targetByCol = {};
@@ -747,18 +751,19 @@ function renderTable() {
     }
   }
 
+  // ========== BODY ==========
   tableState.bodyRows.forEach((row) => {
     if (!row || !row.length) return;
 
     const tr = document.createElement("tr");
 
-    // styling row berdasarkan medal (opsional, tetap dipakai)
+    // styling row berdasarkan medal (opsional)
     const medalText = (row[row.length - 2] || "").toString().trim();
     const medalLower = medalText.toLowerCase();
     if (medalLower === "platinum") tr.classList.add("table-platinum");
     else if (medalLower === "gold") tr.classList.add("table-gold");
 
-    // baris total Branch Tangerang di body (jika ada)
+    // baris total Branch Tangerang di body (kalau ada di body)
     const firstCell = (row[0] || "").toString().trim();
     if (firstCell === "Branch Tangerang") {
       tr.classList.add("kpi12-sto-row-total");
@@ -772,8 +777,8 @@ function renderTable() {
 
       const raw = row[i];
 
-      // deteksi kolom Medal = kolom sebelum Ach (kolom terakhir)
-      const isMedalCol = (i === colCount - 2);
+      // kolom Medal berdasarkan header, bukan colCount - 2
+      const isMedalCol = (i === medalIndex);
 
       if (isMedalCol) {
         const medal = (raw || "").toString().trim();
@@ -813,55 +818,73 @@ function renderTable() {
     els.tableBody.appendChild(tr);
   });
 
-  // FOOT: total Branch Tangerang (sudah ada di tableState.totalRow)
+  // ========== FOOT (TOTAL BRANCH TANGERANG) ==========
   if (els.tableFoot) {
-  els.tableFoot.innerHTML = "";
-  if (tableState.totalRow) {
-    const trTotal = document.createElement("tr");
-    trTotal.className = "kpi12-table-total-row fw-semibold kpi12-sto-row-total";
+    els.tableFoot.innerHTML = "";
+    if (tableState.totalRow) {
+      const trTotal = document.createElement("tr");
+      trTotal.className = "kpi12-table-total-row fw-semibold kpi12-sto-row-total";
 
-    const colCount =
-      tableState.headRows[0]?.length || tableState.totalRow.length;
+      const colCount =
+        tableState.headRows[0]?.length || tableState.totalRow.length;
 
-    const [, , row3] = tableState.headRows || [];
+      const [, , row3Footer] = tableState.headRows || [];
 
-    for (let i = 0; i < colCount; i++) {
-      const td = document.createElement("td");
-      td.className = "text-center";
+      for (let i = 0; i < colCount; i++) {
+        const td = document.createElement("td");
+        td.className = "text-center";
 
-      if (i === 0) {
-        // merge A262:D262
-        td.colSpan = 4;
-        td.textContent = tableState.totalRow[0] ?? "";
-        td.style.textAlign = "left";
-        trTotal.appendChild(td);
-        i = 3;
-        continue;
-      }
-
-      const raw = tableState.totalRow[i];
-      td.textContent = raw ?? "";
-
-      // label baris ketiga: H-1 / 🔄 / HI (pakai header row3 yang sama)
-      const label3 = (row3?.[i] || "").toString().trim();
-      const target = targetByCol[i];
-
-      // hanya untuk kolom H-1 / HI dan kalau ada target
-      if (isFinite(target) && (label3 === "H-1" || label3 === "HI")) {
-        const valNum = toNumber(raw);
-        if (isFinite(valNum) && valNum < target) {
-          td.classList.add("kpi12-sto-cell-below-target"); // merah juga di total
+        if (i === 0) {
+          // merge A262:D262
+          td.colSpan = 4;
+          td.textContent = tableState.totalRow[0] ?? "";
+          td.style.textAlign = "left";
+          trTotal.appendChild(td);
+          i = 3;
+          continue;
         }
-      }
 
-      trTotal.appendChild(td);
-    }
+        const raw = tableState.totalRow[i];
+
+        // kolom Medal di total
+        if (i === medalIndex) {
+          const medal = (raw || "").toString().trim();
+          const medalLowerCase = medal.toLowerCase();
+
+          let medalClass = "";
+          if (medalLowerCase === "platinum") medalClass = "kpi12-medal-platinum";
+          else if (medalLowerCase === "gold") medalClass = "kpi12-medal-gold";
+          else if (medalLowerCase === "silver") medalClass = "kpi12-medal-silver";
+          else if (medalLowerCase === "bronze") medalClass = "kpi12-medal-bronze";
+
+          if (medalClass) {
+            td.innerHTML =
+              `<span class="kpi12-medal-badge ${medalClass}">${medal}</span>`;
+          } else {
+            td.textContent = medal;
+          }
+        } else {
+          td.textContent = raw ?? "";
+        }
+
+        // cek merah H-1 / HI di total
+        const label3 = (row3Footer?.[i] || "").toString().trim();
+        const target = targetByCol[i];
+
+        if (isFinite(target) && (label3 === "H-1" || label3 === "HI")) {
+          const valNum = toNumber(raw);
+          if (isFinite(valNum) && valNum < target) {
+            td.classList.add("kpi12-sto-cell-below-target");
+          }
+        }
+
+        trTotal.appendChild(td);
+      }
 
       els.tableFoot.appendChild(trTotal);
     }
   }
 }
-
 
   function getStoKpiHeaderClass(title) {
   const t = (title || "").toString().trim();
