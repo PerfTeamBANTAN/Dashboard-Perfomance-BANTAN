@@ -156,6 +156,10 @@ body {
         <a class="dropdown-item menu-link" data-menu="progres-indibiz">
           Funneling OnHand Fullfilment Indibiz
         </a>
+      <li>
+        <a class="dropdown-item menu-link" data-menu="funneling-indihome">
+          Monitoring Funneling Order
+        </a>
       </li>
       <li><hr class="dropdown-divider"></li>
     </ul>
@@ -192,24 +196,35 @@ body {
 const B2B_API_URL = 'https://script.google.com/macros/s/AKfycbwUqQ9_EFnGsX0swiip-Mc7ZNavcxLnr7lZdl8bLDYBr4gkRyGeugFPd1elH7Z6QPJwuA/exec';
 
 const menuMap = {
-  "kpi-fullfilment": {
-    html: "partial/kpi-fullfilment.html",
-    js: "js/kpi-fullfilment.js",
-    css: "css/progres-indihome.css",
-    init: "initKpiFullfilment"
-  },
-  "progres-indihome": {
-    html: "partial/progres-indihome.html",
-    js: "js/progres-indihome.js",
-    css: "css/progres-indihome.css",
-    init: "initProgresIndihome"
-  },  // ✅ koma ditambahkan
-  "progres-indibiz": {
-    html: "partial/progres-indibiz.html",
-    js: "js/progres-indibiz.js",
-    css: "css/progres-indihome.css",
-    init: "initProgresIndibiz"
-  }
+
+"kpi-fullfilment": {
+html: "partial/kpi-fullfilment.html",
+js: "js/kpi-fullfilment.js",
+css: "css/progres-indihome.css",
+init: "initKpiFullfilment"
+},
+
+"progres-indihome": {
+html: "partial/progres-indihome.html",
+js: "js/progres-indihome.js",
+css: "css/progres-indihome.css",
+init: "initProgresIndihome"
+},
+
+"progres-indibiz": {
+html: "partial/progres-indibiz.html",
+js: "js/progres-indibiz.js",
+css: "css/progres-indihome.css",
+init: "initProgresIndibiz"
+},
+
+"funneling-indihome": {
+html: "partial/funneling.html",
+js: "js/funneling.js",
+css: "css/progres-indihome.css",
+init: "initFunneling"
+}
+
 };
 
 
