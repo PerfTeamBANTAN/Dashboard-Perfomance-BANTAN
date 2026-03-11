@@ -1,12 +1,10 @@
 // ================= GLOBAL =================
 window.API_URL = window.API_URL || "";
 window.refreshTimer = window.refreshTimer || null;
-window.currentFilters = window.currentFilters || {};
 
 // ================= INIT =================
 function _initProgresIndihome(apiUrl) {
   window.API_URL = apiUrl;
-  createFilterControls(); // Filter UI
   loadIndihomeData();
 
   if (window.refreshTimer) clearInterval(window.refreshTimer);
@@ -15,126 +13,6 @@ function _initProgresIndihome(apiUrl) {
 
 // attach ke window supaya bisa dipanggil via window[cfg.init]()
 window.initProgresIndihome = _initProgresIndihome;
-
-// ================= FILTER FUNCTIONS =================
-function applyFilters(data) {
-  // Filter Cluster Table
-  filterTableRows("#tblSisa table", data.clusterTable || [], "total", 0);
-  
-  // Filter Manja Table  
-  filterTableRows("#tblManja table", data.manjaTable || [], "total", 0);
-  
-  // Filter HSA Table
-  filterTableRows("#tblHSA table", data.hsaTable || [], "totalWO", 0);
-  
-  // Filter Kendala Non Teknik
-  filterTableRows("#tblNonTeknik table", data.kendalaPelangganTable || [], "total", 0);
-  
-  // Filter Kendala Teknik
-  filterTableRows("#tblTeknik table", data.kendalaTeknisTable || [], "total", 0);
-}
-
-function filterTableRows(tableSelector, originalData, valueKey, defaultThreshold) {
-  const table = document.querySelector(tableSelector);
-  if (!table) return;
-
-  const threshold = window.currentFilters.threshold || defaultThreshold;
-  const rows = table.querySelectorAll("tr:not(:first-child)");
-  
-  rows.forEach((row, index) => {
-    const valueCell = row.cells[row.cells.length - 1]; // kolom TOTAL (paling kanan)
-    const value = parseInt(valueCell.textContent || 0);
-    
-    if (value >= threshold) {
-      row.style.display = "";
-    } else {
-      row.style.display = "none";
-    }
-  });
-  
-  updateFilterCounter(tableSelector);
-}
-
-function updateFilterCounter(tableSelector) {
-  const table = document.querySelector(tableSelector);
-  if (!table) return;
-  
-  const visibleRows = table.querySelectorAll("tr:not(:first-child):not([style*='display: none'])").length;
-  const totalRows = table.querySelectorAll("tr:not(:first-child)").length;
-  const container = table.closest("[id$='tbl']");
-  let counterEl = container.querySelector(".filter-counter");
-  
-  if (!counterEl) {
-    counterEl = document.createElement("div");
-    counterEl.className = "filter-counter";
-    counterEl.style.cssText = "font-size:12px;color:#666;margin-top:5px;padding:5px;background:#f8f9fa;border-radius:4px;";
-    container.appendChild(counterEl);
-  }
-  
-  counterEl.textContent = `Showing ${visibleRows} of ${totalRows} rows`;
-}
-
-function setFilterThreshold(threshold) {
-  window.currentFilters.threshold = parseInt(threshold) || 0;
-  if (window.lastData) {
-    applyFilters(window.lastData);
-    renderLines(); // reposition tables
-  }
-}
-
-function clearAllFilters() {
-  window.currentFilters = {};
-  const tables = ["#tblSisa table", "#tblManja table", "#tblHSA table", "#tblNonTeknik table", "#tblTeknik table"];
-  
-  tables.forEach(selector => {
-    const table = document.querySelector(selector);
-    if (table) {
-      const rows = table.querySelectorAll("tr:not(:first-child)");
-      rows.forEach(row => row.style.display = "");
-      
-      // Remove counter
-      const container = table.closest("[id$='tbl']");
-      const counter = container.querySelector(".filter-counter");
-      if (counter) counter.remove();
-    }
-  });
-  
-  renderLines();
-}
-
-// ================= FILTER UI =================
-function createFilterControls() {
-  const filterHtml = `
-    <div id="filterControls" style="position:fixed;top:10px;right:10px;background:#fff;padding:15px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:1000;border:1px solid #dee2e6;min-width:200px;">
-      <div style="font-weight:bold;margin-bottom:10px;color:#495057;">📊 Filter Minimum</div>
-      <div style="display:flex;align-items:center;margin-bottom:10px;">
-        <input type="range" id="filterThreshold" min="0" max="100" value="0" style="flex:1;">
-        <span id="thresholdValue" style="margin-left:10px;font-weight:bold;color:#0d6efd;font-size:14px;min-width:30px;">0</span>
-      </div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;">
-        <button onclick="setFilterThreshold(0)" class="btn btn-outline-primary btn-sm" style="flex:1;">All</button>
-        <button onclick="setFilterThreshold(1)" class="btn btn-outline-success btn-sm" style="flex:1;">≥1</button>
-        <button onclick="setFilterThreshold(5)" class="btn btn-outline-warning btn-sm" style="flex:1;">≥5</button>
-        <button onclick="setFilterThreshold(10)" class="btn btn-outline-info btn-sm" style="flex:1;">≥10</button>
-        <br>
-        <button onclick="clearAllFilters()" class="btn btn-danger btn-sm" style="flex:1;margin-top:5px;">Clear All</button>
-      </div>
-    </div>
-  `;
-  
-  if (!document.getElementById("filterControls")) {
-    document.body.insertAdjacentHTML("beforeend", filterHtml);
-    
-    // Event listener untuk slider
-    const slider = document.getElementById("filterThreshold");
-    const valueSpan = document.getElementById("thresholdValue");
-    
-    slider.oninput = function() {
-      valueSpan.textContent = this.value;
-      setFilterThreshold(this.value);
-    };
-  }
-}
 
 // ================= LOAD DATA =================
 async function loadIndihomeData() {
@@ -154,14 +32,9 @@ async function loadIndihomeData() {
     updateHSATableWithModal(data);
     updateKendalaNonTeknik(data);
     updateKesimpulan(data);
-    
-    // Apply filters setelah semua tabel diupdate
-    setTimeout(() => {
-      applyFilters(data);
-      renderLines();
-    }, 100);
 
     showLoading(false);
+    renderLines();
 
   } catch (err) {
     console.error("Fetch error:", err);
@@ -194,6 +67,7 @@ function updateHeader(data) {
 
 /* ================= BOX ================= */
 function updateBoxes(data) {
+
   const cards = data.cards || {};
 
   // ambil nilai dari sheet WEB
@@ -207,6 +81,7 @@ function updateBoxes(data) {
   const psEnd  = cards["PS END STATE"]?.nilai || 0;
   const ogpEnd = cards["OGP TARIK PS END STATE"]?.nilai || 0;
 
+  
   const pWo     = cards["WO PSB"]?.persen || "0%";
   const pSisa   = cards["SISA PROGRES"]?.persen || "0%";
   const pSudah  = cards["SUDAH PROGRES"]?.persen || "0%";
@@ -215,10 +90,11 @@ function updateBoxes(data) {
   const pSukses = cards["SUKSES"]?.persen || "0%";
   const pGagal  = cards["GAGALTARIK"]?.persen || "0%";
   const pPsEnd  = cards["PS END STATE"]?.persen || "0%";
-  const pOgpEnd = cards["OGP TARIK PS END STATE"]?.persen || "0%";
+const pOgpEnd = cards["OGP TARIK PS END STATE"]?.persen || "0%";
 
   // isi card (nilai + persen langsung dari sheet)
   setBox("wo", wo);
+
   setBoxValuePercent("sisa", sisa, pSisa);
   setBoxValuePercent("sudah", sudah, pSudah);
   setBoxValuePercent("manja", manja, pManja);
@@ -238,10 +114,12 @@ function setBoxValuePercent(id, value, percentText) {
 
   let percentFormatted = percentText;
 
+  // jika percent berupa number (0.259887...) ubah ke 25.99%
   if (typeof percentText === "number") {
     percentFormatted = (percentText * 100).toFixed(2) + "%";
   }
 
+  // jika string tapi tanpa %
   if (typeof percentText === "string" && !percentText.includes("%")) {
     const num = parseFloat(percentText);
     if (!isNaN(num)) {
@@ -281,7 +159,7 @@ function updateClusterTable(data) {
   table.innerHTML = html;
 }
 
-/* ================= TABLE MANJA ================= */
+/* ================= TABLE MANJA (DARI SHEET WEB A18:F21) ================= */
 function updateManjaTable(data) {
   const table = document.querySelector("#tblManja table");
   if (!table) return;
@@ -314,7 +192,6 @@ function updateManjaTable(data) {
 
   table.innerHTML = html;
 }
-
 /* ================= TABLE HSA ================= */
 function updateHSATable(data) {
   const tbody = document.querySelector("#tblHSA table tbody");
@@ -398,7 +275,7 @@ function positionTablesBelowCards() {
   tblTeknik.style.top = (bottomNonTeknik + 20) + "px";
   tblTeknik.style.left = tblNonTeknik.style.left;
 
-  /* ==== KESIMPULAN BOX ==== */
+  /* ==== KESIMPULAN BOX (DI BAWAH TBL TEKNIK) ==== */
   const bottomTeknik = tblTeknik.offsetTop + tblTeknik.offsetHeight;
 
   kesimpulanBox.style.position = "absolute";
@@ -435,7 +312,8 @@ function updateKendalaNonTeknik(data) {
       <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.total}</td>
     </tr>
   `;
-  });
+});
+
 
   table.innerHTML = html;
 
@@ -470,7 +348,7 @@ function updateKendalaTeknisTable(data) {
       <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="TOTAL">${row.total || 0}</td>
     </tr>
   `;
-  });
+});
 
   table.innerHTML = html;
 
@@ -523,6 +401,7 @@ function drawTableLines() {
   const svg = document.getElementById("tree-lines");
   if (!svg) return;
 
+  // hapus dulu garis lama card->table
   svg.querySelectorAll(".card-table-line").forEach(line => line.remove());
 
   function drawLine(cardId, tableId) {
@@ -536,19 +415,42 @@ function drawTableLines() {
 
   let x1, y1, x2, y2, d;
 
+  // ================= KHUSUS GAGAL → KENDALA (GARIS LURUS) =================
   if (cardId === "gagal") {
+
+    // titik awal: tengah bawah card gagal
     x1 = cardRect.left + cardRect.width / 2 - parent.left;
     y1 = cardRect.bottom - parent.top;
+
+    // titik akhir: tengah atas tabel kendala
     x2 = tableRect.left + tableRect.width / 2 - parent.left;
     y2 = tableRect.top - parent.top;
-    d = `M ${x1} ${y1} L ${x2} ${y2}`;
-  } else {
+
+    // garis lurus
+    d = `
+      M ${x1} ${y1}
+      L ${x2} ${y2}
+    `;
+  }
+  // ================= GARIS CARD LAIN (BELAKU SEPERTI BIASA) =================
+  else {
+
+    // titik awal: sisi kiri tengah card
     x1 = cardRect.left - parent.left;
     y1 = cardRect.top + cardRect.height / 2 - parent.top;
+
+    // titik akhir: sisi kiri tengah tabel
     x2 = tableRect.left - parent.left;
     y2 = tableRect.top + tableRect.height / 2 - parent.top;
+
     const midX = x1 - 40;
-    d = `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${y2} L ${x2} ${y2}`;
+
+    d = `
+      M ${x1} ${y1}
+      L ${midX} ${y1}
+      L ${midX} ${y2}
+      L ${x2} ${y2}
+    `;
   }
 
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -560,11 +462,14 @@ function drawTableLines() {
   path.setAttribute("stroke-linejoin", "round");
   path.classList.add("card-table-line");
 
-  svg.appendChild(path);
+  document.getElementById("tree-lines").appendChild(path);
 }
 
+  // normal (samping)
   drawLine("sisa", "tblSisa");
   drawLine("manja", "tblManja");
+
+  // khusus dari bawah
   drawLine("gagal", "tblNonTeknik");
 }
 
@@ -579,6 +484,7 @@ function renderLines() {
 window.addEventListener("resize", renderLines);
 
 /* ================= MODAL DETAIL ================= */
+
 function openModal() {
   const modal = document.getElementById("modalDetail");
   if (!modal) return;
@@ -591,27 +497,34 @@ function closeModal() {
   modal.style.display = "none";
 }
 
+// klik luar modal untuk tutup
 window.addEventListener("click", function (e) {
   const modal = document.getElementById("modalDetail");
   if (!modal) return;
   if (e.target === modal) modal.style.display = "none";
 });
 
+
+/* ================= SHOW MODAL BASED ON HITUNGAN ================= */
 async function showHSADetail(sto, type) {
   const modal = document.getElementById("modalDetail");
   const tbody = modal.querySelector("#modalTable tbody");
   if (!modal || !tbody) return;
 
+  // sekarang colspan = 8 (karena ada kolom NO)
   tbody.innerHTML = `<tr><td colspan="8">Loading...</td></tr>`;
   openModal();
 
   try {
-    const url = `${window.API_URL}?action=getwohi&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(type)}`;
+    const url = `${API_URL}?action=getwohi&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(type)}`;
     const res = await fetch(url);
     const data = await res.json();
 
     if (!data || data.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8">Tidak ada data ${type} untuk STO ${sto}</td></tr>`;
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="8">Tidak ada data ${type} untuk STO ${sto}</td>
+        </tr>`;
       return;
     }
 
@@ -634,6 +547,7 @@ async function showHSADetail(sto, type) {
   }
 }
 
+/* ================= SHOW MODAL KENDALA ================= */
 async function showKendalaDetail(type, detail, cluster) {
   const modal = document.getElementById("modalDetail");
   const tbody = modal.querySelector("#modalTable tbody");
@@ -643,7 +557,7 @@ async function showKendalaDetail(type, detail, cluster) {
   openModal();
 
   try {
-    let url = `${window.API_URL}?action=getkendala&type=${encodeURIComponent(type)}&detail=${encodeURIComponent(detail)}`;
+    let url = `${API_URL}?action=getkendala&type=${encodeURIComponent(type)}&detail=${encodeURIComponent(detail)}`;
 
     if (cluster) {
       url += `&cluster=${encodeURIComponent(cluster)}`;
@@ -653,7 +567,10 @@ async function showKendalaDetail(type, detail, cluster) {
     const data = await res.json();
 
     if (!data || data.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8">Tidak ada data kendala</td></tr>`;
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="8">Tidak ada data kendala</td>
+        </tr>`;
       return;
     }
 
@@ -695,6 +612,7 @@ function bindHSAClicks() {
   });
 }
 
+// panggil ini setelah updateHSATable(data)
 function updateHSATableWithModal(data) {
   updateHSATable(data);
   bindHSAClicks();
@@ -718,6 +636,7 @@ function bindKendalaClicks() {
 }
 
 function updateKesimpulan(data) {
+
   const wo     = data.cards["WO PSB"]?.nilai || 0;
   const sisa   = data.cards["SISA PROGRES"]?.nilai || 0;
   const pSisaRaw = data.cards["SISA PROGRES"]?.persen || 0;
@@ -725,6 +644,7 @@ function updateKesimpulan(data) {
   const sukses = data.cards["SUKSES"]?.nilai || 0;
   const gagal  = data.cards["GAGALTARIK"]?.nilai || 0;
 
+  // format persen rapi (2 desimal)
   let pSisa = "0%";
   const num = parseFloat(pSisaRaw);
   if (!isNaN(num)) pSisa = (num * 100).toFixed(2) + "%";
@@ -753,9 +673,5 @@ function updateKesimpulan(data) {
   <small><i style="color:#2c4b6c;">
     * Sumber data: WO HI Spreadsheet HD Fulfillment Branch <b>Tangerang</b>
   </i></small>
-  `;
+`;
 }
-
-// ================= EXPORT FILTER FUNCTIONS =================
-window.setFilterThreshold = setFilterThreshold;
-window.clearAllFilters = clearAllFilters;
