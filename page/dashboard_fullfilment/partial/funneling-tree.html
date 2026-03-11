@@ -1,107 +1,106 @@
 <div class="container-fluid">
 
-<h5 class="mb-4">
-<button class="btn btn-primary">
-<i class="fa fa-project-diagram"></i> FUNNELING ORDER
-</button>
-</h5>
+<div class="card shadow-sm mb-3">
+<div class="card-body">
 
-<!-- FILTER -->
+<div class="row g-2">
 
-<div class="row mb-4">
-
-<div class="col-md-3">
+<div class="col-md-2">
 <label>HSA</label>
-<select id="filterHSA" class="form-select">
+<select id="filterHSA" class="form-control">
 <option value="">ALL</option>
 </select>
 </div>
 
-<div class="col-md-3">
+<div class="col-md-2">
 <label>STO</label>
-<select id="filterSTO" class="form-select">
+<select id="filterSTO" class="form-control">
 <option value="">ALL</option>
 </select>
 </div>
 
-<div class="col-md-3">
+<div class="col-md-2">
 <label>Start Date</label>
 <input type="date" id="startDate" class="form-control">
 </div>
 
-<div class="col-md-3">
+<div class="col-md-2">
 <label>End Date</label>
 <input type="date" id="endDate" class="form-control">
 </div>
 
-<div class="col-md-12 mt-3">
-<button class="btn btn-success" onclick="applyFilter()">
-Apply Filter
+<div class="col-md-2 d-flex align-items-end">
+<button class="btn btn-primary w-100" id="btnFilter">
+<i class="fa fa-search"></i> Filter
 </button>
 </div>
 
 </div>
 
-<!-- SVG DIAGRAM -->
+</div>
+</div>
 
-<div style="overflow:auto">
 
-<svg width="2100" height="1400">
+<div class="card shadow">
+<div class="card-body text-center">
 
-<g>
+<svg width="2000" height="1400">
 
-<text x="180" y="345" font-size="33" font-weight="700" text-anchor="middle">INPUT ORDER</text>
-<text id="angka000" x="180" y="444" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<g font-family="Tahoma" font-weight="700" text-anchor="middle">
 
-<text x="620" y="227" font-size="33" font-weight="700" text-anchor="middle">PI</text>
-<text id="angka001" x="620" y="326" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<!-- INPUT ORDER -->
+<text x="180" y="340" font-size="33">INPUT ORDER</text>
+<text id="angka000" x="180" y="430" font-size="32" cursor="pointer">0</text>
 
-<text x="620" y="517" font-size="33" font-weight="700" text-anchor="middle">WAPPR</text>
-<text id="angka002" x="620" y="616" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<!-- PI -->
+<text x="620" y="230" font-size="33">PI</text>
+<text id="angka001" x="620" y="320" font-size="32">0</text>
 
-<text x="1060" y="85" font-size="33" font-weight="700" text-anchor="middle">STARTWORK</text>
-<text id="angka003" x="1060" y="184" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<!-- WAPPR -->
+<text x="620" y="520" font-size="33">WAPPR</text>
+<text id="angka002" x="620" y="610" font-size="32">0</text>
 
-<text x="1060" y="375" font-size="33" font-weight="700" text-anchor="middle">INPROGRESS</text>
-<text id="angka004" x="1060" y="469" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<!-- STARTWORK -->
+<text x="1060" y="90" font-size="33">STARTWORK</text>
+<text id="angka003" x="1060" y="180" font-size="32">0</text>
 
-<text x="1060" y="665" font-size="33" font-weight="700" text-anchor="middle">COMPWORK</text>
-<text id="angka005" x="1060" y="759" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<!-- INPROGRESS -->
+<text x="1060" y="380" font-size="33">INPROGRESS</text>
+<text id="angka004" x="1060" y="470" font-size="32">0</text>
 
-<text x="1060" y="955" font-size="33" font-weight="700" text-anchor="middle">CANCEL</text>
-<text id="angka006" x="1060" y="1049" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<!-- COMPWORK -->
+<text x="1060" y="670" font-size="33">COMPWORK</text>
+<text id="angka005" x="1060" y="760" font-size="32">0</text>
 
-<text x="1500" y="38" font-size="33" font-weight="700" text-anchor="middle">WORKFAIL</text>
-<text id="angka007" x="1500" y="132" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<!-- CANCEL -->
+<text x="1060" y="960" font-size="33">CANCEL</text>
+<text id="angka006" x="1060" y="1050" font-size="32">0</text>
 
-<text x="1500" y="375" font-size="33" font-weight="700" text-anchor="middle">PENDWORK</text>
-<text id="angka008" x="1500" y="469" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<!-- WORKFAIL -->
+<text x="1500" y="40" font-size="33">WORKFAIL</text>
+<text id="angka007" x="1500" y="130" font-size="32">0</text>
 
-<text x="1500" y="665" font-size="33" font-weight="700" text-anchor="middle">CONTWORK</text>
-<text id="angka009" x="1500" y="759" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<!-- PENDWORK -->
+<text x="1500" y="380" font-size="33">PENDWORK</text>
+<text id="angka008" x="1500" y="470" font-size="32">0</text>
 
-<text x="1500" y="955" font-size="33" font-weight="700" text-anchor="middle">INSTCOMP</text>
-<text id="angka010" x="1500" y="1049" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<!-- CONTWORK -->
+<text x="1500" y="670" font-size="33">CONTWORK</text>
+<text id="angka009" x="1500" y="760" font-size="32">0</text>
 
-<text x="1500" y="1241" font-size="33" font-weight="700" text-anchor="middle">PROGRESS to PS</text>
-<text id="angka011" x="1500" y="1334" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<!-- INSTCOMP -->
+<text x="1500" y="960" font-size="33">INSTCOMP</text>
+<text id="angka010" x="1500" y="1050" font-size="32">0</text>
 
-<text x="1940" y="38" font-size="33" font-weight="700" text-anchor="middle">KDL PLGN</text>
-<text id="angka012" x="1940" y="132" font-size="32" font-weight="700" text-anchor="middle">0</text>
-
-<text x="1940" y="328" font-size="33" font-weight="700" text-anchor="middle">KDL TEKNIK</text>
-<text id="angka013" x="1940" y="420" font-size="32" font-weight="700" text-anchor="middle">0</text>
-
-<text x="1940" y="618" font-size="33" font-weight="700" text-anchor="middle">KDL SISTEM</text>
-<text id="angka014" x="1940" y="712" font-size="32" font-weight="700" text-anchor="middle">0</text>
-
-<text x="1940" y="908" font-size="33" font-weight="700" text-anchor="middle">KDL LAINNYA</text>
-<text id="angka015" x="1940" y="1002" font-size="32" font-weight="700" text-anchor="middle">0</text>
+<!-- PROGRESS PS -->
+<text x="1500" y="1240" font-size="33">PROGRESS to PS</text>
+<text id="angka011" x="1500" y="1330" font-size="32">0</text>
 
 </g>
 
 </svg>
 
+</div>
 </div>
 
 </div>
