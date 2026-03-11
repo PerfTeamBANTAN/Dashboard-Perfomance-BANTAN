@@ -100,34 +100,33 @@ console.log("ERROR LOAD FUNNEL",e);
 
 function renderFunnel(data){
 
-if(!data.cards){
-console.warn("DATA CARDS TIDAK ADA");
-return;
-}
+if(!data.cards) return;
 
 const c = data.cards;
 
-update("angka000", c["WO PSB"] || 0);
-update("angka001", c["SUDAH PROGRES"] || 0);
-update("angka002", c["SISA PROGRES"] || 0);
-update("angka003", c["MANJA HI EXP"] || 0);
-update("angka004", c["MANJA H+ & NON MANJA"] || 0);
-update("angka005", c["SUKSES"] || 0);
-update("angka006", c["GAGALTARIK"] || 0);
-update("angka007", c["PS END STATE"] || 0);
-update("angka008", c["OGP TARIK PS END STATE"] || 0);
+setVal("angka000", c["WO PSB"]);
+setVal("angka001", c["SUDAH PROGRES"]);
+setVal("angka002", c["SISA PROGRES"]);
+setVal("angka003", c["MANJA HI EXP"]);
+setVal("angka004", c["MANJA H+ & NON MANJA"]);
+setVal("angka005", c["SUKSES"]);
+setVal("angka006", c["GAGALTARIK"]);
+setVal("angka007", c["PS END STATE"]);
+setVal("angka008", c["OGP TARIK PS END STATE"]);
 
 }
 
 
 
-function update(id,val){
+function setVal(id,obj){
+
+const val = obj?.nilai || 0;
 
 const el = document.getElementById(id);
 
 if(!el) return;
 
-animateNumber(el,parseInt(val||0));
+animateNumber(el,val);
 
 }
 
@@ -137,13 +136,13 @@ function animateNumber(el,target){
 
 let start = 0;
 
-const step = target / 20;
+const step = target/20;
 
 const timer = setInterval(()=>{
 
 start += step;
 
-if(start >= target){
+if(start>=target){
 
 el.innerText = target.toLocaleString();
 clearInterval(timer);
