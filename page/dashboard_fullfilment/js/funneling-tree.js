@@ -1,49 +1,102 @@
-let API_URL="";
+let API_URL = "";
 
 function initFunnelingTree(api){
 
-API_URL=api;
+API_URL = api;
+
+loadFilterOptions();
 
 document
 .getElementById("btnFilter")
 .addEventListener("click",loadData);
 
-loadFilterOptions();
 loadData();
 
 setInterval(loadData,30000);
 
 }
 
-async function loadData(){
 
-const hsa=document.getElementById("filterHSA").value;
-const sto=document.getElementById("filterSTO").value;
-const start=document.getElementById("startDate").value;
-const end=document.getElementById("endDate").value;
 
-const url=
-API_URL
-+"?action=funnelingtree"
-+"&hsa="+encodeURIComponent(hsa)
-+"&sto="+encodeURIComponent(sto)
-+"&start="+start
-+"&end="+end;
+async function loadFilterOptions(){
 
 try{
 
-const res=await fetch(url);
-const data=await res.json();
+const res = await fetch(API_URL+"?action=getfunnelingtree");
+const data = await res.json();
+
+const hsaSelect = document.getElementById("filterHSA");
+const stoSelect = document.getElementById("filterSTO");
+
+if(data.hsaList){
+
+data.hsaList.forEach(h=>{
+
+const opt = document.createElement("option");
+opt.value = h;
+opt.textContent = h;
+
+hsaSelect.appendChild(opt);
+
+});
+
+}
+
+if(data.stoList){
+
+data.stoList.forEach(s=>{
+
+const opt = document.createElement("option");
+opt.value = s;
+opt.textContent = s;
+
+stoSelect.appendChild(opt);
+
+});
+
+}
+
+}catch(e){
+
+console.log("ERROR LOAD FILTER",e);
+
+}
+
+}
+
+
+
+async function loadData(){
+
+const hsa = document.getElementById("filterHSA").value;
+const sto = document.getElementById("filterSTO").value;
+const start = document.getElementById("startDate").value;
+const end = document.getElementById("endDate").value;
+
+const url =
+API_URL
++"?action=getfunnelingtree"
++"&hsa="+encodeURIComponent(hsa)
++"&sto="+encodeURIComponent(sto)
++"&start="+encodeURIComponent(start)
++"&end="+encodeURIComponent(end);
+
+try{
+
+const res = await fetch(url);
+const data = await res.json();
 
 renderFunnel(data);
 
 }catch(e){
 
-console.log("ERROR LOAD DATA",e);
+console.log("ERROR LOAD FUNNEL",e);
 
 }
 
 }
+
+
 
 function renderFunnel(data){
 
@@ -70,69 +123,41 @@ update("angka015",data.KDL_LAINNYA);
 
 }
 
+
+
 function update(id,val){
 
-const el=document.getElementById(id);
+const el = document.getElementById(id);
 
-if(!el)return;
+if(!el) return;
 
 animateNumber(el,parseInt(val||0));
 
 }
 
+
+
 function animateNumber(el,target){
 
-let start=0;
+let start = 0;
 
-const step=Math.max(target/20,1);
+const step = target / 20;
 
-const timer=setInterval(()=>{
+const timer = setInterval(()=>{
 
-start+=step;
+start += step;
 
-if(start>=target){
+if(start >= target){
 
-el.innerText=target.toLocaleString();
+el.innerText = target.toLocaleString();
 clearInterval(timer);
 
 }else{
 
-el.innerText=Math.floor(start).toLocaleString();
+el.innerText = Math.floor(start);
 
 }
 
 },20);
-
-}
-
-async function loadFilterOptions(){
-
-try{
-
-const res=await fetch(API_URL+"?action=filter");
-const data=await res.json();
-
-const hsaSelect=document.getElementById("filterHSA");
-const stoSelect=document.getElementById("filterSTO");
-
-data.hsa.forEach(v=>{
-const opt=document.createElement("option");
-opt.value=v;
-opt.text=v;
-hsaSelect.appendChild(opt);
-});
-
-data.sto.forEach(v=>{
-const opt=document.createElement("option");
-opt.value=v;
-opt.text=v;
-stoSelect.appendChild(opt);
-});
-
-}catch(e){
-
-console.log("ERROR LOAD FILTER",e);
-
-}
 
 }
