@@ -1,217 +1,104 @@
-let API_URL = "";
-let rawData = [];
+let API_URL="";
 
 function initFunnelingTree(api){
-API_URL = api;
-loadData();
-startAutoRefresh();
-}
 
-/* =========================
-LOAD DATA
-========================= */
+API_URL=api;
+
+document
+.getElementById("btnFilter")
+.addEventListener("click",loadData);
+
+loadData();
+
+setInterval(loadData,30000);
+
+}
 
 async function loadData(){
 
+const hsa=document.getElementById("filterHSA").value;
+const sto=document.getElementById("filterSTO").value;
+const start=document.getElementById("startDate").value;
+const end=document.getElementById("endDate").value;
+
+const url=API_URL
++"?action=funneling"
++"&hsa="+hsa
++"&sto="+sto
++"&start="+start
++"&end="+end;
+
 try{
 
-const res = await fetch(API_URL + "?sheet=funneling");
-const data = await res.json();
+const res=await fetch(url);
+const data=await res.json();
 
-rawData = data;
+renderFunnel(data);
 
-populateFilter(data);
+}catch(e){
 
-renderDiagram(data);
-
-}catch(err){
-
-console.error("API ERROR",err);
+console.log(e);
 
 }
 
 }
 
-/* =========================
-AUTO REFRESH
-========================= */
 
-function startAutoRefresh(){
+function renderFunnel(data){
 
-setInterval(()=>{
+update("angka000",data.INPUT_ORDER);
+update("angka001",data.PI);
+update("angka002",data.WAPPR);
+update("angka003",data.STARTWORK);
+update("angka004",data.INPROGRESS);
+update("angka005",data.COMPWORK);
+update("angka006",data.CANCEL);
+update("angka007",data.WORKFAIL);
+update("angka008",data.PENDWORK);
+update("angka009",data.CONTWORK);
+update("angka010",data.INSTCOMP);
+update("angka011",data.PROGRESS_PS);
 
-applyFilter();
-
-},30000);
-
-}
-
-/* =========================
-FILTER DROPDOWN
-========================= */
-
-function populateFilter(data){
-
-const hsa = [...new Set(data.map(x=>x.HSA))];
-const sto = [...new Set(data.map(x=>x.STO))];
-
-const hsaSelect = document.getElementById("filterHSA");
-const stoSelect = document.getElementById("filterSTO");
-
-hsa.forEach(v=>{
-if(v){
-hsaSelect.innerHTML += `<option>${v}</option>`;
-}
-});
-
-sto.forEach(v=>{
-if(v){
-stoSelect.innerHTML += `<option>${v}</option>`;
-}
-});
+update("angka012",data.KDL_PLGN);
+update("angka013",data.KDL_TEKNIK);
+update("angka014",data.KDL_SISTEM);
+update("angka015",data.KDL_LAINNYA);
 
 }
 
-/* =========================
-APPLY FILTER
-========================= */
 
-function applyFilter(){
-
-let data = [...rawData];
-
-const hsa = document.getElementById("filterHSA").value;
-const sto = document.getElementById("filterSTO").value;
-const start = document.getElementById("startDate").value;
-const end = document.getElementById("endDate").value;
-
-if(hsa)
-data = data.filter(x=>x.HSA===hsa);
-
-if(sto)
-data = data.filter(x=>x.STO===sto);
-
-if(start)
-data = data.filter(x=> new Date(x.TGL_CREATE)>=new Date(start));
-
-if(end)
-data = data.filter(x=> new Date(x.TGL_CREATE)<=new Date(end));
-
-renderDiagram(data);
-
-}
-
-/* =========================
-RENDER DIAGRAM
-========================= */
-
-function renderDiagram(data){
-
-const count = s => data.filter(x=>x.STATUS===s).length;
-
-const total = data.length;
-
-const result = {
-
-pi:count("PI"),
-wappr:count("WAPPR"),
-startwork:count("STARTWORK"),
-inprogress:count("INPROGRESS"),
-compwork:count("COMPWORK"),
-cancel:count("CANCLWORK"),
-
-workfail:count("WORKFAIL"),
-pendwork:count("PENDWORK"),
-contwork:count("CONTWORK"),
-instcomp:count("INSTCOMP"),
-progressps:count("PROGRESS TO PS"),
-
-kdlplgn:count("KDL PLGN"),
-kdlteknik:count("KDL TEKNIK"),
-kdlsistem:count("KDL SISTEM"),
-kdllain:count("KDL LAINNYA")
-
-};
-
-/* UPDATE SVG */
-
-setVal("angka000",total);
-setVal("angka001",result.pi);
-setVal("angka002",result.wappr);
-setVal("angka003",result.startwork);
-setVal("angka004",result.inprogress);
-setVal("angka005",result.compwork);
-setVal("angka006",result.cancel);
-
-setVal("angka007",result.workfail);
-setVal("angka008",result.pendwork);
-setVal("angka009",result.contwork);
-setVal("angka010",result.instcomp);
-setVal("angka011",result.progressps);
-
-setVal("angka012",result.kdlplgn);
-setVal("angka013",result.kdlteknik);
-setVal("angka014",result.kdlsistem);
-setVal("angka015",result.kdllain);
-
-/* COLOR STATUS */
-
-colorStatus("angka005"); // success
-colorStatus("angka006"); // cancel
-colorStatus("angka007"); // fail
-
-}
-
-/* =========================
-SET SVG VALUE
-========================= */
-
-function setVal(id,val){
+function update(id,val){
 
 const el=document.getElementById(id);
 
-if(el){
+if(!el)return;
 
-el.textContent = val.toLocaleString();
-
-}
+animateNumber(el,parseInt(val||0));
 
 }
 
-/* =========================
-STATUS COLOR
-========================= */
 
-function colorStatus(id){
+function animateNumber(el,target){
 
-const el=document.getElementById(id);
+let start=0;
 
-if(!el) return;
+const step=target/20;
 
-const val=parseInt(el.textContent.replace(/,/g,""));
+const timer=setInterval(()=>{
 
-if(val>0){
+start+=step;
 
-el.style.fill="#d32f2f";
+if(start>=target){
+
+el.innerText=target.toLocaleString();
+clearInterval(timer);
 
 }else{
 
-el.style.fill="#2e7d32";
+el.innerText=Math.floor(start);
 
 }
 
-}
-
-/* =========================
-CLICK EVENT DETAIL
-========================= */
-
-document.addEventListener("click",function(e){
-
-if(e.target.id.startsWith("angka")){
-
-alert("Open Detail Order : "+e.target.id);
+},20);
 
 }
-
-});
