@@ -8,6 +8,7 @@ document
 .getElementById("btnFilter")
 .addEventListener("click",loadData);
 
+loadFilterOptions();
 loadData();
 
 setInterval(loadData,30000);
@@ -21,10 +22,11 @@ const sto=document.getElementById("filterSTO").value;
 const start=document.getElementById("startDate").value;
 const end=document.getElementById("endDate").value;
 
-const url=API_URL
-+"?action=funneling"
-+"&hsa="+hsa
-+"&sto="+sto
+const url=
+API_URL
++"?action=funnelingtree"
++"&hsa="+encodeURIComponent(hsa)
++"&sto="+encodeURIComponent(sto)
 +"&start="+start
 +"&end="+end;
 
@@ -37,26 +39,28 @@ renderFunnel(data);
 
 }catch(e){
 
-console.log(e);
+console.log("ERROR LOAD DATA",e);
 
 }
 
 }
-
 
 function renderFunnel(data){
 
 update("angka000",data.INPUT_ORDER);
 update("angka001",data.PI);
 update("angka002",data.WAPPR);
+
 update("angka003",data.STARTWORK);
 update("angka004",data.INPROGRESS);
 update("angka005",data.COMPWORK);
 update("angka006",data.CANCEL);
+
 update("angka007",data.WORKFAIL);
 update("angka008",data.PENDWORK);
 update("angka009",data.CONTWORK);
 update("angka010",data.INSTCOMP);
+
 update("angka011",data.PROGRESS_PS);
 
 update("angka012",data.KDL_PLGN);
@@ -65,7 +69,6 @@ update("angka014",data.KDL_SISTEM);
 update("angka015",data.KDL_LAINNYA);
 
 }
-
 
 function update(id,val){
 
@@ -77,12 +80,11 @@ animateNumber(el,parseInt(val||0));
 
 }
 
-
 function animateNumber(el,target){
 
 let start=0;
 
-const step=target/20;
+const step=Math.max(target/20,1);
 
 const timer=setInterval(()=>{
 
@@ -95,10 +97,42 @@ clearInterval(timer);
 
 }else{
 
-el.innerText=Math.floor(start);
+el.innerText=Math.floor(start).toLocaleString();
 
 }
 
 },20);
+
+}
+
+async function loadFilterOptions(){
+
+try{
+
+const res=await fetch(API_URL+"?action=filter");
+const data=await res.json();
+
+const hsaSelect=document.getElementById("filterHSA");
+const stoSelect=document.getElementById("filterSTO");
+
+data.hsa.forEach(v=>{
+const opt=document.createElement("option");
+opt.value=v;
+opt.text=v;
+hsaSelect.appendChild(opt);
+});
+
+data.sto.forEach(v=>{
+const opt=document.createElement("option");
+opt.value=v;
+opt.text=v;
+stoSelect.appendChild(opt);
+});
+
+}catch(e){
+
+console.log("ERROR LOAD FILTER",e);
+
+}
 
 }
