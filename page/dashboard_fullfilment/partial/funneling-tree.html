@@ -1,65 +1,102 @@
 <div class="container-fluid">
 
-<h4 class="mb-4">
-<i class="fa fa-project-diagram"></i> Funneling Order Monitoring
-</h4>
+<h5 class="mb-4">
+<button class="btn btn-primary">
+<i class="fa fa-project-diagram"></i> FUNNELING ORDER
+</button>
+</h5>
 
-<div class="tree-wrapper">
+<!-- FILTER AREA -->
 
-<div class="tree">
+<div class="card shadow-sm mb-4">
+<div class="card-body">
 
-<div class="node root">
-TOTAL ORDER
-<div class="count" id="totalOrder">0</div>
+<div class="row">
+
+<div class="col-md-3">
+<label class="form-label">HSA</label>
+<select id="filterHSA" class="form-select">
+<option value="">ALL HSA</option>
+</select>
 </div>
 
-<div class="branch">
-
-<div class="node survey">
-SURVEY
-<div class="count" id="surveyCount">0</div>
+<div class="col-md-3">
+<label class="form-label">STO</label>
+<select id="filterSTO" class="form-select">
+<option value="">ALL STO</option>
+</select>
 </div>
 
-<div class="node install">
-INSTALL
-<div class="count" id="installCount">0</div>
+<div class="col-md-3">
+<label class="form-label">Start Date</label>
+<input type="date" id="startDate" class="form-control">
 </div>
 
-<div class="node complete">
-COMPLETE
+<div class="col-md-3">
+<label class="form-label">End Date</label>
+<input type="date" id="endDate" class="form-control">
+</div>
+
+</div>
+
+<div class="row mt-3">
+
+<div class="col-md-12 text-end">
+<button class="btn btn-success" onclick="applyFilter()">
+<i class="fa fa-filter"></i> Apply Filter
+</button>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<!-- DIAGRAM AREA -->
+
+<div class="card shadow-sm">
+<div class="card-body">
+
+<div id="funnel-container">
+
+<div class="node purple" id="input">
+INPUT ORDER
+<div class="count" id="inputCount">0</div>
+</div>
+
+<div class="node yellow" id="pi">
+PI
+<div class="count" id="piCount">0</div>
+</div>
+
+<div class="node yellow" id="startwork">
+STARTWORK
+<div class="count" id="startCount">0</div>
+</div>
+
+<div class="node blue" id="inprogress">
+INPROGRESS
+<div class="count" id="progressCount">0</div>
+</div>
+
+<div class="node green" id="complete">
+COMPWORK
 <div class="count" id="completeCount">0</div>
 </div>
 
-<div class="node cancel">
+<div class="node red" id="cancel">
 CANCEL
 <div class="count" id="cancelCount">0</div>
 </div>
 
+<div class="node orange" id="workfail">
+WORKFAIL
+<div class="count" id="failCount">0</div>
 </div>
 
 </div>
 
 </div>
-
-<div class="table-responsive mt-4">
-
-<table class="table table-sm table-striped" id="funnelingTable">
-
-<thead class="table-dark">
-<tr>
-<th>WONUM</th>
-<th>DATEL</th>
-<th>STO</th>
-<th>CUSTOMER</th>
-<th>PACKAGE</th>
-<th>STATUS</th>
-</tr>
-</thead>
-
-<tbody></tbody>
-
-</table>
-
 </div>
 
 </div>
