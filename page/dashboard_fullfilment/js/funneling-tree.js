@@ -100,26 +100,22 @@ console.log("ERROR LOAD FUNNEL",e);
 
 function renderFunnel(data){
 
-update("angka000",data.INPUT_ORDER);
-update("angka001",data.PI);
-update("angka002",data.WAPPR);
+if(!data.cards){
+console.warn("DATA CARDS TIDAK ADA");
+return;
+}
 
-update("angka003",data.STARTWORK);
-update("angka004",data.INPROGRESS);
-update("angka005",data.COMPWORK);
-update("angka006",data.CANCEL);
+const c = data.cards;
 
-update("angka007",data.WORKFAIL);
-update("angka008",data.PENDWORK);
-update("angka009",data.CONTWORK);
-update("angka010",data.INSTCOMP);
-
-update("angka011",data.PROGRESS_PS);
-
-update("angka012",data.KDL_PLGN);
-update("angka013",data.KDL_TEKNIK);
-update("angka014",data.KDL_SISTEM);
-update("angka015",data.KDL_LAINNYA);
+update("angka000", c["WO PSB"] || 0);
+update("angka001", c["SUDAH PROGRES"] || 0);
+update("angka002", c["SISA PROGRES"] || 0);
+update("angka003", c["MANJA HI EXP"] || 0);
+update("angka004", c["MANJA H+ & NON MANJA"] || 0);
+update("angka005", c["SUKSES"] || 0);
+update("angka006", c["GAGALTARIK"] || 0);
+update("angka007", c["PS END STATE"] || 0);
+update("angka008", c["OGP TARIK PS END STATE"] || 0);
 
 }
 
