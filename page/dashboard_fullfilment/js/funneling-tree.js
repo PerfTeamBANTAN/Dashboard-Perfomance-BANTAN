@@ -3,6 +3,12 @@ let filtersInitialized = false;
 let lastParams = null;
 let lastData = null;
 
+// detail + pagination + search
+let detailRows = [];
+let detailFilteredRows = [];
+let detailPageSize = 10;
+let detailCurrentPage = 1;
+
 // ========================
 // INIT
 // ========================
@@ -273,7 +279,56 @@ async function loadFunnelDetail(stage) {
   renderDetailTable(stage, json.rows || []);
 }
 
+// ============================
+// DETAIL: RENDER + PAGINATION + SEARCH
+// ============================
 function renderDetailTable(stage, rows) {
+  // simpan ke global
+  detailRows = rows || [];
+  detailFilteredRows = detailRows.slice(); // awalnya tanpa filter
+  detailCurrentPage = 1;
+
+  const titleEl = document.getElementById('detailTitle');
+  if (titleEl) {
+    titleEl.textContent = `Detail ${stage} (${detailRows.length} row)`;
+  }
+
+  // reset input search
+  const searchEl = document.getElementById('detailSearchWONUM');
+  if (searchEl) {
+    searchEl.value = '';
+    searchEl.oninput = handleDetailSearch;
+  }
+
+  renderDetailPage();
+  renderDetailPagination();
+
+  const modalEl = document.getElementById('detailModal');
+  if (modalEl && window.bootstrap) {
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+  }
+}
+
+function handleDetailSearch() {
+  const searchEl = document.getElementById('detailSearchWONUM');
+  const keyword = (searchEl?.value || '').trim().toUpperCase();
+
+  if (!keyword) {
+    detailFilteredRows = detailRows.slice();
+  } else {
+    detailFilteredRows = detailRows.filter(r => {
+      const wonum = String(r.WONUM || '').toUpperCase();
+      return wonum.includes(keyword);
+    });
+  }
+
+  detailCurrentPage = 1;
+  renderDetailPage();
+  renderDetailPagination();
+}
+
+function renderDetailPage() {
   const tbody = document.querySelector('#detailTable tbody');
   if (!tbody) {
     console.warn("detailTable tbody tidak ditemukan");
@@ -282,7 +337,20 @@ function renderDetailTable(stage, rows) {
 
   tbody.innerHTML = '';
 
-  rows.forEach(r => {
+  if (!detailFilteredRows || detailFilteredRows.length === 0) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td colspan="11" class="text-center text-muted">Tidak ada data</td>`;
+    tbody.appendChild(tr);
+    const info = document.getElementById('detailInfo');
+    if (info) info.textContent = '0 row';
+    return;
+  }
+
+  const startIndex = (detailCurrentPage - 1) * detailPageSize;
+  const endIndex = Math.min(startIndex + detailPageSize, detailFilteredRows.length);
+  const pageRows = detailFilteredRows.slice(startIndex, endIndex);
+
+  pageRows.forEach(r => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${r.WONUM || ''}</td>
@@ -300,14 +368,59 @@ function renderDetailTable(stage, rows) {
     tbody.appendChild(tr);
   });
 
-  const titleEl = document.getElementById('detailTitle');
-  if (titleEl) {
-    titleEl.textContent = `Detail ${stage} (${rows.length} row)`;
+  const info = document.getElementById('detailInfo');
+  if (info) {
+    info.textContent = `Menampilkan ${startIndex + 1}–${endIndex} dari ${detailFilteredRows.length} row`;
+  }
+}
+
+function renderDetailPagination() {
+  const pagEl = document.getElementById('detailPagination');
+  if (!pagEl) return;
+
+  pagEl.innerHTML = '';
+
+  if (!detailFilteredRows || detailFilteredRows.length === 0) return;
+
+  const totalPages = Math.ceil(detailFilteredRows.length / detailPageSize);
+  if (totalPages <= 1) return;
+
+  const createPageItem = (label, page, disabled = false, active = false) => {
+    const li = document.createElement('li');
+    li.className = 'page-item';
+    if (disabled) li.classList.add('disabled');
+    if (active) li.classList.add('active');
+
+    const a = document.createElement('a');
+    a.className = 'page-link';
+    a.href = '#';
+    a.textContent = label;
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (disabled || page === detailCurrentPage) return;
+      detailCurrentPage = page;
+      renderDetailPage();
+      renderDetailPagination();
+    });
+
+    li.appendChild(a);
+    return li;
+  };
+
+  // Prev
+  pagEl.appendChild(
+    createPageItem('«', Math.max(1, detailCurrentPage - 1), detailCurrentPage === 1)
+  );
+
+  // nomor halaman
+  for (let p = 1; p <= totalPages; p++) {
+    pagEl.appendChild(
+      createPageItem(String(p), p, false, p === detailCurrentPage)
+    );
   }
 
-  const modalEl = document.getElementById('detailModal');
-  if (modalEl && window.bootstrap) {
-    const modal = new bootstrap.Modal(modalEl);
-    modal.show();
-  }
+  // Next
+  pagEl.appendChild(
+    createPageItem('»', Math.min(totalPages, detailCurrentPage + 1), detailCurrentPage === totalPages)
+  );
 }
