@@ -225,7 +225,7 @@
 /* MANJA – di kanan SISA (masih satu baris) */
 #tblManja{
   top: 380px;
-  left: 620px;
+  left: 520px;
 }
 
 /* HSA – tepat di bawah SISA + MANJA (span tengah) */
@@ -238,13 +238,13 @@
 /* KENDALA PELANGGAN – di bawah GAGAL TARIK (kiri) */
 #tblNonTeknik{
   top: 380px;
-  left: 1080px;
+  left: 1020px;
 }
 
 /* KENDALA TEKNIS – di bawah KENDALA PELANGGAN */
 #tblTeknik{
   top: 760px;
-  left: 1080px;
+  left: 1020px;
 }
 
 /* ===================== */
