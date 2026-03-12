@@ -15,11 +15,19 @@ function initFunnelingTree(api) {
 }
 
 function showLoading() {
-  document.getElementById("loadingBox").style.display = "block";
+  const box = document.getElementById("loadingBox");
+  if (box) box.style.display = "block";
+
+  const ls = document.getElementById("loadingSvg");
+  if (ls) ls.style.display = "flex";
 }
 
 function hideLoading() {
-  document.getElementById("loadingBox").style.display = "none";
+  const box = document.getElementById("loadingBox");
+  if (box) box.style.display = "none";
+
+  const ls = document.getElementById("loadingSvg");
+  if (ls) ls.style.display = "none";
 }
 
 async function loadFilterOptions() {
@@ -30,7 +38,7 @@ async function loadFilterOptions() {
     const hsaSelect = document.getElementById("filterHSA");
     const stoSelect = document.getElementById("filterSTO");
 
-    if (data.hsaList) {
+    if (data.hsaList && hsaSelect) {
       data.hsaList.forEach(h => {
         const opt = document.createElement("option");
         opt.value = h;
@@ -39,7 +47,7 @@ async function loadFilterOptions() {
       });
     }
 
-    if (data.stoList) {
+    if (data.stoList && stoSelect) {
       data.stoList.forEach(s => {
         const opt = document.createElement("option");
         opt.value = s;
@@ -90,23 +98,29 @@ function renderFunnel(data) {
   const c = data.cards || {};
   console.log("CARDS:", c);
 
-  update("angka000", c.INPUT_ORDER ?? 0);
-  update("angka001", c.PI ?? 0);
-  update("angka002", c.WAPPR ?? 0);
-  update("angka003", c.STARTWORK ?? 0);
-  update("angka004", c.INPROGRESS ?? 0);
-  update("angka005", c.COMPWORK ?? 0);
-  update("angka006", c.CANCEL ?? 0);
-  update("angka007", c.WORKFAIL ?? 0);
-  update("angka008", c.PENDWORK ?? 0);
-  update("angka009", c.CONTWORK ?? 0);
-  update("angka010", c.INSTCOMP ?? 0);
+  // mapping sesuai struktur cards yang kamu kirim di log:
+  // INPUT_ORDER, PI, WAPPR, STARTWORK, INPROGRESS, COMPWORK, CANCEL,
+  // WORKFAIL, PENDWORK, CONTWORK, INSTCOMP, KDL_PLGN, KDL_TEKNIK, KDL_SISTEM, KDL_LAINNYA
+
+  update("angka000", c.INPUT_ORDER ?? 0);   // INPUT ORDER
+  update("angka001", c.PI ?? 0);           // PI
+  update("angka002", c.WAPPR ?? 0);        // WAPPR
+  update("angka003", c.STARTWORK ?? 0);    // STARTWORK
+  update("angka004", c.INPROGRESS ?? 0);   // INPROGRESS
+  update("angka005", c.COMPWORK ?? 0);     // COMPWORK
+  update("angka006", c.CANCEL ?? 0);       // CANCEL
+  update("angka007", c.WORKFAIL ?? 0);     // WORKFAIL
+  update("angka008", c.PENDWORK ?? 0);     // PENDWORK
+  update("angka009", c.CONTWORK ?? 0);     // CONTWORK
+  update("angka010", c.INSTCOMP ?? 0);     // INSTCOMP
+
+  // sesuaikan nama key progress ke PS kalau ada (misal PROGRESS_PS / PROGRESS_TO_PS)
   update("angka011", c.PROGRESS_PS ?? c.PROGRESS_TO_PS ?? 0);
 
-  update("angka012", c.KDL_PLGN ?? 0);
-  update("angka013", c.KDL_TEKNIK ?? 0);
-  update("angka014", c.KDL_SISTEM ?? 0);
-  update("angka015", c.KDL_LAINNYA ?? 0);
+  update("angka012", c.KDL_PLGN ?? 0);     // KDL PLGN
+  update("angka013", c.KDL_TEKNIK ?? 0);   // KDL TEKNIK
+  update("angka014", c.KDL_SISTEM ?? 0);   // KDL SISTEM
+  update("angka015", c.KDL_LAINNYA ?? 0);  // KDL LAINNYA
 }
 
 function update(id, val) {
@@ -146,4 +160,3 @@ function animateNumber(el, target) {
     }
   }, 20);
 }
-
