@@ -7,8 +7,8 @@ let lastData = null;
 window.refreshTimer = window.refreshTimer || null;
 
 // ================= INIT =================
-function initProgresIndihome(apiUrl) {
-  API_URL = apiUrl;
+function initFunnelingTree(apiUrl) {
+  API_URL = apiUrl + "?action=getfunnelingtree";
 
   const btn = document.getElementById("btnFilter");
   if (btn) {
@@ -21,14 +21,13 @@ function initProgresIndihome(apiUrl) {
   window.refreshTimer = setInterval(loadIndihomeData, 60000);
 }
 
-window.initProgresIndihome = initProgresIndihome;
+window.initFunnelingTree = initFunnelingTree;
 
 // ================= LOAD DATA =================
 async function loadIndihomeData() {
   try {
     showLoading(true);
 
-    // bisa tambahkan filter hsa/sto/start/end kalau endpoint butuh
     const hsaEl = document.getElementById("filterHSA");
     const stoEl = document.getElementById("filterSTO");
     const startEl = document.getElementById("startDate");
@@ -54,7 +53,7 @@ async function loadIndihomeData() {
 
     const url =
       API_URL +
-      "?hsa=" + encodeURIComponent(hsa) +
+      "&hsa=" + encodeURIComponent(hsa) +
       "&sto=" + encodeURIComponent(sto) +
       "&start=" + encodeURIComponent(start) +
       "&end=" + encodeURIComponent(end);
@@ -484,8 +483,7 @@ function drawTableLines() {
 function positionTablesBelowCards() {
   const parent = document.querySelector(".tree-area");
   if (!parent) return;
-  // kalau nanti mau hitung dinamis (pakai offset seperti versi sebelumnya),
-  // bisa isi di sini. Dengan CSS posisi absolut fixed, fungsi ini boleh kosong.
+  // posisi diatur via CSS absolute, fungsi ini disiapkan kalau nanti mau dinamis
 }
 
 // ================= RENDER SEMUA GARIS =================
@@ -526,7 +524,7 @@ async function showHSADetail(sto, type) {
   openModal();
 
   try {
-    const url = `${API_URL}?action=getwohi&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(type)}`;
+    const url = `${API_URL}&action=getwohi&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(type)}`;
     const res = await fetch(url);
     const data = await res.json();
 
@@ -567,7 +565,7 @@ async function showKendalaDetail(type, detail, cluster) {
   openModal();
 
   try {
-    let url = `${API_URL}?action=getkendala&type=${encodeURIComponent(type)}&detail=${encodeURIComponent(detail)}`;
+    let url = `${API_URL}&action=getkendala&type=${encodeURIComponent(type)}&detail=${encodeURIComponent(detail)}`;
     if (cluster) url += `&cluster=${encodeURIComponent(cluster)}`;
 
     const res = await fetch(url);
