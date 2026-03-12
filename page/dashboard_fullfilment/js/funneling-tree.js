@@ -1,18 +1,18 @@
 let API_URL = "";
+let filtersInitialized = false;
+let lastParams = null;
+let lastData = null;
 
 function initFunnelingTree(api) {
   API_URL = api;
-
-  loadFilterOptions();
 
   const btn = document.getElementById("btnFilter");
   if (btn) {
     btn.addEventListener("click", loadData);
   }
 
+  // load pertama kali, sekali saja
   loadData();
-
-  setInterval(loadData, 30000);
 }
 
 function showLoading() {
@@ -31,44 +31,32 @@ function hideLoading() {
   if (ls) ls.style.display = "none";
 }
 
-async function loadFilterOptions() {
-  try {
-    const res = await fetch(API_URL + "?action=getfunnelingtree");
-    const data = await res.json();
-
-    const hsaSelect = document.getElementById("filterHSA");
-    const stoSelect = document.getElementById("filterSTO");
-
-    if (data.hsaList && hsaSelect) {
-      data.hsaList.forEach(h => {
-        const opt = document.createElement("option");
-        opt.value = h;
-        opt.textContent = h;
-        hsaSelect.appendChild(opt);
-      });
-    }
-
-    if (data.stoList && stoSelect) {
-      data.stoList.forEach(s => {
-        const opt = document.createElement("option");
-        opt.value = s;
-        opt.textContent = s;
-        stoSelect.appendChild(opt);
-      });
-    }
-
-  } catch (e) {
-    console.log("ERROR LOAD FILTER", e);
-  }
-}
-
 async function loadData() {
   showLoading();
 
-  const hsa = document.getElementById("filterHSA").value;
-  const sto = document.getElementById("filterSTO").value;
-  const start = document.getElementById("startDate").value;
-  const end = document.getElementById("endDate").value;
+  const hsaEl = document.getElementById("filterHSA");
+  const stoEl = document.getElementById("filterSTO");
+  const startEl = document.getElementById("startDate");
+  const endEl = document.getElementById("endDate");
+
+  const hsa = hsaEl ? hsaEl.value : "";
+  const sto = stoEl ? stoEl.value : "";
+  const start = startEl ? startEl.value : "";
+  const end = endEl ? endEl.value : "";
+
+  const params = { hsa, sto, start, end };
+
+  // kalau param sama persis dan sudah punya data, pakai cache
+  if (
+    lastParams &&
+    JSON.stringify(lastParams) === JSON.stringify(params) &&
+    lastData
+  ) {
+    console.log("PAKAI CACHE FUNNEL");
+    renderFunnel(lastData);
+    hideLoading();
+    return;
+  }
 
   const url =
     API_URL
@@ -83,6 +71,11 @@ async function loadData() {
     const data = await res.json();
 
     console.log("DATA FUNNEL:", data);
+
+    lastParams = params;
+    lastData = data;
+
+    fillFiltersOnce(data);
     renderFunnel(data);
 
   } catch (e) {
@@ -90,6 +83,32 @@ async function loadData() {
   }
 
   hideLoading();
+}
+
+function fillFiltersOnce(data) {
+  if (filtersInitialized) return;
+  filtersInitialized = true;
+
+  const hsaSelect = document.getElementById("filterHSA");
+  const stoSelect = document.getElementById("filterSTO");
+
+  if (data.hsaList && hsaSelect) {
+    data.hsaList.forEach(h => {
+      const opt = document.createElement("option");
+      opt.value = h;
+      opt.textContent = h;
+      hsaSelect.appendChild(opt);
+    });
+  }
+
+  if (data.stoList && stoSelect) {
+    data.stoList.forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s;
+      opt.textContent = s;
+      stoSelect.appendChild(opt);
+    });
+  }
 }
 
 function renderFunnel(data) {
@@ -110,7 +129,7 @@ function renderFunnel(data) {
   update("angka009", c.CONTWORK ?? 0);     // CONTWORK
   update("angka010", c.INSTCOMP ?? 0);     // INSTCOMP
 
-  // kalau ada field khusus untuk progress ke PS
+  // sesuaikan kalau backend punya field khusus progress ke PS
   update("angka011", c.PROGRESS_PS ?? c.PROGRESS_TO_PS ?? 0);
 
   update("angka012", c.KDL_PLGN ?? 0);     // KDL PLGN
@@ -130,29 +149,29 @@ function update(id, val) {
   animateNumber(el, num);
 }
 
+// versi animasi ringan
 function animateNumber(el, target) {
-  let start = 0;
+  target = Number(target || 0);
 
-  if (!Number.isFinite(target)) {
+  if (!Number.isFinite(target) || target === 0) {
     el.textContent = "0";
     return;
   }
 
-  if (target === 0) {
-    el.textContent = "0";
-    return;
-  }
-
-  const step = target / 20;
+  const steps = 10; // lebih kecil = lebih ringan
+  const step = target / steps;
+  let current = 0;
+  let count = 0;
 
   const timer = setInterval(() => {
-    start += step;
+    count++;
+    current += step;
 
-    if (start >= target) {
+    if (count >= steps) {
       el.textContent = target.toLocaleString();
       clearInterval(timer);
     } else {
-      el.textContent = Math.floor(start);
+      el.textContent = Math.floor(current);
     }
-  }, 20);
+  }, 30);
 }
