@@ -20,8 +20,8 @@
 /* KANVAS UTAMA */
 .tree-area {
   position: relative;
-  width: 1400px;          /* tetap tapi cukup besar */
-  height: 1200px;
+  width: 1400px;
+  height: 1300px;
   margin: 10px auto;
   background: #fff;
   border: 2px solid #000;
@@ -34,7 +34,7 @@
   top:0;
   left:0;
   width:1400px;
-  height:1200px;
+  height:1300px;
   pointer-events:none;
 }
 
@@ -80,19 +80,57 @@
 .red { background:#f44336; color:#fff; }
 .white { background:#f5f5f5; color:#000; border:1px solid #ccc; }
 
-/* POSISI TREE BOX (pakai px, bukan %) */
-#wo    { top: 20px;  left: 630px; }  /* center kira-kira */
+/* POSISI TREE BOX */
 
-#sisa  { top: 120px; left: 350px; }
-#sudah { top: 120px; left: 910px; }
+/* Level 1 */
+#wo {
+  top: 20px;
+  left: 630px;
+}
 
-#manja  { top: 230px; left: 220px; }
-#manja2 { top: 230px; left: 480px; }
-#sukses { top: 230px; left: 840px; }
-#gagal  { top: 230px; left: 1100px; }
+/* Level 2 */
+#sisa {
+  top: 110px;
+  left: 380px;
+}
 
-#psEnd { top: 340px; left: 840px; }
-#ogpEnd{ top: 340px; left: 1100px; }
+#sudah {
+  top: 110px;
+  left: 880px;
+}
+
+/* Level 3 kiri (MANJA) */
+#manja {
+  top: 210px;
+  left: 260px;
+}
+
+#manja2 {
+  top: 210px;
+  left: 500px;
+}
+
+/* Level 3 kanan (SUKSES / GAGAL) */
+#sukses {
+  top: 210px;
+  left: 830px;
+}
+
+#gagal {
+  top: 210px;
+  left: 1080px;
+}
+
+/* Level 4 – geser ke tengah kanan */
+#psEnd {
+  top: 310px;
+  left: 830px;
+}
+
+#ogpEnd {
+  top: 310px;
+  left: 1080px;
+}
 
 /* ===================== */
 /* TABLE BLOCK STYLE */
@@ -178,35 +216,35 @@
 /* POSISI TABEL */
 /* ===================== */
 
-/* kiri bawah sisa */
+/* SISA PROGRESS – kiri bawah SISA */
 #tblSisa{
-  top: 420px;
-  left: 40px;
+  top: 360px;
+  left: 120px;
 }
 
-/* kanan tblSisa */
+/* MANJA – di kanan SISA (masih satu baris) */
 #tblManja{
-  top: 420px;
-  left: 340px;
+  top: 360px;
+  left: 420px;
 }
 
-/* HSA di tengah kanan */
+/* HSA – tepat di bawah SISA + MANJA (span tengah) */
 #tblHSA{
-  top: 420px;
-  left: 640px;
-  width: 700px;
+  top: 580px;
+  left: 120px;
+  width: 900px;
 }
 
-/* kendala pelanggan */
+/* KENDALA PELANGGAN – di bawah GAGAL TARIK (kiri) */
 #tblNonTeknik{
-  top: 720px;
-  left: 40px;
+  top: 360px;
+  left: 880px;
 }
 
-/* kendala teknis */
+/* KENDALA TEKNIS – di bawah KENDALA PELANGGAN */
 #tblTeknik{
-  top: 720px;
-  left: 640px;
+  top: 580px;
+  left: 880px;
 }
 
 /* ===================== */
@@ -339,9 +377,9 @@
 /* ===================== */
 .kesimpulan-box {
   position: absolute;
-  top: 1020px;
-  left: 40px;
-  right: 40px;
+  top: 880px;
+  left: 80px;
+  right: 80px;
   border: 2px solid #d32f2f;
   border-radius: 10px;
   padding: 15px 20px;
