@@ -238,13 +238,13 @@
 /* KENDALA PELANGGAN – di bawah GAGAL TARIK (kiri) */
 #tblNonTeknik{
   top: 380px;
-  left: 960px;
+  left: 970px;
 }
 
 /* KENDALA TEKNIS – di bawah KENDALA PELANGGAN */
 #tblTeknik{
   top: 760px;
-  left: 960px;
+  left: 970px;
 }
 
 /* ===================== */
