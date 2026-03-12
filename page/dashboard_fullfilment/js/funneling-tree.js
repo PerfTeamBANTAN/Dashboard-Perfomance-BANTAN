@@ -3,6 +3,9 @@ let filtersInitialized = false;
 let lastParams = null;
 let lastData = null;
 
+// ========================
+// INIT
+// ========================
 function initFunnelingTree(api) {
   API_URL = api;
 
@@ -11,13 +14,14 @@ function initFunnelingTree(api) {
     btn.addEventListener("click", loadData);
   }
 
-  // pasang handler klik angka funnel
-  attachFunnelClickHandlers();
+  attachFunnelClickHandlers();  // pasang klik di angka
 
-  // load pertama kali
-  loadData();
+  loadData(); // load summary pertama kali
 }
 
+// ========================
+// LOADING UI
+// ========================
 function showLoading() {
   const box = document.getElementById("loadingBox");
   if (box) box.style.display = "block";
@@ -34,6 +38,9 @@ function hideLoading() {
   if (ls) ls.style.display = "none";
 }
 
+// ========================
+// LOAD SUMMARY (TREE)
+// ========================
 async function loadData() {
   showLoading();
 
@@ -49,7 +56,7 @@ async function loadData() {
 
   const params = { hsa, sto, start, end };
 
-  // kalau param sama persis dan sudah punya data, pakai cache
+  // cache kalau param sama
   if (
     lastParams &&
     JSON.stringify(lastParams) === JSON.stringify(params) &&
@@ -88,6 +95,9 @@ async function loadData() {
   hideLoading();
 }
 
+// ========================
+// FILTER DROPDOWN
+// ========================
 function fillFiltersOnce(data) {
   if (filtersInitialized) return;
   filtersInitialized = true;
@@ -114,6 +124,9 @@ function fillFiltersOnce(data) {
   }
 }
 
+// ========================
+// RENDER SUMMARY (ANGKA)
+// ========================
 function renderFunnel(data) {
   if (!data) return;
 
@@ -179,11 +192,9 @@ function animateNumber(el, target) {
   }, 30);
 }
 
-/* ============================
-   DETAIL: KLIK ANGKA -> MODAL
-   ============================ */
-
-// mapping id angka -> stage di backend
+// ============================
+// DETAIL: KLIK ANGKA -> MODAL
+// ============================
 const stageMap = {
   angka000: 'INPUT_ORDER',
   angka001: 'PI',
@@ -204,19 +215,31 @@ const stageMap = {
 };
 
 function attachFunnelClickHandlers() {
+  console.log("INIT HANDLER FUNNEL");
+
   Object.keys(stageMap).forEach(id => {
     const el = document.getElementById(id);
-    if (!el) return;
+    if (!el) {
+      console.warn("ELEMEN ANGKA TIDAK KETEMU:", id);
+      return;
+    }
 
     el.style.cursor = 'pointer';
 
     el.addEventListener('click', () => {
       const stage = stageMap[id];
-      // kalau angka 0, boleh kamu skip (opsional)
-      const val = parseInt(el.textContent.replace(/\./g, ''), 10) || 0;
-      if (val === 0) return;
+      const val = parseInt((el.textContent || "0").replace(/\./g, ''), 10) || 0;
+      console.log("KLIK ANGKA", id, "stage:", stage, "val:", val);
 
-      loadFunnelDetail(stage);
+      if (val === 0) return; // kalau 0, tidak usah load detail
+
+      showLoading();
+      loadFunnelDetail(stage)
+        .catch(err => {
+          console.error("ERROR LOAD DETAIL FUNNEL", err);
+          alert("Gagal load detail funnel");
+        })
+        .finally(hideLoading);
     });
   });
 }
@@ -243,16 +266,11 @@ async function loadFunnelDetail(stage) {
 
   const url = `${API_URL}?${params.toString()}`;
 
-  try {
-    const res = await fetch(url);
-    const json = await res.json();
-    console.log("DETAIL FUNNEL:", json);
+  const res = await fetch(url);
+  const json = await res.json();
+  console.log("DETAIL FUNNEL:", json);
 
-    renderDetailTable(stage, json.rows || []);
-  } catch (err) {
-    console.error("ERROR LOAD DETAIL FUNNEL", err);
-    alert("Gagal load detail funnel");
-  }
+  renderDetailTable(stage, json.rows || []);
 }
 
 function renderDetailTable(stage, rows) {
@@ -287,7 +305,6 @@ function renderDetailTable(stage, rows) {
     titleEl.textContent = `Detail ${stage} (${rows.length} row)`;
   }
 
-  // buka modal bootstrap
   const modalEl = document.getElementById('detailModal');
   if (modalEl && window.bootstrap) {
     const modal = new bootstrap.Modal(modalEl);
