@@ -232,7 +232,7 @@
 #tblHSA{
   top: 580px;
   left: 120px;
-  width: 900px;
+  width: 720px;
 }
 
 /* KENDALA PELANGGAN – di bawah GAGAL TARIK (kiri) */
@@ -377,7 +377,7 @@
 /* ===================== */
 .kesimpulan-box {
   position: absolute;
-  top: 880px;
+  top: 980px;
   left: 80px;
   right: 80px;
   border: 2px solid #d32f2f;
