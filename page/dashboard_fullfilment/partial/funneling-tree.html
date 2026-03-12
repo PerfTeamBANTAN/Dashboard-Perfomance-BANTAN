@@ -1,8 +1,8 @@
 <div class="container-fluid">
 
+  <!-- FILTER -->
   <div class="card shadow-sm mb-3">
     <div class="card-body">
-
       <div class="row g-2">
 
         <div class="col-md-2">
@@ -39,300 +39,194 @@
     </div>
   </div>
 
+  <!-- DIAGRAM TREE INDIHOME -->
   <div class="card shadow">
     <div class="card-body">
 
+      <!-- loading overlay versi kamu -->
       <div id="loadingBox"
            style="display:none;text-align:center;padding:10px;font-size:14px;font-weight:bold;">
         Loading Data...
       </div>
 
-      <div style="position: relative; margin-top: -10px; display: flex; justify-content: center; align-items: center;">
+      <div id="content-area">
+        <div class="tree-dashboard-fullfillment">
 
-        <div id="loadingSvg"
-             style="display:none; position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:20px; background-color:rgba(0,0,0,0.4); color:white; z-index:5;">
-          Fetch Data...
-        </div>
+          <h3 class="title">DIAGRAM TREE INDIHOME TANGERANG</h3>
+          <div class="subtitle" id="updateTime"></div>
 
-        <!-- ====== SVG FUNNEL ====== -->
-        <svg xmlns="http://www.w3.org/2000/svg"
-             viewBox="0 0 2100 1400"
-             style="width:100%;height:auto;display:block;">
+          <div class="tree-area">
+            <!-- SVG garis antar box & tabel -->
+            <svg id="tree-lines"></svg>
 
-          <g font-family="Tahoma" font-weight="700" text-anchor="middle" fill="#333">
+            <!-- LEVEL 1 -->
+            <div class="tree-box blue" id="wo">
+              WO PSB<br><b>0</b>
+            </div>
 
-            <!-- INPUT ORDER -->
-            <rect x="60" y="300" width="240" height="160" rx="24" ry="24"
-                  fill="#e0f7e9" stroke="#404040"/>
-            <text x="180" y="345"
-                  style="font-size:28px;letter-spacing:1px;">
-              INPUT ORDER
-            </text>
-            <text id="angka000"
-                  x="180" y="410"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <!-- LEVEL 2 -->
+            <div class="tree-box yellow" id="sisa">
+              <span class="label">SISA PROGRESS</span>
+              <b>0</b>
+              <small>0%</small>
+            </div>
 
-            <!-- PI -->
-            <rect x="500" y="200" width="240" height="160" rx="24" ry="24"
-                  fill="#fee0e0" stroke="#404040"/>
-            <text x="620" y="245"
-                  style="font-size:28px;letter-spacing:1px;">
-              PI
-            </text>
-            <text id="angka001"
-                  x="620" y="310"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <div class="tree-box green" id="sudah">
+              <span class="label">SUDAH PROGRESS</span>
+              <b>0</b>
+              <small>0%</small>
+            </div>
 
-            <!-- WAPPR -->
-            <rect x="500" y="500" width="240" height="160" rx="24" ry="24"
-                  fill="#fee0e0" stroke="#404040"/>
-            <text x="620" y="545"
-                  style="font-size:28px;letter-spacing:1px;">
-              WAPPR
-            </text>
-            <text id="angka002"
-                  x="620" y="610"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <div class="tree-box yellow" id="manja">
+              <span class="label">MANJA H+EXP</span>
+              <b>0</b>
+              <small>0%</small>
+            </div>
 
-            <!-- STARTWORK -->
-            <rect x="940" y="80" width="260" height="160" rx="24" ry="24"
-                  fill="#e3f2fd" stroke="#404040"/>
-            <text x="1070" y="125"
-                  style="font-size:26px;letter-spacing:1px;">
-              STARTWORK
-            </text>
-            <text id="angka003"
-                  x="1070" y="190"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <div class="tree-box yellow" id="manja2">
+              <span class="label">NON MANJA</span>
+              <b>0</b>
+              <small>0%</small>
+            </div>
 
-            <!-- INPROGRESS -->
-            <rect x="940" y="360" width="260" height="160" rx="24" ry="24"
-                  fill="#e3f2fd" stroke="#404040"/>
-            <text x="1070" y="405"
-                  style="font-size:26px;letter-spacing:1px;">
-              INPROGRESS
-            </text>
-            <text id="angka004"
-                  x="1070" y="470"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <div class="tree-box green" id="sukses">
+              <span class="label">SUKSES</span>
+              <b>0</b>
+              <small>0%</small>
+            </div>
 
-            <!-- COMPWORK -->
-            <rect x="940" y="640" width="260" height="160" rx="24" ry="24"
-                  fill="#e3f2fd" stroke="#404040"/>
-            <text x="1070" y="685"
-                  style="font-size:26px;letter-spacing:1px;">
-              COMPWORK
-            </text>
-            <text id="angka005"
-                  x="1070" y="750"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <div class="tree-box red" id="gagal">
+              <span class="label">GAGAL TARIK</span>
+              <b>0</b>
+              <small>0%</small>
+            </div>
 
-            <!-- CANCEL -->
-            <rect x="940" y="920" width="260" height="160" rx="24" ry="24"
-                  fill="#e3f2fd" stroke="#404040"/>
-            <text x="1070" y="965"
-                  style="font-size:26px;letter-spacing:1px;">
-              CANCEL
-            </text>
-            <text id="angka006"
-                  x="1070" y="1030"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <!-- LEVEL 4 (CARD) -->
+            <div class="tree-box white" id="psEnd">
+              <span class="label">PS END STATE</span>
+              <b>0</b>
+              <small>0%</small>
+            </div>
 
-            <!-- WORKFAIL -->
-            <rect x="1380" y="40" width="260" height="160" rx="24" ry="24"
-                  fill="#fff3e0" stroke="#404040"/>
-            <text x="1510" y="85"
-                  style="font-size:26px;letter-spacing:1px;">
-              WORKFAIL
-            </text>
-            <text id="angka007"
-                  x="1510" y="150"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <div class="tree-box white" id="ogpEnd">
+              <span class="label">OGP TARIK<br>PS END STATE</span>
+              <b>0</b>
+              <small>0%</small>
+            </div>
 
-            <!-- PENDWORK -->
-            <rect x="1380" y="320" width="260" height="160" rx="24" ry="24"
-                  fill="#fff3e0" stroke="#404040"/>
-            <text x="1510" y="365"
-                  style="font-size:26px;letter-spacing:1px;">
-              PENDWORK
-            </text>
-            <text id="angka008"
-                  x="1510" y="430"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <!-- TABLE SISA -->
+            <div class="table-block small" id="tblSisa">
+              <h4>SISA PROGRESS</h4>
+              <table>
+                <tr>
+                  <th>CLUSTER</th>
+                  <th>TOTAL</th>
+                </tr>
+                <!-- diisi updateClusterTable(data) -->
+              </table>
+            </div>
 
-            <!-- CONTWORK -->
-            <rect x="1380" y="600" width="260" height="160" rx="24" ry="24"
-                  fill="#fff3e0" stroke="#404040"/>
-            <text x="1510" y="645"
-                  style="font-size:26px;letter-spacing:1px;">
-              CONTWORK
-            </text>
-            <text id="angka009"
-                  x="1510" y="710"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <!-- TABLE MANJA -->
+            <div class="table-block small" id="tblManja">
+              <h4>MANJA</h4>
+              <table>
+                <tr>
+                  <th>CLUSTER</th>
+                  <th>MANJA HI</th>
+                  <th>MANJA H+</th>
+                  <th>EXP</th>
+                  <th>NON MANJA</th>
+                  <th>TOTAL</th>
+                </tr>
+                <!-- diisi updateManjaTable(data) -->
+              </table>
+            </div>
 
-            <!-- INSTCOMP -->
-            <rect x="1380" y="880" width="260" height="160" rx="24" ry="24"
-                  fill="#fff3e0" stroke="#404040"/>
-            <text x="1510" y="925"
-                  style="font-size:26px;letter-spacing:1px;">
-              INSTCOMP
-            </text>
-            <text id="angka010"
-                  x="1510" y="990"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <!-- TABLE HSA (di bawah manja) -->
+            <div class="table-block large" id="tblHSA">
+              <h4>HSA</h4>
+              <table>
+                <thead>
+                  <tr>
+                    <th>STO</th>
+                    <th>HSA</th>
+                    <th>Est PS HI</th>
+                    <th>PS</th>
+                    <th>Total WO</th>
+                    <th>Sisa WO</th>
+                    <th>KP</th>
+                    <th>KT</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- diisi updateHSATableWithModal(data) -->
+                </tbody>
+              </table>
+            </div>
 
-            <!-- PROGRESS to PS -->
-            <rect x="1380" y="1160" width="260" height="160" rx="24" ry="24"
-                  fill="#fff8e1" stroke="#404040"/>
-            <text x="1510" y="1205"
-                  style="font-size:24px;letter-spacing:1px;">
-              PROGRESS to PS
-            </text>
-            <text id="angka011"
-                  x="1510" y="1270"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <!-- TABLE KENDALA PELANGGAN -->
+            <div class="table-block large" id="tblNonTeknik">
+              <h4>KENDALA PELANGGAN</h4>
+              <table>
+                <tr>
+                  <th>KENDALA</th>
+                  <th>KOTANG</th>
+                  <th>TANGSEL</th>
+                  <th>TOTAL</th>
+                </tr>
+                <!-- diisi updateKendalaNonTeknik(data) -->
+              </table>
+            </div>
 
-            <!-- KDL PLGN -->
-            <rect x="1820" y="40" width="260" height="160" rx="24" ry="24"
-                  fill="#ffebee" stroke="#404040"/>
-            <text x="1950" y="85"
-                  style="font-size:26px;letter-spacing:1px;">
-              KDL PLGN
-            </text>
-            <text id="angka012"
-                  x="1950" y="150"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <!-- TABLE KENDALA TEKNIS -->
+            <div class="table-block large" id="tblTeknik">
+              <h4>KENDALA TEKNIS</h4>
+              <table>
+                <tr>
+                  <th>KENDALA</th>
+                  <th>KOTANG</th>
+                  <th>TANGSEL</th>
+                  <th>TOTAL</th>
+                </tr>
+                <!-- diisi updateKendalaTeknisTable(data) -->
+              </table>
+            </div>
 
-            <!-- KDL TEKNIK -->
-            <rect x="1820" y="320" width="260" height="160" rx="24" ry="24"
-                  fill="#ffebee" stroke="#404040"/>
-            <text x="1950" y="365"
-                  style="font-size:26px;letter-spacing:1px;">
-              KDL TEKNIK
-            </text>
-            <text id="angka013"
-                  x="1950" y="430"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
+            <!-- INSIGHT -->
+            <div id="kesimpulanBox" class="kesimpulan-box">
+              <h3>INSIGHT TREE MONITORING</h3>
+              <div id="kesimpulanText">Loading kesimpulan...</div>
+            </div>
 
-            <!-- KDL SISTEM -->
-            <rect x="1820" y="600" width="260" height="160" rx="24" ry="24"
-                  fill="#ffebee" stroke="#404040"/>
-            <text x="1950" y="645"
-                  style="font-size:26px;letter-spacing:1px;">
-              KDL SISTEM
-            </text>
-            <text id="angka014"
-                  x="1950" y="710"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
-
-            <!-- KDL LAINNYA -->
-            <rect x="1820" y="880" width="260" height="160" rx="24" ry="24"
-                  fill="#ffebee" stroke="#404040"/>
-            <text x="1950" y="925"
-                  style="font-size:26px;letter-spacing:1px;">
-              KDL LAINNYA
-            </text>
-            <text id="angka015"
-                  x="1950" y="990"
-                  style="font-size:34px;letter-spacing:2px;cursor:pointer;">
-              0
-            </text>
-
-          </g>
-
-        </svg>
-
-      </div>
+          </div><!-- .tree-area -->
+        </div><!-- .tree-dashboard-fullfillment -->
+      </div><!-- #content-area -->
 
     </div>
   </div>
-
 </div>
 
-<!-- MODAL DETAIL FUNNEL -->
-<div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="detailTitle">Detail</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-
-        <!-- Search + info -->
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <div class="input-group input-group-sm" style="max-width: 260px;">
-            <span class="input-group-text">Cari WONUM</span>
-            <input type="text" class="form-control" id="detailSearchWONUM"
-                   placeholder="Ketik WONUM...">
-          </div>
-          <div id="detailInfo" class="small text-muted">
-            <!-- info jumlah data / halaman -->
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="table table-sm table-bordered table-striped" id="detailTable">
-            <thead class="table-light">
-              <tr>
-                <th>WONUM</th>
-                <th>STO</th>
-                <th>SERVICENUM</th>
-                <th>CHIEF_CODE</th>
-                <th>CHIEF_NAME</th>
-                <th>STATUS</th>
-                <th>ERRORCODE</th>
-                <th>SUBERRORCODE</th>
-                <th>ENGINEERMEMO</th>
-                <th>TGL</th>
-                <th>HSA</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- diisi via JS -->
-            </tbody>
-          </table>
-        </div>
-
-        <nav class="mt-2">
-          <ul class="pagination pagination-sm mb-0" id="detailPagination">
-            <!-- diisi via JS -->
-          </ul>
-        </nav>
-
-      </div>
-    </div>
+<!-- MODAL DETAIL (versi custom JS, bukan Bootstrap) -->
+<div id="modalDetail" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h4>Detail WO HI</h4>
+    <table id="modalTable">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>MYIR / SCID / WOID</th>
+          <th>STO</th>
+          <th>MITRA</th>
+          <th>TEKNISI</th>
+          <th>KESIMPULAN</th>
+          <th>DETIL KESIMPULAN</th>
+          <th>STATUS MANJA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- diisi showHSADetail / showKendalaDetail -->
+      </tbody>
+    </table>
   </div>
 </div>
