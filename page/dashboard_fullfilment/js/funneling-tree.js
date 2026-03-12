@@ -98,10 +98,6 @@ function renderFunnel(data) {
   const c = data.cards || {};
   console.log("CARDS:", c);
 
-  // mapping sesuai structure cards kamu:
-  // INPUT_ORDER, PI, WAPPR, STARTWORK, INPROGRESS, COMPWORK, CANCEL,
-  // WORKFAIL, PENDWORK, CONTWORK, INSTCOMP, KDL_PLGN, KDL_TEKNIK, KDL_SISTEM, KDL_LAINNYA
-
   update("angka000", c.INPUT_ORDER ?? 0);   // INPUT ORDER
   update("angka001", c.PI ?? 0);           // PI
   update("angka002", c.WAPPR ?? 0);        // WAPPR
