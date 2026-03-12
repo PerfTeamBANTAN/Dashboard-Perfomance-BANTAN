@@ -110,7 +110,7 @@ function renderFunnel(data) {
   update("angka009", c.CONTWORK ?? 0);     // CONTWORK
   update("angka010", c.INSTCOMP ?? 0);     // INSTCOMP
 
-  // kalau ada field khusus untuk progress ke PS, pakai di sini
+  // kalau ada field khusus untuk progress ke PS
   update("angka011", c.PROGRESS_PS ?? c.PROGRESS_TO_PS ?? 0);
 
   update("angka012", c.KDL_PLGN ?? 0);     // KDL PLGN
