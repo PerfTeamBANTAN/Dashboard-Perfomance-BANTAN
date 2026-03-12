@@ -73,7 +73,7 @@ async function loadData() {
     const res = await fetch(url);
     const data = await res.json();
 
-    console.log("DATA FUNNEL:", data); // cek di console
+    console.log("DATA FUNNEL:", data);
 
     renderFunnel(data);
 
@@ -85,65 +85,33 @@ async function loadData() {
 }
 
 function renderFunnel(data) {
-  // safety log
-  if (!data) {
-    console.warn("DATA KOSONG");
-    return;
-  }
+  if (!data) return;
 
   const c = data.cards || {};
-
   console.log("CARDS:", c);
 
-  // mapping cards → angka000–008 (sesuai JSON contoh yang kamu kirim)
-  update("angka000", c["WO PSB"]?.nilai ?? 0);
-  update("angka001", c["SUDAH PROGRES"]?.nilai ?? 0);
-  update("angka002", c["SISA PROGRES"]?.nilai ?? 0);
-  update("angka003", c["MANJA HI EXP"]?.nilai ?? 0);
-  update("angka004", c["MANJA H+ & NON MANJA"]?.nilai ?? 0);
-  update("angka005", c["SUKSES"]?.nilai ?? 0);
-  update("angka006", c["GAGALTARIK"]?.nilai ?? 0);
-  update("angka007", c["PS END STATE"]?.nilai ?? 0);
-  update("angka008", c["OGP TARIK PS END STATE"]?.nilai ?? 0);
+  // mapping sesuai key yang muncul di log kamu
+  update("angka000", c.INPUT_ORDER ?? 0);   // INPUT ORDER
+  update("angka001", c.PI ?? 0);           // PI
+  update("angka002", c.WAPPR ?? 0);        // WAPPR
+  update("angka003", c.STARTWORK ?? 0);    // STARTWORK
+  update("angka004", c.INPROGRESS ?? 0);   // INPROGRESS
+  update("angka005", c.COMPWORK ?? 0);     // COMPWORK
+  update("angka006", c.CANCEL ?? 0);       // CANCEL
+  update("angka007", c.WORKFAIL ?? 0);     // WORKFAIL
+  update("angka008", c.PENDWORK ?? 0);     // PENDWORK
+  update("angka009", c.CONTWORK ?? 0);     // CONTWORK
+  update("angka010", c.INSTCOMP ?? 0);     // INSTCOMP
 
-  // sementara angka009–011 belum ada di JSON contoh
-  // update("angka009", ...);
-  // update("angka010", ...);
-  // update("angka011", ...);
+  // kalau API punya key khusus untuk progress ke PS, pakai di sini
+  // misal: PROGRESS_PS atau PROGRESS_TO_PS
+  update("angka011", c.PROGRESS_PS ?? c.PROGRESS_TO_PS ?? 0);
 
-  // --- HITUNG KENDALA ---
-
-  const kendalaPelangganTable = data.kendalaPelangganTable || [];
-  const kendalaTeknisTable = data.kendalaTeknisTable || [];
-  const kendalaSistemTable = data.kendalaSistemTable || [];   // kalau belum ada, akan kosong
-  const kendalaLainnyaTable = data.kendalaLainnyaTable || []; // kalau belum ada, akan kosong
-
-  const kdlPlgn = kendalaPelangganTable.reduce(
-    (sum, row) => sum + (row.total || 0),
-    0
-  );
-
-  const kdlTeknik = kendalaTeknisTable.reduce(
-    (sum, row) => sum + (row.total || 0),
-    0
-  );
-
-  const kdlSistem = kendalaSistemTable.reduce(
-    (sum, row) => sum + (row.total || 0),
-    0
-  );
-
-  const kdlLainnya = kendalaLainnyaTable.reduce(
-    (sum, row) => sum + (row.total || 0),
-    0
-  );
-
-  console.log("KDL PLGN:", kdlPlgn, "KDL TEKNIK:", kdlTeknik, "KDL SISTEM:", kdlSistem, "KDL LAINNYA:", kdlLainnya);
-
-  update("angka012", kdlPlgn);
-  update("angka013", kdlTeknik);
-  update("angka014", kdlSistem);
-  update("angka015", kdlLainnya);
+  // kendala langsung dari cards (sudah kelihatan di log kamu)
+  update("angka012", c.KDL_PLGN ?? 0);     // KDL PLGN
+  update("angka013", c.KDL_TEKNIK ?? 0);   // KDL TEKNIK
+  update("angka014", c.KDL_SISTEM ?? 0);   // KDL SISTEM
+  update("angka015", c.KDL_LAINNYA ?? 0);  // KDL LAINNYA
 }
 
 function update(id, val) {
@@ -160,7 +128,6 @@ function update(id, val) {
 function animateNumber(el, target) {
   let start = 0;
 
-  // hindari NaN
   if (!Number.isFinite(target)) {
     el.innerText = "0";
     return;
