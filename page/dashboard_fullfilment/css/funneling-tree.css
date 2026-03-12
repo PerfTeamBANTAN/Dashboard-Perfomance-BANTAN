@@ -230,7 +230,7 @@
 
 /* HSA – tepat di bawah SISA + MANJA (span tengah) */
 #tblHSA{
-  top: 580px;
+  top: 780px;
   left: 120px;
   width: 720px;
 }
@@ -377,7 +377,7 @@
 /* ===================== */
 .kesimpulan-box {
   position: absolute;
-  top: 980px;
+  top: 1080px;
   left: 80px;
   right: 80px;
   border: 2px solid #d32f2f;
