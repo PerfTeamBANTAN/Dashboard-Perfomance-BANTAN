@@ -1,109 +1,112 @@
+// ================= GLOBAL =================
 let API_URL = "";
 let filtersInitialized = false;
 let lastParams = null;
 let lastData = null;
 
-// detail + pagination + search
-let detailRows = [];
-let detailFilteredRows = [];
-let detailPageSize = 10;
-let detailCurrentPage = 1;
+window.refreshTimer = window.refreshTimer || null;
 
-// ========================
-// INIT
-// ========================
-function initFunnelingTree(api) {
-  API_URL = api;
+// ================= INIT =================
+function initProgresIndihome(apiUrl) {
+  API_URL = apiUrl;
 
   const btn = document.getElementById("btnFilter");
   if (btn) {
-    btn.addEventListener("click", loadData);
+    btn.addEventListener("click", loadIndihomeData);
   }
 
-  attachFunnelClickHandlers();  // pasang klik di angka
+  loadIndihomeData();
 
-  loadData(); // load summary pertama kali
+  if (window.refreshTimer) clearInterval(window.refreshTimer);
+  window.refreshTimer = setInterval(loadIndihomeData, 60000);
 }
 
-// ========================
-// LOADING UI
-// ========================
-function showLoading() {
-  const box = document.getElementById("loadingBox");
-  if (box) box.style.display = "block";
+window.initProgresIndihome = initProgresIndihome;
 
-  const ls = document.getElementById("loadingSvg");
-  if (ls) ls.style.display = "flex";
-}
-
-function hideLoading() {
-  const box = document.getElementById("loadingBox");
-  if (box) box.style.display = "none";
-
-  const ls = document.getElementById("loadingSvg");
-  if (ls) ls.style.display = "none";
-}
-
-// ========================
-// LOAD SUMMARY (TREE)
-// ========================
-async function loadData() {
-  showLoading();
-
-  const hsaEl = document.getElementById("filterHSA");
-  const stoEl = document.getElementById("filterSTO");
-  const startEl = document.getElementById("startDate");
-  const endEl = document.getElementById("endDate");
-
-  const hsa = hsaEl ? hsaEl.value : "";
-  const sto = stoEl ? stoEl.value : "";
-  const start = startEl ? startEl.value : "";
-  const end = endEl ? endEl.value : "";
-
-  const params = { hsa, sto, start, end };
-
-  // cache kalau param sama
-  if (
-    lastParams &&
-    JSON.stringify(lastParams) === JSON.stringify(params) &&
-    lastData
-  ) {
-    console.log("PAKAI CACHE FUNNEL");
-    renderFunnel(lastData);
-    hideLoading();
-    return;
-  }
-
-  const url =
-    API_URL
-    + "?action=getfunnelingtree"
-    + "&hsa=" + encodeURIComponent(hsa)
-    + "&sto=" + encodeURIComponent(sto)
-    + "&start=" + encodeURIComponent(start)
-    + "&end=" + encodeURIComponent(end);
-
+// ================= LOAD DATA =================
+async function loadIndihomeData() {
   try {
-    const res = await fetch(url);
-    const data = await res.json();
+    showLoading(true);
 
-    console.log("DATA FUNNEL:", data);
+    // bisa tambahkan filter hsa/sto/start/end kalau endpoint butuh
+    const hsaEl = document.getElementById("filterHSA");
+    const stoEl = document.getElementById("filterSTO");
+    const startEl = document.getElementById("startDate");
+    const endEl = document.getElementById("endDate");
+
+    const hsa = hsaEl ? hsaEl.value : "";
+    const sto = stoEl ? stoEl.value : "";
+    const start = startEl ? startEl.value : "";
+    const end = endEl ? endEl.value : "";
+
+    const params = { hsa, sto, start, end };
+
+    if (
+      lastParams &&
+      JSON.stringify(lastParams) === JSON.stringify(params) &&
+      lastData
+    ) {
+      console.log("PAKAI CACHE TREE");
+      applyAllUpdates(lastData);
+      showLoading(false);
+      return;
+    }
+
+    const url =
+      API_URL +
+      "?hsa=" + encodeURIComponent(hsa) +
+      "&sto=" + encodeURIComponent(sto) +
+      "&start=" + encodeURIComponent(start) +
+      "&end=" + encodeURIComponent(end);
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("API Error");
+
+    const data = await res.json();
+    console.log("DATA TREE:", data);
 
     lastParams = params;
     lastData = data;
 
     fillFiltersOnce(data);
-    renderFunnel(data);
+    applyAllUpdates(data);
 
-  } catch (e) {
-    console.log("ERROR LOAD FUNNEL", e);
+    showLoading(false);
+    renderLines();
+
+  } catch (err) {
+    console.error("Fetch error:", err);
+    showError("Gagal load data dari server");
   }
-
-  hideLoading();
 }
 
-// ========================
-// FILTER DROPDOWN
-// ========================
+function applyAllUpdates(data) {
+  updateHeader(data);
+  updateBoxes(data);
+  updateClusterTable(data);
+  updateManjaTable(data);
+  updateHSATableWithModal(data);
+  updateKendalaNonTeknik(data);
+  updateKesimpulan(data);
+}
+
+// ================= UI STATE =================
+function showLoading(show) {
+  const box = document.getElementById("loadingBox");
+  if (box) box.style.display = show ? "block" : "none";
+}
+
+function showError(msg) {
+  const area = document.getElementById("content-area");
+  if (!area) return;
+  area.innerHTML = `
+    <div class="alert alert-danger text-center">
+      <b>Error:</b> ${msg}
+    </div>
+  `;
+}
+
+// ================= FILTER DROPDOWN (HSA/STO) =================
 function fillFiltersOnce(data) {
   if (filtersInitialized) return;
   filtersInitialized = true;
@@ -130,297 +133,509 @@ function fillFiltersOnce(data) {
   }
 }
 
-// ========================
-// RENDER SUMMARY (ANGKA)
-// ========================
-function renderFunnel(data) {
-  if (!data) return;
-
-  const c = data.cards || {};
-  console.log("CARDS:", c);
-
-  update("angka000", c.INPUT_ORDER ?? 0);   // INPUT ORDER
-  update("angka001", c.PI ?? 0);           // PI
-  update("angka002", c.WAPPR ?? 0);        // WAPPR
-  update("angka003", c.STARTWORK ?? 0);    // STARTWORK
-  update("angka004", c.INPROGRESS ?? 0);   // INPROGRESS
-  update("angka005", c.COMPWORK ?? 0);     // COMPWORK
-  update("angka006", c.CANCEL ?? 0);       // CANCEL
-  update("angka007", c.WORKFAIL ?? 0);     // WORKFAIL
-  update("angka008", c.PENDWORK ?? 0);     // PENDWORK
-  update("angka009", c.CONTWORK ?? 0);     // CONTWORK
-  update("angka010", c.INSTCOMP ?? 0);     // INSTCOMP
-
-  // PROGRESS to PS
-  update("angka011", c.PROGRESS_PS ?? c.PROGRESS_TO_PS ?? 0);
-
-  update("angka012", c.KDL_PLGN ?? 0);     // KDL PLGN
-  update("angka013", c.KDL_TEKNIK ?? 0);   // KDL TEKNIK
-  update("angka014", c.KDL_SISTEM ?? 0);   // KDL SISTEM
-  update("angka015", c.KDL_LAINNYA ?? 0);  // KDL LAINNYA
+// ================= HEADER =================
+function updateHeader(data) {
+  const time = new Date(data.updateTime);
+  const el = document.getElementById("updateTime");
+  if (el && !isNaN(time)) {
+    el.innerText = "Last Update : " + time.toLocaleString("id-ID");
+  }
 }
 
-function update(id, val) {
-  const el = document.getElementById(id);
-  if (!el) {
-    console.warn("ELEMEN TIDAK KETEMU:", id);
-    return;
-  }
+// ================= BOX =================
+function updateBoxes(data) {
+  const cards = data.cards || {};
 
-  const num = parseInt(val || 0, 10);
-  animateNumber(el, num);
+  const wo       = cards["WO PSB"]?.nilai || 0;
+  const sisa     = cards["SISA PROGRES"]?.nilai || 0;
+  const sudah    = cards["SUDAH PROGRES"]?.nilai || 0;
+  const manja    = cards["MANJA HI EXP"]?.nilai || 0;
+  const nonManja = cards["MANJA H+ & NON MANJA"]?.nilai || 0;
+  const sukses   = cards["SUKSES"]?.nilai || 0;
+  const gagal    = cards["GAGALTARIK"]?.nilai || 0;
+  const psEnd    = cards["PS END STATE"]?.nilai || 0;
+  const ogpEnd   = cards["OGP TARIK PS END STATE"]?.nilai || 0;
+
+  const pSisa     = cards["SISA PROGRES"]?.persen || "0%";
+  const pSudah    = cards["SUDAH PROGRES"]?.persen || "0%";
+  const pManja    = cards["MANJA HI EXP"]?.persen || "0%";
+  const pNonManja = cards["MANJA H+ & NON MANJA"]?.persen || "0%";
+  const pSukses   = cards["SUKSES"]?.persen || "0%";
+  const pGagal    = cards["GAGALTARIK"]?.persen || "0%";
+  const pPsEnd    = cards["PS END STATE"]?.persen || "0%";
+  const pOgpEnd   = cards["OGP TARIK PS END STATE"]?.persen || "0%";
+
+  setBox("wo", wo);
+  setBoxValuePercent("sisa", sisa, pSisa);
+  setBoxValuePercent("sudah", sudah, pSudah);
+  setBoxValuePercent("manja", manja, pManja);
+  setBoxValuePercent("manja2", nonManja, pNonManja);
+  setBoxValuePercent("sukses", sukses, pSukses);
+  setBoxValuePercent("gagal", gagal, pGagal);
+  setBoxValuePercent("psEnd", psEnd, pPsEnd);
+  setBoxValuePercent("ogpEnd", ogpEnd, pOgpEnd);
 }
 
-// animasi angka ringan
-function animateNumber(el, target) {
-  target = Number(target || 0);
+function setBox(id, value) {
+  const box = document.getElementById(id);
+  if (!box) return;
+  const b = box.querySelector("b");
+  if (b) b.innerText = value;
+}
 
-  if (!Number.isFinite(target) || target === 0) {
-    el.textContent = "0";
-    return;
-  }
+function setBoxValuePercent(id, value, percentText) {
+  const box = document.getElementById(id);
+  if (!box) return;
 
-  const steps = 10;
-  const step = target / steps;
-  let current = 0;
-  let count = 0;
+  const b = box.querySelector("b");
+  const small = box.querySelector("small");
 
-  const timer = setInterval(() => {
-    count++;
-    current += step;
+  let percentFormatted = percentText;
 
-    if (count >= steps) {
-      el.textContent = target.toLocaleString();
-      clearInterval(timer);
-    } else {
-      el.textContent = Math.floor(current);
+  if (typeof percentText === "number") {
+    percentFormatted = (percentText * 100).toFixed(2) + "%";
+  } else if (typeof percentText === "string" && !percentText.includes("%")) {
+    const num = parseFloat(percentText);
+    if (!isNaN(num)) {
+      percentFormatted = (num * 100).toFixed(2) + "%";
     }
-  }, 30);
+  }
+
+  if (b) b.innerText = value;
+  if (small) small.innerText = percentFormatted;
 }
 
-// ============================
-// DETAIL: KLIK ANGKA -> MODAL
-// ============================
-const stageMap = {
-  angka000: 'INPUT_ORDER',
-  angka001: 'PI',
-  angka002: 'WAPPR',
-  angka003: 'STARTWORK',
-  angka004: 'INPROGRESS',
-  angka005: 'COMPWORK',
-  angka006: 'CANCEL',
-  angka007: 'WORKFAIL',
-  angka008: 'PENDWORK',
-  angka009: 'CONTWORK',
-  angka010: 'INSTCOMP',
-  angka011: 'PROGRESS_PS',
-  angka012: 'KDL_PLGN',
-  angka013: 'KDL_TEKNIK',
-  angka014: 'KDL_SISTEM',
-  angka015: 'KDL_LAINNYA'
-};
+// ================= TABLE CLUSTER (SISA) =================
+function updateClusterTable(data) {
+  const table = document.querySelector("#tblSisa table");
+  if (!table) return;
 
-function attachFunnelClickHandlers() {
-  console.log("INIT HANDLER FUNNEL");
+  const rows = data.clusterTable || [];
+  let html = `<tr><th>CLUSTER</th><th>TOTAL</th></tr>`;
 
-  Object.keys(stageMap).forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) {
-      console.warn("ELEMEN ANGKA TIDAK KETEMU:", id);
+  rows.forEach(row => {
+    if (!row.cluster) return;
+    html += `<tr><td>${row.cluster}</td><td>${row.total || 0}</td></tr>`;
+  });
+
+  table.innerHTML = html;
+}
+
+// ================= TABLE MANJA =================
+function updateManjaTable(data) {
+  const table = document.querySelector("#tblManja table");
+  if (!table) return;
+
+  const rows = data.manjaTable || [];
+
+  let html = `
+    <tr>
+      <th>CLUSTER</th>
+      <th>MANJA HI</th>
+      <th>MANJA H+</th>
+      <th>EXP</th>
+      <th>NON MANJA</th>
+      <th>TOTAL</th>
+    </tr>
+  `;
+
+  rows.forEach(row => {
+    html += `
+      <tr>
+        <td>${row.cluster || ""}</td>
+        <td>${row.manjaHI || 0}</td>
+        <td>${row.manjaH || 0}</td>
+        <td>${row.exp || 0}</td>
+        <td>${row.nonManja || 0}</td>
+        <td>${row.total || 0}</td>
+      </tr>
+    `;
+  });
+
+  table.innerHTML = html;
+}
+
+// ================= TABLE HSA =================
+function updateHSATable(data) {
+  const tbody = document.querySelector("#tblHSA table tbody");
+  if (!tbody) return;
+
+  const rows = data.hsaTable || [];
+  let html = "";
+
+  rows.forEach(row => {
+    const totalWO = row.totalWO !== undefined
+      ? row.totalWO
+      : (row.ps || 0) + (row.sisaWO || 0) + (row.kp || 0) + (row.kt || 0);
+
+    html += `
+      <tr>
+        <td>${row.sto || ""}</td>
+        <td>${row.hsa || ""}</td>
+        <td class="clickable" data-type="ESTPSHI">${row.estPSHI || 0}</td>
+        <td class="clickable" data-type="PS">${row.ps || 0}</td>
+        <td>${totalWO}</td>
+        <td class="clickable" data-type="SISA">${row.sisaWO || 0}</td>
+        <td class="clickable" data-type="KP">${row.kp || 0}</td>
+        <td class="clickable" data-type="KT">${row.kt || 0}</td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = html;
+}
+
+function bindHSAClicks() {
+  const tbody = document.querySelector("#tblHSA table tbody");
+  if (!tbody) return;
+
+  tbody.querySelectorAll("td.clickable").forEach(td => {
+    td.style.cursor = "pointer";
+    td.onclick = function () {
+      const tr = this.parentElement;
+      const sto = tr.children[0].innerText.trim();
+      const type = this.dataset.type;
+      if (sto && type) showHSADetail(sto, type);
+    };
+  });
+}
+
+function updateHSATableWithModal(data) {
+  updateHSATable(data);
+  bindHSAClicks();
+}
+
+// ================= TABEL KENDALA =================
+function updateKendalaNonTeknik(data) {
+  const table = document.querySelector("#tblNonTeknik table");
+  if (!table) return;
+
+  const rows = data.kendalaPelangganTable || [];
+
+  let html = `<tr>
+    <th>KENDALA</th>
+    <th>KOTANG</th>
+    <th>TANGSEL</th>
+    <th>TOTAL</th>
+  </tr>`;
+
+  rows.forEach(row => {
+    html += `
+      <tr>
+        <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.kendala}</td>
+        <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="KOTANG">${row.kotang}</td>
+        <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TANGSEL">${row.tangsel}</td>
+        <td class="clickable" data-type="KP" data-detail="${row.kendala}" data-cluster="TOTAL">${row.total}</td>
+      </tr>
+    `;
+  });
+
+  table.innerHTML = html;
+
+  bindKendalaClicks();
+  updateKendalaTeknisTable(data);
+}
+
+function updateKendalaTeknisTable(data) {
+  const teknik = document.getElementById("tblTeknik");
+  if (!teknik) return;
+
+  const table = teknik.querySelector("table");
+  if (!table) return;
+
+  const rows = data.kendalaTeknisTable || [];
+
+  let html = `<tr>
+    <th>KENDALA</th>
+    <th>KOTANG</th>
+    <th>TANGSEL</th>
+    <th>TOTAL</th>
+  </tr>`;
+
+  rows.forEach(row => {
+    const kendala = row.kendala || "";
+    html += `
+      <tr>
+        <td>${kendala}</td>
+        <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="KOTANG">${row.kotang || 0}</td>
+        <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="TANGSEL">${row.tangsel || 0}</td>
+        <td class="clickable" data-type="KT" data-detail="${kendala}" data-cluster="TOTAL">${row.total || 0}</td>
+      </tr>
+    `;
+  });
+
+  table.innerHTML = html;
+
+  bindKendalaClicks();
+}
+
+function bindKendalaClicks() {
+  document.querySelectorAll("#tblNonTeknik td.clickable, #tblTeknik td.clickable")
+    .forEach(td => {
+      td.style.cursor = "pointer";
+      td.onclick = function () {
+        const type = this.dataset.type;
+        const detail = this.dataset.detail;
+        const cluster = this.dataset.cluster;
+        if (type && detail !== undefined) {
+          showKendalaDetail(type, detail, cluster);
+        }
+      };
+    });
+}
+
+// ================= GARIS ANTAR BOX =================
+function drawPath(fromId, toId) {
+  const from = document.getElementById(fromId);
+  const to = document.getElementById(toId);
+  const svg = document.getElementById("tree-lines");
+  if (!from || !to || !svg) return;
+
+  const parent = document.querySelector(".tree-area").getBoundingClientRect();
+  const f = from.getBoundingClientRect();
+  const t = to.getBoundingClientRect();
+
+  const x1 = f.right - parent.left;
+  const y1 = f.top + f.height / 2 - parent.top;
+  const x2 = t.left - parent.left;
+  const y2 = t.top + t.height / 2 - parent.top;
+  const midX = x1 + 40;
+
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("d", `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${y2} L ${x2} ${y2}`);
+  path.setAttribute("fill", "none");
+  path.setAttribute("stroke", "#333");
+  path.setAttribute("stroke-width", "2");
+  path.setAttribute("stroke-linecap", "round");
+  path.setAttribute("stroke-linejoin", "round");
+
+  svg.appendChild(path);
+}
+
+function drawTreeLines() {
+  const svg = document.getElementById("tree-lines");
+  if (!svg) return;
+  svg.innerHTML = "";
+
+  drawPath("wo", "sisa");
+  drawPath("wo", "sudah");
+  drawPath("sisa", "manja");
+  drawPath("sisa", "manja2");
+  drawPath("sudah", "sukses");
+  drawPath("sudah", "gagal");
+}
+
+// ================= GARIS CARD → TABLE =================
+function drawTableLines() {
+  const svg = document.getElementById("tree-lines");
+  if (!svg) return;
+
+  svg.querySelectorAll(".card-table-line").forEach(line => line.remove());
+
+  function drawLine(cardId, tableId) {
+    const card = document.getElementById(cardId);
+    const table = document.getElementById(tableId);
+    if (!card || !table) return;
+
+    const parent = document.querySelector(".tree-area").getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const tableRect = table.getBoundingClientRect();
+
+    let x1, y1, x2, y2, d;
+
+    if (cardId === "gagal") {
+      x1 = cardRect.left + cardRect.width / 2 - parent.left;
+      y1 = cardRect.bottom - parent.top;
+
+      x2 = tableRect.left + tableRect.width / 2 - parent.left;
+      y2 = tableRect.top - parent.top;
+
+      d = `M ${x1} ${y1} L ${x2} ${y2}`;
+    } else {
+      x1 = cardRect.left - parent.left;
+      y1 = cardRect.top + cardRect.height / 2 - parent.top;
+
+      x2 = tableRect.left - parent.left;
+      y2 = tableRect.top + tableRect.height / 2 - parent.top;
+
+      const midX = x1 - 40;
+
+      d = `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${y2} L ${x2} ${y2}`;
+    }
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", d);
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "#333");
+    path.setAttribute("stroke-width", "2");
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("stroke-linejoin", "round");
+    path.classList.add("card-table-line");
+
+    svg.appendChild(path);
+  }
+
+  drawLine("sisa", "tblSisa");
+  drawLine("manja", "tblManja");
+  drawLine("gagal", "tblNonTeknik");
+}
+
+// ================= POSISI TABEL & KESIMPULAN =================
+function positionTablesBelowCards() {
+  const parent = document.querySelector(".tree-area");
+  if (!parent) return;
+  // kalau nanti mau hitung dinamis (pakai offset seperti versi sebelumnya),
+  // bisa isi di sini. Dengan CSS posisi absolut fixed, fungsi ini boleh kosong.
+}
+
+// ================= RENDER SEMUA GARIS =================
+function renderLines() {
+  positionTablesBelowCards();
+  drawTreeLines();
+  drawTableLines();
+}
+
+window.addEventListener("resize", renderLines);
+
+// ================= MODAL DETAIL (CUSTOM) =================
+function openModal() {
+  const modal = document.getElementById("modalDetail");
+  if (!modal) return;
+  modal.style.display = "block";
+}
+
+function closeModal() {
+  const modal = document.getElementById("modalDetail");
+  if (!modal) return;
+  modal.style.display = "none";
+}
+
+window.addEventListener("click", function (e) {
+  const modal = document.getElementById("modalDetail");
+  if (!modal) return;
+  if (e.target === modal) modal.style.display = "none";
+});
+
+// ================= SHOW MODAL HSA =================
+async function showHSADetail(sto, type) {
+  const modal = document.getElementById("modalDetail");
+  const tbody = modal.querySelector("#modalTable tbody");
+  if (!modal || !tbody) return;
+
+  tbody.innerHTML = `<tr><td colspan="8">Loading...</td></tr>`;
+  openModal();
+
+  try {
+    const url = `${API_URL}?action=getwohi&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(type)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="8">Tidak ada data ${type} untuk STO ${sto}</td>
+        </tr>`;
       return;
     }
 
-    el.style.cursor = 'pointer';
+    tbody.innerHTML = data.map((r, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${r.MYIR || ""}</td>
+        <td>${r.STO || ""}</td>
+        <td>${r.MITRA || ""}</td>
+        <td>${r.TEKNISI || ""}</td>
+        <td>${r.KESIMPULAN || ""}</td>
+        <td>${r.DETIL_KESIMPULAN || ""}</td>
+        <td>${r.STATUS_MANJA || ""}</td>
+      </tr>
+    `).join("");
 
-    el.addEventListener('click', () => {
-      const stage = stageMap[id];
-      const val = parseInt((el.textContent || "0").replace(/\./g, ''), 10) || 0;
-      console.log("KLIK ANGKA", id, "stage:", stage, "val:", val);
-
-      if (val === 0) return; // kalau 0, tidak usah load detail
-
-      showLoading();
-      loadFunnelDetail(stage)
-        .catch(err => {
-          console.error("ERROR LOAD DETAIL FUNNEL", err);
-          alert("Gagal load detail funnel");
-        })
-        .finally(hideLoading);
-    });
-  });
-}
-
-async function loadFunnelDetail(stage) {
-  const hsaEl = document.getElementById("filterHSA");
-  const stoEl = document.getElementById("filterSTO");
-  const startEl = document.getElementById("startDate");
-  const endEl = document.getElementById("endDate");
-
-  const hsa = hsaEl ? hsaEl.value : "";
-  const sto = stoEl ? stoEl.value : "";
-  const start = startEl ? startEl.value : "";
-  const end = endEl ? endEl.value : "";
-
-  const params = new URLSearchParams({
-    action: 'getfunnelingdetail',
-    stage: stage,
-    hsa: hsa,
-    sto: sto,
-    start: start,
-    end: end
-  });
-
-  const url = `${API_URL}?${params.toString()}`;
-
-  const res = await fetch(url);
-  const json = await res.json();
-  console.log("DETAIL FUNNEL:", json);
-
-  renderDetailTable(stage, json.rows || []);
-}
-
-// ============================
-// DETAIL: RENDER + PAGINATION + SEARCH
-// ============================
-function renderDetailTable(stage, rows) {
-  // simpan ke global
-  detailRows = rows || [];
-  detailFilteredRows = detailRows.slice(); // awalnya tanpa filter
-  detailCurrentPage = 1;
-
-  const titleEl = document.getElementById('detailTitle');
-  if (titleEl) {
-    titleEl.textContent = `Detail ${stage} (${detailRows.length} row)`;
-  }
-
-  // reset input search
-  const searchEl = document.getElementById('detailSearchWONUM');
-  if (searchEl) {
-    searchEl.value = '';
-    searchEl.oninput = handleDetailSearch;
-  }
-
-  renderDetailPage();
-  renderDetailPagination();
-
-  const modalEl = document.getElementById('detailModal');
-  if (modalEl && window.bootstrap) {
-    const modal = new bootstrap.Modal(modalEl);
-    modal.show();
+  } catch (err) {
+    console.error("Modal fetch error:", err);
+    tbody.innerHTML = `<tr><td colspan="8">Gagal load data</td></tr>`;
   }
 }
 
-function handleDetailSearch() {
-  const searchEl = document.getElementById('detailSearchWONUM');
-  const keyword = (searchEl?.value || '').trim().toUpperCase();
+// ================= SHOW MODAL KENDALA =================
+async function showKendalaDetail(type, detail, cluster) {
+  const modal = document.getElementById("modalDetail");
+  const tbody = modal.querySelector("#modalTable tbody");
+  if (!modal || !tbody) return;
 
-  if (!keyword) {
-    detailFilteredRows = detailRows.slice();
-  } else {
-    detailFilteredRows = detailRows.filter(r => {
-      const wonum = String(r.WONUM || '').toUpperCase();
-      return wonum.includes(keyword);
-    });
-  }
+  tbody.innerHTML = `<tr><td colspan="8">Loading...</td></tr>`;
+  openModal();
 
-  detailCurrentPage = 1;
-  renderDetailPage();
-  renderDetailPagination();
-}
+  try {
+    let url = `${API_URL}?action=getkendala&type=${encodeURIComponent(type)}&detail=${encodeURIComponent(detail)}`;
+    if (cluster) url += `&cluster=${encodeURIComponent(cluster)}`;
 
-function renderDetailPage() {
-  const tbody = document.querySelector('#detailTable tbody');
-  if (!tbody) {
-    console.warn("detailTable tbody tidak ditemukan");
-    return;
-  }
+    const res = await fetch(url);
+    const data = await res.json();
 
-  tbody.innerHTML = '';
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="8">Tidak ada data kendala</td>
+        </tr>`;
+      return;
+    }
 
-  if (!detailFilteredRows || detailFilteredRows.length === 0) {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td colspan="11" class="text-center text-muted">Tidak ada data</td>`;
-    tbody.appendChild(tr);
-    const info = document.getElementById('detailInfo');
-    if (info) info.textContent = '0 row';
-    return;
-  }
+    tbody.innerHTML = data.map((r, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${r.MYIR || ""}</td>
+        <td>${r.STO || ""}</td>
+        <td>${r.MITRA || ""}</td>
+        <td>${r.TEKNISI || ""}</td>
+        <td>${r.KESIMPULAN || ""}</td>
+        <td>${r.DETIL_KESIMPULAN || ""}</td>
+        <td>${r.STATUS_MANJA || ""}</td>
+      </tr>
+    `).join("");
 
-  const startIndex = (detailCurrentPage - 1) * detailPageSize;
-  const endIndex = Math.min(startIndex + detailPageSize, detailFilteredRows.length);
-  const pageRows = detailFilteredRows.slice(startIndex, endIndex);
-
-  pageRows.forEach(r => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${r.WONUM || ''}</td>
-      <td>${r.STO || ''}</td>
-      <td>${r.SERVICENUM || ''}</td>
-      <td>${r.CHIEF_CODE || ''}</td>
-      <td>${r.CHIEF_NAME || ''}</td>
-      <td>${r.STATUS || ''}</td>
-      <td>${r.ERRORCODE || ''}</td>
-      <td>${r.SUBERRORCODE || ''}</td>
-      <td>${r.ENGINEERMEMO || ''}</td>
-      <td>${r.TGL || ''}</td>
-      <td>${r.HSA || ''}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  const info = document.getElementById('detailInfo');
-  if (info) {
-    info.textContent = `Menampilkan ${startIndex + 1}–${endIndex} dari ${detailFilteredRows.length} row`;
+  } catch (err) {
+    console.error("Modal Kendala error:", err);
+    tbody.innerHTML = `<tr><td colspan="8">Gagal load data</td></tr>`;
   }
 }
 
-function renderDetailPagination() {
-  const pagEl = document.getElementById('detailPagination');
-  if (!pagEl) return;
+// ================= KESIMPULAN =================
+function updateKesimpulan(data) {
+  const wo     = data.cards["WO PSB"]?.nilai || 0;
+  const sisa   = data.cards["SISA PROGRES"]?.nilai || 0;
+  const pSisaRaw = data.cards["SISA PROGRES"]?.persen || 0;
+  const sudah  = data.cards["SUDAH PROGRES"]?.nilai || 0;
+  const sukses = data.cards["SUKSES"]?.nilai || 0;
+  const gagal  = data.cards["GAGALTARIK"]?.nilai || 0;
 
-  pagEl.innerHTML = '';
+  let pSisa = "0%";
+  const num = parseFloat(pSisaRaw);
+  if (!isNaN(num)) pSisa = (num * 100).toFixed(2) + "%";
 
-  if (!detailFilteredRows || detailFilteredRows.length === 0) return;
+  const kendalaList = data.kendalaPelangganTable || [];
+  const kendalaTerbesar = kendalaList.length ? kendalaList[0] : { kendala: "-", total: 0 };
 
-  const totalPages = Math.ceil(detailFilteredRows.length / detailPageSize);
-  if (totalPages <= 1) return;
+  const kesimpulanEl = document.getElementById("kesimpulanText");
+  if (!kesimpulanEl) return;
 
-  const createPageItem = (label, page, disabled = false, active = false) => {
-    const li = document.createElement('li');
-    li.className = 'page-item';
-    if (disabled) li.classList.add('disabled');
-    if (active) li.classList.add('active');
-
-    const a = document.createElement('a');
-    a.className = 'page-link';
-    a.href = '#';
-    a.textContent = label;
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (disabled || page === detailCurrentPage) return;
-      detailCurrentPage = page;
-      renderDetailPage();
-      renderDetailPagination();
-    });
-
-    li.appendChild(a);
-    return li;
-  };
-
-  // Prev
-  pagEl.appendChild(
-    createPageItem('«', Math.max(1, detailCurrentPage - 1), detailCurrentPage === 1)
-  );
-
-  // nomor halaman
-  for (let p = 1; p <= totalPages; p++) {
-    pagEl.appendChild(
-      createPageItem(String(p), p, false, p === detailCurrentPage)
-    );
-  }
-
-  // Next
-  pagEl.appendChild(
-    createPageItem('»', Math.min(totalPages, detailCurrentPage + 1), detailCurrentPage === totalPages)
-  );
+  kesimpulanEl.innerHTML = `
+    <span style="color:#0d6efd;"><i>Dari total</i></span> 
+    <b style="color:#0d6efd;">${wo} WO PSB</b>, 
+    <b style="color:#dc3545;">${sisa} (${pSisa})</b> masih berada pada kategori 
+    <i style="color:#dc3545;">Sisa Progress</i>, sedangkan 
+    <b style="color:#198754;">${sudah}</b> telah 
+    <i style="color:#198754;">selesai diproses</i>. 
+    Kinerja dinilai 
+    <b style="color:#198754;">baik</b> dengan 
+    <b style="color:#198754;">${sukses}</b> WO sukses dan 
+    <b style="color:#6c757d;">${gagal}</b> gagal tarik. 
+    Kendala dominan berasal dari 
+    <i style="color:#fd7e14;">${kendalaTerbesar.kendala}</i> sebanyak 
+    <b style="color:#fd7e14;">${kendalaTerbesar.total} kasus</b>.
+    <br>
+    <small><i style="color:#2c4b6c;">
+      * Sumber data: WO HI Spreadsheet HD Fulfillment Branch <b>Tangerang</b>
+    </i></small>
+  `;
 }
