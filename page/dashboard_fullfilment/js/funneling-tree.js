@@ -5,9 +5,10 @@ function initFunnelingTree(api) {
 
   loadFilterOptions();
 
-  document
-    .getElementById("btnFilter")
-    .addEventListener("click", loadData);
+  const btn = document.getElementById("btnFilter");
+  if (btn) {
+    btn.addEventListener("click", loadData);
+  }
 
   loadData();
 
@@ -82,7 +83,6 @@ async function loadData() {
     const data = await res.json();
 
     console.log("DATA FUNNEL:", data);
-
     renderFunnel(data);
 
   } catch (e) {
@@ -98,7 +98,7 @@ function renderFunnel(data) {
   const c = data.cards || {};
   console.log("CARDS:", c);
 
-  // mapping sesuai struktur cards yang kamu kirim di log:
+  // mapping sesuai structure cards kamu:
   // INPUT_ORDER, PI, WAPPR, STARTWORK, INPROGRESS, COMPWORK, CANCEL,
   // WORKFAIL, PENDWORK, CONTWORK, INSTCOMP, KDL_PLGN, KDL_TEKNIK, KDL_SISTEM, KDL_LAINNYA
 
@@ -114,7 +114,7 @@ function renderFunnel(data) {
   update("angka009", c.CONTWORK ?? 0);     // CONTWORK
   update("angka010", c.INSTCOMP ?? 0);     // INSTCOMP
 
-  // sesuaikan nama key progress ke PS kalau ada (misal PROGRESS_PS / PROGRESS_TO_PS)
+  // kalau ada field khusus untuk progress ke PS, pakai di sini
   update("angka011", c.PROGRESS_PS ?? c.PROGRESS_TO_PS ?? 0);
 
   update("angka012", c.KDL_PLGN ?? 0);     // KDL PLGN
