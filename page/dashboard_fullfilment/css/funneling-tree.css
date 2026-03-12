@@ -218,13 +218,13 @@
 
 /* SISA PROGRESS – kiri bawah SISA */
 #tblSisa{
-  top: 360px;
+  top: 380px;
   left: 120px;
 }
 
 /* MANJA – di kanan SISA (masih satu baris) */
 #tblManja{
-  top: 360px;
+  top: 380px;
   left: 420px;
 }
 
@@ -237,14 +237,14 @@
 
 /* KENDALA PELANGGAN – di bawah GAGAL TARIK (kiri) */
 #tblNonTeknik{
-  top: 360px;
-  left: 880px;
+  top: 380px;
+  left: 1000px;
 }
 
 /* KENDALA TEKNIS – di bawah KENDALA PELANGGAN */
 #tblTeknik{
-  top: 580px;
-  left: 880px;
+  top: 640px;
+  left: 1000px;
 }
 
 /* ===================== */
