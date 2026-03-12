@@ -90,28 +90,23 @@ function renderFunnel(data) {
   const c = data.cards || {};
   console.log("CARDS:", c);
 
-  // mapping sesuai key yang muncul di log kamu
-  update("angka000", c.INPUT_ORDER ?? 0);   // INPUT ORDER
-  update("angka001", c.PI ?? 0);           // PI
-  update("angka002", c.WAPPR ?? 0);        // WAPPR
-  update("angka003", c.STARTWORK ?? 0);    // STARTWORK
-  update("angka004", c.INPROGRESS ?? 0);   // INPROGRESS
-  update("angka005", c.COMPWORK ?? 0);     // COMPWORK
-  update("angka006", c.CANCEL ?? 0);       // CANCEL
-  update("angka007", c.WORKFAIL ?? 0);     // WORKFAIL
-  update("angka008", c.PENDWORK ?? 0);     // PENDWORK
-  update("angka009", c.CONTWORK ?? 0);     // CONTWORK
-  update("angka010", c.INSTCOMP ?? 0);     // INSTCOMP
-
-  // kalau API punya key khusus untuk progress ke PS, pakai di sini
-  // misal: PROGRESS_PS atau PROGRESS_TO_PS
+  update("angka000", c.INPUT_ORDER ?? 0);
+  update("angka001", c.PI ?? 0);
+  update("angka002", c.WAPPR ?? 0);
+  update("angka003", c.STARTWORK ?? 0);
+  update("angka004", c.INPROGRESS ?? 0);
+  update("angka005", c.COMPWORK ?? 0);
+  update("angka006", c.CANCEL ?? 0);
+  update("angka007", c.WORKFAIL ?? 0);
+  update("angka008", c.PENDWORK ?? 0);
+  update("angka009", c.CONTWORK ?? 0);
+  update("angka010", c.INSTCOMP ?? 0);
   update("angka011", c.PROGRESS_PS ?? c.PROGRESS_TO_PS ?? 0);
 
-  // kendala langsung dari cards (sudah kelihatan di log kamu)
-  update("angka012", c.KDL_PLGN ?? 0);     // KDL PLGN
-  update("angka013", c.KDL_TEKNIK ?? 0);   // KDL TEKNIK
-  update("angka014", c.KDL_SISTEM ?? 0);   // KDL SISTEM
-  update("angka015", c.KDL_LAINNYA ?? 0);  // KDL LAINNYA
+  update("angka012", c.KDL_PLGN ?? 0);
+  update("angka013", c.KDL_TEKNIK ?? 0);
+  update("angka014", c.KDL_SISTEM ?? 0);
+  update("angka015", c.KDL_LAINNYA ?? 0);
 }
 
 function update(id, val) {
@@ -129,12 +124,12 @@ function animateNumber(el, target) {
   let start = 0;
 
   if (!Number.isFinite(target)) {
-    el.innerText = "0";
+    el.textContent = "0";
     return;
   }
 
   if (target === 0) {
-    el.innerText = "0";
+    el.textContent = "0";
     return;
   }
 
@@ -144,10 +139,11 @@ function animateNumber(el, target) {
     start += step;
 
     if (start >= target) {
-      el.innerText = target.toLocaleString();
+      el.textContent = target.toLocaleString();
       clearInterval(timer);
     } else {
-      el.innerText = Math.floor(start);
+      el.textContent = Math.floor(start);
     }
   }, 20);
 }
+
