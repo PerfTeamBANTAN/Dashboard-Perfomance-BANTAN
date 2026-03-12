@@ -11,7 +11,10 @@ function initFunnelingTree(api) {
     btn.addEventListener("click", loadData);
   }
 
-  // load pertama kali, sekali saja
+  // pasang handler klik angka funnel
+  attachFunnelClickHandlers();
+
+  // load pertama kali
   loadData();
 }
 
@@ -129,7 +132,7 @@ function renderFunnel(data) {
   update("angka009", c.CONTWORK ?? 0);     // CONTWORK
   update("angka010", c.INSTCOMP ?? 0);     // INSTCOMP
 
-  // sesuaikan kalau backend punya field khusus progress ke PS
+  // PROGRESS to PS
   update("angka011", c.PROGRESS_PS ?? c.PROGRESS_TO_PS ?? 0);
 
   update("angka012", c.KDL_PLGN ?? 0);     // KDL PLGN
@@ -149,7 +152,7 @@ function update(id, val) {
   animateNumber(el, num);
 }
 
-// versi animasi ringan
+// animasi angka ringan
 function animateNumber(el, target) {
   target = Number(target || 0);
 
@@ -158,7 +161,7 @@ function animateNumber(el, target) {
     return;
   }
 
-  const steps = 10; // lebih kecil = lebih ringan
+  const steps = 10;
   const step = target / steps;
   let current = 0;
   let count = 0;
@@ -174,4 +177,120 @@ function animateNumber(el, target) {
       el.textContent = Math.floor(current);
     }
   }, 30);
+}
+
+/* ============================
+   DETAIL: KLIK ANGKA -> MODAL
+   ============================ */
+
+// mapping id angka -> stage di backend
+const stageMap = {
+  angka000: 'INPUT_ORDER',
+  angka001: 'PI',
+  angka002: 'WAPPR',
+  angka003: 'STARTWORK',
+  angka004: 'INPROGRESS',
+  angka005: 'COMPWORK',
+  angka006: 'CANCEL',
+  angka007: 'WORKFAIL',
+  angka008: 'PENDWORK',
+  angka009: 'CONTWORK',
+  angka010: 'INSTCOMP',
+  angka011: 'PROGRESS_PS',
+  angka012: 'KDL_PLGN',
+  angka013: 'KDL_TEKNIK',
+  angka014: 'KDL_SISTEM',
+  angka015: 'KDL_LAINNYA'
+};
+
+function attachFunnelClickHandlers() {
+  Object.keys(stageMap).forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.style.cursor = 'pointer';
+
+    el.addEventListener('click', () => {
+      const stage = stageMap[id];
+      // kalau angka 0, boleh kamu skip (opsional)
+      const val = parseInt(el.textContent.replace(/\./g, ''), 10) || 0;
+      if (val === 0) return;
+
+      loadFunnelDetail(stage);
+    });
+  });
+}
+
+async function loadFunnelDetail(stage) {
+  const hsaEl = document.getElementById("filterHSA");
+  const stoEl = document.getElementById("filterSTO");
+  const startEl = document.getElementById("startDate");
+  const endEl = document.getElementById("endDate");
+
+  const hsa = hsaEl ? hsaEl.value : "";
+  const sto = stoEl ? stoEl.value : "";
+  const start = startEl ? startEl.value : "";
+  const end = endEl ? endEl.value : "";
+
+  const params = new URLSearchParams({
+    action: 'getfunnelingdetail',
+    stage: stage,
+    hsa: hsa,
+    sto: sto,
+    start: start,
+    end: end
+  });
+
+  const url = `${API_URL}?${params.toString()}`;
+
+  try {
+    const res = await fetch(url);
+    const json = await res.json();
+    console.log("DETAIL FUNNEL:", json);
+
+    renderDetailTable(stage, json.rows || []);
+  } catch (err) {
+    console.error("ERROR LOAD DETAIL FUNNEL", err);
+    alert("Gagal load detail funnel");
+  }
+}
+
+function renderDetailTable(stage, rows) {
+  const tbody = document.querySelector('#detailTable tbody');
+  if (!tbody) {
+    console.warn("detailTable tbody tidak ditemukan");
+    return;
+  }
+
+  tbody.innerHTML = '';
+
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.WONUM || ''}</td>
+      <td>${r.STO || ''}</td>
+      <td>${r.SERVICENUM || ''}</td>
+      <td>${r.CHIEF_CODE || ''}</td>
+      <td>${r.CHIEF_NAME || ''}</td>
+      <td>${r.STATUS || ''}</td>
+      <td>${r.ERRORCODE || ''}</td>
+      <td>${r.SUBERRORCODE || ''}</td>
+      <td>${r.ENGINEERMEMO || ''}</td>
+      <td>${r.TGL || ''}</td>
+      <td>${r.HSA || ''}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const titleEl = document.getElementById('detailTitle');
+  if (titleEl) {
+    titleEl.textContent = `Detail ${stage} (${rows.length} row)`;
+  }
+
+  // buka modal bootstrap
+  const modalEl = document.getElementById('detailModal');
+  if (modalEl && window.bootstrap) {
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+  }
 }
