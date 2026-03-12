@@ -1,38 +1,376 @@
-.diagram-wrapper{
-overflow:auto;
-background:#f5f5f5;
-padding:20px;
-border-radius:10px;
+.tree-dashboard-fullfillment{
+  width:100%;
+  height:100vh;
+  overflow:auto;
+  background:#eee;
+  font-family:Arial, sans-serif;
 }
 
-#funnelSVG text{
-font-family:Tahoma;
-font-weight:700;
-font-size:32px;
-text-anchor:middle;
+.title{
+  text-align:center;
+  font-size:18px;
+  margin:5px 0;
+}
+.subtitle{
+  text-align:center;
+  font-size:12px;
+  margin-bottom:5px;
 }
 
-.value{
-font-size:34px;
-cursor:pointer;
-fill:#111;
+/* KANVAS UTAMA */
+.tree-area {
+  position: relative;
+  width: 1400px;          /* lebar tetap */
+  height: 1250px;         /* tinggi tetap total area */
+  margin: 10px auto;
+  background: #fff;
+  border: 2px solid #000;
+  padding-bottom: 200px;  /* ruang khusus kesimpulan */
+  overflow: auto;
 }
 
-.value:hover{
-fill:#c62828;
+/* SVG GARIS */
+#tree-lines{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
 }
 
-.red{
-fill:#c62828;
+/* TREE BOX */
+.tree-box {
+  position: absolute;
+  width: 120px;
+  min-height: 60px;
+  padding: 6px 4px;
+  border-radius: 10px;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
 }
 
-.flow-line{
-stroke:#999;
-stroke-width:4;
+.tree-box span,
+.tree-box .label {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
-.flow-line:hover{
-stroke:#c62828;
-stroke-width:6;
-transition:0.2s;
+.tree-box b {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.tree-box small {
+  font-size: 10px;
+  opacity: .9;
+  line-height: 1;
+}
+
+/* WARNA CARD */
+.blue { background:#2196f3; color:#fff; }
+.green { background:#4caf50; color:#fff; }
+.yellow { background:#ffc107; color:#000; }
+.red { background:#f44336; color:#fff; }
+.white { background:#f5f5f5; color:#000; border:1px solid #ccc; }
+
+/* POSISI TREE BOX */
+#wo { top:20px; left:50%; transform:translateX(-50%); }
+
+#sisa { top:90px; left:35%; }
+#sudah { top:90px; left:55%; }
+
+#manja { top:160px; left:25%; }
+#manja2 { top:160px; left:40%; }
+
+#sukses { top:160px; left:55%; }
+#gagal { top:160px; left:70%; }
+
+#psEnd { top:230px; left:55%; }
+#ogpEnd { top:300px; left:55%; }
+
+/* ===================== */
+/* TABLE BLOCK STYLE */
+/* ===================== */
+.table-block {
+  position:absolute;
+  font-family: 'Poppins', sans-serif;
+  font-size: 10px;
+  background:#fff;
+  border-radius:8px;
+  padding:6px;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  max-height:none;
+  overflow:hidden;   /* HILANGKAN SCROLL */
+}
+
+/* Judul tabel */
+.table-block h4{
+  margin:0 0 6px 0;
+  padding:4px 6px;
+  font-size:12px;
+  font-weight:600;
+  text-align:center;
+  border-radius:6px;
+  color:#fff;
+}
+
+/* Warna header tiap tabel */
+#tblSisa h4{
+  background:#ffc107;
+  color:#000;
+}
+
+#tblManja h4{
+  background:#ffc107;
+  color:#000;
+}
+
+#tblNonTeknik h4{
+  background:#dc3545;
+  color:#fff;
+}
+
+#tblTeknik h4{
+  background:#0d6efd;
+  color:#fff;
+}
+
+/* Table */
+.table-block table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:10px;
+}
+
+.table-block th,
+.table-block td{
+  border:1px solid #bbb;
+  padding:3px 5px;
+  text-align:center;
+  line-height:1.1;
+}
+
+/* header row */
+.table-block th{
+  background:#f1f1f1;
+  font-weight:600;
+}
+
+/* grand total */
+.table-block tr:last-child th{
+  background:#e9ecef;
+  font-weight:700;
+}
+
+/* hover */
+.table-block table tr:hover{
+  background:#f9f9f9;
+}
+
+/* ukuran tabel */
+.table-block.small{
+  width:280px;
+}
+
+.table-block.large{
+  width:360px;
+}
+
+/* ===================== */
+/* POSISI TABEL */
+/* ===================== */
+
+/* kiri bawah sisa */
+#tblSisa{
+  top:180px;
+  left:30px;
+}
+
+/* kanan tblSisa */
+#tblManja{
+  top:180px;
+  left:350px;
+}
+
+/* kanan sejajar card gagal */
+#tblNonTeknik{
+  top:240px;
+  left:1000px;  /* lurus di bawah card gagal */
+}
+
+/* di bawah tblNonTeknik */
+#tblTeknik{
+  top:390px;
+  left:1000px;
+}
+
+/* ===================== */
+/* STYLE KHUSUS HSA */
+/* ===================== */
+
+#tblHSA{
+  width:520px;              /* bikin lebih lebar */
+  font-size:11px;
+}
+
+/* judul HSA */
+#tblHSA h4{
+  background:linear-gradient(135deg,#9fbbcf,#5378b5);
+  color:#fff;
+  font-weight:700;
+  letter-spacing:0.5px;
+}
+
+/* header kolom */
+#tblHSA th{
+  background:#e7f1ff;
+  font-weight:700;
+  font-size:10px;
+  padding:5px 6px;
+}
+
+/* isi tabel */
+#tblHSA td{
+  padding:5px 6px;
+  font-size:10px;
+}
+
+/* baris nama HSA (kolom pertama) */
+#tblHSA td:first-child{
+  font-weight:600;
+  background:#f3f6ff;
+}
+
+/* zebra stripe */
+#tblHSA tr:nth-child(even) td{
+  background:#fafbff;
+}
+
+/* hover effect */
+#tblHSA table tr:hover{
+  background:#e0ecff;
+  transition:0.2s;
+}
+
+/* border lebih halus */
+#tblHSA table{
+  border:1px solid #9bbcff;
+  border-radius:6px;
+  overflow:hidden;
+}
+
+/* ===================== */
+/* MODAL DETAIL STYLE    */
+/* ===================== */
+#modalDetail {
+  display: none;
+  position: fixed;
+  z-index: 200;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+  font-family: 'Poppins', sans-serif;
+}
+
+#modalDetail .modal-content {
+  background-color: #fff;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 1100px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: slideDown 0.3s ease-out;
+}
+
+#modalDetail .modal-content h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+}
+
+#modalDetail .close {
+  float: right;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #333;
+}
+
+#modalTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+#modalTable th,
+#modalTable td {
+  border: 1px solid #bbb;
+  padding: 4px 6px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+#modalTable th {
+  background: #393b75;
+  color: #fff;
+  font-weight: 700;
+}
+
+#modalTable td:first-child {
+  font-weight: 600;
+  background: #f3f6ff;
+}
+
+#modalTable tr:nth-child(even) td {
+  background: #fafbff;
+}
+
+#modalTable tr:hover {
+  background: #e0ecff;
+  transition: 0.2s;
+}
+
+/* Animasi modal muncul */
+@keyframes slideDown {
+  from {transform: translateY(-50px); opacity:0;}
+  to {transform: translateY(0); opacity:1;}
+}
+
+.kesimpulan-box {
+  position: relative;
+  margin-top: 40px;
+  border: 2px solid #d32f2f;
+  border-radius: 10px;
+  padding: 15px 20px;
+  background: #fff5f5;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.kesimpulan-box h3 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #b71c1c;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#kesimpulanText {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #333;
 }
