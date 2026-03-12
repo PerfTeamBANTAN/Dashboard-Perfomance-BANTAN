@@ -73,6 +73,8 @@ async function loadData() {
     const res = await fetch(url);
     const data = await res.json();
 
+    console.log("DATA FUNNEL:", data); // cek di console
+
     renderFunnel(data);
 
   } catch (e) {
@@ -83,55 +85,61 @@ async function loadData() {
 }
 
 function renderFunnel(data) {
-  if (!data.cards) {
-    console.warn("DATA CARDS TIDAK ADA");
+  // safety log
+  if (!data) {
+    console.warn("DATA KOSONG");
     return;
   }
 
-  const c = data.cards;
+  const c = data.cards || {};
 
-  // mapping utama dari cards
-  update("angka000", c["WO PSB"]?.nilai || 0);
-  update("angka001", c["SUDAH PROGRES"]?.nilai || 0);
-  update("angka002", c["SISA PROGRES"]?.nilai || 0);
-  update("angka003", c["MANJA HI EXP"]?.nilai || 0);
-  update("angka004", c["MANJA H+ & NON MANJA"]?.nilai || 0);
-  update("angka005", c["SUKSES"]?.nilai || 0);
-  update("angka006", c["GAGALTARIK"]?.nilai || 0);
-  update("angka007", c["PS END STATE"]?.nilai || 0);
-  update("angka008", c["OGP TARIK PS END STATE"]?.nilai || 0);
+  console.log("CARDS:", c);
 
-  // kalau nanti angka009–011 mau dipakai, tinggal mapping di sini
+  // mapping cards → angka000–008 (sesuai JSON contoh yang kamu kirim)
+  update("angka000", c["WO PSB"]?.nilai ?? 0);
+  update("angka001", c["SUDAH PROGRES"]?.nilai ?? 0);
+  update("angka002", c["SISA PROGRES"]?.nilai ?? 0);
+  update("angka003", c["MANJA HI EXP"]?.nilai ?? 0);
+  update("angka004", c["MANJA H+ & NON MANJA"]?.nilai ?? 0);
+  update("angka005", c["SUKSES"]?.nilai ?? 0);
+  update("angka006", c["GAGALTARIK"]?.nilai ?? 0);
+  update("angka007", c["PS END STATE"]?.nilai ?? 0);
+  update("angka008", c["OGP TARIK PS END STATE"]?.nilai ?? 0);
+
+  // sementara angka009–011 belum ada di JSON contoh
   // update("angka009", ...);
   // update("angka010", ...);
   // update("angka011", ...);
 
-  // --- HITUNG KENDALA DARI TABLE ---
+  // --- HITUNG KENDALA ---
 
-  // total kendala pelanggan (jumlah kolom total)
-  const kdlPlgn = (data.kendalaPelangganTable || []).reduce(
+  const kendalaPelangganTable = data.kendalaPelangganTable || [];
+  const kendalaTeknisTable = data.kendalaTeknisTable || [];
+  const kendalaSistemTable = data.kendalaSistemTable || [];   // kalau belum ada, akan kosong
+  const kendalaLainnyaTable = data.kendalaLainnyaTable || []; // kalau belum ada, akan kosong
+
+  const kdlPlgn = kendalaPelangganTable.reduce(
     (sum, row) => sum + (row.total || 0),
     0
   );
 
-  // total kendala teknis (jumlah kolom total)
-  const kdlTeknik = (data.kendalaTeknisTable || []).reduce(
+  const kdlTeknik = kendalaTeknisTable.reduce(
     (sum, row) => sum + (row.total || 0),
     0
   );
 
-  // kalau ada tabel lain untuk sistem & lainnya, sesuaikan nama properti
-  const kdlSistem = (data.kendalaSistemTable || []).reduce(
+  const kdlSistem = kendalaSistemTable.reduce(
     (sum, row) => sum + (row.total || 0),
     0
   );
 
-  const kdlLainnya = (data.kendalaLainnyaTable || []).reduce(
+  const kdlLainnya = kendalaLainnyaTable.reduce(
     (sum, row) => sum + (row.total || 0),
     0
   );
 
-  // mapping ke SVG text
+  console.log("KDL PLGN:", kdlPlgn, "KDL TEKNIK:", kdlTeknik, "KDL SISTEM:", kdlSistem, "KDL LAINNYA:", kdlLainnya);
+
   update("angka012", kdlPlgn);
   update("angka013", kdlTeknik);
   update("angka014", kdlSistem);
@@ -140,13 +148,29 @@ function renderFunnel(data) {
 
 function update(id, val) {
   const el = document.getElementById(id);
-  if (!el) return;
+  if (!el) {
+    console.warn("ELEMEN TIDAK KETEMU:", id);
+    return;
+  }
 
-  animateNumber(el, parseInt(val || 0, 10));
+  const num = parseInt(val || 0, 10);
+  animateNumber(el, num);
 }
 
 function animateNumber(el, target) {
   let start = 0;
+
+  // hindari NaN
+  if (!Number.isFinite(target)) {
+    el.innerText = "0";
+    return;
+  }
+
+  if (target === 0) {
+    el.innerText = "0";
+    return;
+  }
+
   const step = target / 20;
 
   const timer = setInterval(() => {
