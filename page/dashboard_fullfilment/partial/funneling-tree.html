@@ -54,13 +54,11 @@
           Fetch Data...
         </div>
 
-        <!-- ====== SVG FUNNEL BARU (GARIS LENGKUNG) ====== -->
-        <!-- ini versi pendek: cuma kotak + label + angka, garis boleh kamu tambahi sendiri -->
+        <!-- ====== SVG FUNNEL ====== -->
         <svg xmlns="http://www.w3.org/2000/svg"
              viewBox="0 0 2100 1400"
              style="width:100%;height:auto;display:block;">
 
-          <!-- KOTAK + TEKS (VERSI LAMA TAPI TANPA GARIS) -->
           <g font-family="Tahoma" font-weight="700" text-anchor="middle" fill="#333">
 
             <!-- INPUT ORDER -->
@@ -292,6 +290,19 @@
                 aria-label="Close"></button>
       </div>
       <div class="modal-body">
+
+        <!-- Search + info -->
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="input-group input-group-sm" style="max-width: 260px;">
+            <span class="input-group-text">Cari WONUM</span>
+            <input type="text" class="form-control" id="detailSearchWONUM"
+                   placeholder="Ketik WONUM...">
+          </div>
+          <div id="detailInfo" class="small text-muted">
+            <!-- info jumlah data / halaman -->
+          </div>
+        </div>
+
         <div class="table-responsive">
           <table class="table table-sm table-bordered table-striped" id="detailTable">
             <thead class="table-light">
@@ -314,6 +325,13 @@
             </tbody>
           </table>
         </div>
+
+        <nav class="mt-2">
+          <ul class="pagination pagination-sm mb-0" id="detailPagination">
+            <!-- diisi via JS -->
+          </ul>
+        </nav>
+
       </div>
     </div>
   </div>
