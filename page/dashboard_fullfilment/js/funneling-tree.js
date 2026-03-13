@@ -538,9 +538,15 @@ async function showHSADetail(sto, type) {
   try {
     const url = `${API_URL}&action=getwohi&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(type)}`;
     const res = await fetch(url);
-    const data = await res.json();
+    const json = await res.json();
+    console.log("HSA DETAIL RAW:", json);
 
-    if (!data || data.length === 0) {
+    // normalisasi: kalau backend kamu nanti juga dibuat { rows:[...] }, ini otomatis kepakai
+    const rows = Array.isArray(json.rows)
+      ? json.rows
+      : (Array.isArray(json) ? json : []);
+
+    if (!rows.length) {
       tbody.innerHTML = `
         <tr>
           <td colspan="8">Tidak ada data ${type} untuk STO ${sto}</td>
@@ -548,16 +554,16 @@ async function showHSADetail(sto, type) {
       return;
     }
 
-    tbody.innerHTML = data.map((r, i) => `
+    tbody.innerHTML = rows.map((r, i) => `
       <tr>
         <td>${i + 1}</td>
-        <td>${r.MYIR || ""}</td>
-        <td>${r.STO || ""}</td>
-        <td>${r.MITRA || ""}</td>
-        <td>${r.TEKNISI || ""}</td>
-        <td>${r.KESIMPULAN || ""}</td>
-        <td>${r.DETIL_KESIMPULAN || ""}</td>
-        <td>${r.STATUS_MANJA || ""}</td>
+        <td>${r.MYIR || r.myir || ""}</td>
+        <td>${r.STO || r.sto || ""}</td>
+        <td>${r.MITRA || r.mitra || ""}</td>
+        <td>${r.TEKNISI || r.teknisi || ""}</td>
+        <td>${r.KESIMPULAN || r.kesimpulan || ""}</td>
+        <td>${r.DETIL_KESIMPULAN || r.detil_kesimpulan || ""}</td>
+        <td>${r.STATUS_MANJA || r.status_manja || ""}</td>
       </tr>
     `).join("");
 
@@ -581,9 +587,14 @@ async function showKendalaDetail(type, detail, cluster) {
     if (cluster) url += `&cluster=${encodeURIComponent(cluster)}`;
 
     const res = await fetch(url);
-    const data = await res.json();
+    const json = await res.json();
+    console.log("KENDALA DETAIL RAW:", json);
 
-    if (!data || data.length === 0) {
+    const rows = Array.isArray(json.rows)
+      ? json.rows
+      : (Array.isArray(json) ? json : []);
+
+    if (!rows.length) {
       tbody.innerHTML = `
         <tr>
           <td colspan="8">Tidak ada data kendala</td>
@@ -591,16 +602,16 @@ async function showKendalaDetail(type, detail, cluster) {
       return;
     }
 
-    tbody.innerHTML = data.map((r, i) => `
+    tbody.innerHTML = rows.map((r, i) => `
       <tr>
         <td>${i + 1}</td>
-        <td>${r.MYIR || ""}</td>
-        <td>${r.STO || ""}</td>
-        <td>${r.MITRA || ""}</td>
-        <td>${r.TEKNISI || ""}</td>
-        <td>${r.KESIMPULAN || ""}</td>
-        <td>${r.DETIL_KESIMPULAN || ""}</td>
-        <td>${r.STATUS_MANJA || ""}</td>
+        <td>${r.MYIR || r.myir || ""}</td>
+        <td>${r.STO || r.sto || ""}</td>
+        <td>${r.MITRA || r.mitra || ""}</td>
+        <td>${r.TEKNISI || r.teknisi || ""}</td>
+        <td>${r.KESIMPULAN || r.kesimpulan || ""}</td>
+        <td>${r.DETIL_KESIMPULAN || r.detil_kesimpulan || ""}</td>
+        <td>${r.STATUS_MANJA || r.status_manja || ""}</td>
       </tr>
     `).join("");
 
@@ -625,6 +636,7 @@ async function showCardDetail(kind) {
     type = "SISA";
     title = "Detail SISA PROGRESS";
   } else if (kind === "GAGAL") {
+    // semua gagal tarik (pelanggan + teknis)
     type = "GAGAL_ALL";
     title = "Detail GAGAL TARIK";
   } else {
@@ -652,16 +664,17 @@ async function showCardDetail(kind) {
 
     const res = await fetch(url);
     const json = await res.json();
+    const rows = Array.isArray(json.rows) ? json.rows : [];
 
     const titleEl = document.querySelector("#modalDetail .modal-title");
     if (titleEl) titleEl.textContent = title;
 
-    if (!json.rows || json.rows.length === 0) {
+    if (!rows.length) {
       tbody.innerHTML = `<tr><td colspan="8">Tidak ada data</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = json.rows.map((r, i) => `
+    tbody.innerHTML = rows.map((r, i) => `
       <tr>
         <td>${i + 1}</td>
         <td>${r.wonum || ""}</td>
