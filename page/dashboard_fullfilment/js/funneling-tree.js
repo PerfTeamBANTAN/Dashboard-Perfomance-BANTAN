@@ -305,8 +305,9 @@ function bindHSAClicks() {
     td.onclick = function () {
       const tr = this.parentElement;
       const sto = tr.children[0].innerText.trim();
+      const hsa = tr.children[1].innerText.trim();
       const type = this.dataset.type;
-      if (sto && type) showHSADetail(sto, type);
+      if (sto && type) showHSADetail(sto, type, hsa);
     };
   });
 }
@@ -495,7 +496,6 @@ function drawTableLines() {
 function positionTablesBelowCards() {
   const parent = document.querySelector(".tree-area");
   if (!parent) return;
-  // posisi diatur via CSS absolute, fungsi ini disiapkan kalau nanti mau dinamis
 }
 
 // ================= RENDER SEMUA GARIS =================
@@ -527,7 +527,7 @@ window.addEventListener("click", function (e) {
 });
 
 // ================= SHOW MODAL HSA (via getfunnelingdetail) =================
-async function showHSADetail(sto, type) {
+async function showHSADetail(sto, type, hsa) {
   const modal = document.getElementById("modalDetail");
   const tbody = modal.querySelector("#modalTable tbody");
   if (!modal || !tbody) return;
@@ -547,7 +547,8 @@ async function showHSADetail(sto, type) {
     const base = API_URL.replace("action=getfunnelingtree", "action=getfunnelingdetail");
     const url = base +
       `&type=${encodeURIComponent(fType)}` +
-      `&sto=${encodeURIComponent(sto)}`;
+      `&sto=${encodeURIComponent(sto)}` +
+      `&hsa=${encodeURIComponent(hsa || "")}`;
 
     const res = await fetch(url);
     const json = await res.json();
