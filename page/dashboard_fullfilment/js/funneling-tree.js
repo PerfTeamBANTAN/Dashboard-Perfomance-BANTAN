@@ -173,6 +173,18 @@ function updateBoxes(data) {
   setBoxValuePercent("gagal", gagal, pGagal);
   setBoxValuePercent("psEnd", psEnd, pPsEnd);
   setBoxValuePercent("ogpEnd", ogpEnd, pOgpEnd);
+
+  // bikin nilai SISA & GAGAL bisa diklik untuk detail
+  const sisaBox = document.querySelector("#sisa b");
+  if (sisaBox) {
+    sisaBox.style.cursor = "pointer";
+    sisaBox.onclick = () => showCardDetail("SISA");
+  }
+  const gagalBox = document.querySelector("#gagal b");
+  if (gagalBox) {
+    gagalBox.style.cursor = "pointer";
+    gagalBox.onclick = () => showCardDetail("GAGAL");
+  }
 }
 
 function setBox(id, value) {
@@ -594,6 +606,76 @@ async function showKendalaDetail(type, detail, cluster) {
 
   } catch (err) {
     console.error("Modal Kendala error:", err);
+    tbody.innerHTML = `<tr><td colspan="8">Gagal load data</td></tr>`;
+  }
+}
+
+// ================= SHOW MODAL CARD (SISA / GAGAL) =================
+async function showCardDetail(kind) {
+  const modal = document.getElementById("modalDetail");
+  const tbody = modal.querySelector("#modalTable tbody");
+  if (!modal || !tbody) return;
+
+  tbody.innerHTML = `<tr><td colspan="8">Loading...</td></tr>`;
+  openModal();
+
+  let type = "";
+  let title = "";
+  if (kind === "SISA") {
+    type = "SISA";
+    title = "Detail SISA PROGRESS";
+  } else if (kind === "GAGAL") {
+    type = "GAGAL_ALL";
+    title = "Detail GAGAL TARIK";
+  } else {
+    return;
+  }
+
+  const hsaEl = document.getElementById("filterHSA");
+  const stoEl = document.getElementById("filterSTO");
+  const startEl = document.getElementById("startDate");
+  const endEl = document.getElementById("endDate");
+
+  const hsa = hsaEl ? hsaEl.value : "";
+  const sto = stoEl ? stoEl.value : "";
+  const start = startEl ? startEl.value : "";
+  const end = endEl ? endEl.value : "";
+
+  try {
+    const base = API_URL.replace("action=getfunnelingtree", "action=getfunnelingdetail");
+    const url = base +
+      `&type=${encodeURIComponent(type)}` +
+      `&hsa=${encodeURIComponent(hsa)}` +
+      `&sto=${encodeURIComponent(sto)}` +
+      `&start=${encodeURIComponent(start)}` +
+      `&end=${encodeURIComponent(end)}`;
+
+    const res = await fetch(url);
+    const json = await res.json();
+
+    const titleEl = document.querySelector("#modalDetail .modal-title");
+    if (titleEl) titleEl.textContent = title;
+
+    if (!json.rows || json.rows.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8">Tidak ada data</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = json.rows.map((r, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${r.wonum || ""}</td>
+        <td>${r.sto || ""}</td>
+        <td>${r.hsa || ""}</td>
+        <td>${r.branch || ""}</td>
+        <td>${r.status || ""}</td>
+        <td>${r.errorcode || ""}</td>
+        <td>${r.tgl || ""}</td>
+      </tr>
+    `).join("");
+
+  } catch (err) {
+    console.error("Card detail error:", err);
     tbody.innerHTML = `<tr><td colspan="8">Gagal load data</td></tr>`;
   }
 }
