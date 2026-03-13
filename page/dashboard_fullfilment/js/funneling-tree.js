@@ -174,7 +174,7 @@ function updateBoxes(data) {
   setBoxValuePercent("psEnd", psEnd, pPsEnd);
   setBoxValuePercent("ogpEnd", ogpEnd, pOgpEnd);
 
-  // bikin nilai SISA & GAGAL bisa diklik untuk detail
+  // klik nilai SISA & GAGAL → detail
   const sisaBox = document.querySelector("#sisa b");
   if (sisaBox) {
     sisaBox.style.cursor = "pointer";
@@ -526,7 +526,7 @@ window.addEventListener("click", function (e) {
   if (e.target === modal) modal.style.display = "none";
 });
 
-// ================= SHOW MODAL HSA =================
+// ================= SHOW MODAL HSA (via getfunnelingdetail) =================
 async function showHSADetail(sto, type) {
   const modal = document.getElementById("modalDetail");
   const tbody = modal.querySelector("#modalTable tbody");
@@ -535,13 +535,24 @@ async function showHSADetail(sto, type) {
   tbody.innerHTML = `<tr><td colspan="8">Loading...</td></tr>`;
   openModal();
 
+  let fType = "";
+  if (type === "SISA")        fType = "SISA";
+  else if (type === "KP")     fType = "GAGAL_KP";
+  else if (type === "KT")     fType = "GAGAL_KT";
+  else if (type === "PS")     fType = "PS";
+  else if (type === "ESTPSHI") fType = "ESTPSHI";
+  else fType = type;
+
   try {
-    const url = `${API_URL}&action=getwohi&sto=${encodeURIComponent(sto)}&type=${encodeURIComponent(type)}`;
+    const base = API_URL.replace("action=getfunnelingtree", "action=getfunnelingdetail");
+    const url = base +
+      `&type=${encodeURIComponent(fType)}` +
+      `&sto=${encodeURIComponent(sto)}`;
+
     const res = await fetch(url);
     const json = await res.json();
     console.log("HSA DETAIL RAW:", json);
 
-    // normalisasi: kalau backend kamu nanti juga dibuat { rows:[...] }, ini otomatis kepakai
     const rows = Array.isArray(json.rows)
       ? json.rows
       : (Array.isArray(json) ? json : []);
@@ -557,13 +568,13 @@ async function showHSADetail(sto, type) {
     tbody.innerHTML = rows.map((r, i) => `
       <tr>
         <td>${i + 1}</td>
-        <td>${r.MYIR || r.myir || ""}</td>
-        <td>${r.STO || r.sto || ""}</td>
-        <td>${r.MITRA || r.mitra || ""}</td>
-        <td>${r.TEKNISI || r.teknisi || ""}</td>
-        <td>${r.KESIMPULAN || r.kesimpulan || ""}</td>
-        <td>${r.DETIL_KESIMPULAN || r.detil_kesimpulan || ""}</td>
-        <td>${r.STATUS_MANJA || r.status_manja || ""}</td>
+        <td>${r.wonum || r.MYIR || ""}</td>
+        <td>${r.sto || r.STO || ""}</td>
+        <td>${r.hsa || ""}</td>
+        <td>${r.branch || ""}</td>
+        <td>${r.status || ""}</td>
+        <td>${r.errorcode || ""}</td>
+        <td>${r.tgl || ""}</td>
       </tr>
     `).join("");
 
@@ -573,7 +584,7 @@ async function showHSADetail(sto, type) {
   }
 }
 
-// ================= SHOW MODAL KENDALA =================
+// ================= SHOW MODAL KENDALA (via getfunnelingdetail) =================
 async function showKendalaDetail(type, detail, cluster) {
   const modal = document.getElementById("modalDetail");
   const tbody = modal.querySelector("#modalTable tbody");
@@ -582,8 +593,13 @@ async function showKendalaDetail(type, detail, cluster) {
   tbody.innerHTML = `<tr><td colspan="8">Loading...</td></tr>`;
   openModal();
 
+  const fType = type === "KP" ? "GAGAL_KP" : "GAGAL_KT";
+
   try {
-    let url = `${API_URL}&action=getkendala&type=${encodeURIComponent(type)}&detail=${encodeURIComponent(detail)}`;
+    const base = API_URL.replace("action=getfunnelingtree", "action=getfunnelingdetail");
+    let url = base +
+      `&type=${encodeURIComponent(fType)}` +
+      `&kendala=${encodeURIComponent(detail)}`;
     if (cluster) url += `&cluster=${encodeURIComponent(cluster)}`;
 
     const res = await fetch(url);
@@ -605,13 +621,13 @@ async function showKendalaDetail(type, detail, cluster) {
     tbody.innerHTML = rows.map((r, i) => `
       <tr>
         <td>${i + 1}</td>
-        <td>${r.MYIR || r.myir || ""}</td>
-        <td>${r.STO || r.sto || ""}</td>
-        <td>${r.MITRA || r.mitra || ""}</td>
-        <td>${r.TEKNISI || r.teknisi || ""}</td>
-        <td>${r.KESIMPULAN || r.kesimpulan || ""}</td>
-        <td>${r.DETIL_KESIMPULAN || r.detil_kesimpulan || ""}</td>
-        <td>${r.STATUS_MANJA || r.status_manja || ""}</td>
+        <td>${r.wonum || ""}</td>
+        <td>${r.sto || ""}</td>
+        <td>${r.hsa || ""}</td>
+        <td>${r.branch || ""}</td>
+        <td>${r.status || ""}</td>
+        <td>${r.errorcode || ""}</td>
+        <td>${r.tgl || ""}</td>
       </tr>
     `).join("");
 
@@ -636,7 +652,6 @@ async function showCardDetail(kind) {
     type = "SISA";
     title = "Detail SISA PROGRESS";
   } else if (kind === "GAGAL") {
-    // semua gagal tarik (pelanggan + teknis)
     type = "GAGAL_ALL";
     title = "Detail GAGAL TARIK";
   } else {
